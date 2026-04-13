@@ -1,13 +1,14 @@
 from fastapi import APIRouter, Query, HTTPException
 from typing import List
 from models.schemas import SearchHistoryItem
-from db.supabase_client import supabase
 
 router = APIRouter()
 
 
 @router.get("", response_model=List[SearchHistoryItem])
 async def get_search_history(limit: int = Query(20, ge=1, le=100)):
+    """Get search history - stub implementation"""
+    return []
     """
     Get recent search history with product names.
     """

@@ -7,9 +7,12 @@ export default {
   theme: {
     extend: {
       colors: {
-        primary: '#2ECC71',
-        'primary-dark': '#1A8A4A',
-        'primary-light': '#E8F5EE',
+        primary: '#138808',
+        'primary-dark': '#0A5A05',
+        'primary-light': '#E8F5E9',
+        orange: '#FF9933',
+        'orange-dark': '#E67E22',
+        'orange-light': '#FFF3E0',
         navy: '#0D1B2A',
         'navy-light': '#162840',
         'amber-custom': '#F39C12',

@@ -9,6 +9,7 @@ class IngredientItem(BaseModel):
     classification: str
     one_line_note: Optional[str] = None
     regulatory_note: Optional[str] = None
+    detailed_effects: Optional[str] = None  # New field for detailed harmful effects
 
 
 class ProductResponse(BaseModel):
@@ -20,8 +21,13 @@ class ProductResponse(BaseModel):
     awareness_score: int = 50
     summary: Optional[str] = None
     fssai_note: Optional[str] = None
+    verdict: Optional[str] = None  # New field for final verdict
+    recommendation: Optional[str] = None  # New field for usage recommendation
     ingredients: List[IngredientItem] = []
     search_count: int = 1
+    data_source: Optional[str] = None  # Where data came from
+    confidence: Optional[str] = None  # high | medium | low
+    is_complete: bool = False  # Whether ingredient list is complete
 
 
 class IngredientRuleResponse(BaseModel):
@@ -31,8 +37,10 @@ class IngredientRuleResponse(BaseModel):
     what_it_is: Optional[str] = None
     commonly_found_in: Optional[str] = None
     one_line_note: Optional[str] = None
+    regulatory_note: Optional[str] = None  # Added for consistency
     countries_restricted: List[str] = []
     fssai_position: Optional[str] = None
+    health_effects: Optional[dict] = None  # Added for detailed health information
 
 
 class SearchHistoryItem(BaseModel):

@@ -3,7 +3,6 @@ import { useParams } from 'react-router-dom'
 import { motion } from 'framer-motion'
 import axios from 'axios'
 import ScoreCircle from '../components/ScoreCircle'
-import IngredientColumns from '../components/IngredientColumns'
 import DisclaimerBox from '../components/DisclaimerBox'
 
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:8000'
@@ -13,6 +12,9 @@ function Result() {
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(null)
   const [product, setProduct] = useState(null)
+  const [showCorrectionForm, setShowCorrectionForm] = useState(false)
+  const [correctionText, setCorrectionText] = useState('')
+  const [submitting, setSubmitting] = useState(false)
 
   useEffect(() => {
     fetchProduct()
@@ -30,6 +32,43 @@ function Result() {
       setError(err.response?.data?.detail || 'Failed to fetch product information')
     } finally {
       setLoading(false)
+    }
+  }
+
+  const handleVerifyCorrect = async () => {
+    try {
+      await axios.post(`${API_BASE_URL}/api/product/verify`, null, {
+        params: { product_name: productName, is_correct: true }
+      })
+      alert('Thank you for verifying!')
+    } catch (err) {
+      console.error('Error verifying:', err)
+    }
+  }
+
+  const handleSubmitCorrection = async () => {
+    if (!correctionText.trim()) {
+      alert('Please enter the ingredients')
+      return
+    }
+
+    try {
+      setSubmitting(true)
+      await axios.post(`${API_BASE_URL}/api/product/correct`, null, {
+        params: {
+          product_name: productName,
+          ingredients: correctionText,
+          product_id: product?.id
+        }
+      })
+      alert('Thank you! Your correction has been submitted for review.')
+      setShowCorrectionForm(false)
+      setCorrectionText('')
+    } catch (err) {
+      alert('Error submitting correction. Please try again.')
+      console.error('Error submitting correction:', err)
+    } finally {
+      setSubmitting(false)
     }
   }
 
@@ -64,9 +103,25 @@ function Result() {
   if (!product) return null
 
   // Categorize ingredients
-  const generally_recognised = product.ingredients.filter(i => i.classification === 'generally_recognised')
-  const worth_knowing = product.ingredients.filter(i => i.classification === 'worth_knowing')
-  const commonly_questioned = product.ingredients.filter(i => i.classification === 'commonly_questioned')
+  const allIngredients = product.ingredients || []
+  const generally_recognised = allIngredients.filter(i => i.classification === 'generally_recognised')
+  const worth_knowing = allIngredients.filter(i => i.classification === 'worth_knowing')
+  const commonly_questioned = allIngredients.filter(i => i.classification === 'commonly_questioned')
+
+  // Get score color
+  const getScoreColor = (score) => {
+    if (score >= 80) return 'text-green-600'
+    if (score >= 60) return 'text-yellow-600'
+    if (score >= 40) return 'text-orange-600'
+    return 'text-red-600'
+  }
+
+  const getScoreBg = (score) => {
+    if (score >= 80) return 'bg-green-50 border-green-200'
+    if (score >= 60) return 'bg-yellow-50 border-yellow-200'
+    if (score >= 40) return 'bg-orange-50 border-orange-200'
+    return 'bg-red-50 border-red-200'
+  }
 
   return (
     <motion.div
@@ -75,7 +130,7 @@ function Result() {
       exit={{ opacity: 0 }}
       className="min-h-screen bg-gray-soft py-8"
     >
-      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Product Header Card */}
         <div className="card p-6 mb-6">
           <div className="flex flex-col md:flex-row gap-6">
@@ -116,50 +171,245 @@ function Result() {
               <ScoreCircle score={product.awareness_score} size="large" showLabel={true} />
             </div>
           </div>
-
-          {/* Summary */}
-          {product.summary && (
-            <div className="mt-6 pt-6 border-t border-gray-100">
-              <p className="text-sm text-gray-600 leading-relaxed">{product.summary}</p>
-            </div>
-          )}
         </div>
 
-        {/* Awareness Disclaimer */}
+        {/* Final Verdict Section */}
+        {(product.verdict || product.recommendation) && (
+          <div className={`card p-6 mb-6 border-2 ${getScoreBg(product.awareness_score)}`}>
+            <div className="flex items-start gap-4">
+              <div className="flex-shrink-0">
+                <div className={`w-12 h-12 rounded-full ${getScoreBg(product.awareness_score)} flex items-center justify-center`}>
+                  <span className={`text-2xl font-bold ${getScoreColor(product.awareness_score)}`}>
+                    {product.awareness_score}
+                  </span>
+                </div>
+              </div>
+              <div className="flex-1">
+                <h2 className="font-poppins font-bold text-xl text-navy mb-2">Final Verdict</h2>
+                {product.verdict && (
+                  <p className="text-gray-700 mb-3 font-medium">{product.verdict}</p>
+                )}
+                {product.recommendation && (
+                  <div className="bg-white rounded-lg p-4 border border-gray-200">
+                    <p className="text-sm font-semibold text-navy mb-1">Recommendation:</p>
+                    <p className="text-sm text-gray-700">{product.recommendation}</p>
+                  </div>
+                )}
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* Complete Ingredients List */}
+        <div className="card p-6 mb-6">
+          <h2 className="font-poppins font-bold text-xl text-navy mb-4">
+            Complete Ingredients List ({allIngredients.length} ingredients)
+          </h2>
+          <div className="bg-gray-50 rounded-lg p-4">
+            <p className="text-sm text-gray-600 leading-relaxed">
+              {allIngredients.map((ing, idx) => (
+                <span key={idx}>
+                  <span className={
+                    ing.classification === 'commonly_questioned' ? 'text-red-700 font-semibold' :
+                    ing.classification === 'worth_knowing' ? 'text-red-500 font-semibold' :
+                    'text-gray-700'
+                  }>
+                    {ing.name}
+                  </span>
+                  {ing.aliases && <span className="text-gray-500"> ({ing.aliases})</span>}
+                  {idx < allIngredients.length - 1 && ', '}
+                </span>
+              ))}
+            </p>
+          </div>
+        </div>
+
+        {/* Worth Knowing Ingredients */}
+        {worth_knowing.length > 0 && (
+          <div className="card p-6 mb-6 border-l-4 border-red-400">
+            <h2 className="font-poppins font-bold text-xl text-red-600 mb-4 flex items-center gap-2">
+              <span className="w-3 h-3 bg-red-400 rounded-full"></span>
+              Worth Knowing ({worth_knowing.length} ingredients)
+            </h2>
+            <div className="space-y-4">
+              {worth_knowing.map((ing, idx) => (
+                <div key={idx} className="bg-red-50 rounded-lg p-4 border border-red-200">
+                  <div className="flex items-start justify-between mb-2">
+                    <h3 className="font-semibold text-navy">
+                      {ing.name}
+                      {ing.aliases && <span className="text-sm text-gray-500 font-normal ml-2">({ing.aliases})</span>}
+                    </h3>
+                  </div>
+                  {ing.one_line_note && (
+                    <p className="text-sm text-gray-600 mb-2">{ing.one_line_note}</p>
+                  )}
+                  {ing.detailed_effects && (
+                    <div className="mt-3 pt-3 border-t border-red-200">
+                      <p className="text-sm font-semibold text-navy mb-1">Detailed Information:</p>
+                      <p className="text-sm text-gray-700 leading-relaxed">{ing.detailed_effects}</p>
+                    </div>
+                  )}
+                  {ing.regulatory_note && (
+                    <div className="mt-2 text-xs text-gray-600 italic">
+                      Regulatory: {ing.regulatory_note}
+                    </div>
+                  )}
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+
+        {/* Commonly Questioned Ingredients */}
+        {commonly_questioned.length > 0 && (
+          <div className="card p-6 mb-6 border-l-4 border-red-600">
+            <h2 className="font-poppins font-bold text-xl text-red-700 mb-4 flex items-center gap-2">
+              <span className="w-3 h-3 bg-red-600 rounded-full"></span>
+              Commonly Questioned ({commonly_questioned.length} ingredients)
+            </h2>
+            <div className="space-y-4">
+              {commonly_questioned.map((ing, idx) => (
+                <div key={idx} className="bg-red-100 rounded-lg p-4 border border-red-300">
+                  <div className="flex items-start justify-between mb-2">
+                    <h3 className="font-semibold text-navy">
+                      {ing.name}
+                      {ing.aliases && <span className="text-sm text-gray-500 font-normal ml-2">({ing.aliases})</span>}
+                    </h3>
+                  </div>
+                  {ing.one_line_note && (
+                    <p className="text-sm text-gray-600 mb-2">{ing.one_line_note}</p>
+                  )}
+                  {ing.detailed_effects && (
+                    <div className="mt-3 pt-3 border-t border-red-300">
+                      <p className="text-sm font-semibold text-navy mb-1">Detailed Information:</p>
+                      <p className="text-sm text-gray-700 leading-relaxed">{ing.detailed_effects}</p>
+                    </div>
+                  )}
+                  {ing.regulatory_note && (
+                    <div className="mt-2 text-xs text-gray-600 italic">
+                      Regulatory: {ing.regulatory_note}
+                    </div>
+                  )}
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+
+        {/* Generally Recognised Ingredients */}
+        {generally_recognised.length > 0 && (
+          <div className="card p-6 mb-6">
+            <h2 className="font-poppins font-bold text-xl text-navy mb-4 flex items-center gap-2">
+              <span className="w-3 h-3 bg-green-500 rounded-full"></span>
+              Generally Recognised ({generally_recognised.length} ingredients)
+            </h2>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+              {generally_recognised.map((ing, idx) => (
+                <div key={idx} className="bg-green-50 rounded-lg p-3 border border-green-200">
+                  <h3 className="font-semibold text-navy text-sm">
+                    {ing.name}
+                    {ing.aliases && <span className="text-xs text-gray-500 font-normal ml-2">({ing.aliases})</span>}
+                  </h3>
+                  {ing.one_line_note && (
+                    <p className="text-xs text-gray-600 mt-1">{ing.one_line_note}</p>
+                  )}
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+
+        {/* Summary */}
+        {product.summary && (
+          <div className="card p-6 mb-6">
+            <h3 className="font-poppins font-semibold text-navy mb-3">Summary</h3>
+            <p className="text-sm text-gray-600 leading-relaxed">{product.summary}</p>
+          </div>
+        )}
+
+        {/* FSSAI Note */}
+        {product.fssai_note && (
+          <div className="card p-6 mb-6 bg-amber-50 border border-amber-200">
+            <h3 className="font-poppins font-semibold text-navy mb-2">FSSAI Position</h3>
+            <p className="text-sm text-gray-700">{product.fssai_note}</p>
+          </div>
+        )}
+
+        {/* Help Improve This Section - Show when data is AI estimated or low confidence */}
+        {(product.data_source === 'ai_estimated' || product.confidence === 'low') && (
+          <div className="card p-6 mb-6 bg-yellow-50 border-2 border-yellow-400">
+            <div className="flex items-start gap-4">
+              <div className="flex-shrink-0">
+                <svg className="w-8 h-8 text-yellow-600" fill="currentColor" viewBox="0 0 20 20">
+                  <path fillRule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clipRule="evenodd" />
+                </svg>
+              </div>
+              <div className="flex-1">
+                <h3 className="font-poppins font-bold text-lg text-yellow-900 mb-2">
+                  Help Improve This Data
+                </h3>
+                <p className="text-sm text-yellow-800 mb-4">
+                  These ingredients are AI estimated and may be incomplete. Do you have this product with you?
+                </p>
+                
+                {!showCorrectionForm ? (
+                  <div className="flex flex-wrap gap-3">
+                    <button
+                      onClick={handleVerifyCorrect}
+                      className="px-4 py-2 bg-green-600 hover:bg-green-700 text-white rounded-lg font-medium text-sm transition-colors"
+                    >
+                      ✓ Ingredients look correct
+                    </button>
+                    <button
+                      onClick={() => setShowCorrectionForm(true)}
+                      className="px-4 py-2 bg-primary hover:bg-primary-dark text-white rounded-lg font-medium text-sm transition-colors"
+                    >
+                      Submit correct ingredients
+                    </button>
+                  </div>
+                ) : (
+                  <div className="bg-white rounded-lg p-4 border border-yellow-300">
+                    <label className="block text-sm font-semibold text-navy mb-2">
+                      Paste the complete ingredients list from the product label:
+                    </label>
+                    <textarea
+                      value={correctionText}
+                      onChange={(e) => setCorrectionText(e.target.value)}
+                      placeholder="Example: Water, Sugar, Wheat Flour, Palm Oil, Salt, Citric Acid (E330), Preservative (E211)..."
+                      className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent text-sm"
+                      rows="4"
+                    />
+                    <div className="flex gap-3 mt-3">
+                      <button
+                        onClick={handleSubmitCorrection}
+                        disabled={submitting}
+                        className="px-4 py-2 bg-primary hover:bg-primary-dark text-white rounded-lg font-medium text-sm transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                      >
+                        {submitting ? 'Submitting...' : 'Submit Correction'}
+                      </button>
+                      <button
+                        onClick={() => {
+                          setShowCorrectionForm(false)
+                          setCorrectionText('')
+                        }}
+                        className="px-4 py-2 bg-gray-200 hover:bg-gray-300 text-gray-700 rounded-lg font-medium text-sm transition-colors"
+                      >
+                        Cancel
+                      </button>
+                    </div>
+                  </div>
+                )}
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* Disclaimer */}
         <div className="mb-6">
           <DisclaimerBox variant="info">
             This Awareness Score reflects how commonly ingredients in this product are discussed by health researchers and flagged by international regulatory bodies. It is not a safety rating, health claim, or medical assessment. CheckKaro does not certify any product as safe or unsafe. Always read the actual product label and consult a qualified professional for personal health decisions.
           </DisclaimerBox>
         </div>
-
-        {/* Ingredient Columns */}
-        <div className="mb-6">
-          <h2 className="section-heading mb-4">Ingredient Breakdown</h2>
-          <IngredientColumns
-            generally_recognised={generally_recognised}
-            worth_knowing={worth_knowing}
-            commonly_questioned={commonly_questioned}
-          />
-        </div>
-
-        {/* Awareness Message */}
-        <div className="mb-6">
-          <div className="bg-primary-light border-2 border-primary rounded-xl p-5">
-            <p className="text-sm text-gray-700 leading-relaxed">
-              CheckKaro provides ingredient information for general awareness only. Our classifications are based on publicly available international regulatory data. We do not make health claims. Individual responses to ingredients vary. This is not medical advice.
-            </p>
-          </div>
-        </div>
-
-        {/* FSSAI Note */}
-        {product.fssai_note && (
-          <div className="mb-6">
-            <div className="card p-4">
-              <h3 className="font-poppins font-semibold text-navy mb-2">FSSAI Position</h3>
-              <p className="text-sm text-gray-600">{product.fssai_note}</p>
-            </div>
-          </div>
-        )}
       </div>
     </motion.div>
   )

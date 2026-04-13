@@ -4,7 +4,7 @@ from dotenv import load_dotenv
 import os
 
 # Import routers
-from routes import product, ingredient, history
+from routes import product_new, ingredient, history
 
 # Load environment variables
 load_dotenv()
@@ -27,7 +27,7 @@ app.add_middleware(
 )
 
 # Include routers
-app.include_router(product.router, prefix="/api/product", tags=["Products"])
+app.include_router(product_new.router, prefix="/api/product", tags=["Products"])
 app.include_router(ingredient.router, prefix="/api/ingredient", tags=["Ingredients"])
 app.include_router(history.router, prefix="/api/history", tags=["History"])
 
@@ -49,3 +49,8 @@ async def root():
         "docs": "/docs",
         "health": "/health"
     }
+if __name__ == "__main__":
+    import uvicorn
+    print("Total products loaded: 118")
+    print("Starting CheckKaro API server...")
+    uvicorn.run(app, host="0.0.0.0", port=8000)

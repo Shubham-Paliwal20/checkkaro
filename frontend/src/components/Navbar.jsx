@@ -22,11 +22,14 @@ function Navbar() {
         <div className="flex justify-between items-center h-[68px]">
           {/* Logo */}
           <Link to="/" className="flex items-center space-x-2">
-            <svg className="w-8 h-8 text-primary" fill="currentColor" viewBox="0 0 24 24">
+            <svg className="w-8 h-8 text-orange" fill="currentColor" viewBox="0 0 24 24">
               <path d="M12 2L2 7v10c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V7l-10-5zm0 18c-3.31 0-6-2.69-6-6s2.69-6 6-6 6 2.69 6 6-2.69 6-6 6zm-1-10v5l4.25 2.52.77-1.28-3.52-2.09V10H11z"/>
             </svg>
             <div className="flex flex-col">
-              <span className="font-poppins font-bold text-primary text-xl">CheckKaro</span>
+              <div className="font-poppins font-bold text-xl flex items-center">
+                <span className="text-orange">Check</span>
+                <span className="text-primary">Karo</span>
+              </div>
               <span className="text-xs text-gray-500 -mt-1">Know what's inside</span>
             </div>
           </Link>
@@ -35,19 +38,19 @@ function Navbar() {
           <div className="hidden md:flex items-center space-x-8">
             <Link 
               to="/products" 
-              className={`text-sm font-medium transition-colors ${isActive('/products') ? 'text-primary border-b-2 border-primary' : 'text-gray-700 hover:text-primary'}`}
+              className={`text-sm font-medium transition-colors ${isActive('/products') ? 'text-orange border-b-2 border-orange' : 'text-gray-700 hover:text-orange'}`}
             >
               Products
             </Link>
             <Link 
               to="/check-ingredient" 
-              className={`text-sm font-medium transition-colors ${isActive('/check-ingredient') ? 'text-primary border-b-2 border-primary' : 'text-gray-700 hover:text-primary'}`}
+              className={`text-sm font-medium transition-colors ${isActive('/check-ingredient') ? 'text-orange border-b-2 border-orange' : 'text-gray-700 hover:text-orange'}`}
             >
               Check Ingredient
             </Link>
             <Link 
               to="/about" 
-              className={`text-sm font-medium transition-colors ${isActive('/about') ? 'text-primary border-b-2 border-primary' : 'text-gray-700 hover:text-primary'}`}
+              className={`text-sm font-medium transition-colors ${isActive('/about') ? 'text-orange border-b-2 border-orange' : 'text-gray-700 hover:text-orange'}`}
             >
               About
             </Link>
@@ -73,21 +76,21 @@ function Navbar() {
           <div className="md:hidden py-4 border-t border-gray-100">
             <Link 
               to="/products" 
-              className="block py-2 text-sm font-medium text-gray-700 hover:text-primary"
+              className="block py-2 text-sm font-medium text-gray-700 hover:text-orange"
               onClick={() => setIsMobileMenuOpen(false)}
             >
               Products
             </Link>
             <Link 
               to="/check-ingredient" 
-              className="block py-2 text-sm font-medium text-gray-700 hover:text-primary"
+              className="block py-2 text-sm font-medium text-gray-700 hover:text-orange"
               onClick={() => setIsMobileMenuOpen(false)}
             >
               Check Ingredient
             </Link>
             <Link 
               to="/about" 
-              className="block py-2 text-sm font-medium text-gray-700 hover:text-primary"
+              className="block py-2 text-sm font-medium text-gray-700 hover:text-orange"
               onClick={() => setIsMobileMenuOpen(false)}
             >
               About
