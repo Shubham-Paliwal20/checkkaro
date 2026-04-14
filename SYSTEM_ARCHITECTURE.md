@@ -318,9 +318,10 @@ Supabase (PostgreSQL)
 ### Backend (.env)
 ```env
 # Required
-SUPABASE_URL=https://ecyuhdegovjhhqvasiez.supabase.co
-SUPABASE_ANON_KEY=eyJ...
-GROQ_API_KEY=gsk_...
+SUPABASE_URL=https://your-project.supabase.co
+SUPABASE_ANON_KEY=your_supabase_anon_key_here
+GROQ_API_KEY=your_groq_api_key_here
+GEMINI_API_KEY=your_gemini_api_key_here
 ALLOWED_ORIGINS=http://localhost:5173
 
 # Optional (for better coverage)
