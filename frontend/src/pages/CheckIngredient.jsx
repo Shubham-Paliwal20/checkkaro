@@ -631,12 +631,12 @@ function CheckIngredient() {
               <button
                 key={idx}
                 onClick={() => {
-                  setQuery(item)
-                  handleSearch(item)
+                  setQuery(item.name)
+                  handleSearch(item.name)
                 }}
                 className="px-6 py-3 bg-primary-light text-primary rounded-full hover:bg-primary hover:text-white transition-colors font-medium"
               >
-                {item}
+                {item.name}
               </button>
             ))}
           </div>
