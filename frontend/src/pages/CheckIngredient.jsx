@@ -16,9 +16,8 @@ function CheckIngredient() {
   const [popularIngredients, setPopularIngredients] = useState([])
   
   const searchRef = useRef(null)
-  const suggestionsRef = useRef(null)
 
-  // Fetch popular ingredients on component mount
+  // Fetch popular ingredients on mount
   useEffect(() => {
     fetchPopularIngredients()
   }, [])
@@ -26,7 +25,7 @@ function CheckIngredient() {
   // Fetch suggestions when user types
   useEffect(() => {
     const fetchSuggestions = async () => {
-      if (query.length >= 2) {
+      if (query.length >= 1) {
         try {
           const response = await axios.get(`${API_BASE_URL}/api/ingredient/suggestions`, {
             params: { q: query, limit: 8 }
@@ -55,6 +54,17 @@ function CheckIngredient() {
       setPopularIngredients(response.data || [])
     } catch (error) {
       console.error('Error fetching popular ingredients:', error)
+      // Fallback to hardcoded list
+      setPopularIngredients([
+        { name: 'TBHQ', classification: 'commonly_questioned' },
+        { name: 'Tartrazine', classification: 'commonly_questioned' },
+        { name: 'MSG', classification: 'commonly_questioned' },
+        { name: 'Sodium Benzoate', classification: 'commonly_questioned' },
+        { name: 'Sunset Yellow', classification: 'commonly_questioned' },
+        { name: 'Carrageenan', classification: 'worth_knowing' },
+        { name: 'Palm Oil', classification: 'worth_knowing' },
+        { name: 'Aspartame', classification: 'commonly_questioned' }
+      ])
     }
   }
 
@@ -162,7 +172,7 @@ function CheckIngredient() {
     }
     const badge = badges[classification] || badges.worth_knowing
     return (
-      <span className={`inline-block px-4 py-2 rounded-full text-sm font-semibold ${badge.bg} ${badge.text}`}>
+      <span className={`inline-block px-3 sm:px-4 py-1.5 sm:py-2 rounded-full text-xs sm:text-sm font-semibold ${badge.bg} ${badge.text}`}>
         {badge.label}
       </span>
     )
@@ -184,28 +194,28 @@ function CheckIngredient() {
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
     >
-      {/* Hero Section */}
-      <section className="bg-navy text-white py-16 sm:py-20">
+      {/* Hero Section - Mobile Optimized */}
+      <section className="bg-navy text-white py-12 sm:py-16 md:py-20">
         <div className="max-w-4xl mx-auto px-4 text-center">
-          <div className="inline-block mb-4">
-            <span className="inline-block px-4 py-2 rounded-full border border-primary text-primary text-sm font-medium">
+          <div className="inline-block mb-3 sm:mb-4">
+            <span className="inline-block px-3 sm:px-4 py-1.5 sm:py-2 rounded-full border border-primary text-primary text-xs sm:text-sm font-medium">
               Ingredient Checker
             </span>
           </div>
           
-          <h1 className="font-poppins font-bold text-3xl sm:text-4xl md:text-5xl mb-4">
+          <h1 className="font-poppins font-bold text-2xl sm:text-3xl md:text-4xl lg:text-5xl mb-3 sm:mb-4 px-2">
             What does this ingredient do?
           </h1>
           
-          <p className="text-gray-300 text-base sm:text-lg mb-6 sm:mb-8">
+          <p className="text-gray-300 text-sm sm:text-base md:text-lg mb-6 sm:mb-8 px-2">
             Type any ingredient name or E-number from a product label
           </p>
 
-          {/* Enhanced Search Bar with Suggestions */}
+          {/* Enhanced Search Bar with Suggestions - Mobile Optimized */}
           <div ref={searchRef} className="max-w-xl mx-auto relative">
             <form onSubmit={handleSubmit}>
-              <div className="flex items-center bg-white rounded-full overflow-hidden h-[50px] sm:h-[60px]">
-                <svg className="w-5 h-5 sm:w-6 sm:h-6 text-gray-400 ml-4 sm:ml-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <div className="flex items-center bg-white rounded-full overflow-hidden h-[48px] sm:h-[56px] md:h-[60px] shadow-lg">
+                <svg className="w-4 h-4 sm:w-5 sm:h-5 md:w-6 md:h-6 text-gray-400 ml-3 sm:ml-4 md:ml-6 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
                 </svg>
                 <input
@@ -213,52 +223,46 @@ function CheckIngredient() {
                   value={query}
                   onChange={handleInputChange}
                   onKeyDown={handleKeyDown}
-                  placeholder="e.g. TBHQ, E102, Tartrazine, Sodium Benzoate..."
-                  className="flex-1 px-3 sm:px-4 text-gray-900 outline-none text-sm sm:text-base"
+                  placeholder="e.g. Tartrazine, MSG..."
+                  className="flex-1 px-2 sm:px-3 md:px-4 text-sm sm:text-base text-gray-900 outline-none min-w-0"
                   autoComplete="off"
                 />
                 <button
                   type="submit"
                   disabled={loading}
-                  className="bg-primary text-white rounded-full mr-2 px-4 sm:px-6 py-2 hover:bg-primary-dark transition-colors font-semibold disabled:opacity-50 text-sm sm:text-base"
+                  className="bg-primary text-white rounded-full mr-1.5 sm:mr-2 px-3 sm:px-4 md:px-6 py-1.5 sm:py-2 hover:bg-primary-dark transition-colors font-semibold disabled:opacity-50 text-xs sm:text-sm md:text-base flex-shrink-0"
                 >
                   {loading ? 'Searching...' : 'Search'}
                 </button>
               </div>
             </form>
 
-            {/* Suggestions Dropdown */}
+            {/* Suggestions Dropdown - Mobile Optimized */}
             {showSuggestions && suggestions.length > 0 && (
               <div 
-                ref={suggestionsRef}
-                className="absolute top-full left-0 right-0 bg-white border border-gray-200 rounded-lg shadow-xl z-50 mt-2 max-h-80 overflow-y-auto"
+                className="absolute top-full left-0 right-0 bg-white border border-gray-200 rounded-lg shadow-xl z-50 mt-2 max-h-72 sm:max-h-80 overflow-y-auto"
               >
                 {suggestions.map((suggestion, index) => (
                   <div
                     key={suggestion.id}
                     onClick={() => selectSuggestion(suggestion)}
-                    className={`px-4 py-3 cursor-pointer border-b border-gray-100 last:border-b-0 transition-colors ${
+                    className={`px-3 sm:px-4 py-2.5 sm:py-3 cursor-pointer border-b border-gray-100 last:border-b-0 transition-colors ${
                       index === selectedIndex 
                         ? 'bg-primary-light text-primary' 
                         : 'hover:bg-gray-50'
                     }`}
                   >
-                    <div className="flex items-center gap-3">
-                      <div className={`w-3 h-3 rounded-full ${
+                    <div className="flex items-center gap-2 sm:gap-3">
+                      <div className={`w-2.5 h-2.5 sm:w-3 sm:h-3 rounded-full flex-shrink-0 ${
                         suggestion.classification === 'commonly_questioned' ? 'bg-red-600' :
                         suggestion.classification === 'worth_knowing' ? 'bg-red-400' :
                         'bg-green-500'
                       }`}></div>
-                      <div className="flex-1">
-                        <div className="font-medium text-gray-900 text-sm sm:text-base">
+                      <div className="flex-1 min-w-0">
+                        <div className="font-medium text-gray-900 text-sm sm:text-base truncate">
                           {suggestion.name}
                         </div>
-                        {suggestion.aliases && suggestion.aliases.length > 0 && (
-                          <div className="text-xs text-gray-500">
-                            Also: {suggestion.aliases.slice(0, 2).join(', ')}
-                          </div>
-                        )}
-                        <div className="text-xs text-gray-600 mt-1">
+                        <div className="text-xs sm:text-sm text-gray-600 line-clamp-1">
                           {suggestion.what_it_is}
                         </div>
                       </div>
@@ -621,55 +625,21 @@ function CheckIngredient() {
       {/* Popular Ingredients */}
       <section className="py-12 bg-white">
         <div className="max-w-4xl mx-auto px-4">
-          <h2 className="section-heading text-center mb-8 text-2xl sm:text-3xl">Popular Ingredients to Check</h2>
-          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3">
+          <h2 className="section-heading text-center mb-8">Popular Ingredients to Check</h2>
+          <div className="flex flex-wrap gap-3 justify-center">
             {popularIngredients.map((item, idx) => (
               <button
-                key={item.id || idx}
+                key={idx}
                 onClick={() => {
                   setQuery(item.name)
                   handleSearch(item.name)
                 }}
-                className={`p-3 rounded-lg text-left hover:shadow-md transition-all font-medium text-sm ${
-                  item.classification === 'commonly_questioned' 
-                    ? 'bg-red-50 text-red-800 border border-red-200 hover:bg-red-100' 
-                    : item.classification === 'worth_knowing'
-                    ? 'bg-yellow-50 text-yellow-800 border border-yellow-200 hover:bg-yellow-100'
-                    : 'bg-green-50 text-green-800 border border-green-200 hover:bg-green-100'
-                }`}
+                className="px-6 py-3 bg-primary-light text-primary rounded-full hover:bg-primary hover:text-white transition-colors font-medium"
               >
-                <div className="flex items-center gap-2 mb-1">
-                  <div className={`w-2 h-2 rounded-full ${
-                    item.classification === 'commonly_questioned' ? 'bg-red-600' :
-                    item.classification === 'worth_knowing' ? 'bg-red-400' :
-                    'bg-green-500'
-                  }`}></div>
-                  <span className="font-semibold truncate">{item.name}</span>
-                </div>
-                <p className="text-xs opacity-75 line-clamp-2">
-                  {item.what_it_is || 'Click to learn more'}
-                </p>
+                {item.name}
               </button>
             ))}
           </div>
-          
-          {/* Fallback popular ingredients if database is empty */}
-          {popularIngredients.length === 0 && (
-            <div className="flex flex-wrap gap-3 justify-center">
-              {['TBHQ', 'Tartrazine', 'MSG', 'Sodium Benzoate', 'Aspartame', 'BHA', 'Carrageenan', 'Sunset Yellow'].map((item, idx) => (
-                <button
-                  key={idx}
-                  onClick={() => {
-                    setQuery(item)
-                    handleSearch(item)
-                  }}
-                  className="px-6 py-3 bg-primary-light text-primary rounded-full hover:bg-primary hover:text-white transition-colors font-medium"
-                >
-                  {item}
-                </button>
-              ))}
-            </div>
-          )}
         </div>
       </section>
       
