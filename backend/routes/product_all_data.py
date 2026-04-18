@@ -144,6 +144,124 @@ ALL_PRODUCTS = {
     "dabur-red": ("Dabur Red Toothpaste", "Dabur", "Oral Care", 74, "Ayurvedic toothpaste", "Contains clove oil."),
     "himalaya-toothpaste": ("Himalaya Complete Care Toothpaste", "Himalaya", "Oral Care", 76, "Herbal toothpaste", "Contains neem and pomegranate."),
     "close-up": ("Close Up Red Hot Toothpaste", "Close Up", "Oral Care", 54, "Gel toothpaste", "Gel formula with artificial color."),
+
+    # HONEY & SPREADS
+    "dabur-honey": ("Dabur Honey", "Dabur", "Food", 92, "Pure natural honey", "Pure honey with no additives."),
+    "patanjali-honey": ("Patanjali Honey", "Patanjali", "Food", 90, "Pure natural honey", "Pure honey."),
+    "kissan-jam": ("Kissan Mixed Fruit Jam", "Kissan", "Food", 52, "Contains preservatives", "Contains sodium benzoate preservative."),
+    "nutella": ("Nutella Hazelnut Spread", "Nutella", "Food", 45, "High sugar and palm oil", "High sugar with palm oil."),
+
+    # COOKING OILS
+    "fortune-sunflower-oil": ("Fortune Sunflower Oil", "Fortune", "Cooking Oil", 88, "Refined sunflower oil", "Pure refined sunflower oil."),
+    "saffola-gold": ("Saffola Gold Oil", "Saffola", "Cooking Oil", 85, "Blended healthy oil", "Rice bran and sunflower oil blend."),
+    "dhara-mustard-oil": ("Dhara Mustard Oil", "Dhara", "Cooking Oil", 86, "Pure mustard oil", "Pure refined mustard oil."),
+    "fortune-rice-bran": ("Fortune Rice Bran Oil", "Fortune", "Cooking Oil", 84, "Rice bran oil", "Refined rice bran oil."),
+    "saffola-tasty": ("Saffola Tasty Oil", "Saffola", "Cooking Oil", 83, "Blended oil", "Corn and soybean oil blend."),
+    "patanjali-mustard-oil": ("Patanjali Mustard Oil", "Patanjali", "Cooking Oil", 85, "Pure mustard oil", "Pure mustard oil."),
+
+    # SPICES & MASALAS
+    "mdh-chana-masala": ("MDH Chana Masala", "MDH", "Spices", 88, "Natural spice blend", "All natural spices, no additives."),
+    "mdh-garam-masala": ("MDH Garam Masala", "MDH", "Spices", 90, "Natural spice blend", "Pure spice blend."),
+    "everest-garam-masala": ("Everest Garam Masala", "Everest", "Spices", 90, "Natural spice blend", "Pure spice blend."),
+    "everest-chana-masala": ("Everest Chana Masala", "Everest", "Spices", 88, "Natural spice blend", "All natural spices."),
+    "catch-turmeric": ("Catch Turmeric Powder", "Catch", "Spices", 95, "Pure turmeric", "100% pure turmeric."),
+    "mdh-rajma-masala": ("MDH Rajma Masala", "MDH", "Spices", 88, "Natural spice blend", "All natural spices."),
+    "everest-kitchen-king": ("Everest Kitchen King Masala", "Everest", "Spices", 88, "Natural spice blend", "All natural spices."),
+    "patanjali-haldi": ("Patanjali Haldi Powder", "Patanjali", "Spices", 95, "Pure turmeric", "100% pure turmeric."),
+
+    # READY TO EAT
+    "mtr-paneer-butter-masala": ("MTR Ready to Eat Paneer Butter Masala", "MTR", "Ready to Eat", 62, "Contains preservatives", "Convenient meal with citric acid."),
+    "mtr-dal-makhani": ("MTR Ready to Eat Dal Makhani", "MTR", "Ready to Eat", 65, "Contains preservatives", "Lentil dish with preservatives."),
+    "mtr-palak-paneer": ("MTR Ready to Eat Palak Paneer", "MTR", "Ready to Eat", 64, "Contains preservatives", "Spinach and paneer dish."),
+    "haldiram-ready-to-eat": ("Haldirams Ready to Eat Pav Bhaji", "Haldiram", "Ready to Eat", 60, "Contains preservatives", "Ready meal with preservatives."),
+
+    # FLOUR & GRAINS
+    "aashirvaad-atta": ("ITC Aashirvaad Atta", "ITC", "Food", 90, "Whole wheat flour", "100% whole wheat flour."),
+    "pillsbury-atta": ("Pillsbury Chakki Fresh Atta", "Pillsbury", "Food", 90, "Whole wheat flour", "100% whole wheat flour."),
+    "patanjali-atta": ("Patanjali Atta", "Patanjali", "Food", 90, "Whole wheat flour", "100% whole wheat flour."),
+    "aashirvaad-multigrain": ("Aashirvaad Multigrain Atta", "ITC", "Food", 88, "Multigrain flour", "Wheat with multiple grains."),
+
+    # CONDIMENTS & SAUCES
+    "maggi-ketchup": ("Maggi Tomato Ketchup", "Maggi", "Condiments", 58, "Contains preservatives", "Contains sodium benzoate."),
+    "kissan-ketchup": ("Kissan Fresh Tomato Ketchup", "Kissan", "Condiments", 60, "Contains preservatives", "Contains sodium benzoate."),
+    "veeba-mayo": ("Veeba Mayonnaise", "Veeba", "Condiments", 55, "Contains preservatives", "Contains EDTA and potassium sorbate."),
+    "dr-oetker-mayo": ("Dr. Oetker FunFoods Mayonnaise", "Dr. Oetker", "Condiments", 55, "Contains preservatives", "Contains EDTA."),
+    "maggi-hot-sweet": ("Maggi Hot & Sweet Sauce", "Maggi", "Condiments", 55, "Contains preservatives", "Contains sodium benzoate."),
+
+    # BREAKFAST CEREALS
+    "kelloggs-corn-flakes": ("Kelloggs Corn Flakes", "Kelloggs", "Breakfast Cereal", 72, "Fortified cereal", "Corn-based with vitamins."),
+    "kelloggs-chocos": ("Kelloggs Chocos", "Kelloggs", "Breakfast Cereal", 58, "Contains sugar", "Chocolate-flavored with high sugar."),
+    "kelloggs-muesli": ("Kelloggs Muesli Fruit & Nut", "Kelloggs", "Breakfast Cereal", 75, "Whole grain cereal", "Oats with fruits and nuts."),
+    "quaker-oats": ("Quaker Oats", "Quaker", "Breakfast Cereal", 92, "Pure oats", "100% whole grain oats."),
+    "bagrry-corn-flakes": ("Bagrry's Corn Flakes", "Bagrry's", "Breakfast Cereal", 72, "Fortified cereal", "Corn-based with vitamins."),
+    "saffola-oats": ("Saffola Oats", "Saffola", "Breakfast Cereal", 90, "Pure oats", "100% whole grain oats."),
+
+    # JUICES & DRINKS
+    "real-mango": ("Real Fruit Juice Mango", "Real", "Beverages", 55, "Juice from concentrate", "Contains citric acid and pectin."),
+    "real-apple": ("Real Fruit Juice Apple", "Real", "Beverages", 58, "Juice from concentrate", "Apple juice with preservatives."),
+    "tropicana-orange": ("Tropicana 100% Orange Juice", "Tropicana", "Beverages", 78, "100% juice", "Pure orange juice."),
+    "paper-boat-aamras": ("Paper Boat Aamras", "Paper Boat", "Beverages", 72, "Mango pulp drink", "Mango pulp with minimal additives."),
+    "paper-boat-jaljeera": ("Paper Boat Jaljeera", "Paper Boat", "Beverages", 75, "Traditional drink", "Traditional spiced drink."),
+    "b-natural-mango": ("B Natural Mango Juice", "B Natural", "Beverages", 68, "Fruit juice", "Mango juice with no added color."),
+
+    # ICE CREAMS
+    "amul-vanilla": ("Amul Vanilla Ice Cream", "Amul", "Dessert", 65, "Contains stabilizers", "Contains carrageenan and guar gum."),
+    "amul-chocolate": ("Amul Chocolate Ice Cream", "Amul", "Dessert", 62, "Contains stabilizers", "Chocolate ice cream with stabilizers."),
+    "kwality-walls-cornetto": ("Kwality Walls Cornetto", "Kwality Walls", "Dessert", 55, "Contains stabilizers", "Contains multiple stabilizers."),
+    "mother-dairy-kulfi": ("Mother Dairy Kulfi", "Mother Dairy", "Dessert", 72, "Traditional kulfi", "Milk-based with cardamom."),
+    "havmor-ice-cream": ("Havmor Vanilla Ice Cream", "Havmor", "Dessert", 65, "Contains stabilizers", "Contains stabilizers."),
+
+    # PICKLES
+    "priya-mango-pickle": ("Priya Mango Pickle", "Priya", "Pickles", 72, "Traditional pickle", "Mango with spices and oil."),
+    "mothers-recipe-pickle": ("Mother's Recipe Mixed Pickle", "Mother's Recipe", "Pickles", 70, "Traditional pickle", "Mixed vegetables with spices."),
+    "patanjali-mango-pickle": ("Patanjali Mango Pickle", "Patanjali", "Pickles", 74, "Natural pickle", "Mango with natural spices."),
+
+    # BAKERY
+    "britannia-bread": ("Britannia Bread", "Britannia", "Bakery", 58, "Contains preservatives", "Contains DATEM emulsifier."),
+    "modern-bread": ("Modern Bread", "Modern", "Bakery", 56, "Contains preservatives", "Contains calcium propionate."),
+    "harvest-gold-bread": ("Harvest Gold Bread", "Harvest Gold", "Bakery", 58, "Contains preservatives", "Contains preservatives."),
+    "britannia-whole-wheat-bread": ("Britannia 100% Whole Wheat Bread", "Britannia", "Bakery", 68, "Whole wheat bread", "Whole wheat with fewer additives."),
+
+    # TEA & COFFEE
+    "tata-tea-gold": ("Tata Tea Gold", "Tata", "Beverages", 92, "Pure black tea", "100% black tea."),
+    "tata-tea-premium": ("Tata Tea Premium", "Tata", "Beverages", 92, "Pure black tea", "100% black tea."),
+    "red-label-tea": ("Red Label Natural Care Tea", "Red Label", "Beverages", 90, "Tea with herbs", "Black tea with tulsi and ginger."),
+    "nescafe-classic": ("Nescafe Classic Coffee", "Nescafe", "Beverages", 88, "Pure coffee", "100% coffee."),
+    "bru-coffee": ("Bru Instant Coffee", "Bru", "Beverages", 85, "Instant coffee", "Coffee with chicory."),
+    "tata-coffee": ("Tata Coffee Grand", "Tata", "Beverages", 88, "Pure coffee", "100% coffee."),
+    "green-tea-lipton": ("Lipton Green Tea", "Lipton", "Beverages", 92, "Pure green tea", "100% green tea."),
+
+    # FACE WASH & SKINCARE
+    "himalaya-face-wash": ("Himalaya Neem Face Wash", "Himalaya", "Personal Care", 68, "Herbal face wash", "Contains neem and turmeric."),
+    "garnier-men-face-wash": ("Garnier Men Face Wash", "Garnier", "Personal Care", 62, "Contains SLS", "Contains sodium laureth sulfate."),
+    "neutrogena-face-wash": ("Neutrogena Deep Clean Face Wash", "Neutrogena", "Personal Care", 65, "Salicylic acid formula", "Contains salicylic acid."),
+    "cetaphil-face-wash": ("Cetaphil Gentle Skin Cleanser", "Cetaphil", "Personal Care", 72, "Gentle cleanser", "Mild formula for sensitive skin."),
+    "ponds-face-wash": ("Ponds Pure White Face Wash", "Ponds", "Personal Care", 60, "Contains SLS", "Contains sodium laureth sulfate."),
+    "lakme-face-wash": ("Lakme Blush & Glow Face Wash", "Lakme", "Personal Care", 62, "Fruit-based face wash", "Contains fruit extracts."),
+
+    # MOISTURIZERS & CREAMS
+    "nivea-cream": ("Nivea Soft Moisturising Cream", "Nivea", "Personal Care", 68, "Standard moisturizer", "Contains mineral oil."),
+    "vaseline-lotion": ("Vaseline Intensive Care Lotion", "Vaseline", "Personal Care", 65, "Petroleum-based", "Contains petroleum jelly."),
+    "himalaya-moisturizer": ("Himalaya Nourishing Skin Cream", "Himalaya", "Personal Care", 72, "Herbal moisturizer", "Contains aloe vera and winter cherry."),
+    "ponds-cold-cream": ("Ponds Cold Cream", "Ponds", "Personal Care", 65, "Classic cold cream", "Traditional cold cream formula."),
+    "lakme-sunscreen": ("Lakme Sun Expert SPF 50", "Lakme", "Personal Care", 62, "Sunscreen", "Contains chemical UV filters."),
+
+    # DETERGENTS & HOUSEHOLD
+    "surf-excel-matic": ("Surf Excel Matic Detergent", "Surf Excel", "Household", 55, "Contains surfactants", "Anionic surfactants with enzymes."),
+    "ariel-matic": ("Ariel Matic Detergent", "Ariel", "Household", 55, "Contains surfactants", "Surfactants with optical brightener."),
+    "tide-plus": ("Tide Plus Detergent", "Tide", "Household", 52, "Contains surfactants", "Surfactants with sodium carbonate."),
+    "rin-detergent": ("Rin Advanced Detergent", "Rin", "Household", 55, "Contains surfactants", "Standard detergent formula."),
+    "wheel-detergent": ("Wheel Active Detergent", "Wheel", "Household", 58, "Contains surfactants", "Budget detergent."),
+
+    # BABY PRODUCTS
+    "johnsons-baby-shampoo": ("Johnson's Baby Shampoo", "Johnson's", "Baby Care", 72, "Mild baby formula", "Tear-free formula."),
+    "johnsons-baby-lotion": ("Johnson's Baby Lotion", "Johnson's", "Baby Care", 70, "Baby moisturizer", "Gentle formula for babies."),
+    "himalaya-baby-soap": ("Himalaya Baby Soap", "Himalaya", "Baby Care", 78, "Gentle herbal soap", "Mild herbal formula for babies."),
+
+    # PROTEIN & NUTRITION
+    "ensure-nutrition": ("Ensure Complete Nutrition", "Ensure", "Health Drink", 68, "Complete nutrition", "Fortified nutrition supplement."),
+    "whey-protein-muscleblaze": ("MuscleBlaze Whey Protein", "MuscleBlaze", "Nutrition", 72, "Whey protein supplement", "Protein supplement with sweeteners."),
+    "sattu-patanjali": ("Patanjali Sattu", "Patanjali", "Food", 92, "Pure roasted gram flour", "100% natural sattu."),
 }
 
 print(f"Total products loaded: {len(ALL_PRODUCTS)}")
