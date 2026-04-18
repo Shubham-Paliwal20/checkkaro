@@ -1,6 +1,7 @@
 import { motion } from 'framer-motion'
 import { useNavigate } from 'react-router-dom'
 import SearchBar from '../components/SearchBar'
+import ReviewsSection from '../components/ReviewsSection'
 
 function Home() {
   const navigate = useNavigate()
@@ -193,6 +194,8 @@ function Home() {
         </div>
       </section>
 
+      {/* Reviews Carousel Section */}
+      <ReviewsSection />
       {/* Second Search Section */}
       <section className="py-16 sm:py-24 bg-white">
         <div className="max-w-3xl mx-auto px-4 text-center">

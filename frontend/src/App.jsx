@@ -1,7 +1,9 @@
 import { BrowserRouter as Router, Routes, Route, useLocation } from 'react-router-dom'
 import { AnimatePresence } from 'framer-motion'
+import { AuthProvider, useAuth } from './context/AuthContext'
 import Navbar from './components/Navbar'
 import Footer from './components/Footer'
+import AuthModal from './components/AuthModal'
 import Home from './pages/Home'
 import Result from './pages/Result'
 import CheckIngredient from './pages/CheckIngredient'
@@ -10,7 +12,7 @@ import About from './pages/About'
 
 function AnimatedRoutes() {
   const location = useLocation()
-  
+
   return (
     <AnimatePresence mode="wait">
       <Routes location={location} key={location.pathname}>
@@ -24,16 +26,27 @@ function AnimatedRoutes() {
   )
 }
 
+function AppShell() {
+  const { showAuthModal, authModalStep, closeAuthModal } = useAuth()
+
+  return (
+    <div className="min-h-screen flex flex-col">
+      <Navbar />
+      <main className="flex-grow">
+        <AnimatedRoutes />
+      </main>
+      <Footer />
+      {showAuthModal && <AuthModal onClose={closeAuthModal} initialStep={authModalStep} />}
+    </div>
+  )
+}
+
 function App() {
   return (
     <Router>
-      <div className="min-h-screen flex flex-col">
-        <Navbar />
-        <main className="flex-grow">
-          <AnimatedRoutes />
-        </main>
-        <Footer />
-      </div>
+      <AuthProvider>
+        <AppShell />
+      </AuthProvider>
     </Router>
   )
 }
