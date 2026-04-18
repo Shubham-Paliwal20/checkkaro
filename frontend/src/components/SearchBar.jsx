@@ -2,7 +2,7 @@ import { useState, useEffect, useRef } from 'react'
 import { useNavigate } from 'react-router-dom'
 import axios from 'axios'
 
-const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:8000'
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'https://checkkaro.onrender.com'
 
 function SearchBar({ placeholder = "Search any product...", onSearch }) {
   const [query, setQuery] = useState('')
@@ -118,8 +118,8 @@ function SearchBar({ placeholder = "Search any product...", onSearch }) {
   return (
     <div ref={searchRef} className="w-full relative">
       <form onSubmit={handleSubmit} className="w-full">
-        <div className="flex items-center bg-white rounded-full border-2 border-gray-200 focus-within:border-primary shadow-lg overflow-hidden h-[72px] transition-colors">
-          <svg className="w-6 h-6 text-gray-400 ml-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <div className="flex items-center bg-white rounded-full border-2 border-gray-200 focus-within:border-primary shadow-lg overflow-hidden h-[60px] sm:h-[72px] transition-colors">
+          <svg className="w-5 h-5 sm:w-6 sm:h-6 text-gray-400 ml-4 sm:ml-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
           </svg>
           <input
@@ -128,14 +128,17 @@ function SearchBar({ placeholder = "Search any product...", onSearch }) {
             onChange={handleInputChange}
             onKeyDown={handleKeyDown}
             placeholder={placeholder}
-            className="flex-1 px-4 text-lg outline-none font-inter"
+            className="flex-1 px-3 sm:px-4 text-base sm:text-lg outline-none font-inter"
             autoComplete="off"
           />
           <button
             type="submit"
-            className="bg-orange text-white rounded-full mr-2 px-8 py-3 hover:bg-orange-dark transition-colors font-semibold"
+            className="bg-orange text-white rounded-full mr-2 px-4 sm:px-8 py-2 sm:py-3 hover:bg-orange-dark transition-colors font-semibold text-sm sm:text-base"
           >
-            Search
+            <span className="hidden sm:inline">Search</span>
+            <svg className="w-4 h-4 sm:hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+            </svg>
           </button>
         </div>
       </form>
@@ -151,25 +154,25 @@ function SearchBar({ placeholder = "Search any product...", onSearch }) {
             <div
               key={index}
               onClick={() => selectSuggestion(suggestion)}
-              className={`px-4 py-3 cursor-pointer border-b border-gray-100 last:border-b-0 transition-colors ${
+              className={`px-3 sm:px-4 py-3 cursor-pointer border-b border-gray-100 last:border-b-0 transition-colors ${
                 index === selectedIndex 
                   ? 'bg-primary-light text-primary' 
                   : 'hover:bg-gray-50'
               }`}
             >
-              <div className="flex items-center gap-3">
-                <svg className="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <div className="flex items-center gap-2 sm:gap-3">
+                <svg className="w-4 h-4 text-gray-400 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
                 </svg>
-                <div className="flex-1">
-                  <div className="font-medium text-gray-900">
+                <div className="flex-1 min-w-0">
+                  <div className="font-medium text-gray-900 text-sm sm:text-base truncate">
                     {suggestion.name}
                   </div>
-                  <div className="text-sm text-gray-500">
+                  <div className="text-xs sm:text-sm text-gray-500 truncate">
                     {suggestion.brand} • {suggestion.category}
                   </div>
                 </div>
-                <svg className="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <svg className="w-4 h-4 text-gray-400 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
                 </svg>
               </div>
@@ -179,17 +182,17 @@ function SearchBar({ placeholder = "Search any product...", onSearch }) {
           {/* Show "Search for..." option */}
           <div
             onClick={handleSubmit}
-            className={`px-4 py-3 cursor-pointer transition-colors border-t border-gray-200 ${
+            className={`px-3 sm:px-4 py-3 cursor-pointer transition-colors border-t border-gray-200 ${
               selectedIndex === suggestions.length 
                 ? 'bg-primary-light text-primary' 
                 : 'hover:bg-gray-50'
             }`}
           >
-            <div className="flex items-center gap-3">
-              <svg className="w-4 h-4 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <div className="flex items-center gap-2 sm:gap-3">
+              <svg className="w-4 h-4 text-primary flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
               </svg>
-              <div className="font-medium text-primary">
+              <div className="font-medium text-primary text-sm sm:text-base truncate">
                 Search for "{query}"
               </div>
             </div>

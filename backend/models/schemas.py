@@ -37,10 +37,10 @@ class IngredientRuleResponse(BaseModel):
     what_it_is: Optional[str] = None
     commonly_found_in: Optional[str] = None
     one_line_note: Optional[str] = None
-    regulatory_note: Optional[str] = None  # Added for consistency
+    regulatory_note: Optional[str] = None
     countries_restricted: List[str] = []
     fssai_position: Optional[str] = None
-    health_effects: Optional[dict] = None  # Added for detailed health information
+    health_effects: Optional[dict] = None
 
 
 class SearchHistoryItem(BaseModel):
