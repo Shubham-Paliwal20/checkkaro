@@ -1,20 +1,24 @@
 import { useState, useEffect } from 'react'
 import { Link, useLocation } from 'react-router-dom'
+import { useAuth } from '../context/AuthContext'
 
 function Navbar() {
   const [isScrolled, setIsScrolled] = useState(false)
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
   const location = useLocation()
+  const { user, signOut, openAuthModal } = useAuth()
+
+  const isHome = location.pathname === '/'
 
   useEffect(() => {
-    const handleScroll = () => {
-      setIsScrolled(window.scrollY > 10)
-    }
+    const handleScroll = () => setIsScrolled(window.scrollY > 10)
     window.addEventListener('scroll', handleScroll)
     return () => window.removeEventListener('scroll', handleScroll)
   }, [])
 
   const isActive = (path) => location.pathname === path
+
+  const closeMobile = () => setIsMobileMenuOpen(false)
 
   return (
     <nav className={`sticky top-0 z-50 bg-white transition-shadow duration-200 ${isScrolled ? 'shadow-md' : 'shadow-sm'}`}>
@@ -36,30 +40,63 @@ function Navbar() {
 
           {/* Desktop Navigation */}
           <div className="hidden md:flex items-center space-x-8">
-            <Link 
-              to="/products" 
+            {/* Home – only show when not on landing page */}
+            {!isHome && (
+              <Link
+                to="/"
+                className={`text-sm font-medium transition-colors ${isActive('/') ? 'text-orange border-b-2 border-orange' : 'text-gray-700 hover:text-orange'}`}
+              >
+                Home
+              </Link>
+            )}
+            <Link
+              to="/products"
               className={`text-sm font-medium transition-colors ${isActive('/products') ? 'text-orange border-b-2 border-orange' : 'text-gray-700 hover:text-orange'}`}
             >
               Products
             </Link>
-            <Link 
-              to="/check-ingredient" 
+            <Link
+              to="/check-ingredient"
               className={`text-sm font-medium transition-colors ${isActive('/check-ingredient') ? 'text-orange border-b-2 border-orange' : 'text-gray-700 hover:text-orange'}`}
             >
               Check Ingredient
             </Link>
-            <Link 
-              to="/about" 
+            <Link
+              to="/about"
               className={`text-sm font-medium transition-colors ${isActive('/about') ? 'text-orange border-b-2 border-orange' : 'text-gray-700 hover:text-orange'}`}
             >
               About
             </Link>
+
+            {/* Login / User */}
+            {user ? (
+              <div className="flex items-center space-x-3">
+                <span className="text-xs text-gray-500 truncate max-w-[120px]">
+                  {user.email || user.phone}
+                </span>
+                <button
+                  onClick={signOut}
+                  className="text-sm font-medium text-gray-600 border border-gray-300 px-3 py-1.5 rounded-lg hover:bg-gray-50 transition-colors"
+                >
+                  Logout
+                </button>
+              </div>
+            ) : (
+              <button
+                onClick={() => openAuthModal()}
+                className="text-sm font-semibold text-white bg-orange px-4 py-1.5 rounded-lg hover:bg-orange-600 transition-colors"
+                style={{ backgroundColor: '#FF9933' }}
+              >
+                Login
+              </button>
+            )}
           </div>
 
           {/* Mobile Menu Button */}
-          <button 
+          <button
             className="md:hidden p-2"
             onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+            aria-label="Toggle menu"
           >
             <svg className="w-6 h-6 text-gray-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               {isMobileMenuOpen ? (
@@ -73,28 +110,62 @@ function Navbar() {
 
         {/* Mobile Menu */}
         {isMobileMenuOpen && (
-          <div className="md:hidden py-4 border-t border-gray-100">
-            <Link 
-              to="/products" 
+          <div className="md:hidden py-4 border-t border-gray-100 space-y-1">
+            {!isHome && (
+              <Link
+                to="/"
+                className="block py-2 text-sm font-medium text-gray-700 hover:text-orange"
+                onClick={closeMobile}
+              >
+                Home
+              </Link>
+            )}
+            <Link
+              to="/products"
               className="block py-2 text-sm font-medium text-gray-700 hover:text-orange"
-              onClick={() => setIsMobileMenuOpen(false)}
+              onClick={closeMobile}
             >
               Products
             </Link>
-            <Link 
-              to="/check-ingredient" 
+            <Link
+              to="/check-ingredient"
               className="block py-2 text-sm font-medium text-gray-700 hover:text-orange"
-              onClick={() => setIsMobileMenuOpen(false)}
+              onClick={closeMobile}
             >
               Check Ingredient
             </Link>
-            <Link 
-              to="/about" 
+            <Link
+              to="/about"
               className="block py-2 text-sm font-medium text-gray-700 hover:text-orange"
-              onClick={() => setIsMobileMenuOpen(false)}
+              onClick={closeMobile}
             >
               About
             </Link>
+
+            {/* Mobile Login / User */}
+            <div className="pt-2 border-t border-gray-100 mt-2">
+              {user ? (
+                <div className="flex items-center justify-between">
+                  <span className="text-xs text-gray-500 truncate max-w-[180px]">
+                    {user.email || user.phone}
+                  </span>
+                  <button
+                    onClick={() => { signOut(); closeMobile() }}
+                    className="text-sm text-gray-600 border border-gray-300 px-3 py-1.5 rounded-lg hover:bg-gray-50"
+                  >
+                    Logout
+                  </button>
+                </div>
+              ) : (
+                <button
+                  onClick={() => { openAuthModal(); closeMobile() }}
+                  className="w-full text-sm font-semibold text-white py-2.5 rounded-lg transition-colors"
+                  style={{ backgroundColor: '#FF9933' }}
+                >
+                  Login / Sign up
+                </button>
+              )}
+            </div>
           </div>
         )}
       </div>
