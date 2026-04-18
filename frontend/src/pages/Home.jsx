@@ -1,6 +1,7 @@
 import { motion } from 'framer-motion'
 import { useNavigate } from 'react-router-dom'
 import SearchBar from '../components/SearchBar'
+import ReviewsSection from '../components/ReviewsSection'
 
 function Home() {
   const navigate = useNavigate()
@@ -193,23 +194,8 @@ function Home() {
         </div>
       </section>
 
-      {/* Second Search Section */}
-      <section className="py-24 bg-white">
-        <div className="max-w-3xl mx-auto px-4 text-center">
-          <h2 className="section-heading mb-3">Ready to check your product?</h2>
-          <p className="text-gray-500 mb-8">Join thousands of Indians making more informed choices</p>
-          
-          <div className="mb-4">
-            <SearchBar placeholder="Search any product..." />
-          </div>
-          
-          <p className="text-xs text-gray-400">
-            <span className="inline-block px-3 py-1 bg-gray-100 rounded-full">
-              For informational purposes only. Not medical advice.
-            </span>
-          </p>
-        </div>
-      </section>
+      {/* Reviews Carousel Section */}
+      <ReviewsSection />
 
       {/* Check Ingredient Promo */}
       <section className="py-16 bg-navy text-white">
