@@ -39,11 +39,11 @@ async def get_product_data(product_name: str) -> dict:
             result.update(off_data)
             result["source"] = "open_food_facts"
             result["confidence"] = "high"
-            print(f"[DATA PIPELINE] ✓ Found in Open Food Facts: {len(off_data['ingredients_list'])} ingredients")
+            print(f"[DATA PIPELINE] OK Found in Open Food Facts: {len(off_data['ingredients_list'])} ingredients")
             return result
-        print(f"[DATA PIPELINE] ✗ Open Food Facts: insufficient data")
+        print(f"[DATA PIPELINE] FAIL Open Food Facts: insufficient data")
     except Exception as e:
-        print(f"[DATA PIPELINE] ✗ Open Food Facts error: {e}")
+        print(f"[DATA PIPELINE] FAIL Open Food Facts error: {e}")
     
     # SOURCE 2: Edamam API
     print("[DATA PIPELINE] Trying Edamam API...")
@@ -53,11 +53,11 @@ async def get_product_data(product_name: str) -> dict:
             result.update(edamam_data)
             result["source"] = "edamam"
             result["confidence"] = "high"
-            print(f"[DATA PIPELINE] ✓ Found in Edamam: {len(edamam_data['ingredients_list'])} ingredients")
+            print(f"[DATA PIPELINE] OK Found in Edamam: {len(edamam_data['ingredients_list'])} ingredients")
             return result
-        print(f"[DATA PIPELINE] ✗ Edamam: insufficient data")
+        print(f"[DATA PIPELINE] FAIL Edamam: insufficient data")
     except Exception as e:
-        print(f"[DATA PIPELINE] ✗ Edamam error: {e}")
+        print(f"[DATA PIPELINE] FAIL Edamam error: {e}")
     
     # SOURCE 3: BigBasket scraper
     print("[DATA PIPELINE] Trying BigBasket scraper...")
@@ -67,14 +67,14 @@ async def get_product_data(product_name: str) -> dict:
             result.update(bb_data)
             result["source"] = "bigbasket"
             result["confidence"] = "medium"
-            print(f"[DATA PIPELINE] ✓ Found in BigBasket: {len(bb_data['ingredients_list'])} ingredients")
+            print(f"[DATA PIPELINE] OK Found in BigBasket: {len(bb_data['ingredients_list'])} ingredients")
             return result
-        print(f"[DATA PIPELINE] ✗ BigBasket: insufficient data")
+        print(f"[DATA PIPELINE] FAIL BigBasket: insufficient data")
     except Exception as e:
-        print(f"[DATA PIPELINE] ✗ BigBasket error: {e}")
+        print(f"[DATA PIPELINE] FAIL BigBasket error: {e}")
     
     # SOURCE 4: AI estimation (fallback)
-    print("[DATA PIPELINE] ⚠ Using AI estimation as fallback")
+    print("[DATA PIPELINE] WARN Using AI estimation as fallback")
     result["source"] = "ai_estimated"
     result["confidence"] = "low"
     result["found"] = True

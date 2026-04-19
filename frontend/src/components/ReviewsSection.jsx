@@ -182,7 +182,8 @@ export default function ReviewsSection() {
         <div style={{ textAlign: 'center', marginBottom: 52 }}>
           <p style={{ fontSize: 12, fontWeight: 700, color: '#FF9933', textTransform: 'uppercase', letterSpacing: '0.1em', margin: '0 0 10px' }}>Testimonials</p>
           <h2 style={{ fontSize: 32, fontWeight: 800, color: '#0D1B2A', margin: '0 0 12px', fontFamily: 'Poppins, sans-serif' }}>
-            Loved by users <span style={{ color: '#138808' }}>across India</span>
+            Loved by users across{' '}
+            <span style={{ color: '#FF9933' }}>In</span><span style={{ color: 'white', WebkitTextStroke: '1.5px #9ca3af' }}>d</span><span style={{ color: '#138808' }}>ia</span>
           </h2>
           <p style={{ fontSize: 15, color: '#6b7280', margin: 0 }}>Real reviews from real people making smarter choices every day.</p>
         </div>

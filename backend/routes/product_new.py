@@ -48,7 +48,7 @@ async def search_product(name: str = Query(..., description="Product name to sea
             normalized_search in normalize_name(product_data["name"]) or
             normalized_search in normalize_name(product_data["brand"])):
             
-            print(f"[DATABASE ONLY] ✓ Found: {product_data['name']}")
+            print(f"[DATABASE ONLY] Found: {product_data['name']}")
             
             # Build ingredients list - GET FULL INGREDIENTS FROM DATABASE
             full_ingredients = get_ingredients(key)

@@ -51,7 +51,7 @@ async def search_product_in_database(product_name: str) -> Optional[Dict]:
             except:
                 pass  # Don't fail if search count update fails
             
-            print(f"[DATABASE ONLY] ✓ Found: {product['name']} by {product['brand']}")
+            print(f"[DATABASE ONLY] OK Found: {product['name']} by {product['brand']}")
             
             # Parse ingredients list into proper format
             ingredients = []
@@ -96,7 +96,7 @@ async def search_product_in_database(product_name: str) -> Optional[Dict]:
                 "is_complete": True
             }
         
-        print(f"[DATABASE ONLY] ✗ Not found in database")
+        print(f"[DATABASE ONLY] FAIL Not found in database")
         return None
         
     except Exception as e:

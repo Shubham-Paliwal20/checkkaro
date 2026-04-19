@@ -41,7 +41,7 @@ async def get_cached_product(product_name: str) -> Optional[Dict]:
                 "search_count": product["search_count"] + 1
             }).eq("id", product["id"]).execute()
             
-            print(f"[CACHE] ✓ Found in database! ID: {product['id']}, Searches: {product['search_count'] + 1}")
+            print(f"[CACHE] OK Found in database! ID: {product['id']}, Searches: {product['search_count'] + 1}")
             
             # Format ingredients
             ingredients = []
@@ -70,7 +70,7 @@ async def get_cached_product(product_name: str) -> Optional[Dict]:
                 "search_count": product["search_count"] + 1
             }
         
-        print(f"[CACHE] ✗ Not found in database")
+        print(f"[CACHE] FAIL Not found in database")
         return None
         
     except Exception as e:
@@ -121,7 +121,7 @@ async def save_product_to_cache(
             return None
         
         product_id = product_response.data[0]["id"]
-        print(f"[CACHE] ✓ Product saved with ID: {product_id}")
+        print(f"[CACHE] OK Product saved with ID: {product_id}")
         
         # Insert ingredients
         if ingredients and len(ingredients) > 0:
@@ -137,7 +137,7 @@ async def save_product_to_cache(
                 })
             
             supabase.table("product_ingredients").insert(ingredient_data).execute()
-            print(f"[CACHE] ✓ Saved {len(ingredient_data)} ingredients")
+            print(f"[CACHE] OK Saved {len(ingredient_data)} ingredients")
         
         return product_id
         
@@ -153,7 +153,7 @@ async def update_product_image(product_id: str, image_url: str):
             supabase.table("products").update({
                 "image_url": image_url
             }).eq("id", product_id).execute()
-            print(f"[CACHE] ✓ Updated image for product {product_id}")
+            print(f"[CACHE] OK Updated image for product {product_id}")
     except Exception as e:
         print(f"[CACHE ERROR] Failed to update image: {str(e)}")
 

@@ -324,16 +324,118 @@ def classify_ingredient(ingredient_name):
     }
 
 
+def get_countries_restricted(ingredient_name):
+    """Return list of countries where the ingredient is banned or restricted"""
+    ingredient_lower = ingredient_name.lower()
+
+    bans = {
+        'triclosan': ['European Union (cosmetics ban)', 'USA (hand soaps ban by FDA)', 'Canada (regulated)'],
+        'tartrazine': ['Austria', 'Norway', 'EU (warning label required)'],
+        'sunset yellow': ['Norway', 'Finland', 'EU (warning label required)'],
+        'allura red': ['Denmark', 'Belgium', 'France', 'Switzerland', 'Sweden', 'Austria', 'Norway', 'EU (warning label required)'],
+        'ponceau 4r': ['USA', 'Norway', 'Finland', 'EU (warning label required)'],
+        'carmoisine': ['USA', 'Canada', 'Japan', 'Austria', 'Norway', 'Sweden'],
+        'quinoline yellow': ['USA', 'Canada', 'Japan', 'Australia', 'Norway'],
+        'brown ht': ['USA', 'Canada', 'Australia', 'Belgium', 'France', 'Switzerland'],
+        'erythrosine': ['Norway', 'USA (banned in cosmetics)'],
+        'brilliant blue': ['Belgium', 'France', 'Germany', 'Greece', 'Italy', 'Spain', 'Switzerland'],
+        'indigo carmine': ['Norway', 'UK (restricted)'],
+        'methylparaben': ['Denmark (children\'s products)', 'EU (concentration restricted)'],
+        'propylparaben': ['Denmark (children\'s products)', 'EU (banned in children under 3)'],
+        'butylparaben': ['Denmark', 'EU (banned in children under 3)', 'Japan (restricted)'],
+        'methylisothiazolinone': ['European Union (banned in leave-on cosmetics)', 'Canada (restricted)'],
+        'methylchloroisothiazolinone': ['European Union (restricted)', 'Japan (restricted)'],
+        'sodium nitrite': ['EU (concentration limits)', 'UK (restricted since 2022)', 'Several Nordic countries (restricted)'],
+        'sodium nitrate': ['EU (restricted concentration)', 'Several Nordic countries (restricted)'],
+        'caramel colour': ['EU (E150d restricted in some beverages)', 'California (Prop 65 warning)'],
+        'caramel color': ['EU (E150d restricted in some beverages)', 'California (Prop 65 warning)'],
+        'phosphoric acid': ['EU (labelling required)', 'Several countries (concentration limits)'],
+        'sulfur dioxide': ['Australia (concentration limits)', 'EU (labelling required for asthmatics)'],
+        'sodium metabisulphite': ['Australia (must declare)', 'EU (labelling required for asthmatics)'],
+        'fragrance': ['EU (26 allergens must be individually declared)', 'USA (California Prop 65 for some components)'],
+        'parfum': ['EU (26 allergens must be individually declared)', 'USA (California Prop 65 for some components)'],
+        'perfume': ['EU (26 allergens must be individually declared)', 'USA (California Prop 65 for some components)'],
+        'tbhq': ['Japan (banned)', 'EU (restricted, max 100mg/kg)', 'Australia (concentration limits)'],
+        'tert-butylhydroquinone': ['Japan (banned)', 'EU (restricted)', 'Australia'],
+        'bha': ['Japan (banned)', 'EU (restricted in some foods)', 'California (listed as carcinogen)'],
+        'butylated hydroxyanisole': ['Japan (banned)', 'EU (restricted in some foods)', 'California (Prop 65)'],
+        'potassium bromate': ['European Union', 'United Kingdom', 'Canada', 'Brazil', 'China', 'Sri Lanka', 'Nigeria', 'Peru', 'Australia'],
+        'brominated vegetable oil': ['European Union', 'Japan', 'India'],
+        'azodicarbonamide': ['European Union', 'United Kingdom', 'Australia', 'Singapore', 'most of Asia'],
+        'titanium dioxide': ['European Union (banned as food additive E171 since 2022)'],
+        'red 3': ['USA (banned in cosmetics)', 'EU (restricted)'],
+        'erythrosine': ['Norway', 'USA (banned in cosmetics)'],
+        'acesulfame': ['EU (labelling required)', 'Several countries (ADI limits)'],
+        'aspartame': ['EU (phenylketonuria warning)', 'Some countries (quantity restricted)'],
+    }
+
+    # Check all known patterns
+    for key, countries in bans.items():
+        if key in ingredient_lower:
+            return countries
+
+    # Pattern-based checks
+    if 'paraben' in ingredient_lower:
+        return ['Denmark (children\'s products)', 'EU (concentration restricted)']
+    if 'isothiazolinone' in ingredient_lower:
+        return ['European Union (restricted/banned in cosmetics)', 'Canada (restricted)']
+    if 'nitrite' in ingredient_lower or 'nitrate' in ingredient_lower:
+        return ['EU (concentration limits)', 'UK (restricted)']
+    if any(x in ingredient_lower for x in ['sunset yellow', 'allura red', 'tartrazine', 'ponceau']):
+        return ['EU (warning label required)', 'Norway', 'Finland']
+
+    return []
+
+
+def get_fssai_position(ingredient_name):
+    """Return FSSAI's position on the ingredient"""
+    ingredient_lower = ingredient_name.lower()
+
+    positions = {
+        'tartrazine': 'Permitted as E102 under FSSAI with concentration limits. Advisory to watch for sensitivity.',
+        'sunset yellow': 'Permitted as E110 under FSSAI. Quantity limits apply in food products.',
+        'sodium benzoate': 'Permitted as E211 preservative under FSSAI Food Safety and Standards Regulations.',
+        'monosodium glutamate': 'Permitted under FSSAI as a flavour enhancer with usage guidelines.',
+        'sodium nitrite': 'Permitted in meat products under FSSAI with strict quantity limits.',
+        'phosphoric acid': 'Permitted as acidulant E338 under FSSAI in non-alcoholic beverages.',
+        'sodium metabisulphite': 'Permitted preservative under FSSAI with mandatory declaration for sulphite content above 10ppm.',
+        'methylparaben': 'Permitted in cosmetics under India BIS/CDSCO guidelines with concentration limits.',
+        'propylparaben': 'Permitted in cosmetics under India BIS/CDSCO guidelines with concentration limits.',
+        'triclosan': 'Permitted in cosmetics and personal care products under Indian regulations.',
+        'caramel colour': 'Permitted under FSSAI as colour E150. Class III and IV have usage restrictions.',
+        'tbhq': 'Permitted antioxidant under FSSAI with concentration limits in edible oils.',
+    }
+
+    for key, pos in positions.items():
+        if key in ingredient_lower:
+            return pos
+
+    if 'paraben' in ingredient_lower:
+        return 'Permitted in cosmetics under India BIS/CDSCO guidelines with concentration limits.'
+    if 'color' in ingredient_lower or 'colour' in ingredient_lower:
+        return 'Artificial colours must be declared on labels under FSSAI regulations.'
+    if 'preservative' in ingredient_lower or 'benzoate' in ingredient_lower or 'sorbate' in ingredient_lower:
+        return 'Permitted preservative under FSSAI with quantity limits.'
+
+    return 'Regulated under FSSAI Food Safety and Standards Act, 2006.'
+
+
 def get_ingredient_details(ingredient_name):
     """Get detailed information about an ingredient"""
     classification_data = classify_ingredient(ingredient_name)
-    
+
     # Add commonly found in based on ingredient type
     commonly_found_in = get_commonly_found_in(ingredient_name)
-    
+
     # Add health effects based on classification
     health_effects = get_health_effects(ingredient_name, classification_data['classification'])
-    
+
+    # Countries where restricted/banned
+    countries_restricted = get_countries_restricted(ingredient_name)
+
+    # FSSAI position
+    fssai_position = get_fssai_position(ingredient_name)
+
     return {
         'name': ingredient_name,
         'classification': classification_data['classification'],
@@ -341,7 +443,9 @@ def get_ingredient_details(ingredient_name):
         'commonly_found_in': commonly_found_in,
         'one_line_note': classification_data['one_line_note'],
         'regulatory_note': classification_data['regulatory_note'],
-        'health_effects': health_effects
+        'health_effects': health_effects,
+        'countries_restricted': countries_restricted,
+        'fssai_position': fssai_position,
     }
 
 

@@ -227,10 +227,13 @@ function Result() {
         {/* Worth Knowing Ingredients */}
         {worth_knowing.length > 0 && (
           <div className="card p-4 sm:p-6 mb-6 border-l-4 border-red-400">
-            <h2 className="font-poppins font-bold text-lg sm:text-xl text-red-600 mb-4 flex items-center gap-2">
+            <h2 className="font-poppins font-bold text-lg sm:text-xl text-red-600 mb-1 flex items-center gap-2">
               <span className="w-3 h-3 bg-red-400 rounded-full"></span>
               Worth Knowing ({worth_knowing.length} ingredients)
             </h2>
+            <p className="text-xs text-gray-500 mb-4 leading-relaxed">
+              Ingredients with some concerns or restrictions. May cause issues in sensitive individuals or at high doses. Mixed scientific findings — fine for most people in small amounts.
+            </p>
             <div className="space-y-4">
               {worth_knowing.map((ing, idx) => (
                 <div key={idx} className="bg-red-50 rounded-lg p-3 sm:p-4 border border-red-200">
@@ -263,10 +266,13 @@ function Result() {
         {/* Commonly Questioned Ingredients */}
         {commonly_questioned.length > 0 && (
           <div className="card p-4 sm:p-6 mb-6 border-l-4 border-red-600">
-            <h2 className="font-poppins font-bold text-lg sm:text-xl text-red-700 mb-4 flex items-center gap-2">
+            <h2 className="font-poppins font-bold text-lg sm:text-xl text-red-700 mb-1 flex items-center gap-2">
               <span className="w-3 h-3 bg-red-600 rounded-full"></span>
               Commonly Questioned ({commonly_questioned.length} ingredients)
             </h2>
+            <p className="text-xs text-gray-500 mb-4 leading-relaxed">
+              Ingredients flagged, restricted, or banned in one or more countries. Associated with potential health concerns — worth avoiding or limiting where possible.
+            </p>
             <div className="space-y-4">
               {commonly_questioned.map((ing, idx) => (
                 <div key={idx} className="bg-red-100 rounded-lg p-3 sm:p-4 border border-red-300">
@@ -299,10 +305,13 @@ function Result() {
         {/* Generally Recognised Ingredients */}
         {generally_recognised.length > 0 && (
           <div className="card p-4 sm:p-6 mb-6">
-            <h2 className="font-poppins font-bold text-lg sm:text-xl text-navy mb-4 flex items-center gap-2">
+            <h2 className="font-poppins font-bold text-lg sm:text-xl text-navy mb-1 flex items-center gap-2">
               <span className="w-3 h-3 bg-green-500 rounded-full"></span>
               Generally Recognised ({generally_recognised.length} ingredients)
             </h2>
+            <p className="text-xs text-gray-500 mb-4 leading-relaxed">
+              Safe ingredients with no known adverse effects at normal consumption levels. Approved by major regulatory bodies worldwide without restrictions.
+            </p>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
               {generally_recognised.map((ing, idx) => (
                 <div key={idx} className="bg-green-50 rounded-lg p-3 border border-green-200">

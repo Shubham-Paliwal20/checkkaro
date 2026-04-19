@@ -205,13 +205,13 @@ async def search_product_in_database(product_name: str) -> Optional[Dict]:
         
         if response.data and len(response.data) > 0:
             product = response.data[0]
-            print(f"[DATABASE SEARCH] ✓ Found: {product['name']}")
+            print(f"[DATABASE SEARCH] OK Found: {product['name']}")
             
             # Get ingredients list
             ingredients_list = product.get("ingredients_list", [])
             
             if not ingredients_list:
-                print(f"[DATABASE SEARCH] ✗ No ingredients found")
+                print(f"[DATABASE SEARCH] FAIL No ingredients found")
                 return None
             
             # Classify each ingredient and calculate score
@@ -259,7 +259,7 @@ async def search_product_in_database(product_name: str) -> Optional[Dict]:
                 "has_banned": has_banned
             }
         
-        print(f"[DATABASE SEARCH] ✗ Not found")
+        print(f"[DATABASE SEARCH] FAIL Not found")
         return None
         
     except Exception as e:
@@ -363,8 +363,8 @@ async def search_product(name: str = Query(..., description="Product name to sea
             "message": f"STRICT SYSTEM ACTIVE - Searching for: {name}",
             "status": "Your new scoring rules are implemented",
             "rules": [
-                "Any banned ingredient → Score < 60 → RED → Not safe to use",
-                "Score > 79 → Only safe ingredients → GREEN → Safe for human body",
+                "Any banned ingredient -> Score < 60 -> RED -> Not safe to use",
+                "Score > 79 -> Only safe ingredients -> GREEN -> Safe for human body",
                 "Full ingredient list from database"
             ]
         }

@@ -262,6 +262,216 @@ ALL_PRODUCTS = {
     "ensure-nutrition": ("Ensure Complete Nutrition", "Ensure", "Health Drink", 68, "Complete nutrition", "Fortified nutrition supplement."),
     "whey-protein-muscleblaze": ("MuscleBlaze Whey Protein", "MuscleBlaze", "Nutrition", 72, "Whey protein supplement", "Protein supplement with sweeteners."),
     "sattu-patanjali": ("Patanjali Sattu", "Patanjali", "Food", 92, "Pure roasted gram flour", "100% natural sattu."),
+
+    # SKINCARE - FACE SERUMS & TREATMENTS (Most searched on Nykaa)
+    "minimalist-niacinamide": ("Minimalist 10% Niacinamide Face Serum", "Minimalist", "Skincare", 78, "Niacinamide-based serum", "Well-formulated serum with niacinamide and zinc."),
+    "minimalist-aha-bha": ("Minimalist AHA 25% + BHA 2% Exfoliant", "Minimalist", "Skincare", 62, "Chemical exfoliant", "Strong acid exfoliant — not for daily use or sensitive skin."),
+    "minimalist-vitamin-c": ("Minimalist Vitamin C 10% Face Serum", "Minimalist", "Skincare", 76, "Vitamin C serum", "Stable vitamin C derivative with good efficacy."),
+    "minimalist-retinol": ("Minimalist Granactive Retinoid 2%", "Minimalist", "Skincare", 68, "Retinoid serum", "Retinoid — avoid during pregnancy; use SPF."),
+    "minimalist-hyaluronic-acid": ("Minimalist Hyaluronic Acid 2% + PGA", "Minimalist", "Skincare", 85, "Hydrating serum", "Excellent hydrator with no concerning ingredients."),
+    "wow-vitamin-c": ("Wow Skin Science Vitamin C Serum", "Wow Skin Science", "Skincare", 74, "Vitamin C serum", "Contains vitamin C with hyaluronic acid."),
+    "mamaearth-vitamin-c-serum": ("Mamaearth Vitamin C Face Serum", "Mamaearth", "Skincare", 72, "Vitamin C with turmeric", "Contains vitamin C and turmeric extract."),
+    "dot-key-vitamin-c": ("Dot & Key Vitamin C + E Serum", "Dot & Key", "Skincare", 74, "Brightening serum", "Vitamin C and E antioxidant serum."),
+    "plum-vitamin-c": ("Plum 15% Vitamin C Face Serum", "Plum", "Skincare", 76, "Vitamin C serum", "Stable vitamin C with ferulic acid."),
+    "neutrogena-retinol": ("Neutrogena Rapid Wrinkle Repair Retinol Serum", "Neutrogena", "Skincare", 65, "Retinol serum", "Contains retinol — use sunscreen; avoid in pregnancy."),
+    "lakme-absolute-serum": ("Lakme Absolute Perfect Radiance Serum", "Lakme", "Skincare", 60, "Brightening serum", "Contains kojic acid and niacinamide."),
+    "olay-regenerist-serum": ("Olay Regenerist Micro-Sculpting Serum", "Olay", "Skincare", 65, "Anti-ageing serum", "Contains niacinamide and amino-peptides."),
+    "garnier-serum": ("Garnier Bright Complete Vitamin C Booster Serum", "Garnier", "Skincare", 68, "Vitamin C serum", "Contains stable vitamin C derivative."),
+    "forest-essentials-serum": ("Forest Essentials Tejus Facial Serum", "Forest Essentials", "Skincare", 80, "Ayurvedic serum", "Contains saffron, sandalwood and rose."),
+
+    # SKINCARE - MOISTURISERS
+    "cetaphil-moisturizer": ("Cetaphil Moisturising Cream", "Cetaphil", "Skincare", 75, "Gentle daily moisturizer", "Dermatologist-recommended gentle formula."),
+    "neutrogena-water-gel": ("Neutrogena Hydro Boost Water Gel", "Neutrogena", "Skincare", 78, "Hyaluronic acid moisturizer", "Lightweight gel with hyaluronic acid."),
+    "olay-total-effects": ("Olay Total Effects 7-in-1 Day Cream", "Olay", "Skincare", 65, "Multi-benefit moisturizer", "Contains niacinamide and vitamin B5."),
+    "ponds-age-miracle": ("Pond's Age Miracle Day Cream", "Pond's", "Skincare", 58, "Anti-ageing cream", "Contains retinol — caution during pregnancy."),
+    "lakme-peach-milk": ("Lakme Peach Milk Moisturizer", "Lakme", "Skincare", 68, "Lightweight moisturizer", "Peach-based with SPF 24."),
+    "mamaearth-ubtan-moisturizer": ("Mamaearth Ubtan Moisturizer", "Mamaearth", "Skincare", 74, "Natural moisturizer", "Contains turmeric and saffron."),
+    "himalaya-aloe-vera-gel": ("Himalaya Aloe Vera Gel", "Himalaya", "Skincare", 82, "Aloe vera gel", "Pure aloe vera with minimal additives."),
+    "wow-aloe-vera-gel": ("Wow Skin Science Aloe Vera Gel", "Wow Skin Science", "Skincare", 80, "Aloe vera gel", "99% pure aloe vera gel."),
+    "plum-e-luminence-moisturizer": ("Plum E-Luminence Simply Supple Moisturizer", "Plum", "Skincare", 76, "Vitamin E moisturizer", "Contains vitamin E and hyaluronic acid."),
+    "biotique-morning-nectar": ("Biotique Morning Nectar Moisturizer", "Biotique", "Skincare", 74, "Ayurvedic moisturizer", "Contains honey, neem and basil."),
+    "kama-ayurveda-kumkumadi": ("Kama Ayurveda Kumkumadi Miraculous Beauty Fluid", "Kama Ayurveda", "Skincare", 82, "Ayurvedic face oil", "Saffron-based traditional Ayurvedic formulation."),
+
+    # SKINCARE - SUNSCREENS
+    "lakme-sun-expert-spf50": ("Lakme Sun Expert SPF 50 PA+++ Sunscreen", "Lakme", "Skincare", 62, "Chemical sunscreen", "Contains avobenzone and octinoxate UV filters."),
+    "neutrogena-sunscreen": ("Neutrogena Ultra Sheer Dry Touch SPF 50+", "Neutrogena", "Skincare", 65, "Sunscreen", "Contains homosalate and octisalate."),
+    "minimalist-spf50-sunscreen": ("Minimalist SPF 50 PA++++ Sunscreen", "Minimalist", "Skincare", 72, "Broad spectrum sunscreen", "Lightweight mineral-chemical hybrid sunscreen."),
+    "dot-key-sunscreen": ("Dot & Key Waterlight SPF 50 Sunscreen", "Dot & Key", "Skincare", 70, "Hybrid sunscreen", "Lightweight with zinc oxide and chemical filters."),
+    "re-equil-sunscreen": ("Re'equil Ultra Matte Sunscreen SPF 50", "Re'equil", "Skincare", 72, "Matte sunscreen", "Broad spectrum with zinc oxide."),
+    "mamaearth-spf-moisturizer": ("Mamaearth SPF 20 Daily Moisturizer", "Mamaearth", "Skincare", 70, "Moisturizer with SPF", "Contains SPF 20 with aloe vera."),
+    "lotus-sunscreen": ("Lotus Herbals Safe Sun SPF 50", "Lotus Herbals", "Skincare", 68, "Herbal sunscreen", "Contains UV filters with herbal extracts."),
+    "banana-boat-sunscreen": ("Banana Boat SPF 50 Sunscreen", "Banana Boat", "Skincare", 62, "Chemical sunscreen", "Contains oxybenzone — potential hormone disruptor."),
+
+    # SKINCARE - FACE MASKS & TREATMENTS
+    "mamaearth-ubtan-face-mask": ("Mamaearth Ubtan Face Mask", "Mamaearth", "Skincare", 76, "Natural face mask", "Contains turmeric, saffron and kaolin clay."),
+    "multani-mitti-vicco": ("Vicco Turmeric Cream", "Vicco", "Skincare", 78, "Ayurvedic turmeric cream", "Contains turmeric extract in a mild base."),
+    "plum-clay-mask": ("Plum Green Tea Pore Cleansing Face Mask", "Plum", "Skincare", 74, "Clay mask", "Kaolin clay with green tea antioxidants."),
+    "forest-essentials-face-mask": ("Forest Essentials Sandalwood Face Mask", "Forest Essentials", "Skincare", 80, "Ayurvedic face mask", "Contains sandalwood, rosewater and multani mitti."),
+
+    # SKINCARE - TONERS
+    "minimalist-pgf-toner": ("Minimalist PGA 3% Pore Minimising Toner", "Minimalist", "Skincare", 76, "Pore-minimising toner", "Contains polyglutamic acid for hydration."),
+    "plum-toner": ("Plum Green Tea Alcohol-Free Toner", "Plum", "Skincare", 78, "Alcohol-free toner", "Green tea toner with no alcohol."),
+    "mamaearth-toner": ("Mamaearth Skin Illuminate Face Toner", "Mamaearth", "Skincare", 72, "Brightening toner", "Contains vitamin C and turmeric."),
+    "biotique-rose-water-toner": ("Biotique Bio Rose Water Toner", "Biotique", "Skincare", 76, "Rose water toner", "Pure rose water with Ayurvedic extracts."),
+
+    # HAIRCARE - CONDITIONERS
+    "tresemme-conditioner": ("Tresemme Smooth & Shine Conditioner", "Tresemme", "Hair Care", 62, "Conditioner with silicones", "Contains dimethicone — builds up over time."),
+    "loreal-conditioner": ("Loreal Paris Total Repair 5 Conditioner", "Loreal", "Hair Care", 64, "Repair conditioner", "Contains ceramide and arginine."),
+    "dove-conditioner": ("Dove Intense Repair Conditioner", "Dove", "Hair Care", 68, "Protein-based conditioner", "Contains keratin actives."),
+    "pantene-conditioner": ("Pantene Pro-V Smooth & Silky Conditioner", "Pantene", "Hair Care", 62, "Silicone conditioner", "Contains cyclopentasiloxane — avoid if scalp-sensitive."),
+    "himalaya-conditioner": ("Himalaya Anti-Breakage Hair Conditioner", "Himalaya", "Hair Care", 70, "Herbal conditioner", "Contains bhringraj and chickpea."),
+    "mamaearth-conditioner": ("Mamaearth Onion Conditioner for Hair Fall", "Mamaearth", "Hair Care", 72, "Onion-based conditioner", "Contains onion extract and plant keratin."),
+    "biotique-conditioner": ("Biotique Bio Kelp Fresh Growth Conditioner", "Biotique", "Hair Care", 72, "Ayurvedic conditioner", "Contains seaweed and bhringraj."),
+    "wow-onion-conditioner": ("Wow Skin Science Onion & Black Seed Oil Conditioner", "Wow Skin Science", "Hair Care", 74, "Natural conditioner", "Contains onion and black seed oil."),
+
+    # HAIRCARE - HAIR OILS
+    "dabur-amla-hair-oil": ("Dabur Amla Hair Oil", "Dabur", "Hair Care", 85, "Amla-based hair oil", "Contains amla (Indian gooseberry) in mineral oil base."),
+    "parachute-coconut-oil": ("Parachute Advanced Coconut Hair Oil", "Parachute", "Hair Care", 88, "Pure coconut oil", "100% refined coconut oil."),
+    "bajaj-almond-drops": ("Bajaj Almond Drops Hair Oil", "Bajaj", "Hair Care", 80, "Almond hair oil", "Contains almond oil in a light base."),
+    "indulekha-hair-oil": ("Indulekha Bringha Hair Oil", "Indulekha", "Hair Care", 82, "Ayurvedic hair oil", "Contains bhringha, amla and neem."),
+    "keo-karpin-hair-oil": ("Keo Karpin Hair Oil", "Keo Karpin", "Hair Care", 72, "Blended hair oil", "Contains mineral oil with herbal extracts."),
+    "vatika-coconut-hair-oil": ("Vatika Coconut Hair Oil", "Vatika", "Hair Care", 82, "Enriched coconut oil", "Coconut oil with henna and amla."),
+    "mamaearth-onion-hair-oil": ("Mamaearth Onion Hair Oil", "Mamaearth", "Hair Care", 78, "Onion-based hair oil", "Contains onion, bhringraj and redensyl."),
+    "wow-castor-oil": ("Wow Skin Science Castor Oil", "Wow Skin Science", "Hair Care", 86, "Pure castor oil", "100% pure cold-pressed castor oil."),
+    "forest-essentials-hair-oil": ("Forest Essentials Japakusum Hair Oil", "Forest Essentials", "Hair Care", 84, "Ayurvedic hair oil", "Contains hibiscus, brahmi and jasmine."),
+    "khadi-hair-oil": ("Khadi Natural Amla & Bhringraj Hair Oil", "Khadi Natural", "Hair Care", 84, "Natural hair oil", "Contains amla, bhringraj in sesame oil base."),
+
+    # HAIRCARE - HAIR MASKS & TREATMENTS
+    "mamaearth-hair-mask": ("Mamaearth Argan Hair Mask", "Mamaearth", "Hair Care", 74, "Deep conditioning mask", "Contains argan oil and egg protein."),
+    "loreal-hair-mask": ("Loreal Paris Total Repair 5 Hair Mask", "Loreal", "Hair Care", 65, "Repair hair mask", "Contains ceramide and arginine."),
+    "wow-hair-mask": ("Wow Skin Science Revitalizing Hair Mask", "Wow Skin Science", "Hair Care", 72, "Protein hair mask", "Contains egg protein and argan oil."),
+    "biotique-hair-mask": ("Biotique Bio Bhringraj Therapeutic Hair Pack", "Biotique", "Hair Care", 76, "Ayurvedic hair pack", "Contains bhringraj, amla and brahmi."),
+
+    # COSMETICS - FOUNDATIONS & BB CREAMS
+    "lakme-perfecting-bb-cream": ("Lakme 9 to 5 Naturale BB Cream SPF 20", "Lakme", "Cosmetics", 62, "BB cream with SPF", "Contains UV filters and skin-tone pigments."),
+    "maybelline-fit-me-foundation": ("Maybelline Fit Me Foundation", "Maybelline", "Cosmetics", 60, "Liquid foundation", "Contains dimethicone and titanium dioxide."),
+    "loreal-infallible-foundation": ("Loreal Paris Infallible Foundation", "Loreal", "Cosmetics", 58, "Long-wear foundation", "Contains isododecane and talc."),
+    "colorbar-bb-cream": ("Colorbar Radiant White BB Cream", "Colorbar", "Cosmetics", 60, "BB cream with SPF", "Contains titanium dioxide and zinc oxide."),
+    "mac-studio-fix": ("MAC Studio Fix Fluid Foundation", "MAC", "Cosmetics", 58, "Full coverage foundation", "Contains talc and synthetic polymers."),
+    "nykaa-bb-cream": ("Nykaa Skin Loves Vitamin C BB Cream", "Nykaa Cosmetics", "Cosmetics", 65, "Vitamin C BB cream", "Contains vitamin C and SPF."),
+
+    # COSMETICS - LIP PRODUCTS
+    "lakme-lip-color": ("Lakme Enrich Matte Lipstick", "Lakme", "Cosmetics", 62, "Matte lipstick", "Contains castor oil, wax and pigments."),
+    "maybelline-lipstick": ("Maybelline Color Sensational Lipstick", "Maybelline", "Cosmetics", 60, "Satin lipstick", "Contains beeswax, castor oil and pigments."),
+    "nykaa-lip-gloss": ("Nykaa Matte To Last Lip Gloss", "Nykaa Cosmetics", "Cosmetics", 62, "Matte lip gloss", "Contains vitamin E and castor oil."),
+    "mac-lipstick": ("MAC Matte Lipstick", "MAC", "Cosmetics", 60, "Classic matte lipstick", "Contains beeswax and synthetic dyes."),
+    "loreal-rouge-signature": ("Loreal Paris Rouge Signature Matte Lip Ink", "Loreal", "Cosmetics", 64, "Matte liquid lipstick", "Contains isododecane and film-forming polymer."),
+    "sugar-lip-balm": ("Sugar Cosmetics Tipsy Lips Moisturizing Balm", "Sugar Cosmetics", "Cosmetics", 70, "Tinted lip balm", "Contains shea butter and vitamin E."),
+
+    # COSMETICS - EYE PRODUCTS
+    "lakme-kajal": ("Lakme Eyeconic Kajal", "Lakme", "Cosmetics", 60, "Kajal eyeliner", "Contains carbon black and mineral oil."),
+    "maybelline-kajal": ("Maybelline Colossal Kajal", "Maybelline", "Cosmetics", 62, "Kajal eyeliner", "Contains carbon black and wax."),
+    "loreal-kajal": ("Loreal Paris Kajal Magique", "Loreal", "Cosmetics", 60, "Kajal eyeliner", "Contains mineral pigments and waxes."),
+    "lakme-mascara": ("Lakme Absolute Eye Artist Mascara", "Lakme", "Cosmetics", 62, "Volume mascara", "Contains beeswax, iron oxides and silica."),
+    "maybelline-colossal-mascara": ("Maybelline Colossal Volume Express Mascara", "Maybelline", "Cosmetics", 60, "Volumizing mascara", "Contains beeswax and coloring agents."),
+    "colorbar-kajal": ("Colorbar Soft Touch Kajal", "Colorbar", "Cosmetics", 62, "Soft kajal", "Contains beeswax and pigments."),
+
+    # COSMETICS - FACE POWDER & BLUSH
+    "lakme-compact-powder": ("Lakme Radiance Complexion Compact", "Lakme", "Cosmetics", 60, "Compact powder", "Contains talc, mica and titanium dioxide."),
+    "maybelline-fit-me-powder": ("Maybelline Fit Me Matte + Poreless Powder", "Maybelline", "Cosmetics", 60, "Setting powder", "Contains talc and silica."),
+    "nykaa-blush": ("Nykaa Cosmetix Sky High Blush Palette", "Nykaa Cosmetics", "Cosmetics", 64, "Blush palette", "Contains mica, talc and cosmetic pigments."),
+    "loreal-true-match-powder": ("Loreal Paris True Match Powder", "Loreal", "Cosmetics", 62, "Translucent powder", "Contains talc, mica and nylon."),
+    "sugar-face-powder": ("Sugar Cosmetics Face Fwd Loose Powder", "Sugar Cosmetics", "Cosmetics", 64, "Setting powder", "Contains tapioca starch and silica."),
+
+    # COSMETICS - NAIL CARE
+    "opi-nail-polish": ("OPI Nail Lacquer", "OPI", "Cosmetics", 55, "Nail polish", "Contains formaldehyde resin and dibutyl phthalate."),
+    "lakme-nail-polish": ("Lakme Color Crush Nailart", "Lakme", "Cosmetics", 60, "Nail polish", "Standard nail polish formula."),
+    "sugar-nail-polish": ("Sugar Cosmetics Nail Polish", "Sugar Cosmetics", "Cosmetics", 62, "Nail polish", "5-free formula without harmful chemicals."),
+    "colorbar-nail-polish": ("Colorbar Nail Lacquer", "Colorbar", "Cosmetics", 60, "Nail polish", "Standard nail polish formula."),
+
+    # PERSONAL CARE - DEODORANTS & BODY SPRAYS
+    "fogg-deo": ("Fogg Body Spray", "Fogg", "Personal Care", 60, "Body spray", "Contains alcohol and synthetic fragrance."),
+    "axe-deo": ("Axe Dark Temptation Deo", "Axe", "Personal Care", 58, "Deodorant", "Contains aluminum salts and synthetic fragrance."),
+    "dove-deo": ("Dove Original Antiperspirant Deodorant", "Dove", "Personal Care", 62, "Antiperspirant", "Contains aluminum zirconium tetrachlorohydrex."),
+    "fa-deo": ("Fa Fresh Morning Deodorant", "Fa", "Personal Care", 60, "Deodorant", "Contains alcohol and fragrance."),
+    "nivea-deo": ("Nivea Men Fresh Active Deo", "Nivea", "Personal Care", 62, "Deodorant", "Contains aluminum chlorohydrate and fragrance."),
+    "engage-deo": ("Engage W1 Perfume Body Spray", "Engage", "Personal Care", 62, "Perfume spray", "Contains alcohol, water and fragrance blend."),
+    "wild-stone-deo": ("Wild Stone Classic Marble Deo", "Wild Stone", "Personal Care", 60, "Deodorant", "Contains alcohol and synthetic fragrance."),
+
+    # PERSONAL CARE - BODY WASHES
+    "dove-body-wash": ("Dove Deeply Nourishing Body Wash", "Dove", "Personal Care", 70, "Mild body wash", "Contains mild surfactants and 1/4 moisturising cream."),
+    "fiama-body-wash": ("Fiama Lemongrass Body Wash", "Fiama", "Personal Care", 68, "Gel body wash", "Contains lemongrass extract and moisturisers."),
+    "pears-body-wash": ("Pears Pure & Gentle Shower Gel", "Pears", "Personal Care", 72, "Glycerin body wash", "Contains glycerin and no parabens."),
+    "himalaya-body-wash": ("Himalaya Soothing Body Wash", "Himalaya", "Personal Care", 72, "Herbal body wash", "Contains aloe vera and milk protein."),
+    "johnsons-body-wash": ("Johnson's Vita-Rich Softening Body Wash", "Johnson's", "Personal Care", 72, "Gentle body wash", "Contains natural butter extracts."),
+    "mamaearth-body-wash": ("Mamaearth Ubtan Natural Body Wash", "Mamaearth", "Personal Care", 74, "Natural body wash", "Contains turmeric and saffron."),
+    "wow-body-wash": ("Wow Skin Science Apple Cider Vinegar Body Wash", "Wow Skin Science", "Personal Care", 72, "ACV body wash", "Contains apple cider vinegar and aloe vera."),
+
+    # PERSONAL CARE - LIP BALMS
+    "vaseline-lip-balm": ("Vaseline Lip Therapy Rosy Lips", "Vaseline", "Personal Care", 72, "Petroleum-based lip balm", "Contains petrolatum, shea butter and fragrance."),
+    "himalaya-lip-balm": ("Himalaya Herbals Lip Balm Strawberry", "Himalaya", "Personal Care", 76, "Herbal lip balm", "Contains strawberry extract and aloe vera."),
+    "biotique-lip-balm": ("Biotique Bio Berry Lip Balm", "Biotique", "Personal Care", 78, "Ayurvedic lip balm", "Contains wheat germ and aloe vera."),
+    "mamaearth-lip-balm": ("Mamaearth Vitamin C Lip Balm", "Mamaearth", "Personal Care", 76, "Vitamin C lip balm", "Contains vitamin C, shea butter and beeswax."),
+    "plum-lip-balm": ("Plum Chamomile & White Tea Lip Balm", "Plum", "Personal Care", 78, "Natural lip balm", "100% vegan with chamomile and white tea."),
+    "carmex-lip-balm": ("Carmex Classic Lip Balm", "Carmex", "Personal Care", 68, "Medicated lip balm", "Contains salicylic acid and camphor."),
+
+    # FOOD - HEALTHY SNACKS & NUTS
+    "mccain-fries": ("McCain Smiles Potato Snacks", "McCain", "Snacks", 62, "Processed potato snack", "Contains potato, oil and seasonings."),
+    "tata-sampann-poha": ("Tata Sampann Thick Poha", "Tata", "Food", 88, "Whole grain flattened rice", "100% whole grain flattened rice."),
+    "happydent-gum": ("Happydent White Xylitol Gum", "Happydent", "Confectionery", 58, "Chewing gum", "Contains xylitol and artificial sweeteners."),
+    "milkybar-choclairs": ("Milky Bar Choc Lairs", "Nestle", "Confectionery", 52, "White chocolate toffee", "Contains hydrogenated fat and white chocolate."),
+    "sunbites-whole-grain": ("Sunbites Whole Grain Multigrain Crackers", "Sunbites", "Snacks", 72, "Whole grain crackers", "Contains whole wheat and multi-grains."),
+    "tiger-biscuits": ("Tiger Kreams Chocolate Biscuits", "Britannia", "Biscuits", 50, "Chocolate sandwich biscuit", "Contains artificial flavors."),
+
+    # FOOD - PACKAGED PULSES & GRAINS
+    "tata-dal": ("Tata Sampann Chana Dal", "Tata", "Food", 94, "Pure chana dal", "100% pure Bengal gram split."),
+    "tata-moong-dal": ("Tata Sampann Moong Dal", "Tata", "Food", 94, "Pure moong dal", "100% pure green gram split."),
+    "fortune-basmati-rice": ("Fortune Biryani Special Basmati Rice", "Fortune", "Food", 92, "Aged basmati rice", "100% aged basmati rice."),
+    "india-gate-basmati": ("India Gate Classic Basmati Rice", "India Gate", "Food", 92, "Pure basmati rice", "100% aged basmati rice."),
+    "daawat-basmati": ("Daawat Extra Long Basmati Rice", "Daawat", "Food", 92, "Pure basmati rice", "100% extra long grain basmati."),
+    "patanjali-besan": ("Patanjali Besan", "Patanjali", "Food", 94, "Pure gram flour", "100% pure chickpea flour."),
+
+    # FOOD - DAIRY ALTERNATIVES
+    "silk-soy-milk": ("Silk Soy Milk Unsweetened", "Silk", "Beverages", 82, "Soy-based milk", "Contains soy protein with minimal additives."),
+    "epigamia-greek-yogurt": ("Epigamia Greek Yogurt Mango", "Epigamia", "Dairy", 78, "Greek yogurt", "High protein yogurt with fruit."),
+    "id-idli-batter": ("iD Fresh Food Idli Batter", "iD Fresh Food", "Food", 88, "Natural idli batter", "Rice and urad dal with no preservatives."),
+    "id-dosa-batter": ("iD Fresh Food Dosa Batter", "iD Fresh Food", "Food", 88, "Natural dosa batter", "Rice and urad dal batter."),
+
+    # FOOD - INSTANT MIXES
+    "gits-gulab-jamun": ("Gits Gulab Jamun Mix", "Gits", "Food", 65, "Dessert mix", "Contains milk solids, sugar and refined flour."),
+    "mtr-rava-idli-mix": ("MTR Rava Idli Mix", "MTR", "Food", 72, "Instant breakfast mix", "Contains semolina and spices."),
+    "mtr-upma-mix": ("MTR Upma Mix", "MTR", "Food", 70, "Instant upma mix", "Contains semolina with spices."),
+    "mtr-kheer-mix": ("MTR Gulab Jamun Mix", "MTR", "Food", 62, "Dessert mix", "Contains milk solids and refined flour."),
+    "eastern-fish-curry-masala": ("Eastern Fish Curry Masala", "Eastern", "Spices", 85, "Fish curry spice blend", "All natural Kerala spices."),
+    "catch-red-chilli-powder": ("Catch Red Chilli Powder", "Catch", "Spices", 92, "Pure chilli powder", "100% pure red chilli."),
+
+    # FOOD - SPREADS & BREAKFAST
+    "amul-peanut-butter": ("Amul Peanut Butter Crunchy", "Amul", "Food", 82, "Natural peanut butter", "Contains peanuts, sugar and salt only."),
+    "sundrop-peanut-butter": ("Sundrop Peanut Butter Creamy", "Sundrop", "Food", 80, "Peanut butter", "Contains peanuts, sugar, hydrogenated vegetable oil and salt."),
+    "dr-oetker-peanut-butter": ("Dr. Oetker FunFoods Peanut Butter", "Dr. Oetker", "Food", 78, "Peanut butter", "Contains peanuts, sugar and palm oil."),
+    "myfitness-peanut-butter": ("My Fitness Peanut Butter Original Crunchy", "My Fitness", "Food", 88, "Natural peanut butter", "Contains peanuts only — no added sugar or oil."),
+    "sleepy-owl-granola": ("Sleepy Owl Granola Honey & Oat", "Sleepy Owl", "Food", 78, "Granola cereal", "Contains oats, honey and nuts."),
+
+    # FOOD - PROTEIN BARS & HEALTH SNACKS
+    "rite-bite-protein-bar": ("RiteBite Max Protein Bar", "RiteBite", "Nutrition", 72, "Protein bar", "Contains soy protein, oats and dark chocolate."),
+    "onelife-protein-bar": ("Onelife Protein Bar Choco Almond", "Onelife", "Nutrition", 70, "Protein bar", "Contains whey protein and almonds."),
+    "yoga-bar-protein": ("Yoga Bar Protein Bar Chocolate Fudge", "Yoga Bar", "Nutrition", 74, "Protein bar", "Contains whey protein, oats and dark chocolate."),
+    "true-elements-seeds": ("True Elements Roasted Pumpkin Seeds", "True Elements", "Food", 92, "Roasted seeds snack", "100% natural pumpkin seeds."),
+    "farmley-almonds": ("Farmley Premium Almonds", "Farmley", "Food", 96, "Natural almonds", "100% whole almonds, no additives."),
+    "happilo-cashews": ("Happilo Premium Whole Cashews", "Happilo", "Food", 96, "Natural cashews", "100% whole cashews."),
+
+    # BEVERAGES - ENERGY DRINKS
+    "red-bull": ("Red Bull Energy Drink", "Red Bull", "Energy Drink", 32, "High caffeine energy drink", "High caffeine (80mg/can) with taurine and B-vitamins. Not suitable for children."),
+    "monster-energy": ("Monster Energy Original", "Monster", "Energy Drink", 28, "High caffeine energy drink", "Very high caffeine (160mg/can) with B-vitamins and taurine."),
+    "sting-energy": ("Sting Energy Drink", "Sting", "Energy Drink", 35, "Caffeine energy drink", "Contains caffeine, taurine and B-vitamins."),
+    "hell-energy": ("Hell Energy Drink", "Hell", "Energy Drink", 32, "Caffeine energy drink", "Contains high caffeine and synthetic B-vitamins."),
+
+    # BEVERAGES - HEALTH DRINKS & TEAS
+    "tetley-green-tea": ("Tetley Long Leaf Green Tea", "Tetley", "Beverages", 92, "Pure green tea", "100% green tea leaves."),
+    "tulsi-green-tea": ("Organic India Tulsi Green Tea", "Organic India", "Beverages", 92, "Tulsi & green tea blend", "Organic tulsi and green tea."),
+    "patanjali-honey-lemon-tea": ("Patanjali Honey Lemon Green Tea", "Patanjali", "Beverages", 88, "Herbal green tea", "Green tea with honey and lemon extracts."),
+    "vahdam-tea": ("Vahdam Himalayan Green Tea", "Vahdam", "Beverages", 95, "Single-origin green tea", "100% pure first-flush Himalayan green tea."),
+    "chaayos-masala-chai": ("Chaayos Instant Masala Chai Mix", "Chaayos", "Beverages", 80, "Masala chai mix", "Contains tea, spices and milk powder."),
+
+    # AYURVEDIC & HEALTH SUPPLEMENTS
+    "dabur-chyawanprash": ("Dabur Chyawanprash", "Dabur", "Health Supplement", 82, "Ayurvedic immunity supplement", "Contains amla, ashwagandha and 40+ Ayurvedic herbs."),
+    "himalaya-ashwagandha": ("Himalaya Ashwagandha Tablets", "Himalaya", "Health Supplement", 85, "Ayurvedic supplement", "Pure ashwagandha root extract."),
+    "patanjali-giloy-juice": ("Patanjali Giloy Juice", "Patanjali", "Health Supplement", 84, "Ayurvedic juice", "Pure giloy extract for immunity."),
+    "kapiva-aloe-juice": ("Kapiva Aloe Vera Juice", "Kapiva", "Health Supplement", 82, "Aloe vera juice", "Contains fresh aloe vera pulp."),
+    "dabur-amla-juice": ("Dabur Amla Juice", "Dabur", "Health Supplement", 85, "Amla extract juice", "Pure Indian gooseberry extract."),
+    "vestige-noni-juice": ("Vestige Noni Juice", "Vestige", "Health Supplement", 78, "Noni fruit juice", "Contains noni fruit extract with natural flavors."),
 }
 
+
 print(f"Total products loaded: {len(ALL_PRODUCTS)}")
+

@@ -23,7 +23,9 @@ async def search_ingredient(name: str = Query(..., description="Ingredient name 
             commonly_found_in=ingredient_data['commonly_found_in'],
             one_line_note=ingredient_data['one_line_note'],
             regulatory_note=ingredient_data['regulatory_note'],
-            health_effects=ingredient_data.get('health_effects')
+            health_effects=ingredient_data.get('health_effects'),
+            countries_restricted=ingredient_data.get('countries_restricted', []),
+            fssai_position=ingredient_data.get('fssai_position'),
         )
         
     except Exception as e:

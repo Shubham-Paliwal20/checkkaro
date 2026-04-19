@@ -7,8 +7,14 @@ function Home() {
   const navigate = useNavigate()
 
   const quickSearchItems = [
-    'Maggi Noodles', 'Kurkure', 'Parle-G', 'Dove Soap',
-    'Dabur Honey', 'Thums Up', 'Haldiram Bhujia', 'Britannia Good Day'
+    { label: '🍜 Maggi Noodles', query: 'Maggi Noodles', cat: 'Food' },
+    { label: '🍪 Parle-G', query: 'Parle-G', cat: 'Biscuit' },
+    { label: '🥤 Thums Up', query: 'Thums Up', cat: 'Soft Drink' },
+    { label: '🧴 Dove Soap', query: 'Dove Soap', cat: 'Soap' },
+    { label: '🌿 Parachute Oil', query: 'Parachute Coconut Oil', cat: 'Hair Care' },
+    { label: '✨ Lakme CC Cream', query: 'Lakme CC Cream', cat: 'Skincare' },
+    { label: '🧈 Amul Butter', query: 'Amul Butter', cat: 'Dairy' },
+    { label: '🌶 Kurkure', query: 'Kurkure', cat: 'Snack' },
   ]
 
   return (
@@ -22,13 +28,18 @@ function Home() {
         <div className="max-w-4xl mx-auto text-center">
           {/* Badge */}
           <div className="inline-block mb-4 sm:mb-6">
-            <span className="inline-flex items-center gap-2 px-3 sm:px-4 py-2 rounded-full border-2 border-orange text-orange text-xs sm:text-sm font-medium bg-orange-light">
+            <span className="inline-flex items-center gap-2 px-4 sm:px-5 py-2 rounded-full text-xs sm:text-sm font-semibold border-2"
+              style={{ background: 'linear-gradient(90deg, #fff7ed 0%, #f0fdf4 100%)', borderColor: '#e5e7eb', color: '#374151' }}>
               <span className="flex items-center gap-1">
-                <span className="w-2 h-2 rounded-full bg-orange"></span>
-                <span className="w-2 h-2 rounded-full bg-white border border-gray-300"></span>
-                <span className="w-2 h-2 rounded-full bg-primary"></span>
+                <span className="w-2.5 h-2.5 rounded-full" style={{ background: '#FF9933' }}></span>
+                <span className="w-2.5 h-2.5 rounded-full" style={{ background: '#ffffff', border: '1.5px solid #d1d5db' }}></span>
+                <span className="w-2.5 h-2.5 rounded-full" style={{ background: '#138808' }}></span>
               </span>
-              Made in India
+              <span>
+                <span style={{ color: '#FF9933', fontWeight: 700 }}>Loved</span>
+                {' by users across '}
+                <span style={{ color: '#138808', fontWeight: 700 }}>India</span>
+              </span>
             </span>
           </div>
 
@@ -54,15 +65,16 @@ function Home() {
           </div>
 
           {/* Quick Search Chips */}
-          <div className="flex flex-wrap gap-2 justify-center items-center px-4">
-            <span className="text-sm text-gray-500 w-full sm:w-auto text-center sm:text-left mb-2 sm:mb-0">Try:</span>
+          <div className="flex flex-wrap gap-2 justify-center items-center px-4 mt-2">
+            <span className="text-sm text-gray-400 w-full text-center mb-1">Popular searches across categories</span>
             {quickSearchItems.map((item, idx) => (
               <button
                 key={idx}
-                onClick={() => navigate(`/result/${encodeURIComponent(item)}`)}
-                className="bg-orange-light text-orange rounded-full px-3 sm:px-4 py-1.5 text-xs sm:text-sm hover:bg-orange hover:text-white transition-colors border border-orange"
+                onClick={() => navigate(`/result/${encodeURIComponent(item.query)}`)}
+                className="flex flex-col items-center bg-white border border-gray-200 rounded-2xl px-3 sm:px-4 py-2 text-xs sm:text-sm hover:shadow-md hover:border-orange transition-all group"
               >
-                {item}
+                <span className="font-medium text-gray-800 group-hover:text-orange transition-colors">{item.label}</span>
+                <span className="text-[10px] text-gray-400 mt-0.5">{item.cat}</span>
               </button>
             ))}
           </div>
@@ -179,12 +191,12 @@ function Home() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6 sm:gap-8 text-center">
             <div>
-              <div className="text-3xl sm:text-4xl font-poppins font-bold text-orange mb-2">50+</div>
+              <div className="text-3xl sm:text-4xl font-poppins font-bold text-orange mb-2">500+</div>
               <p className="text-gray-600 text-sm sm:text-base">Ingredients classified in our database</p>
             </div>
             <div>
-              <div className="text-3xl sm:text-4xl font-poppins font-bold text-navy mb-2">3</div>
-              <p className="text-gray-600 text-sm sm:text-base">Categories: Food, Cosmetics, Personal Care</p>
+              <div className="text-3xl sm:text-4xl font-poppins font-bold text-navy mb-2">360+</div>
+              <p className="text-gray-600 text-sm sm:text-base">Indian products analysed across categories</p>
             </div>
             <div>
               <div className="text-3xl sm:text-4xl font-poppins font-bold text-primary mb-2">100%</div>

@@ -44,7 +44,7 @@ function About() {
             <div>
               <h3 className="font-poppins font-semibold text-lg text-primary mb-2">2. AI Analysis</h3>
               <p className="text-gray-700">
-                We use advanced AI (Groq Llama 3) to analyze ingredients and cross-reference them with regulatory databases from multiple countries.
+                We use advanced AI to analyze ingredients and cross-reference them with regulatory databases from multiple countries.
               </p>
             </div>
             
