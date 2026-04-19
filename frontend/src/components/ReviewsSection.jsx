@@ -148,9 +148,10 @@ function ReviewFormModal({ onClose, onSubmitted }) {
 export default function ReviewsSection() {
   const { user, openAuthModal } = useAuth()
   const [reviews, setReviews] = useState(PLACEHOLDER)
-  const [currentPage, setCurrentPage] = useState(0)
+  const [currentIdx, setCurrentIdx] = useState(0)
   const [showForm, setShowForm] = useState(false)
   const [submitted, setSubmitted] = useState(false)
+  const [isMobile, setIsMobile] = useState(false)
   const timerRef = useRef(null)
 
   const fetchReviews = async () => {
@@ -160,32 +161,46 @@ export default function ReviewsSection() {
 
   useEffect(() => { fetchReviews() }, [])
 
-  const PER_PAGE = 3
+  // Detect mobile
+  useEffect(() => {
+    const check = () => setIsMobile(window.innerWidth < 768)
+    check()
+    window.addEventListener('resize', check)
+    return () => window.removeEventListener('resize', check)
+  }, [])
+
+  const perPage = isMobile ? 1 : 3
   const pages = []
-  for (let i = 0; i < reviews.length; i += PER_PAGE) pages.push(reviews.slice(i, i + PER_PAGE))
+  for (let i = 0; i < reviews.length; i += perPage) pages.push(reviews.slice(i, i + perPage))
   const totalPages = pages.length
 
+  // Reset page index when perPage changes so we don't land out of bounds
+  useEffect(() => { setCurrentIdx(0) }, [perPage])
+
+  const currentPage = Math.min(currentIdx, totalPages - 1)
+
   const startTimer = () => {
-    timerRef.current = setInterval(() => setCurrentPage(p => (p + 1) % totalPages), 4500)
+    clearInterval(timerRef.current)
+    timerRef.current = setInterval(() => setCurrentIdx(p => (p + 1) % totalPages), 4500)
   }
   const stopTimer = () => clearInterval(timerRef.current)
 
   useEffect(() => { startTimer(); return stopTimer }, [totalPages])
 
-  const goTo = (idx) => { stopTimer(); setCurrentPage(idx); startTimer() }
+  const goTo = (idx) => { stopTimer(); setCurrentIdx(idx); startTimer() }
 
   return (
     <section style={{ padding: '72px 0', backgroundColor: '#f9fafb', overflow: 'hidden' }}>
-      <div style={{ maxWidth: 1140, margin: '0 auto', padding: '0 24px' }}>
+      <div style={{ maxWidth: 1140, margin: '0 auto', padding: '0 20px' }}>
 
         {/* Header */}
-        <div style={{ textAlign: 'center', marginBottom: 52 }}>
+        <div style={{ textAlign: 'center', marginBottom: 48 }}>
           <p style={{ fontSize: 12, fontWeight: 700, color: '#FF9933', textTransform: 'uppercase', letterSpacing: '0.1em', margin: '0 0 10px' }}>Testimonials</p>
-          <h2 style={{ fontSize: 32, fontWeight: 800, color: '#0D1B2A', margin: '0 0 12px', fontFamily: 'Poppins, sans-serif' }}>
+          <h2 style={{ fontSize: isMobile ? 26 : 32, fontWeight: 800, color: '#0D1B2A', margin: '0 0 12px', fontFamily: 'Poppins, sans-serif' }}>
             Loved by users across{' '}
             <span style={{ color: '#FF9933' }}>In</span><span style={{ color: 'white', WebkitTextStroke: '1.5px #9ca3af' }}>d</span><span style={{ color: '#138808' }}>ia</span>
           </h2>
-          <p style={{ fontSize: 15, color: '#6b7280', margin: 0 }}>Real reviews from real people making smarter choices every day.</p>
+          <p style={{ fontSize: isMobile ? 13 : 15, color: '#6b7280', margin: 0 }}>Real reviews from real people making smarter choices every day.</p>
         </div>
 
         {/* Sliding carousel track */}
@@ -201,12 +216,18 @@ export default function ReviewsSection() {
             willChange: 'transform',
           }}>
             {pages.map((pageReviews, pageIdx) => (
-              <div key={pageIdx} style={{ minWidth: '100%', display: 'flex', gap: 20, alignItems: 'stretch' }}>
+              <div key={pageIdx} style={{
+                minWidth: '100%',
+                display: 'flex',
+                gap: isMobile ? 0 : 20,
+                alignItems: 'stretch',
+                padding: isMobile ? '0 4px' : 0,
+              }}>
                 {pageReviews.map((review, cardIdx) => (
                   <ReviewCard key={review.id} review={review} colorIndex={cardIdx} />
                 ))}
-                {/* Fill empty slots so flex layout stays consistent */}
-                {pageReviews.length < PER_PAGE && Array.from({ length: PER_PAGE - pageReviews.length }).map((_, i) => (
+                {/* Fill empty slots on desktop so layout stays consistent */}
+                {!isMobile && pageReviews.length < perPage && Array.from({ length: perPage - pageReviews.length }).map((_, i) => (
                   <div key={`empty-${i}`} style={{ flex: '1 1 0' }} />
                 ))}
               </div>
@@ -215,7 +236,7 @@ export default function ReviewsSection() {
         </div>
 
         {/* Dots */}
-        <div style={{ display: 'flex', justifyContent: 'center', gap: 8, marginTop: 32 }}>
+        <div style={{ display: 'flex', justifyContent: 'center', gap: 8, marginTop: 28 }}>
           {pages.map((_, i) => (
             <button key={i} onClick={() => goTo(i)} style={{
               width: currentPage === i ? 28 : 9,
@@ -225,6 +246,13 @@ export default function ReviewsSection() {
             }} />
           ))}
         </div>
+
+        {/* Mobile swipe hint */}
+        {isMobile && (
+          <p style={{ textAlign: 'center', fontSize: 11, color: '#9ca3af', marginTop: 10 }}>
+            Tap dots to navigate
+          </p>
+        )}
 
         {/* CTA */}
         <div style={{ textAlign: 'center', marginTop: 44 }}>
