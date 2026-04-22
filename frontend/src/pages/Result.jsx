@@ -166,39 +166,75 @@ function Result() {
               </div>
             </div>
 
-            {/* Awareness Score */}
+            {/* Composition Score */}
             <div className="flex justify-center md:justify-end">
               <ScoreCircle score={product.awareness_score} size="large" showLabel={true} />
             </div>
           </div>
         </div>
 
-        {/* Final Verdict Section */}
-        {(product.verdict || product.recommendation) && (
-          <div className={`card p-4 sm:p-6 mb-6 border-2 ${getScoreBg(product.awareness_score)}`}>
-            <div className="flex flex-col sm:flex-row items-start gap-4">
-              <div className="flex-shrink-0 mx-auto sm:mx-0">
-                <div className={`w-12 h-12 rounded-full ${getScoreBg(product.awareness_score)} flex items-center justify-center`}>
-                  <span className={`text-xl sm:text-2xl font-bold ${getScoreColor(product.awareness_score)}`}>
-                    {product.awareness_score}
-                  </span>
+        {/* Quick Insight Section */}
+        {(() => {
+          let insight, insightBg, insightBorder, insightTextColor, insightIcon
+
+          if (commonly_questioned.length >= 2 || product.awareness_score < 50) {
+            insight = "Users may want to review the ingredient details closely before making a choice."
+            insightBg = "bg-red-50"
+            insightBorder = "border-red-300"
+            insightTextColor = "text-red-700"
+            insightIcon = (
+              <svg className="w-5 h-5 text-red-500 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
+                <path fillRule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clipRule="evenodd"/>
+              </svg>
+            )
+          } else if (product.awareness_score < 70) {
+            insight = "This formulation includes a range of components that may require a closer look."
+            insightBg = "bg-amber-50"
+            insightBorder = "border-amber-300"
+            insightTextColor = "text-amber-700"
+            insightIcon = (
+              <svg className="w-5 h-5 text-amber-500 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
+                <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clipRule="evenodd"/>
+              </svg>
+            )
+          } else if (commonly_questioned.length === 0 && worth_knowing.length === 0) {
+            insight = "The composition suggests a balanced formulation that many users may find suitable."
+            insightBg = "bg-green-50"
+            insightBorder = "border-green-300"
+            insightTextColor = "text-green-700"
+            insightIcon = (
+              <svg className="w-5 h-5 text-green-500 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
+                <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd"/>
+              </svg>
+            )
+          } else {
+            insight = "This formulation includes a range of components that may require a closer look."
+            insightBg = "bg-amber-50"
+            insightBorder = "border-amber-300"
+            insightTextColor = "text-amber-700"
+            insightIcon = (
+              <svg className="w-5 h-5 text-amber-500 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
+                <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clipRule="evenodd"/>
+              </svg>
+            )
+          }
+
+          return (
+            <div className={`card p-4 sm:p-6 mb-6 border-2 ${insightBg} ${insightBorder}`}>
+              <h2 className="font-poppins font-bold text-lg sm:text-xl text-navy mb-3">Quick Insight</h2>
+              <div className={`flex items-start gap-2 rounded-lg p-3 border ${insightBorder} bg-white`}>
+                {insightIcon}
+                <p className={`text-sm sm:text-base font-medium ${insightTextColor}`}>{insight}</p>
+              </div>
+              {product.recommendation && (
+                <div className="mt-3 bg-white rounded-lg p-3 sm:p-4 border border-gray-200">
+                  <p className="text-sm font-semibold text-navy mb-1">Recommendation:</p>
+                  <p className="text-sm text-gray-700">{product.recommendation}</p>
                 </div>
-              </div>
-              <div className="flex-1 text-center sm:text-left">
-                <h2 className="font-poppins font-bold text-lg sm:text-xl text-navy mb-2">Final Verdict</h2>
-                {product.verdict && (
-                  <p className="text-gray-700 mb-3 font-medium text-sm sm:text-base">{product.verdict}</p>
-                )}
-                {product.recommendation && (
-                  <div className="bg-white rounded-lg p-3 sm:p-4 border border-gray-200">
-                    <p className="text-sm font-semibold text-navy mb-1">Recommendation:</p>
-                    <p className="text-sm text-gray-700">{product.recommendation}</p>
-                  </div>
-                )}
-              </div>
+              )}
             </div>
-          </div>
-        )}
+          )
+        })()}
 
         {/* Complete Ingredients List */}
         <div className="card p-4 sm:p-6 mb-6">
@@ -416,7 +452,7 @@ function Result() {
         {/* Disclaimer */}
         <div className="mb-6">
           <DisclaimerBox variant="info">
-            This Awareness Score reflects how commonly ingredients in this product are discussed by health researchers and flagged by international regulatory bodies. It is not a safety rating, health claim, or medical assessment. CheckKaro does not certify any product as safe or unsafe. Always read the actual product label and consult a qualified professional for personal health decisions.
+            This Composition Score reflects how commonly ingredients in this product are discussed by health researchers and flagged by international regulatory bodies. It is not a safety rating, health claim, or medical assessment. CheckKaro does not certify any product as safe or unsafe. Always read the actual product label and consult a qualified professional for personal health decisions.
           </DisclaimerBox>
         </div>
       </div>

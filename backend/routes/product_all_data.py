@@ -565,6 +565,56 @@ ALL_PRODUCTS = {
     "too-yumm-multigrain": ("Too Yumm Multigrain Chilli Chips", "Too Yumm", "Snacks", 72, "Baked multigrain chips", "Lower fat baked chips; contains corn, rice and wheat with natural spices."),
     "mccain-aloo-tikki": ("McCain Aloo Tikki", "McCain", "Snacks", 58, "Processed potato product", "Contains reconstituted potato, starch, onion powder and flavour enhancers."),
     "britannia-cheese-croissant": ("Britannia Cheese Croissant", "Britannia", "Bakery", 48, "Cheese-filled pastry with trans fat risk", "Contains hydrogenated vegetable fat — potential trans fat source. Artificial cheese flavour."),
+
+    # ─── HINDUSTAN UNILEVER (HUL) — EXPANDED ────────────────────────────────
+
+    # HUL — LAUNDRY & HOUSEHOLD
+    "surf-excel-easy-wash": ("Surf Excel Easy Wash Detergent Powder", "Surf Excel", "Household", 52, "Contains surfactants and optical brightener", "Anionic surfactants (LAS), non-ionic surfactants, sodium carbonate, sodium silicate, optical brightener (FWA). Phosphate-free."),
+    "comfort-fabric-conditioner": ("Comfort Fabric Conditioner After Wash", "Comfort", "Household", 55, "Quaternary ammonium compounds", "Contains distearyl dimethyl ammonium chloride (DSDMAC) fabric softener. Fragrance blend may contain allergens."),
+    "domex-toilet-cleaner": ("Domex Toilet Cleaner Original", "Domex", "Household", 50, "Contains hydrochloric acid and surfactants", "Hydrochloric acid (HCl) — strong corrosive; anionic surfactants and EDTA. For toilet use only."),
+    "vim-dishwash-bar": ("Vim Dishwash Bar", "Vim", "Household", 60, "Surfactant-based dish cleaner", "Sodium linear alkylbenzene sulphonate, sodium tripolyphosphate, sodium silicate, perfume."),
+    "vim-liquid-dishwash": ("Vim Dishwash Liquid Lemon", "Vim", "Household", 62, "Liquid dish cleaner with lemon", "Sodium laureth sulphate, cocamidopropyl betaine, sodium chloride, citric acid, lemon extract, preservative (phenoxyethanol), fragrance."),
+
+    # HUL — SKINCARE (POND'S, SIMPLE, VASELINE)
+    "ponds-super-light-gel-spf30": ("Pond's Super Light Gel Oil-Free Moisturiser SPF 30", "Pond's", "Skincare", 62, "Lightweight moisturiser with chemical UV filter", "Contains ethylhexyl methoxycinnamate UV filter; niacinamide 2%; dimethicone. Paraben-free but contains phenoxyethanol."),
+    "ponds-bright-beauty-serum": ("Pond's Bright Beauty Spot-less Glow Serum", "Pond's", "Skincare", 65, "Niacinamide + gluta-boost serum", "Contains niacinamide 12% and glutathione (via gluta-boost complex); phenoxyethanol preservative."),
+    "simple-kind-to-skin-moisturiser": ("Simple Kind to Skin Moisturising Facial Wash", "Simple", "Skincare", 70, "No-fragrance gentle cleanser", "No artificial perfumes, dyes or harsh chemicals; contains pro-vitamin B5, vitamin E and bisabolol."),
+    "simple-micellar-water": ("Simple Kind to Skin Micellar Cleansing Water", "Simple", "Skincare", 78, "Gentle micellar water", "Triple-purified water, mild micelles; no artificial fragrance, no alcohol, no harsh chemicals."),
+    "simple-spf30-moisturiser": ("Simple Kind to Skin SPF 30 Light Moisturiser", "Simple", "Skincare", 68, "SPF moisturiser, no fragrance", "Contains octinoxate and zinc oxide UV filters; bisabolol soothing agent; no parabens or artificial fragrance."),
+    "vaseline-healthy-white-lotion": ("Vaseline Healthy White Complete 10 Body Lotion", "Vaseline", "Personal Care", 60, "Contains UV filters and niacinamide", "Petrolatum, niacinamide, octyl methoxycinnamate (UV), glycerin; methylparaben and propylparaben preservatives."),
+    "vaseline-aloe-soothe-lotion": ("Vaseline Aloe Soothe Body Lotion", "Vaseline", "Personal Care", 65, "Aloe vera enriched lotion", "Aloe vera (50%), glycerin, petrolatum; milder formula. Contains methylparaben."),
+
+    # HUL — HAIR CARE (DOVE, SUNSILK, TRESEMMÉ, CLINIC PLUS)
+    "dove-hair-therapy-dry-shampoo": ("Dove Hair Therapy Dry Shampoo", "Dove", "Hair Care", 55, "Aerosol dry shampoo with butane propellant", "Contains isobutane, butane propellants; aluminium starch octenylsuccinate, fragrance. Avoid inhaling."),
+    "dove-intense-repair-shampoo": ("Dove Intense Repair Shampoo", "Dove", "Hair Care", 62, "Keratin actives for damaged hair", "Sodium laureth sulphate, cocamidopropyl betaine, keratin protein, glycerin, dimethicone, sodium benzoate."),
+    "sunsilk-lusciously-thick-shampoo": ("Sunsilk Lusciously Thick & Long Shampoo", "Sunsilk", "Hair Care", 58, "Contains SLS and biotin", "Sodium laureth sulphate, cocamidopropyl betaine, biotin, soy protein, dimethicone, sodium benzoate, methylchloroisothiazolinone."),
+    "sunsilk-smooth-manageable-shampoo": ("Sunsilk Smooth & Manageable Shampoo", "Sunsilk", "Hair Care", 58, "Silicone-based smoothing shampoo", "Sodium laureth sulphate, cocamidopropyl betaine, dimethicone, argania spinosa oil, sodium benzoate, MIT/MCIT."),
+    "clinic-plus-strong-long-conditioner": ("Clinic Plus Strong & Long Conditioner", "Clinic Plus", "Hair Care", 60, "Silicone conditioner with protein", "Cetearyl alcohol, distearyl dimethyl ammonium chloride, dimethicone, milk protein, methylparaben, propylparaben, fragrance."),
+    "tresemme-keratin-smooth-conditioner": ("TRESemmé Keratin Smooth Conditioner", "TRESemmé", "Hair Care", 60, "Silicone-based keratin conditioner", "Cetyl alcohol, stearyl alcohol, behentrimonium chloride, keratin amino acids, dimethicone, DMDM hydantoin, fragrance."),
+
+    # HUL — ORAL CARE
+    "pepsodent-whitening-toothpaste": ("Pepsodent Whitening Toothpaste", "Pepsodent", "Oral Care", 56, "Abrasive whitening formula with SLS", "Hydrated silica (abrasive), sodium monofluorophosphate (0.76%), sodium lauryl sulphate, sodium saccharin, titanium dioxide."),
+    "closeup-ever-fresh-gel": ("Closeup Ever Fresh+ Aqua Fresh Gel Toothpaste", "Close Up", "Oral Care", 54, "Gel toothpaste with zinc and SLS", "Sorbitol, hydrated silica, sodium lauryl sulphate, sodium fluoride (1000ppm), zinc citrate, sodium saccharin, blue dye (CI 42090)."),
+
+    # HUL — FACE WASH (POND'S, LAKME, DOVE MEN)
+    "dove-men-care-face-wash": ("Dove Men+Care Hydrate+ Face Wash", "Dove", "Personal Care", 65, "Gentle men's face wash", "Sodium laureth sulphate, cocamidopropyl betaine, glycerin, glycol distearate, micro-moisture actives; no parabens."),
+    "ponds-bright-miracle-face-wash": ("Pond's Bright Miracle Ultimate Pigment Control Face Wash", "Pond's", "Personal Care", 60, "Niacinamide face wash with SLS", "Sodium laureth sulphate, cocamidopropyl betaine, niacinamide, glycerin, citric acid, sodium benzoate, methylchloroisothiazolinone."),
+    "lakme-absolute-white-intense-face-wash": ("Lakme Absolute White Intense Face Wash", "Lakme", "Personal Care", 58, "Brightening face wash with SLS", "Sodium laureth sulphate, cocamidopropyl betaine, glycerin, titanium dioxide, niacinamide, sodium benzoate, methylparaben."),
+
+    # HUL — BEVERAGES (BROOKE BOND, LIPTON, HORLICKS, BRU)
+    "brooke-bond-taj-mahal-tea": ("Brooke Bond Taj Mahal Tea", "Brooke Bond", "Beverages", 93, "Premium Darjeeling blend black tea", "100% selected Darjeeling and Assam black tea leaves. No additives."),
+    "lipton-honey-lemon-green-tea": ("Lipton Honey Lemon Green Tea", "Lipton", "Beverages", 88, "Green tea with honey and lemon", "Green tea, honey powder, natural lemon flavour. No artificial preservatives."),
+    "horlicks-lite-health-drink": ("Horlicks Lite Health & Nutrition Drink", "Horlicks", "Health Drink", 62, "Low-sugar fortified malt drink", "Wheat flour, skimmed milk powder, malted barley, sugar (reduced), vitamins (A, B1, B2, B3, B6, B12, C, D, E), minerals (iron, calcium, phosphorus), sucralose."),
+    "bru-gold-coffee": ("Bru Gold Freeze Dried Coffee", "Bru", "Beverages", 88, "Premium freeze-dried instant coffee", "100% freeze-dried coffee. No chicory, no additives."),
+    "knorr-hot-sour-soup": ("Knorr Classic Hot & Sour Veg Soup", "Knorr", "Beverages", 48, "Instant soup with flavour enhancers and high sodium", "Corn starch, dehydrated vegetables, salt, sugar, soy sauce powder, acidity regulator (330), flavour enhancers (621, 627, 631), spices, anticaking agent (551)."),
+    "knorr-mixed-veg-soup": ("Knorr Mixed Vegetable Soup", "Knorr", "Beverages", 50, "Instant vegetable soup with MSG", "Corn starch, dehydrated vegetables (carrot, onion, beans, peas, corn), salt, sugar, flavour enhancers (621, 631, 627), acidity regulator (330), spices, anticaking agent."),
+
+    # HUL — COSMETICS (LAKME EXTENDED)
+    "lakme-9to5-gel-liner": ("Lakme 9 to 5 Gel Eye Liner", "Lakme", "Cosmetics", 58, "Long-wear gel liner", "Synthetic wax, hydrogenated polyisobutene, iron oxides (CI 77499), dimethicone, silica, methylparaben, propylparaben."),
+    "lakme-absolute-matte-lipstick": ("Lakme Absolute Matte Ultimate Lip Color", "Lakme", "Cosmetics", 60, "Long-wear matte lipstick", "Castor oil, carnauba wax, candelilla wax, beeswax, lanolin, niacinamide, vitamin E, synthetic dyes (CI 45410, CI 77491), fragrance."),
+    "lakme-9to5-primer-matte-foundation": ("Lakme 9 to 5 Primer + Matte Perfect Cover Foundation", "Lakme", "Cosmetics", 58, "Full-coverage matte foundation", "Water, cyclopentasiloxane, dimethicone, titanium dioxide, talc, niacinamide, sodium hyaluronate, phenoxyethanol, ethylhexylglycerin, iron oxides."),
+    "lakme-sun-expert-tinted-spf50": ("Lakme Sun Expert Ultra Matte SPF 50 PA+++ Tinted Sunscreen", "Lakme", "Skincare", 62, "Tinted sunscreen with chemical UV filters", "Ethylhexyl methoxycinnamate, octinoxate, zinc oxide, niacinamide, titanium dioxide, dimethicone, iron oxides, phenoxyethanol, fragrance."),
+    "lakme-lumi-cream": ("Lakme Luminous Skin Tint SPF 15 Cream", "Lakme", "Skincare", 60, "Tinted moisturiser with SPF", "Water, glycerin, dimethicone, octyl methoxycinnamate, titanium dioxide, niacinamide, mica, iron oxides, methylparaben, propylparaben."),
 }
 
 

@@ -59,7 +59,12 @@ function ScoreCircle({ score, size = 'large', showLabel = true }) {
         </text>
       </svg>
       {showLabel && (
-        <p className="text-sm text-gray-500 mt-2">Awareness Score</p>
+        <div className="text-center mt-2 max-w-[160px]">
+          <p className="text-sm font-semibold text-gray-700">Composition Score</p>
+          <p className="text-xs text-gray-400 mt-1 leading-snug">
+            Based on ingredient composition and commonly known information to help you make informed choices.
+          </p>
+        </div>
       )}
     </div>
   )

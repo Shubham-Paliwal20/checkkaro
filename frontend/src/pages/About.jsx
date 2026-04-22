@@ -56,9 +56,9 @@ function About() {
             </div>
             
             <div>
-              <h3 className="font-poppins font-semibold text-lg text-primary mb-2">4. Awareness Score</h3>
+              <h3 className="font-poppins font-semibold text-lg text-primary mb-2">4. Composition Score</h3>
               <p className="text-gray-700">
-                We calculate an Awareness Score (0-100) that reflects how commonly ingredients are discussed by researchers and flagged by regulators.
+                We calculate an Composition Score (0-100) that reflects how commonly ingredients are discussed by researchers and flagged by regulators.
               </p>
             </div>
           </div>
@@ -123,11 +123,11 @@ function About() {
           </div>
         </section>
 
-        {/* Awareness Score */}
+        {/* Composition Score */}
         <section className="card p-8 mb-8">
-          <h2 className="font-poppins font-bold text-2xl text-navy mb-4">Understanding the Awareness Score</h2>
+          <h2 className="font-poppins font-bold text-2xl text-navy mb-4">Understanding the Composition Score</h2>
           <p className="text-gray-700 mb-4">
-            The Awareness Score (0-100) is calculated based on ingredient classifications:
+            The Composition Score (0-100) is calculated based on ingredient classifications:
           </p>
           <ul className="space-y-2 text-gray-700 mb-4">
             <li className="flex items-start gap-2">
@@ -149,7 +149,7 @@ function About() {
           </ul>
           <div className="p-4 bg-blue-50 rounded-lg">
             <p className="text-sm text-gray-700">
-              <strong>Important:</strong> The Awareness Score reflects regulatory discussion frequency, not product quality or health impact. It is not a safety rating or health claim.
+              <strong>Important:</strong> The Composition Score reflects regulatory discussion frequency, not product quality or health impact. It is not a safety rating or health claim.
             </p>
           </div>
         </section>
@@ -166,7 +166,7 @@ function About() {
                 <strong>This is not medical advice.</strong> CheckKaro does not certify any product as safe or unsafe. We do not make health claims. Individual responses to ingredients vary.
               </p>
               <p>
-                The Awareness Score is not a safety rating, health claim, or medical assessment. It reflects how commonly ingredients are discussed by researchers and flagged by international regulatory bodies.
+                The Composition Score is not a safety rating, health claim, or medical assessment. It reflects how commonly ingredients are discussed by researchers and flagged by international regulatory bodies.
               </p>
               <p>
                 Always read the actual product label and consult a qualified healthcare professional for personal health decisions.
