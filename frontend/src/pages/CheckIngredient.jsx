@@ -14,8 +14,16 @@ function CheckIngredient() {
   const [showSuggestions, setShowSuggestions] = useState(false)
   const [selectedIndex, setSelectedIndex] = useState(-1)
   const [popularIngredients, setPopularIngredients] = useState([])
-  
+
   const searchRef = useRef(null)
+  const resultRef = useRef(null)
+
+  // Auto-scroll to result when ingredient data arrives
+  useEffect(() => {
+    if (ingredient && resultRef.current) {
+      resultRef.current.scrollIntoView({ behavior: 'smooth', block: 'start' })
+    }
+  }, [ingredient])
 
   // Fetch popular ingredients on mount
   useEffect(() => {
@@ -277,7 +285,7 @@ function CheckIngredient() {
 
       {/* Results Section */}
       {ingredient && (
-        <section className="py-12 bg-gray-soft">
+        <section ref={resultRef} className="py-12 bg-gray-soft">
           <div className="max-w-7xl mx-auto px-4">
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
               

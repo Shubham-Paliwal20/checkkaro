@@ -470,6 +470,101 @@ ALL_PRODUCTS = {
     "kapiva-aloe-juice": ("Kapiva Aloe Vera Juice", "Kapiva", "Health Supplement", 82, "Aloe vera juice", "Contains fresh aloe vera pulp."),
     "dabur-amla-juice": ("Dabur Amla Juice", "Dabur", "Health Supplement", 85, "Amla extract juice", "Pure Indian gooseberry extract."),
     "vestige-noni-juice": ("Vestige Noni Juice", "Vestige", "Health Supplement", 78, "Noni fruit juice", "Contains noni fruit extract with natural flavors."),
+
+    # BEVERAGES — CARBONATED & FRUIT DRINKS
+    "7up": ("7UP Lemon Lime", "PepsiCo", "Soft Drink", 40, "High sugar, preservative", "High sugar; contains sodium benzoate preservative."),
+    "mountain-dew": ("Mountain Dew", "PepsiCo", "Soft Drink", 30, "High sugar, caffeine, artificial color", "Contains tartrazine (E102) — linked to hyperactivity in children. Also has caffeine."),
+    "appy-fizz": ("Appy Fizz Apple Drink", "Parle Agro", "Fruit Drink", 42, "Low fruit content, preservatives", "Only 3% apple juice concentrate; contains caramel colour (E150d) and sodium benzoate."),
+    "slice-mango": ("Slice Mango Drink", "PepsiCo", "Fruit Drink", 38, "Low fruit content, artificial color", "Only 13% mango pulp; contains sunset yellow (E110) and sodium benzoate."),
+    "nimbooz": ("Nimbooz Lemon Drink", "PepsiCo", "Fruit Drink", 45, "Low fruit content", "Only 1.5% lemon juice concentrate; rest is sugar and water with sodium benzoate."),
+    "minute-maid-pulpy-orange": ("Minute Maid Pulpy Orange", "Coca-Cola India", "Fruit Drink", 52, "Juice from concentrate with additives", "12% orange juice from concentrate with colour (E160a) and stabilizers."),
+    "glucon-d-original": ("Glucon-D Original Energy Drink", "Heinz India", "Health Drink", 48, "High glucose, artificial color", "97.5% dextrose; contains sunset yellow (E110) artificial colour and added vitamins."),
+    "nestea-iced-tea-lemon": ("Nestea Lemon Iced Tea", "Nestle", "Beverages", 44, "High sugar, preservative", "Low tea content with sodium benzoate preservative."),
+    "gatorade-lemon": ("Gatorade Lemon Electrolyte Drink", "PepsiCo", "Sports Drink", 60, "Electrolyte drink with artificial color", "Contains sodium, potassium electrolytes; tartrazine (E102) artificial colour."),
+
+    # DAIRY — MILK & FRESH
+    "amul-gold-full-cream-milk": ("Amul Gold Full Cream Milk", "Amul", "Dairy", 95, "Pure full cream milk", "Standardised to min 6% fat, 9% SNF. Nothing added."),
+    "amul-taaza-toned-milk": ("Amul Taaza Toned Milk", "Amul", "Dairy", 95, "Pure toned milk", "Standardised to 3% fat, 8.5% SNF. Nothing added."),
+    "amul-kool-chocolate-milk": ("Amul Kool Chocolate Flavoured Milk", "Amul", "Dairy", 62, "Flavoured milk with additives", "Contains carrageenan stabilizer and artificial chocolate flavour."),
+    "amul-masti-dahi": ("Amul Masti Dahi", "Amul", "Dairy", 90, "Natural set curd", "Just toned milk and live lactic acid bacteria cultures. No preservatives."),
+    "mother-dairy-full-cream-milk": ("Mother Dairy Full Cream Milk", "Mother Dairy", "Dairy", 95, "Pure full cream milk", "Standardised full cream milk. Nothing added."),
+    "go-cheese-spread": ("Go Processed Cheese Spread", "Britannia", "Dairy", 62, "Processed cheese with emulsifiers", "Contains sodium citrate emulsifier and nisin preservative."),
+
+    # BISCUITS — ADDITIONAL
+    "mcvities-digestive": ("McVitie's Digestive Biscuits", "McVitie's", "Biscuits", 65, "Whole wheat with palm oil", "25% wholemeal wheat; no artificial colours or preservatives."),
+    "britannia-jim-jam": ("Britannia Jim Jam Biscuits", "Britannia", "Biscuits", 48, "Contains artificial colour in filling", "Strawberry filling contains azorubine (E122) colour and potassium sorbate."),
+    "parle-cheeselings": ("Parle Cheeselings Snack", "Parle", "Biscuits", 52, "Contains artificial flavour and colour", "Artificial cheese flavour; annatto colour (E160b)."),
+    "sunfeast-bounce-chocolate": ("Sunfeast Bounce Chocolate Crème", "Sunfeast", "Biscuits", 50, "Contains artificial flavours", "Chocolate cream sandwich biscuit with artificial flavours."),
+    "farmlite-oats-digestive": ("Sunfeast Farmlite Oats & Raisin Biscuits", "Sunfeast", "Biscuits", 68, "Oats with natural raisins", "Contains 12% oats and real raisins; no artificial colours."),
+    "britannia-little-hearts": ("Britannia Little Hearts Biscuits", "Britannia", "Biscuits", 52, "High sugar, artificial flavour", "Heart-shaped biscuit with high sugar and artificial vanilla flavour."),
+
+    # CHOCOLATES & CONFECTIONERY — ADDITIONAL
+    "bounty-bar": ("Bounty Coconut Chocolate Bar", "Mars", "Chocolate", 50, "High sugar, palm oil", "Desiccated coconut in milk chocolate; contains palm oil emulsifiers (E442, E476)."),
+    "twix-bar": ("Twix Caramel Cookie Bar", "Mars", "Chocolate", 48, "High sugar, multiple emulsifiers", "Caramel + biscuit in milk chocolate; contains palm oil and emulsifiers E442, E476."),
+    "toblerone-milk-chocolate": ("Toblerone Milk Chocolate with Honey & Almond", "Mondelez", "Chocolate", 60, "Milk chocolate with honey", "Contains 3.6% honey and 3% almonds. Soy lecithin emulsifier."),
+    "halls-mentho-lyptus": ("Halls Mentho-Lyptus Candy", "Mondelez", "Confectionery", 55, "Sugar candy with eucalyptus", "Contains eucalyptus oil and menthol. High sugar base."),
+    "pulse-raw-mango-candy": ("Pass Pass Pulse Raw Mango Candy", "DS Group", "Confectionery", 38, "Artificial colour, high sugar", "Contains tartrazine (E102) and brilliant blue (E133) artificial colours."),
+    "center-fresh-spearmint-gum": ("Center Fresh Spearmint Gum", "Perfetti Van Melle", "Confectionery", 42, "Artificial sweeteners, colour", "Contains aspartame (E951), acesulfame K (E950) and tartrazine (E102)."),
+    "alpenliebe-caramel-candy": ("Alpenliebe Caramel Candy", "Perfetti Van Melle", "Confectionery", 45, "High sugar, palm oil", "Caramel candy with condensed skim milk and palm oil."),
+    "mango-bite-candy": ("Mango Bite Candy", "Perfetti Van Melle", "Confectionery", 40, "Artificial flavour and colour", "Contains artificial mango flavour and sunset yellow (E110)."),
+
+    # HANDWASH & SANITIZERS
+    "dettol-original-handwash": ("Dettol Original Antibacterial Handwash", "Reckitt", "Personal Care", 60, "Antibacterial with PCMX", "Contains chloroxylenol (PCMX); MIT/MCIT preservatives linked to contact dermatitis."),
+    "lifebuoy-total-handwash": ("Lifebuoy Total 10 Handwash", "HUL", "Personal Care", 55, "Contains triclosan", "Contains triclosan (0.3%) — hormone disruptor, banned in EU wash-off products."),
+    "himalaya-purifying-handwash": ("Himalaya Purifying Neem Handwash", "Himalaya", "Personal Care", 65, "Herbal handwash with SLS", "Contains neem and turmeric; uses SLS and paraben preservatives."),
+    "savlon-moisturising-handwash": ("Savlon Moisturizing Germ Protection Handwash", "ITC", "Personal Care", 62, "Antibacterial with chlorhexidine", "Contains chlorhexidine gluconate 0.3%; MIT/MCIT preservatives."),
+
+    # ORAL CARE — ADDITIONAL
+    "colgate-maxfresh-blue": ("Colgate MaxFresh Blue Gel Toothpaste", "Colgate", "Oral Care", 58, "Gel formula with SLS and cooling crystals", "Contains SLS, sodium fluoride and Blue 1 artificial colour. Cooling crystals are polyethylene microplastics."),
+    "colgate-strong-teeth": ("Colgate Strong Teeth Toothpaste", "Colgate", "Oral Care", 60, "Standard fluoride toothpaste", "Contains sodium monofluorophosphate (0.76%); SLS and saccharin sweetener."),
+    "dabur-meswak": ("Dabur Meswak Complete Oral Care Toothpaste", "Dabur", "Oral Care", 72, "Herbal toothpaste with Miswak", "Contains Salvadora persica (Miswak) extract; low fluoride formula (1000 ppm)."),
+
+    # SKINCARE — ADDITIONAL
+    "glow-and-lovely-face-cream": ("Glow & Lovely Advanced Multivitamin Face Cream", "HUL", "Skincare", 58, "Contains parabens and mineral oil", "Contains methylparaben, propylparaben and liquid paraffin (mineral oil); niacinamide 2%."),
+    "ponds-white-beauty-spf15": ("Pond's White Beauty SPF 15 Day Cream", "HUL", "Skincare", 56, "Chemical sunscreen with parabens", "Contains octyl methoxycinnamate UV filter; methylparaben and propylparaben preservatives."),
+    "dabur-gulabari-rose-water": ("Dabur Gulabari Premium Rose Water", "Dabur", "Skincare", 82, "Pure rose water toner", "99.5% Rosa damascena flower water. Minimal preservatives (phenoxyethanol, methylparaben)."),
+    "the-derma-co-spf50-sunscreen": ("The Derma Co 1% Hyaluronic Sunscreen SPF 50", "The Derma Co", "Skincare", 70, "Hybrid sunscreen with hyaluronic acid", "Contains 1% sodium hyaluronate; avobenzone and zinc oxide UV filters."),
+    "lotus-white-glow-cream": ("Lotus Herbals White Glow Skin Whitening Gel Cream SPF 25", "Lotus Herbals", "Skincare", 62, "Whitening cream with chemical UV filters", "Contains kojic acid and mulberry extract; avobenzone UV filter with paraben preservatives."),
+    "biotique-coconut-whitening-cream": ("Biotique Bio Coconut Whitening & Brightening Cream", "Biotique", "Skincare", 68, "Ayurvedic brightening cream", "Contains coconut oil, turmeric and saffron. Minimal additives."),
+    "pilgrim-vitamin-c-serum": ("Pilgrim 20% Vitamin C Brightening Serum", "Pilgrim", "Skincare", 74, "High-strength Vitamin C serum", "Contains 20% ascorbic acid with ferulic acid stabiliser. Free of parabens and sulphates."),
+
+    # HAIR CARE — ADDITIONAL
+    "streax-pro-serum": ("Streax Professional Vitariche Gloss Hair Serum", "Streax", "Hair Care", 65, "Silicone-based hair serum", "Contains cyclopentasiloxane (volatile silicone) and argan oil. Light non-greasy serum."),
+    "parachute-advansed-body-lotion": ("Parachute Advansed Deep Nourish Body Lotion", "Marico", "Personal Care", 68, "Coconut oil-based lotion", "Contains coconut oil, glycerin and vitamin E. Paraben preservatives present."),
+    "loreal-elvive-extraordinary-oil": ("Loreal Paris Elvive Extraordinary Oil Serum", "Loreal", "Hair Care", 64, "Multi-oil hair serum", "Contains blend of 6 rare flower oils in cyclopentasiloxane base. Dimethicone present."),
+    "indulekha-bringha-shampoo": ("Indulekha Bringha Anti Hair Fall Shampoo", "HUL", "Hair Care", 70, "Ayurvedic anti-hairfall shampoo", "Contains bhringraj and light liquid paraffin; free of parabens."),
+
+    # FOOD — SALT, OATS & INSTANT
+    "tata-salt-iodized": ("Tata Salt Iodised", "Tata Consumer Products", "Food", 96, "Pure iodized salt", "Sodium chloride with potassium iodate (iodine). Anti-caking agent (E535 - sodium ferrocyanide, max 10 ppm)."),
+    "captain-cook-salt": ("Captain Cook Free Flow Iodised Salt", "Tata", "Food", 95, "Iodized salt with anti-caking agent", "Sodium chloride with potassium iodate and silicon dioxide anti-caking agent."),
+    "saffola-masala-oats-tomato": ("Saffola Masala Oats Peppy Tomato", "Marico", "Breakfast Cereal", 68, "Oats with flavour enhancer", "62% oats with dried vegetables; contains disodium ribonucleotide (E635) flavour enhancer."),
+    "nissin-cup-noodles-masala": ("Nissin Cup Noodles Masala", "Nissin Foods", "Instant Noodles", 38, "Very high sodium, MSG", "Contains MSG (E621), disodium guanylate (E627) and disodium inosinate (E631). Very high salt."),
+    "maggi-pazzta-masala": ("Maggi Pazzta Masala Twist Pasta", "Nestle", "Instant Noodles", 45, "Semolina pasta with flavour enhancers", "Contains disodium guanylate (E627) and disodium inosinate (E631); relatively lower sodium than noodles."),
+    "aashirvaad-sambhar-masala": ("Aashirvaad Sambhar Masala", "ITC", "Spices", 86, "Natural spice blend", "All natural spices: coriander, cumin, chilli, turmeric, pepper, curry leaves. No artificial additives."),
+    "mdh-dal-makhani-masala": ("MDH Dal Makhani Masala", "MDH", "Spices", 88, "Natural spice blend", "Pure blend of natural spices. No artificial colours, flavours or preservatives."),
+    "heinz-tomato-ketchup": ("Heinz Tomato Ketchup", "Heinz", "Condiments", 58, "Contains sodium benzoate", "60% tomatoes but also contains sodium benzoate (E211) preservative and high sugar."),
+    "amul-mithai-mate": ("Amul Mithai Mate Condensed Milk", "Amul", "Dairy", 55, "Very high sugar", "Condensed whole milk with 45% added sugar. High glycaemic."),
+    "britannia-whole-wheat-bread": ("Britannia 100% Whole Wheat Bread", "Britannia", "Bakery", 70, "Whole wheat with preservatives", "100% whole wheat flour; calcium propionate (E282) preservative."),
+
+    # HEALTH SUPPLEMENTS — ADDITIONAL
+    "revital-h-multivitamin": ("Revital H Multivitamin & Multimineral Capsules", "Sun Pharma", "Health Supplement", 78, "Ginseng + multivitamin complex", "Contains ginseng extract 42.5 mg with 17 vitamins and minerals. Generally safe for adults."),
+    "baidyanath-chyawanprash": ("Baidyanath Special Chyawanprash", "Baidyanath", "Health Supplement", 82, "Traditional Ayurvedic formulation", "Amla 3.6g per 10g serving; 40+ classical herbs with ghee, honey and sesame oil base."),
+    "himalaya-triphala": ("Himalaya Triphala Tablets", "Himalaya", "Health Supplement", 88, "Three-fruit Ayurvedic supplement", "Equal parts amla, haritaki and bibhitaki. No synthetic additives."),
+    "patanjali-ashwagandha-churna": ("Patanjali Ashwagandha Churna", "Patanjali", "Health Supplement", 90, "Pure ashwagandha root powder", "100% Withania somnifera root powder. No fillers or additives."),
+    "himalaya-liv52-syrup": ("Himalaya Liv.52 Syrup", "Himalaya", "Health Supplement", 80, "Liver protective herbal syrup", "Contains caper bush (himsra), chicory, black nightshade, arjuna. Sucrose base."),
+
+    # BABY CARE — ADDITIONAL
+    "johnsons-baby-powder": ("Johnson's Baby Powder", "Johnson's", "Baby Care", 55, "Talc-based powder", "Primary ingredient is talc — FDA has raised cancer concerns for talc near genital area."),
+    "himalaya-gentle-baby-powder": ("Himalaya Gentle Baby Powder", "Himalaya", "Baby Care", 72, "Herbal baby powder", "Talc base with khus khus and lodhra herbal extracts. Gentler than standard talc powders."),
+    "mamaearth-baby-massage-oil": ("Mamaearth Daily Moisturizing Baby Massage Oil", "Mamaearth", "Baby Care", 82, "Natural oil blend for babies", "Blend of sesame, almond, jojoba and chamomile oils. Free of mineral oil and parabens."),
+    "himalaya-baby-lotion": ("Himalaya Baby Lotion", "Himalaya", "Baby Care", 75, "Gentle herbal baby lotion", "Contains aloe vera and almond oil. Free of parabens; mild formula for sensitive baby skin."),
+
+    # SNACKS — ADDITIONAL POPULAR
+    "haldiram-navrattan-mixture": ("Haldirams Navrattan Mixture", "Haldiram", "Snacks", 68, "Mixed namkeen with natural spices", "Nine-ingredient traditional namkeen with natural spices. Fried in palmolein oil."),
+    "bikaji-bhujia": ("Bikaji Bhujia", "Bikaji", "Snacks", 70, "Traditional moth dal bhujia", "Moth bean flour, spices and palmolein oil. No artificial preservatives."),
+    "too-yumm-multigrain": ("Too Yumm Multigrain Chilli Chips", "Too Yumm", "Snacks", 72, "Baked multigrain chips", "Lower fat baked chips; contains corn, rice and wheat with natural spices."),
+    "mccain-aloo-tikki": ("McCain Aloo Tikki", "McCain", "Snacks", 58, "Processed potato product", "Contains reconstituted potato, starch, onion powder and flavour enhancers."),
+    "britannia-cheese-croissant": ("Britannia Cheese Croissant", "Britannia", "Bakery", 48, "Cheese-filled pastry with trans fat risk", "Contains hydrogenated vegetable fat — potential trans fat source. Artificial cheese flavour."),
 }
 
 

@@ -26,6 +26,18 @@ for key, (name, brand, category, score, verdict, recommendation) in ALL_PRODUCTS
         ]
     }
 
+# Pre-built search index — computed once at startup, never rebuilt per-request
+SEARCH_INDEX = [
+    {
+        "name": p["name"],
+        "brand": p["brand"],
+        "category": p["category"],
+        "name_lower": p["name"].lower(),
+        "brand_lower": p["brand"].lower(),
+    }
+    for p in SAMPLE_PRODUCTS.values()
+]
+
 
 def normalize_name(name: str) -> str:
     """Normalize product name for matching"""
@@ -90,38 +102,24 @@ async def search_product(name: str = Query(..., description="Product name to sea
 
 @router.get("/suggestions")
 async def get_search_suggestions(q: str = Query(..., description="Search query for suggestions")):
-    """
-    Get product name suggestions for autocomplete (like Google search)
-    """
-    try:
-        if len(q) < 2:  # Only show suggestions after 2 characters
-            return {"suggestions": []}
-        
-        print(f"[SUGGESTIONS] Getting suggestions for: {q}")
-        
-        # Get all product names from our database
-        ALL_PRODUCT_NAMES = []
-        for key, product_data in SAMPLE_PRODUCTS.items():
-            ALL_PRODUCT_NAMES.append({
-                "name": product_data["name"],
-                "brand": product_data["brand"],
-                "category": product_data["category"]
-            })
-        
-        # Filter products that match the query (case insensitive)
-        query_lower = q.lower()
-        suggestions = []
-        
-        for product in ALL_PRODUCT_NAMES:
-            if query_lower in product["name"].lower() or query_lower in product["brand"].lower():
-                suggestions.append(product)
-        
-        # Limit to top 8 suggestions
-        suggestions = suggestions[:8]
-        
-        print(f"[SUGGESTIONS] Found {len(suggestions)} suggestions")
-        return {"suggestions": suggestions}
-        
-    except Exception as e:
-        print(f"[SUGGESTIONS ERROR] {str(e)}")
+    if len(q) < 1:
         return {"suggestions": []}
+
+    q_lower = q.lower()
+    prefix = []
+    substring = []
+
+    for p in SEARCH_INDEX:
+        name_match = q_lower in p["name_lower"]
+        brand_match = q_lower in p["brand_lower"]
+        if not name_match and not brand_match:
+            continue
+        entry = {"name": p["name"], "brand": p["brand"], "category": p["category"]}
+        # Prefix matches in name rank first
+        if p["name_lower"].startswith(q_lower):
+            prefix.append(entry)
+        else:
+            substring.append(entry)
+
+    suggestions = (prefix + substring)[:8]
+    return {"suggestions": suggestions}

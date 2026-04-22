@@ -7,13 +7,30 @@ function Footer() {
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
           {/* Left - Logo and Tagline */}
           <div>
-            <div className="flex items-center space-x-2 mb-3">
-              <svg className="w-8 h-8 text-orange" fill="currentColor" viewBox="0 0 24 24">
-                <path d="M12 2L2 7v10c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V7l-10-5zm0 18c-3.31 0-6-2.69-6-6s2.69-6 6-6 6 2.69 6 6-2.69 6-6 6zm-1-10v5l4.25 2.52.77-1.28-3.52-2.09V10H11z"/>
+            <div className="flex items-center gap-2.5 mb-3">
+              <svg width="40" height="40" viewBox="0 0 52 52" fill="none" xmlns="http://www.w3.org/2000/svg">
+                {/* Magnifying glass — orange ring */}
+                <circle cx="22" cy="22" r="17.5" fill="white" fillOpacity="0.08" stroke="#FF9933" strokeWidth="4"/>
+                {/* Jar with leaf */}
+                <rect x="9" y="14" width="11" height="14" rx="2" fill="#4A87B8"/>
+                <ellipse cx="14.5" cy="20" rx="3" ry="4" fill="white" opacity="0.85"/>
+                <line x1="14.5" y1="15.5" x2="14.5" y2="24.5" stroke="#4A87B8" strokeWidth="1.2"/>
+                <rect x="10" y="12" width="9" height="3" rx="1" fill="#4A87B8"/>
+                {/* Pump bottle */}
+                <rect x="21" y="12" width="8" height="16" rx="2.5" fill="#4A87B8"/>
+                <rect x="22.5" y="9" width="5" height="4" rx="1.5" fill="#4A87B8"/>
+                <rect x="24" y="6.5" width="2" height="3.5" rx="1" fill="#4A87B8"/>
+                {/* Small container */}
+                <rect x="30" y="21" width="7.5" height="7" rx="2" fill="#4A87B8"/>
+                <rect x="30.5" y="19" width="6.5" height="2.5" rx="1" fill="#4A87B8"/>
+                {/* Handle */}
+                <line x1="36" y1="36" x2="48" y2="48" stroke="#FF9933" strokeWidth="5.5" strokeLinecap="round"/>
               </svg>
-              <div className="font-poppins font-bold text-xl flex items-center">
-                <span className="text-orange">Check</span>
-                <span className="text-white">Karo</span>
+              <div className="flex flex-col leading-tight">
+                <div className="font-poppins font-bold text-xl">
+                  <span className="text-orange">Check</span><span className="text-white">Karo</span>
+                </div>
+                <span className="text-xs text-gray-400" style={{ marginTop: '-1px' }}>Know what's inside</span>
               </div>
             </div>
             <p className="text-gray-400 text-sm">Be informed. Be aware.</p>

@@ -4,6 +4,9 @@ import axios from 'axios'
 
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'https://checkkaro.onrender.com'
 
+// Session-level cache so repeated keystrokes don't re-hit the server
+const suggestionsCache = new Map()
+
 function SearchBar({ placeholder = "Search any product...", onSearch }) {
   const [query, setQuery] = useState('')
   const [suggestions, setSuggestions] = useState([])
@@ -13,30 +16,35 @@ function SearchBar({ placeholder = "Search any product...", onSearch }) {
   const searchRef = useRef(null)
   const suggestionsRef = useRef(null)
 
-  // Fetch suggestions when user types
   useEffect(() => {
+    if (query.length < 1) {
+      setSuggestions([])
+      setShowSuggestions(false)
+      return
+    }
+
+    // Return cached result immediately — no network round-trip
+    if (suggestionsCache.has(query)) {
+      setSuggestions(suggestionsCache.get(query))
+      setShowSuggestions(true)
+      return
+    }
+
     const fetchSuggestions = async () => {
-      if (query.length >= 2) {
-        try {
-          console.log(`[FRONTEND] Fetching suggestions for: ${query}`)
-          const response = await axios.get(`${API_BASE_URL}/api/product/suggestions`, {
-            params: { q: query }
-          })
-          console.log(`[FRONTEND] Got suggestions:`, response.data.suggestions)
-          setSuggestions(response.data.suggestions || [])
-          setShowSuggestions(true)
-        } catch (error) {
-          console.error('[FRONTEND] Error fetching suggestions:', error)
-          setSuggestions([])
-        }
-      } else {
-        console.log(`[FRONTEND] Query too short: ${query}`)
+      try {
+        const response = await axios.get(`${API_BASE_URL}/api/product/suggestions`, {
+          params: { q: query }
+        })
+        const results = response.data.suggestions || []
+        suggestionsCache.set(query, results)
+        setSuggestions(results)
+        setShowSuggestions(true)
+      } catch {
         setSuggestions([])
-        setShowSuggestions(false)
       }
     }
 
-    const debounceTimer = setTimeout(fetchSuggestions, 200) // Debounce for 200ms
+    const debounceTimer = setTimeout(fetchSuggestions, 150)
     return () => clearTimeout(debounceTimer)
   }, [query])
 
@@ -144,7 +152,6 @@ function SearchBar({ placeholder = "Search any product...", onSearch }) {
       </form>
 
       {/* Suggestions Dropdown */}
-      {console.log(`[FRONTEND] Render - showSuggestions: ${showSuggestions}, suggestions.length: ${suggestions.length}`)}
       {showSuggestions && suggestions.length > 0 && (
         <div 
           ref={suggestionsRef}
