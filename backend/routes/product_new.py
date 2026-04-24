@@ -4,6 +4,7 @@ from models.schemas import ProductResponse, IngredientItem
 import re
 from routes.product_all_data import ALL_PRODUCTS
 from routes.product_ingredients_full import get_ingredients
+from routes.product_images import PRODUCT_IMAGES
 
 router = APIRouter()
 
@@ -15,7 +16,7 @@ for key, (name, brand, category, score, verdict, recommendation) in ALL_PRODUCTS
         "name": name,
         "brand": brand,
         "category": category,
-        "image_url": None,
+        "image_url": PRODUCT_IMAGES.get(key),
         "awareness_score": score,
         "summary": f"{name} - {verdict}. This information is for general awareness based on publicly available regulatory data. It is not a health assessment or medical advice.",
         "fssai_note": "FSSAI approved product with standard ingredients.",
@@ -63,7 +64,7 @@ async def search_product(name: str = Query(..., description="Product name to sea
             print(f"[DATABASE ONLY] Found: {product_data['name']}")
             
             # Build ingredients list - GET FULL INGREDIENTS FROM DATABASE
-            full_ingredients = get_ingredients(key)
+            full_ingredients = get_ingredients(key, category=product_data["category"])
             ingredients = []
             for ing in full_ingredients:
                 ingredients.append(IngredientItem(

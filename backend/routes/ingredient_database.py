@@ -3,9 +3,32 @@ Comprehensive Ingredient Database - Single Source of Truth
 This ensures consistency between product search and ingredient check pages
 """
 
-def classify_ingredient(ingredient_name):
+COSMETIC_CATEGORIES = {
+    "Skincare", "Hair Care", "Cosmetics", "Personal Care", "Baby Care", "Oral Care", "Household"
+}
+
+# Ingredients that are standard/safe in cosmetics but have dietary concerns in food
+COSMETIC_SAFE_OVERRIDES = {
+    'sodium chloride': ('Isotonic agent / texture ingredient', 'Standard cosmetic ingredient; the salt-intake concern applies only to food, not topical use'),
+    'nacl': ('Isotonic agent / texture ingredient', 'Standard cosmetic ingredient used to adjust texture and tonicity'),
+    'citric acid': ('pH adjuster (E330)', 'Used in cosmetics to balance pH; the tooth-enamel concern applies to ingestion, not skin application'),
+    'glycerin': ('Humectant', 'Standard moisturising agent, one of the most widely used cosmetic ingredients globally'),
+    'glycerine': ('Humectant', 'Standard moisturising agent, one of the most widely used cosmetic ingredients globally'),
+    'glycerol': ('Humectant', 'Standard moisturising agent, widely used in cosmetics and pharmaceuticals'),
+    'sorbitol': ('Humectant', 'Used as a moisture-retaining agent in cosmetics; laxative concern is only relevant to ingestion'),
+    'ascorbic acid': ('Antioxidant / Vitamin C', 'Antioxidant preservative and skin-brightening agent; safe for topical use'),
+    'sodium bicarbonate': ('pH adjuster', 'Used to adjust pH in cosmetic formulations; no dietary concerns apply topically'),
+    'lactic acid': ('Alpha hydroxy acid (AHA)', 'Standard exfoliant and pH adjuster in skincare; gentle and widely used'),
+    'tocopherol': ('Vitamin E antioxidant', 'Natural antioxidant preservative widely used in skincare products'),
+    'tocopheryl acetate': ('Vitamin E ester', 'Stable form of Vitamin E, widely used antioxidant in cosmetics'),
+    'salt': ('Isotonic / texture agent', 'Standard cosmetic ingredient; dietary salt concerns do not apply to topical use'),
+}
+
+
+def classify_ingredient(ingredient_name, category=None):
     """Classify ingredients based on regulatory and health concerns - SINGLE SOURCE OF TRUTH"""
     ingredient_lower = ingredient_name.lower()
+    is_cosmetic = category in COSMETIC_CATEGORIES
     
     # COMMONLY QUESTIONED INGREDIENTS (RED) - Regulatory concerns, banned substances, health risks
     commonly_questioned_patterns = {
@@ -284,6 +307,17 @@ def classify_ingredient(ingredient_name):
         'herbal extract': ('Natural herbal extract', 'Natural plant-derived ingredient, safe'),
         'botanical extract': ('Natural botanical extract', 'Natural plant-derived ingredient, safe'),
     }
+
+    # For cosmetic/topical products, override food-context concerns with cosmetic-appropriate classification
+    if is_cosmetic:
+        for pattern, (what_it_is, note) in COSMETIC_SAFE_OVERRIDES.items():
+            if pattern in ingredient_lower:
+                return {
+                    'classification': 'generally_recognised',
+                    'what_it_is': what_it_is,
+                    'one_line_note': note,
+                    'regulatory_note': 'Standard cosmetic ingredient, no topical safety concerns'
+                }
 
     # Check commonly questioned first (highest priority)
     for pattern, (what_it_is, note) in commonly_questioned_patterns.items():

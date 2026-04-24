@@ -5,17 +5,15 @@ Uses centralized classification system for consistency
 
 from routes.ingredient_database import classify_ingredient as get_classification
 
-def create_ingredient_item(name, custom_classification=None, custom_note=None, custom_regulatory=None):
+def create_ingredient_item(name, custom_classification=None, custom_note=None, custom_regulatory=None, category=None):
     """Create standardized ingredient item using centralized classification"""
-    
-    # Always use centralized classification for consistency
-    classification_data = get_classification(name)
-    
-    # Use custom values if provided, otherwise use centralized data
+
+    classification_data = get_classification(name, category=category)
+
     classification = custom_classification or classification_data['classification']
     note = custom_note or classification_data['one_line_note']
     regulatory = custom_regulatory or classification_data['regulatory_note']
-    
+
     return {
         "name": name,
         "classification": classification,
@@ -5168,6 +5166,31 @@ DEFAULT_INGREDIENTS = [
     create_ingredient_item("Standard Food/Cosmetic Ingredients")
 ]
 
-def get_ingredients(product_key):
-    """Get full ingredient list for a product"""
-    return FULL_INGREDIENTS.get(product_key, DEFAULT_INGREDIENTS)
+from routes.ingredient_database import COSMETIC_SAFE_OVERRIDES, COSMETIC_CATEGORIES
+
+def get_ingredients(product_key, category=None):
+    """Get full ingredient list for a product, with category-aware classification."""
+    ingredients = FULL_INGREDIENTS.get(product_key, DEFAULT_INGREDIENTS)
+
+    if category not in COSMETIC_CATEGORIES:
+        return ingredients
+
+    # Re-classify ingredients that have food-context concerns but are safe topically
+    result = []
+    for ing in ingredients:
+        ing_lower = ing["name"].lower()
+        override_applied = False
+        if ing["classification"] in ("worth_knowing", "commonly_questioned"):
+            for pattern, (what_it_is, note) in COSMETIC_SAFE_OVERRIDES.items():
+                if pattern in ing_lower:
+                    result.append({
+                        "name": ing["name"],
+                        "classification": "generally_recognised",
+                        "one_line_note": note,
+                        "regulatory_note": "Standard cosmetic ingredient, no topical safety concerns"
+                    })
+                    override_applied = True
+                    break
+        if not override_applied:
+            result.append(ing)
+    return result
