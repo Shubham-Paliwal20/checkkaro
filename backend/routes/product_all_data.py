@@ -722,6 +722,76 @@ ALL_PRODUCTS = {
     # ─── CETAPHIL (EXPANDED) ──────────────────────────────────────────────────
     "cetaphil-daily-lotion": ("Cetaphil Daily Advance Ultra Hydrating Lotion", "Cetaphil", "Skincare", 78, "Dermatologist-recommended daily lotion", "Pro-Vitamin B5, shea butter, vitamin E and sweet almond oil; non-comedogenic, hypoallergenic."),
     "cetaphil-sunscreen": ("Cetaphil Sun SPF 50+ Light Gel", "Cetaphil", "Skincare", 74, "Lightweight gel sunscreen for sensitive skin", "UVA/UVB broad spectrum; lightweight gel texture with moisturising actives; suitable for sensitive skin."),
+
+    # ─── PROTEIN SUPPLEMENTS ──────────────────────────────────────────────────
+
+    # MuscleBlaze
+    "muscleblaze-whey-gold": ("MuscleBlaze Whey Gold 100% Whey Protein", "MuscleBlaze", "Protein Supplement", 70, "Blended whey protein with creamer base", "WPI + WPC + hydrolyzed whey blend; contains artificial sweeteners sucralose and Ace-K; creamer contains hydrogenated vegetable oil."),
+    "muscleblaze-raw-whey": ("MuscleBlaze Raw Whey Protein 80% (Unflavored)", "MuscleBlaze", "Protein Supplement", 90, "Pure whey protein concentrate, no additives", "Single ingredient: whey protein concentrate 80%. No sweeteners, flavours, or fillers. Best choice for clean protein."),
+    "muscleblaze-biozyme-whey": ("MuscleBlaze Biozyme Performance Whey Protein", "MuscleBlaze", "Protein Supplement", 72, "Whey protein with digestive enzyme blend", "WPC + WPI with protease, lactase, amylase and lipase enzyme blend for enhanced absorption. Contains sucralose and Ace-K."),
+    "muscleblaze-mass-gainer": ("MuscleBlaze Mass Gainer XXL", "MuscleBlaze", "Protein Supplement", 50, "High-calorie mass gainer with high maltodextrin", "Maltodextrin is the first ingredient; high GI carb source. Contains hydrogenated vegetable oil, artificial flavors, sucralose. Suitable for hard gainers only."),
+    "muscleblaze-creatine": ("MuscleBlaze Creatine Monohydrate", "MuscleBlaze", "Protein Supplement", 92, "100% pure creatine monohydrate, no additives", "Single ingredient creatine monohydrate. One of the most studied sports supplements with proven efficacy for strength and power."),
+    "muscleblaze-high-protein-bar": ("MuscleBlaze HIGH Protein Bar Chocolate Brownie", "MuscleBlaze", "Nutrition", 65, "Protein bar with multiple protein sources and chocolate coating", "Whey + milk + soy protein blend; glucose syrup, palm oil, sugar and dark chocolate coating; sucralose added."),
+
+    # Optimum Nutrition (ON)
+    "on-gold-standard-whey": ("Optimum Nutrition Gold Standard 100% Whey", "Optimum Nutrition", "Protein Supplement", 74, "Industry benchmark whey protein with WPI as first ingredient", "Protein blend (WPI, WPC, whey peptides); lecithin, natural/artificial flavors, Ace-K; no hydrogenated fats. Aminogen enzyme blend included."),
+    "on-serious-mass": ("Optimum Nutrition Serious Mass Gainer", "Optimum Nutrition", "Protein Supplement", 52, "Ultra high-calorie mass gainer with multiple protein sources", "Maltodextrin-dominant; multi-protein blend including egg albumin and casein; contains creatine, glutamine, inulin, corn syrup solids, Ace-K and sucralose."),
+    "on-creatine": ("Optimum Nutrition Micronized Creatine Powder", "Optimum Nutrition", "Protein Supplement", 92, "100% micronized creatine monohydrate", "Single ingredient: micronized creatine monohydrate. No fillers, flavors, or sweeteners. Clinically proven for strength and athletic performance."),
+
+    # MyProtein
+    "myprotein-impact-whey": ("MyProtein Impact Whey Protein", "MyProtein", "Protein Supplement", 74, "Simple WPC formula with minimal additives", "Whey protein concentrate 80% with cocoa powder, flavoring, soya lecithin and sucralose. Simple, clean formula."),
+    "myprotein-total-protein": ("MyProtein Total Protein Blend", "MyProtein", "Protein Supplement", 72, "Multi-source protein blend for sustained release", "Five-protein blend: micellar casein, WPC, milk protein concentrate, pea protein isolate and egg albumin. Sucralose, sunflower lecithin and xanthan gum."),
+    "myprotein-vegan-blend": ("MyProtein Vegan Protein Blend", "MyProtein", "Protein Supplement", 80, "Plant-based complete amino acid protein blend", "Pea protein isolate + brown rice protein + hemp protein; complete BCAA profile. Sucralose, sunflower lecithin. Dairy-free, egg-free."),
+    "myprotein-creatine": ("MyProtein Creatine Monohydrate Powder", "MyProtein", "Protein Supplement", 92, "100% creatine monohydrate, unflavored", "Single ingredient: creatine monohydrate. No additives. Same formula as pharmaceutical-grade creatine."),
+
+    # AS-IT-IS Nutrition
+    "as-it-is-whey-protein": ("AS-IT-IS Nutrition Whey Protein Concentrate 80%", "AS-IT-IS Nutrition", "Protein Supplement", 90, "Pure WPC80, zero additives, lab-tested", "Single ingredient: whey protein concentrate 80%. Tested by FSSAI-approved labs. No sweeteners, flavors, maltodextrin or anti-caking agents."),
+    "as-it-is-creatine": ("AS-IT-IS Nutrition Creatine Monohydrate", "AS-IT-IS Nutrition", "Protein Supplement", 92, "100% creatine monohydrate, no fillers", "Single ingredient: creatine monohydrate. Third-party tested. Zero artificial sweeteners, flavours or additives."),
+    "as-it-is-casein": ("AS-IT-IS Nutrition Micellar Casein Protein", "AS-IT-IS Nutrition", "Protein Supplement", 88, "Slow-digesting casein for overnight recovery", "Single ingredient: micellar casein (milk). No additives. Provides sustained amino acid release over 6-8 hours."),
+
+    # Dymatize
+    "dymatize-iso100": ("Dymatize ISO 100 Whey Protein Isolate", "Dymatize", "Protein Supplement", 76, "Hydrolyzed WPI for fast absorption and minimal lactose", "Hydrolyzed WPI + WPI blend; one of the fastest-absorbing proteins. Contains Ace-K and sucralose; no hydrogenated fats."),
+
+    # BSN
+    "bsn-syntha6": ("BSN Syntha-6 Protein Powder", "BSN", "Protein Supplement", 60, "Multi-source protein with added fiber, dessert-like taste", "Six-protein matrix including casein and egg albumin; polydextrose and carrageenan as fiber/thickener; corn syrup solids in creamer; sucralose and Ace-K."),
+
+    # GNC
+    "gnc-pro-whey": ("GNC Pro Performance 100% Whey Protein", "GNC", "Protein Supplement", 68, "WPC-based protein with calcium caseinate", "Whey protein concentrate with calcium caseinate, cocoa, cellulose gum, guar gum, sucralose and Ace-K."),
+
+    # Nakpro
+    "nakpro-perform-whey": ("Nakpro Perform 100% Whey Protein", "Nakpro Nutrition", "Protein Supplement", 72, "Affordable WPC80 protein with minimal fillers", "Whey protein concentrate 80%; cocoa powder, soy lecithin, sucralose, silicon dioxide. FSSAI approved. Made in India."),
+
+    # Avvatar
+    "avvatar-whey-protein": ("Avvatar Absolute 100% Whey Protein", "Avvatar", "Protein Supplement", 72, "WPC + WPI blend, Made in India", "Whey protein concentrate and isolate blend; cocoa powder, soy lecithin, sucralose, Ace-K, xanthan gum. No hydrogenated fats."),
+
+    # Scitron
+    "scitron-advance-whey": ("Scitron Advance Whey Protein", "Scitron", "Protein Supplement", 72, "WPC + WPI blend with standard sweeteners", "Whey protein concentrate and isolate; cocoa, natural/artificial flavors, soy lecithin, sucralose, Ace-K, xanthan gum."),
+
+    # HK Vitals (HealthKart)
+    "hk-vitals-whey": ("HK Vitals Whey Protein by HealthKart", "HK Vitals", "Protein Supplement", 70, "Entry-level flavored WPC protein", "Whey protein concentrate with cocoa, natural/artificial flavors, soy lecithin, sucralose and Ace-K. Made in India."),
+
+    # Fast&Up
+    "fast-up-whey": ("Fast&Up Whey Protein Advanced", "Fast&Up", "Protein Supplement", 74, "WPC + WPI with digestive enzymes", "Whey concentrate and isolate blend with protease and lactase enzyme blend; soy lecithin, sucralose, Ace-K. Informed Sport certified."),
+
+    # MuscleTech
+    "muscletech-nitrotech": ("MuscleTech NitroTech Whey Protein", "MuscleTech", "Protein Supplement", 65, "Whey protein with added creatine and glutamine", "WPI + WPC + whey peptides; added creatine monohydrate and L-glutamine; corn syrup solids in creamer; sucralose and Ace-K."),
+    "muscletech-phase8": ("MuscleTech Phase 8 Multi-Phase Protein", "MuscleTech", "Protein Supplement", 66, "Sustained-release multi-protein 8-hour matrix", "Six-protein blend including micellar casein and egg albumin for 8-hour release; calcium caseinate, cellulose gum, guar gum, sucralose, Ace-K."),
+
+    # Abbzorb
+    "abbzorb-whey": ("Abbzorb Nutrition Whey Protein", "Abbzorb Nutrition", "Protein Supplement", 70, "Budget WPC protein made in India", "Whey protein concentrate 80%; cocoa powder, natural/artificial flavors, soy lecithin, sucralose, Ace-K. FSSAI approved."),
+
+    # Six Pack Nutrition
+    "sixpack-accelerate-whey": ("Six Pack Nutrition Accelerate 100% Whey Protein", "Six Pack Nutrition", "Protein Supplement", 70, "WPC + WPI blend for muscle building", "Whey concentrate and isolate blend; cocoa powder, natural/artificial flavors, soy lecithin, sucralose, Ace-K."),
+
+    # Steadfast Nutrition
+    "steadfast-whey": ("Steadfast Nutrition Whey Protein", "Steadfast Nutrition", "Protein Supplement", 74, "Minimal-additive whey protein", "Whey protein concentrate; natural/artificial flavors, soy lecithin, sucralose. Fewer additives than most brands."),
+
+    # Yoga Bar Plant Protein
+    "yoga-bar-plant-protein": ("Yoga Bar Plant Protein Chocolate", "Yoga Bar", "Protein Supplement", 82, "Plant-based protein with no artificial sweeteners", "Pea protein isolate + brown rice protein + pumpkin seed protein. Sweetened with monk fruit extract only. No sucralose, no Ace-K, no artificial flavors."),
+
+    # Protein Bars
+    "ritebite-max-protein-bar": ("RiteBite Max Protein Bar", "RiteBite", "Nutrition", 72, "Whole food protein bar with dark chocolate coating", "Whey + soy protein blend with oats, dates, almonds, cashews; dark chocolate coating with soy lecithin; no sucralose. Added honey and rice syrup."),
+    "quest-protein-bar": ("Quest Nutrition Protein Bar", "Quest Nutrition", "Nutrition", 68, "High-protein low-carb bar with sucralose", "WPI + milk protein isolate; almonds, palm kernel oil; L-leucine added; sucralose and steviol glycosides as sweeteners. Imported product."),
 }
 
 

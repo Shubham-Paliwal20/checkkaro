@@ -90,7 +90,18 @@ def classify_ingredient(ingredient_name, category=None):
         'high fructose corn syrup': ('Sweetener', 'Linked to obesity, fatty liver disease, insulin resistance, metabolic syndrome'),
         'glucose syrup': ('Sweetener', 'Rapid blood sugar spikes, weight gain, diabetes risk with regular consumption'),
         'invert sugar': ('Sweetener', 'High calorie, tooth decay, blood sugar spikes, similar concerns as regular sugar'),
-        'maltodextrin': ('Carbohydrate additive', 'Very high glycemic index, blood sugar spikes, may harm gut bacteria'),
+        'maltodextrin': ('Carbohydrate additive', 'Very high glycemic index — faster blood sugar spike than table sugar; may harm gut microbiome with regular use'),
+        'corn syrup solids': ('Dried glucose syrup', 'High-GI refined carbohydrate; rapid blood sugar spike; often used in creamers in protein powders'),
+
+        # Artificial sweeteners
+        'sucralose': ('Artificial sweetener E955', 'Alters gut microbiome composition; may impair insulin response; some studies link to increased appetite and glucose intolerance'),
+        'acesulfame potassium': ('Artificial sweetener E950 (Ace-K)', 'Animal studies show potential effects on gut bacteria and insulin; typically used with sucralose in protein powders'),
+        'acesulfame-k': ('Artificial sweetener E950', 'Same as acesulfame potassium; animal studies suggest metabolic effects; FDA-approved but long-term human data limited'),
+        'aspartame': ('Artificial sweetener E951', 'Contains phenylalanine (PKU risk); headaches and mood changes reported; classified possible carcinogen (Group 2B) by IARC 2023'),
+
+        # Fiber additives
+        'inulin': ('Prebiotic fiber', 'Causes gas, bloating and abdominal discomfort in doses above 5g; ferments rapidly in colon — problematic for IBS sufferers'),
+        'polydextrose': ('Synthetic soluble fiber E1200', 'May cause gas and bloating in large amounts; generally well tolerated at moderate doses'),
         
         # Oils and fats
         'palm oil': ('Vegetable oil', 'High saturated fat (50%), raises LDL cholesterol, heart disease risk'),
@@ -333,7 +344,7 @@ def classify_ingredient(ingredient_name, category=None):
                     'regulatory_note': 'Standard cosmetic ingredient, no topical safety concerns'
                 }
 
-    # Check commonly questioned first (highest priority)
+    # Check commonly questioned first (highest priority — serious concerns)
     for pattern, (what_it_is, note) in commonly_questioned_patterns.items():
         if pattern in ingredient_lower:
             return {
@@ -343,17 +354,7 @@ def classify_ingredient(ingredient_name, category=None):
                 'regulatory_note': 'Check usage guidelines and restrictions'
             }
 
-    # Check generally recognised BEFORE worth_knowing (natural/herbal ingredients)
-    for pattern, (what_it_is, note) in generally_recognised_patterns.items():
-        if pattern in ingredient_lower:
-            return {
-                'classification': 'generally_recognised',
-                'what_it_is': what_it_is,
-                'one_line_note': note,
-                'regulatory_note': 'No specific restrictions, widely used'
-            }
-
-    # Check worth knowing
+    # Check worth knowing second (specific ingredient concerns take priority over generic natural labels)
     for pattern, (what_it_is, note) in worth_knowing_patterns.items():
         if pattern in ingredient_lower:
             return {
@@ -361,6 +362,16 @@ def classify_ingredient(ingredient_name, category=None):
                 'what_it_is': what_it_is,
                 'one_line_note': note,
                 'regulatory_note': 'FSSAI approved with usage guidelines'
+            }
+
+    # Check generally recognised (natural/herbal ingredients — checked last to avoid overriding specific flags)
+    for pattern, (what_it_is, note) in generally_recognised_patterns.items():
+        if pattern in ingredient_lower:
+            return {
+                'classification': 'generally_recognised',
+                'what_it_is': what_it_is,
+                'one_line_note': note,
+                'regulatory_note': 'No specific restrictions, widely used'
             }
     
     # Default to generally recognised

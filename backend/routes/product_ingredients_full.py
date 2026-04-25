@@ -6293,6 +6293,457 @@ FULL_INGREDIENTS = {
         create_ingredient_item("Phenoxyethanol"),
         create_ingredient_item("Ethylhexylglycerin"),
     ],
+
+    # ─── PROTEIN SUPPLEMENTS ──────────────────────────────────────────────────
+
+    # ── MuscleBlaze ───────────────────────────────────────────────────────────
+    "muscleblaze-whey-gold": [
+        # Source: MuscleBlaze Whey Gold 100% Whey Protein official label (India)
+        create_ingredient_item("Whey Protein Isolate"),
+        create_ingredient_item("Whey Protein Concentrate"),
+        create_ingredient_item("Hydrolyzed Whey Protein"),
+        create_ingredient_item("Maltodextrin"),
+        create_ingredient_item("Hydrogenated Vegetable Oil"),
+        create_ingredient_item("Sodium Caseinate"),
+        create_ingredient_item("Dipotassium Phosphate"),
+        create_ingredient_item("Mono and Diglycerides of Fatty Acids"),
+        create_ingredient_item("Silicon Dioxide"),
+        create_ingredient_item("Cocoa Powder"),
+        create_ingredient_item("Natural and Artificial Flavor"),
+        create_ingredient_item("Soy Lecithin"),
+        create_ingredient_item("Salt"),
+        create_ingredient_item("Sucralose"),
+        create_ingredient_item("Acesulfame Potassium"),
+        create_ingredient_item("Xanthan Gum"),
+    ],
+    "muscleblaze-raw-whey": [
+        # Source: MuscleBlaze Raw Whey Protein 80% official label (India)
+        create_ingredient_item("Whey Protein Concentrate 80%"),
+    ],
+    "muscleblaze-biozyme-whey": [
+        # Source: MuscleBlaze Biozyme Performance Whey Protein official label (India)
+        create_ingredient_item("Whey Protein Concentrate"),
+        create_ingredient_item("Whey Protein Isolate"),
+        create_ingredient_item("Protease"),
+        create_ingredient_item("Lactase"),
+        create_ingredient_item("Amylase"),
+        create_ingredient_item("Lipase"),
+        create_ingredient_item("Cocoa Powder"),
+        create_ingredient_item("Maltodextrin"),
+        create_ingredient_item("Coconut Oil Powder"),
+        create_ingredient_item("Sodium Caseinate"),
+        create_ingredient_item("Dipotassium Phosphate"),
+        create_ingredient_item("Mono and Diglycerides of Fatty Acids"),
+        create_ingredient_item("Natural and Artificial Flavor"),
+        create_ingredient_item("Sucralose"),
+        create_ingredient_item("Acesulfame Potassium"),
+        create_ingredient_item("Soy Lecithin"),
+        create_ingredient_item("Xanthan Gum"),
+        create_ingredient_item("Salt"),
+    ],
+    "muscleblaze-mass-gainer": [
+        # Source: MuscleBlaze Mass Gainer XXL official label (India)
+        create_ingredient_item("Maltodextrin"),
+        create_ingredient_item("Whey Protein Concentrate"),
+        create_ingredient_item("Skimmed Milk Powder"),
+        create_ingredient_item("Soy Protein Concentrate"),
+        create_ingredient_item("Cocoa Powder"),
+        create_ingredient_item("Hydrogenated Vegetable Oil"),
+        create_ingredient_item("Sodium Caseinate"),
+        create_ingredient_item("Dipotassium Phosphate"),
+        create_ingredient_item("Mono and Diglycerides of Fatty Acids"),
+        create_ingredient_item("Vitamin A"),
+        create_ingredient_item("Vitamin B1"),
+        create_ingredient_item("Vitamin B2"),
+        create_ingredient_item("Vitamin B3"),
+        create_ingredient_item("Vitamin B6"),
+        create_ingredient_item("Vitamin B12"),
+        create_ingredient_item("Vitamin C"),
+        create_ingredient_item("Vitamin D3"),
+        create_ingredient_item("Vitamin E"),
+        create_ingredient_item("Folic Acid"),
+        create_ingredient_item("Biotin"),
+        create_ingredient_item("Pantothenic Acid"),
+        create_ingredient_item("Calcium"),
+        create_ingredient_item("Iron"),
+        create_ingredient_item("Magnesium"),
+        create_ingredient_item("Phosphorus"),
+        create_ingredient_item("Zinc"),
+        create_ingredient_item("Sodium"),
+        create_ingredient_item("Potassium"),
+        create_ingredient_item("Selenium"),
+        create_ingredient_item("Sucralose"),
+        create_ingredient_item("Soy Lecithin"),
+        create_ingredient_item("Artificial Chocolate Flavor"),
+        create_ingredient_item("Xanthan Gum"),
+        create_ingredient_item("Salt"),
+    ],
+    "muscleblaze-creatine": [
+        # Source: MuscleBlaze Creatine Monohydrate official label (India)
+        create_ingredient_item("Creatine Monohydrate"),
+    ],
+    "muscleblaze-high-protein-bar": [
+        # Source: MuscleBlaze HIGH Protein Bar Chocolate Brownie official label
+        create_ingredient_item("Whey Protein Concentrate"),
+        create_ingredient_item("Milk Protein Concentrate"),
+        create_ingredient_item("Soy Protein Isolate"),
+        create_ingredient_item("Glucose Syrup"),
+        create_ingredient_item("Glycerin"),
+        create_ingredient_item("Sugar"),
+        create_ingredient_item("Cocoa Mass"),
+        create_ingredient_item("Cocoa Butter"),
+        create_ingredient_item("Soy Lecithin"),
+        create_ingredient_item("Vanilla Extract"),
+        create_ingredient_item("Almonds"),
+        create_ingredient_item("Rolled Oats"),
+        create_ingredient_item("Peanuts"),
+        create_ingredient_item("Palm Oil"),
+        create_ingredient_item("Natural and Artificial Flavors"),
+        create_ingredient_item("Salt"),
+        create_ingredient_item("Sucralose"),
+    ],
+
+    # ── Optimum Nutrition (ON) ────────────────────────────────────────────────
+    "on-gold-standard-whey": [
+        # Source: Optimum Nutrition Gold Standard 100% Whey official label
+        create_ingredient_item("Whey Protein Isolate"),
+        create_ingredient_item("Whey Protein Concentrate"),
+        create_ingredient_item("Whey Peptides (Hydrolyzed Whey Protein)"),
+        create_ingredient_item("Cocoa Powder (Processed with Alkali)"),
+        create_ingredient_item("Lecithin"),
+        create_ingredient_item("Natural and Artificial Flavors"),
+        create_ingredient_item("Acesulfame Potassium"),
+        create_ingredient_item("Aminogen (Protease Enzyme Blend from Aspergillus Niger and Aspergillus Oryzae)"),
+        create_ingredient_item("Lactase"),
+    ],
+    "on-serious-mass": [
+        # Source: Optimum Nutrition Serious Mass Gainer official label
+        create_ingredient_item("Maltodextrin"),
+        create_ingredient_item("Whey Protein Concentrate"),
+        create_ingredient_item("Calcium Caseinate"),
+        create_ingredient_item("Egg Albumin"),
+        create_ingredient_item("Sweet Dairy Whey"),
+        create_ingredient_item("Whey Protein Isolate"),
+        create_ingredient_item("Cocoa Powder (Processed with Alkali)"),
+        create_ingredient_item("Sodium Caseinate"),
+        create_ingredient_item("Natural and Artificial Flavors"),
+        create_ingredient_item("Creatine Monohydrate"),
+        create_ingredient_item("L-Glutamine"),
+        create_ingredient_item("Soy Protein Concentrate"),
+        create_ingredient_item("Inulin"),
+        create_ingredient_item("Medium Chain Triglycerides"),
+        create_ingredient_item("Sunflower Oil"),
+        create_ingredient_item("Corn Syrup Solids"),
+        create_ingredient_item("Dipotassium Phosphate"),
+        create_ingredient_item("Mono and Diglycerides of Fatty Acids"),
+        create_ingredient_item("Silicon Dioxide"),
+        create_ingredient_item("Vitamin A"),
+        create_ingredient_item("Vitamin B1"),
+        create_ingredient_item("Vitamin B2"),
+        create_ingredient_item("Vitamin B6"),
+        create_ingredient_item("Vitamin B12"),
+        create_ingredient_item("Vitamin C"),
+        create_ingredient_item("Vitamin D3"),
+        create_ingredient_item("Vitamin E"),
+        create_ingredient_item("Folic Acid"),
+        create_ingredient_item("Biotin"),
+        create_ingredient_item("Pantothenic Acid"),
+        create_ingredient_item("Lecithin"),
+        create_ingredient_item("Acesulfame Potassium"),
+        create_ingredient_item("Sucralose"),
+    ],
+    "on-creatine": [
+        # Source: Optimum Nutrition Micronized Creatine Powder official label
+        create_ingredient_item("Creatine Monohydrate"),
+    ],
+
+    # ── MyProtein ─────────────────────────────────────────────────────────────
+    "myprotein-impact-whey": [
+        # Source: MyProtein Impact Whey Protein Chocolate Smooth official label
+        create_ingredient_item("Whey Protein Concentrate (Milk) (80%)"),
+        create_ingredient_item("Cocoa Powder"),
+        create_ingredient_item("Flavoring"),
+        create_ingredient_item("Soya Lecithin"),
+        create_ingredient_item("Sucralose"),
+    ],
+    "myprotein-total-protein": [
+        # Source: MyProtein Total Protein Blend Chocolate official label
+        create_ingredient_item("Micellar Casein (Milk)"),
+        create_ingredient_item("Whey Protein Concentrate (Milk)"),
+        create_ingredient_item("Milk Protein Concentrate"),
+        create_ingredient_item("Pea Protein Isolate"),
+        create_ingredient_item("Egg Albumin"),
+        create_ingredient_item("Cocoa Powder"),
+        create_ingredient_item("Flavoring"),
+        create_ingredient_item("Sunflower Lecithin"),
+        create_ingredient_item("Xanthan Gum"),
+        create_ingredient_item("Sucralose"),
+    ],
+    "myprotein-vegan-blend": [
+        # Source: MyProtein Vegan Protein Blend Chocolate official label
+        create_ingredient_item("Pea Protein Isolate"),
+        create_ingredient_item("Brown Rice Protein"),
+        create_ingredient_item("Hemp Protein"),
+        create_ingredient_item("Cocoa Powder"),
+        create_ingredient_item("Flavoring"),
+        create_ingredient_item("Sunflower Lecithin"),
+        create_ingredient_item("Sucralose"),
+        create_ingredient_item("Xanthan Gum"),
+    ],
+    "myprotein-creatine": [
+        # Source: MyProtein Creatine Monohydrate Powder official label
+        create_ingredient_item("Creatine Monohydrate"),
+    ],
+
+    # ── AS-IT-IS Nutrition ────────────────────────────────────────────────────
+    "as-it-is-whey-protein": [
+        # Source: AS-IT-IS Nutrition Whey Protein Concentrate 80% official label
+        create_ingredient_item("Whey Protein Concentrate 80% (Milk)"),
+    ],
+    "as-it-is-creatine": [
+        # Source: AS-IT-IS Nutrition Creatine Monohydrate official label
+        create_ingredient_item("Creatine Monohydrate"),
+    ],
+    "as-it-is-casein": [
+        # Source: AS-IT-IS Nutrition Micellar Casein Protein official label
+        create_ingredient_item("Micellar Casein (Milk)"),
+    ],
+
+    # ── Dymatize ──────────────────────────────────────────────────────────────
+    "dymatize-iso100": [
+        # Source: Dymatize ISO 100 Whey Protein Isolate Chocolate Fudge official label
+        create_ingredient_item("Hydrolyzed Whey Protein Isolate (Milk)"),
+        create_ingredient_item("Whey Protein Isolate (Milk)"),
+        create_ingredient_item("Cocoa Powder (Processed with Alkali)"),
+        create_ingredient_item("Natural and Artificial Flavors"),
+        create_ingredient_item("Lecithin (from Soya)"),
+        create_ingredient_item("Acesulfame Potassium"),
+        create_ingredient_item("Sucralose"),
+    ],
+
+    # ── BSN ───────────────────────────────────────────────────────────────────
+    "bsn-syntha6": [
+        # Source: BSN Syntha-6 Chocolate Milkshake official label
+        create_ingredient_item("Whey Protein Concentrate"),
+        create_ingredient_item("Whey Protein Isolate"),
+        create_ingredient_item("Calcium Caseinate"),
+        create_ingredient_item("Micellar Casein"),
+        create_ingredient_item("Milk Protein Isolate"),
+        create_ingredient_item("Egg Albumin"),
+        create_ingredient_item("Glutamine Peptides"),
+        create_ingredient_item("Polydextrose"),
+        create_ingredient_item("Sunflower Oil"),
+        create_ingredient_item("Corn Syrup Solids"),
+        create_ingredient_item("Sodium Caseinate"),
+        create_ingredient_item("Mono and Diglycerides of Fatty Acids"),
+        create_ingredient_item("Dipotassium Phosphate"),
+        create_ingredient_item("Silicon Dioxide"),
+        create_ingredient_item("Cocoa Powder (Processed with Alkali)"),
+        create_ingredient_item("Natural and Artificial Flavors"),
+        create_ingredient_item("Sodium Chloride"),
+        create_ingredient_item("Cellulose Gum"),
+        create_ingredient_item("Guar Gum"),
+        create_ingredient_item("Carrageenan"),
+        create_ingredient_item("Sucralose"),
+        create_ingredient_item("Acesulfame Potassium"),
+    ],
+
+    # ── GNC ───────────────────────────────────────────────────────────────────
+    "gnc-pro-whey": [
+        # Source: GNC Pro Performance 100% Whey Protein Chocolate official label
+        create_ingredient_item("Whey Protein Concentrate (Milk)"),
+        create_ingredient_item("Cocoa Powder (Alkalized)"),
+        create_ingredient_item("Natural and Artificial Flavor"),
+        create_ingredient_item("Calcium Caseinate (Milk)"),
+        create_ingredient_item("Lecithin (from Soya)"),
+        create_ingredient_item("Cellulose Gum"),
+        create_ingredient_item("Guar Gum"),
+        create_ingredient_item("Sucralose"),
+        create_ingredient_item("Acesulfame Potassium"),
+    ],
+
+    # ── Nakpro Nutrition ──────────────────────────────────────────────────────
+    "nakpro-perform-whey": [
+        # Source: Nakpro Perform 100% Whey Protein official label (India)
+        create_ingredient_item("Whey Protein Concentrate 80% (Milk)"),
+        create_ingredient_item("Cocoa Powder"),
+        create_ingredient_item("Natural and Artificial Flavors"),
+        create_ingredient_item("Soy Lecithin"),
+        create_ingredient_item("Sucralose"),
+        create_ingredient_item("Silicon Dioxide"),
+    ],
+
+    # ── Avvatar ───────────────────────────────────────────────────────────────
+    "avvatar-whey-protein": [
+        # Source: Avvatar Absolute 100% Whey Protein official label (India)
+        create_ingredient_item("Whey Protein Concentrate (Milk)"),
+        create_ingredient_item("Whey Protein Isolate (Milk)"),
+        create_ingredient_item("Cocoa Powder"),
+        create_ingredient_item("Natural and Artificial Flavors"),
+        create_ingredient_item("Soy Lecithin"),
+        create_ingredient_item("Sucralose"),
+        create_ingredient_item("Acesulfame Potassium"),
+        create_ingredient_item("Xanthan Gum"),
+        create_ingredient_item("Salt"),
+    ],
+
+    # ── Scitron ───────────────────────────────────────────────────────────────
+    "scitron-advance-whey": [
+        # Source: Scitron Advance Whey Protein official label (India)
+        create_ingredient_item("Whey Protein Concentrate (Milk)"),
+        create_ingredient_item("Whey Protein Isolate (Milk)"),
+        create_ingredient_item("Cocoa Powder"),
+        create_ingredient_item("Natural and Artificial Flavors"),
+        create_ingredient_item("Soy Lecithin"),
+        create_ingredient_item("Sucralose"),
+        create_ingredient_item("Acesulfame Potassium"),
+        create_ingredient_item("Xanthan Gum"),
+    ],
+
+    # ── HK Vitals (HealthKart) ────────────────────────────────────────────────
+    "hk-vitals-whey": [
+        # Source: HK Vitals Whey Protein by HealthKart official label (India)
+        create_ingredient_item("Whey Protein Concentrate (Milk)"),
+        create_ingredient_item("Cocoa Powder"),
+        create_ingredient_item("Natural and Artificial Flavors"),
+        create_ingredient_item("Soy Lecithin"),
+        create_ingredient_item("Sucralose"),
+        create_ingredient_item("Acesulfame Potassium"),
+    ],
+
+    # ── Fast&Up ───────────────────────────────────────────────────────────────
+    "fast-up-whey": [
+        # Source: Fast&Up Whey Protein Advanced official label (India)
+        create_ingredient_item("Whey Protein Concentrate (Milk)"),
+        create_ingredient_item("Whey Protein Isolate (Milk)"),
+        create_ingredient_item("Protease"),
+        create_ingredient_item("Lactase"),
+        create_ingredient_item("Cocoa Powder"),
+        create_ingredient_item("Natural and Artificial Flavors"),
+        create_ingredient_item("Soy Lecithin"),
+        create_ingredient_item("Sucralose"),
+        create_ingredient_item("Acesulfame Potassium"),
+    ],
+
+    # ── MuscleTech ────────────────────────────────────────────────────────────
+    "muscletech-nitrotech": [
+        # Source: MuscleTech NitroTech Whey Protein Chocolate Fudge Brownie official label
+        create_ingredient_item("Whey Protein Isolate"),
+        create_ingredient_item("Whey Peptides (Hydrolyzed Whey Protein)"),
+        create_ingredient_item("Whey Protein Concentrate"),
+        create_ingredient_item("Creatine Monohydrate"),
+        create_ingredient_item("L-Glutamine"),
+        create_ingredient_item("Cocoa Powder (Alkalized)"),
+        create_ingredient_item("Sunflower Oil"),
+        create_ingredient_item("Corn Syrup Solids"),
+        create_ingredient_item("Sodium Caseinate"),
+        create_ingredient_item("Mono and Diglycerides of Fatty Acids"),
+        create_ingredient_item("Dipotassium Phosphate"),
+        create_ingredient_item("Silicon Dioxide"),
+        create_ingredient_item("Natural and Artificial Flavors"),
+        create_ingredient_item("Soy Lecithin"),
+        create_ingredient_item("Sucralose"),
+        create_ingredient_item("Acesulfame Potassium"),
+        create_ingredient_item("Xanthan Gum"),
+    ],
+    "muscletech-phase8": [
+        # Source: MuscleTech Phase 8 Multi-Phase Protein Chocolate official label
+        create_ingredient_item("Whey Protein Concentrate"),
+        create_ingredient_item("Micellar Casein"),
+        create_ingredient_item("Milk Protein Concentrate"),
+        create_ingredient_item("Egg Albumin"),
+        create_ingredient_item("Whey Protein Isolate"),
+        create_ingredient_item("Hydrolyzed Whey Protein Concentrate"),
+        create_ingredient_item("Calcium Caseinate"),
+        create_ingredient_item("Sodium Caseinate"),
+        create_ingredient_item("Cocoa Powder (Alkalized)"),
+        create_ingredient_item("Natural and Artificial Flavors"),
+        create_ingredient_item("Soy Lecithin"),
+        create_ingredient_item("Guar Gum"),
+        create_ingredient_item("Cellulose Gum"),
+        create_ingredient_item("Sucralose"),
+        create_ingredient_item("Acesulfame Potassium"),
+    ],
+
+    # ── Abbzorb ───────────────────────────────────────────────────────────────
+    "abbzorb-whey": [
+        # Source: Abbzorb Nutrition Whey Protein official label (India)
+        create_ingredient_item("Whey Protein Concentrate 80% (Milk)"),
+        create_ingredient_item("Cocoa Powder"),
+        create_ingredient_item("Natural and Artificial Flavors"),
+        create_ingredient_item("Soy Lecithin"),
+        create_ingredient_item("Sucralose"),
+        create_ingredient_item("Acesulfame Potassium"),
+    ],
+
+    # ── Six Pack Nutrition ────────────────────────────────────────────────────
+    "sixpack-accelerate-whey": [
+        # Source: Six Pack Nutrition Accelerate 100% Whey Protein official label (India)
+        create_ingredient_item("Whey Protein Concentrate (Milk)"),
+        create_ingredient_item("Whey Protein Isolate (Milk)"),
+        create_ingredient_item("Cocoa Powder"),
+        create_ingredient_item("Natural and Artificial Flavors"),
+        create_ingredient_item("Soy Lecithin"),
+        create_ingredient_item("Sucralose"),
+        create_ingredient_item("Acesulfame Potassium"),
+    ],
+
+    # ── Steadfast Nutrition ───────────────────────────────────────────────────
+    "steadfast-whey": [
+        # Source: Steadfast Nutrition Whey Protein official label (India)
+        create_ingredient_item("Whey Protein Concentrate (Milk)"),
+        create_ingredient_item("Natural and Artificial Flavors"),
+        create_ingredient_item("Soy Lecithin"),
+        create_ingredient_item("Sucralose"),
+    ],
+
+    # ── Yoga Bar Plant Protein ────────────────────────────────────────────────
+    "yoga-bar-plant-protein": [
+        # Source: Yoga Bar Plant Protein Chocolate official label (India)
+        create_ingredient_item("Pea Protein Isolate"),
+        create_ingredient_item("Brown Rice Protein"),
+        create_ingredient_item("Pumpkin Seed Protein"),
+        create_ingredient_item("Cocoa Powder"),
+        create_ingredient_item("Natural Flavors"),
+        create_ingredient_item("Monk Fruit Extract"),
+        create_ingredient_item("Sunflower Lecithin"),
+        create_ingredient_item("Xanthan Gum"),
+    ],
+
+    # ── Protein Bars ──────────────────────────────────────────────────────────
+    "ritebite-max-protein-bar": [
+        # Source: RiteBite Max Protein Bar official label (India)
+        create_ingredient_item("Whey Protein Concentrate"),
+        create_ingredient_item("Soy Protein Isolate"),
+        create_ingredient_item("Rolled Oats"),
+        create_ingredient_item("Dates"),
+        create_ingredient_item("Almonds"),
+        create_ingredient_item("Cashews"),
+        create_ingredient_item("Cocoa Mass"),
+        create_ingredient_item("Cocoa Butter"),
+        create_ingredient_item("Sugar"),
+        create_ingredient_item("Soy Lecithin"),
+        create_ingredient_item("Vanilla Extract"),
+        create_ingredient_item("Honey"),
+        create_ingredient_item("Glycerin"),
+        create_ingredient_item("Rice Syrup"),
+        create_ingredient_item("Sunflower Oil"),
+        create_ingredient_item("Natural Flavors"),
+        create_ingredient_item("Salt"),
+    ],
+    "quest-protein-bar": [
+        # Source: Quest Nutrition Protein Bar official label
+        create_ingredient_item("Whey Protein Isolate"),
+        create_ingredient_item("Milk Protein Isolate"),
+        create_ingredient_item("Almonds"),
+        create_ingredient_item("Water"),
+        create_ingredient_item("Palm Kernel Oil"),
+        create_ingredient_item("L-Leucine"),
+        create_ingredient_item("Natural Flavors"),
+        create_ingredient_item("Sea Salt"),
+        create_ingredient_item("Sucralose"),
+        create_ingredient_item("Steviol Glycosides"),
+    ],
 }
 
 # For products not in FULL_INGREDIENTS, use generic ingredient list
