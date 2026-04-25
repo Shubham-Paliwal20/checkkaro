@@ -615,6 +615,50 @@ ALL_PRODUCTS = {
     "lakme-9to5-primer-matte-foundation": ("Lakme 9 to 5 Primer + Matte Perfect Cover Foundation", "Lakme", "Cosmetics", 58, "Full-coverage matte foundation", "Water, cyclopentasiloxane, dimethicone, titanium dioxide, talc, niacinamide, sodium hyaluronate, phenoxyethanol, ethylhexylglycerin, iron oxides."),
     "lakme-sun-expert-tinted-spf50": ("Lakme Sun Expert Ultra Matte SPF 50 PA+++ Tinted Sunscreen", "Lakme", "Skincare", 62, "Tinted sunscreen with chemical UV filters", "Ethylhexyl methoxycinnamate, octinoxate, zinc oxide, niacinamide, titanium dioxide, dimethicone, iron oxides, phenoxyethanol, fragrance."),
     "lakme-lumi-cream": ("Lakme Luminous Skin Tint SPF 15 Cream", "Lakme", "Skincare", 60, "Tinted moisturiser with SPF", "Water, glycerin, dimethicone, octyl methoxycinnamate, titanium dioxide, niacinamide, mica, iron oxides, methylparaben, propylparaben."),
+
+    # ─── COOKING OILS ─────────────────────────────────────────────────────────
+    "fortune-sunflower-oil": ("Fortune Sunflower Oil", "Fortune", "Cooking Oil", 78, "Refined sunflower oil with vitamins", "Refined sunflower oil, vitamin A, vitamin D. No trans fats declared."),
+    "saffola-gold-oil": ("Saffola Gold Refined Blend Oil", "Saffola", "Cooking Oil", 72, "Blend of rice bran and sunflower oil", "Refined rice bran oil, refined sunflower seed oil. Added vitamins A and D."),
+    "dalda-vanaspati-ghee": ("Dalda Vanaspati", "Dalda", "Cooking Oil", 38, "Partially hydrogenated vegetable fat with trans fats", "Partially hydrogenated vegetable oils (palm, soybean), emulsifier (471), antioxidant (320), vitamin A. Contains trans fats."),
+    "patanjali-cow-ghee": ("Patanjali Cow Ghee", "Patanjali", "Cooking Oil", 85, "Pure clarified butter from cow milk", "Pure cow milk fat (clarified butter / ghee). No additives."),
+
+    # ─── SOFT DRINKS / BEVERAGES ──────────────────────────────────────────────
+    "limca": ("Limca Lemon & Lime Drink", "Coca-Cola India", "Soft Drink", 45, "Carbonated lime drink with sugar and citric acid", "Carbonated water, sugar, citric acid, natural lime and lemon flavours, stabiliser (E414)."),
+    "thums-up-charged": ("Thums Up Charged", "Coca-Cola India", "Soft Drink", 40, "High-caffeine cola variant", "Carbonated water, sugar, caramel colour (E150d), phosphoric acid, natural flavours, caffeine (50mg/250ml)."),
+    "bisleri-water": ("Bisleri Packaged Drinking Water", "Bisleri", "Beverages", 100, "Purified packaged drinking water", "Purified water with essential minerals. No additives, no sugar, no calories."),
+    "kinley-water": ("Kinley Drinking Water", "Coca-Cola India", "Beverages", 100, "Purified packaged drinking water", "Purified water, added minerals (calcium chloride, magnesium chloride, sodium bicarbonate). No additives."),
+    "boost-health-drink": ("Boost Energy & Sports Nutrition Drink", "GSK", "Health Drink", 62, "Malt-based health drink with caffeine", "Malt extract, skimmed milk powder, sugar, cocoa powder, glucose, vitamins (B1, B2, B3, B6, B12, C, D), minerals, caffeine."),
+    "complan-chocolate": ("Complan Chocolate Nutrition Drink", "Zydus Wellness", "Health Drink", 60, "High-protein nutritional drink", "Skimmed milk powder, sugar, maltodextrin, cocoa powder, vitamins (A, B1, B2, B3, B6, B12, C, D, E, K), minerals, soy protein."),
+
+    # ─── CONDIMENTS / SAUCES ──────────────────────────────────────────────────
+    "kissan-mixed-fruit-jam": ("Kissan Mixed Fruit Jam", "Kissan", "Condiments", 55, "Fruit jam with added sugar and preservatives", "Sugar, mixed fruit pulp (35%), glucose syrup, pectin (E440), citric acid (E330), sodium benzoate (E211), artificial mixed fruit flavour."),
+    "maggi-hot-sweet-sauce": ("Maggi Hot & Sweet Tomato Chilli Sauce", "Nestle", "Condiments", 52, "Popular dip sauce with preservatives and colour", "Tomato paste (50%), sugar, water, vinegar, salt, modified starch, spices, acetic acid, caramel colour (E150), sodium benzoate."),
+    "dr-oetker-funfoods-mayo": ("Dr. Oetker FunFoods Veg Mayonnaise", "Dr. Oetker", "Condiments", 58, "Egg-free mayo with soybean oil", "Refined soybean oil (75%), water, sugar, vinegar, modified starch, salt, mustard powder, citric acid, sodium benzoate, potassium sorbate."),
+
+    # ─── SNACKS ───────────────────────────────────────────────────────────────
+    "parle-kreams-biscuits": ("Parle Kreams Gold Biscuits", "Parle", "Biscuits", 52, "Cream-filled biscuits with artificial flavour", "Refined wheat flour, sugar, palm oil, invert syrup, cream filling (sugar, vegetable fat, milk solids), sodium bicarbonate, ammonium bicarbonate, artificial vanilla flavour."),
+    "sunfeast-dream-cream": ("Sunfeast Dream Cream Vanilla Biscuits", "Sunfeast", "Biscuits", 52, "Vanilla cream sandwich biscuits", "Refined wheat flour, sugar, palm oil, milk solids, glucose, sodium bicarbonate, ammonium bicarbonate, artificial vanilla flavour, sodium metabisulphite."),
+    "cadbury-perk": ("Cadbury Perk Chocolate Wafer", "Cadbury", "Chocolate", 58, "Chocolate-coated wafer with PGPR", "Sugar, refined wheat flour, cocoa butter, milk solids, vegetable fat, cocoa mass, emulsifier (E476/PGPR), vanilla flavour."),
+    "cadbury-gems": ("Cadbury Gems", "Cadbury", "Chocolate", 55, "Sugar-coated chocolate buttons with artificial colours", "Sugar, cocoa butter, milk solids, cocoa mass, vegetable fat, colours (E102, E110, E129, E133, E132), emulsifier (E322)."),
+    "vicks-vaporub": ("Vicks VapoRub", "Procter & Gamble", "Personal Care", 70, "Topical decongestant ointment", "Camphor (4.8%), eucalyptus oil (1.2%), menthol (2.6%), in a base of petrolatum, cedarwood oil, nutmeg oil, thymol, turpentine oil."),
+    "boroline-cream": ("Boroline Antiseptic Cream", "GD Pharmaceuticals", "Skincare", 78, "Antiseptic and moisturising cream", "Boric acid, zinc oxide, lanolin, petrolatum, rose water, perfume. Traditional Indian antiseptic formulation."),
+    "lacto-calamine-lotion": ("Lacto Calamine Lotion", "Piramal", "Skincare", 75, "Calamine and kaolin skin lotion", "Calamine (5%), zinc oxide (4%), kaolin, glycerin, light liquid paraffin, methylparaben, propylparaben."),
+    "iodex-fast-relief": ("Iodex Fast Relief Spray", "GSK", "Personal Care", 68, "Topical analgesic spray", "Diclofenac diethylamine (1.16%), menthol (5%), methyl salicylate (10%), isopropyl alcohol, water. For external use only."),
+    "odomos-mosquito-repellent": ("Odomos Mosquito Repellent Cream", "Dabur", "Personal Care", 72, "DEET-free mosquito repellent cream", "Diethyl toluamide (DEET) 12.5%, cetostearyl alcohol, glycerin, white soft paraffin, triethanolamine, fragrance."),
+    "kurkure-triangles": ("Kurkure Triangles Chilli Chatka", "Kurkure", "Snacks", 42, "Fried corn snack with flavour enhancers", "Corn meal, rice flour, palm oil, salt, spices, sugar, dried mango powder, flavour enhancers (E621, E631, E627), tartrazine (E102), caramel colour."),
+    "haldiram-namkeen-mix": ("Haldiram Bhujia Mix Namkeen", "Haldiram", "Snacks", 55, "Mixed namkeen snack", "Besan, vegetable oil, potatoes, salt, spices, dried mango powder, chilli powder. No artificial colours or flavours."),
+
+    # ─── PERSONAL CARE / SKINCARE ─────────────────────────────────────────────
+    "garnier-micellar-water": ("Garnier Micellar Cleansing Water", "Garnier", "Skincare", 80, "Gentle micellar cleansing water", "Water, hexylene glycol, glycerin, disodium cocoamphodiacetate, disodium EDTA, poloxamer 184, polyaminopropyl biguanide."),
+    "zandu-balm": ("Zandu Balm", "Emami", "Personal Care", 72, "Ayurvedic pain and cold relief balm", "Menthol (14%), camphor (7%), clove oil, eucalyptus oil, methyl salicylate, in paraffin wax base. Traditional Ayurvedic formulation."),
+    "amrutanjan-balm": ("Amrutanjan Pain Relief Balm", "Amrutanjan Health Care", "Personal Care", 70, "Topical analgesic balm with herbal ingredients", "Menthol, camphor, eucalyptus oil, methyl salicylate, turpentine oil, clove oil, in white petrolatum base."),
+    "parachute-jasmine-hair-oil": ("Parachute Advansed Jasmine Coconut Hair Oil", "Marico", "Hair Care", 75, "Coconut oil with jasmine fragrance", "100% pure coconut oil, jasmine fragrance, vitamin E. No mineral oil, no paraffin."),
+    "garnier-fructis-shampoo": ("Garnier Fructis Strengthening Shampoo", "Garnier", "Hair Care", 58, "Shampoo with SLS and fruit extracts", "Water, sodium laureth sulphate, cocamidopropyl betaine, guar hydroxypropyltrimonium chloride, citric acid, glycol distearate, dimethicone, methylparaben, fragrance."),
+    "biotique-bio-morning-nectar-lotion": ("Biotique Bio Morning Nectar Flawless Skin Lotion", "Biotique", "Skincare", 78, "Ayurvedic moisturising lotion", "Aqua, honey, bhringaraj extract, margosa extract, winter cherry extract, almond oil, aloe vera gel, glycerin, cetearyl alcohol, no parabens."),
+    "margo-neem-soap": ("Margo Original Neem Soap", "Emami", "Personal Care", 80, "Neem-enriched antiseptic soap", "Sodium palmate, sodium cocoate, neem extract (0.5%), glycerin, perfume, titanium dioxide, EDTA. Genuine neem formulation."),
+    "dettol-handwash-original": ("Dettol Original Liquid Handwash", "Reckitt", "Personal Care", 62, "Antibacterial handwash with chloroxylenol", "Water, sodium laureth sulphate, cocamidopropyl betaine, glycerin, chloroxylenol (0.1%), citric acid, sodium chloride, parfum, yellow dye."),
+    "himalaya-neem-face-wash": ("Himalaya Purifying Neem Face Wash", "Himalaya", "Skincare", 80, "Neem and turmeric gel face wash", "Aqua, sodium laureth sulphate, cocamidopropyl betaine, neem leaf extract, turmeric extract, glycerin, citric acid, phenoxyethanol, no parabens."),
+    "wow-vitamin-c-face-wash": ("WOW Skin Science Brightening Vitamin C Face Wash", "Wow Skin Science", "Skincare", 75, "SLS-free brightening face wash", "Water, cocamidopropyl betaine, glycerin, vitamin C (ascorbic acid), niacinamide, aloe vera gel, hyaluronic acid, citric acid, phenoxyethanol, ethylhexylglycerin."),
 }
 
 
