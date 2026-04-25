@@ -659,6 +659,69 @@ ALL_PRODUCTS = {
     "dettol-handwash-original": ("Dettol Original Liquid Handwash", "Reckitt", "Personal Care", 62, "Antibacterial handwash with chloroxylenol", "Water, sodium laureth sulphate, cocamidopropyl betaine, glycerin, chloroxylenol (0.1%), citric acid, sodium chloride, parfum, yellow dye."),
     "himalaya-neem-face-wash": ("Himalaya Purifying Neem Face Wash", "Himalaya", "Skincare", 80, "Neem and turmeric gel face wash", "Aqua, sodium laureth sulphate, cocamidopropyl betaine, neem leaf extract, turmeric extract, glycerin, citric acid, phenoxyethanol, no parabens."),
     "wow-vitamin-c-face-wash": ("WOW Skin Science Brightening Vitamin C Face Wash", "Wow Skin Science", "Skincare", 75, "SLS-free brightening face wash", "Water, cocamidopropyl betaine, glycerin, vitamin C (ascorbic acid), niacinamide, aloe vera gel, hyaluronic acid, citric acid, phenoxyethanol, ethylhexylglycerin."),
+
+    # ─── MINIMALIST (EXPANDED) ─────────────────────────────────────────────────
+    "minimalist-salicylic-acid": ("Minimalist Salicylic Acid 2% Serum", "Minimalist", "Skincare", 76, "BHA exfoliant for acne and pores", "Salicylic acid 2% targets blackheads and acne; contains niacinamide and zinc to reduce inflammation."),
+    "minimalist-kojic-acid": ("Minimalist Kojic Acid 2% + Alpha Arbutin 1% Serum", "Minimalist", "Skincare", 74, "Brightening serum for pigmentation", "Kojic acid and alpha arbutin together inhibit melanin production; with licorice and tranexamic acid."),
+    "minimalist-alpha-arbutin": ("Minimalist Alpha Arbutin 2% + HA Serum", "Minimalist", "Skincare", 78, "Depigmentation serum", "Alpha arbutin is a gentle, stable melanin inhibitor; paired with hyaluronic acid for hydration."),
+    "minimalist-ceramide-moisturiser": ("Minimalist Ceramide & Hyaluronic Acid Moisturiser", "Minimalist", "Skincare", 84, "Barrier-repair daily moisturiser", "Triple ceramide complex (NP, AP, EOP) with cholesterol and HA restores skin barrier function."),
+    "minimalist-peptide-moisturiser": ("Minimalist Multi-Peptide Moisturiser", "Minimalist", "Skincare", 80, "Anti-ageing peptide moisturiser", "Argireline, Syn-Ake, Leuphasyl and Matrixyl 3000 peptide complex with ceramides and hyaluronic acid."),
+    "minimalist-hair-growth-serum": ("Minimalist Multi-Peptide 18% Hair Growth Serum", "Minimalist", "Hair Care", 82, "Clinically-backed hair growth actives blend", "Redensyl, Procapil, Capixyl, Anagain, Baicapil — five proven hair growth actives with biotin and niacinamide."),
+    "minimalist-azelaic-acid": ("Minimalist Azelaic Acid 10% Serum", "Minimalist", "Skincare", 75, "Anti-redness and brightening serum", "Azelaic acid 10% reduces rosacea, acne and pigmentation; gentle enough for sensitive skin."),
+    "minimalist-bakuchiol": ("Minimalist Bakuchiol 0.5% + Niacinamide 5% Serum", "Minimalist", "Skincare", 80, "Plant-based retinol alternative", "Bakuchiol mimics retinol effects without irritation; safe in pregnancy; paired with niacinamide."),
+    "minimalist-spf-matte": ("Minimalist SPF 50 PA++++ Matte Sunscreen", "Minimalist", "Skincare", 74, "Lightweight matte broad-spectrum sunscreen", "Hybrid formula with zinc oxide and chemical filters; lightweight, non-greasy, PA++++ rating."),
+    "minimalist-sunscreen-aqua": ("Minimalist SPF 50 PA++++ Aqua Sunscreen Gel", "Minimalist", "Skincare", 76, "Water-gel sunscreen for oily skin", "Ultra-light aqua-gel sunscreen with UV filters; zero white cast, suitable for oily and acne-prone skin."),
+
+    # ─── THE DERMA CO ─────────────────────────────────────────────────────────
+    "the-derma-co-ha-serum": ("The Derma Co 1% Hyaluronic Acid Serum", "The Derma Co", "Skincare", 82, "Multi-molecular HA hydrating serum", "Three weights of hyaluronic acid for surface and deep hydration; with centella and beta-glucan."),
+    "the-derma-co-niacinamide": ("The Derma Co 10% Niacinamide Face Serum", "The Derma Co", "Skincare", 80, "Pore-minimising and brightening serum", "10% niacinamide with zinc PCA for sebum control; reduces pores, dark spots and uneven tone."),
+    "the-derma-co-salicylic-serum": ("The Derma Co Salicylic Acid 2% Serum", "The Derma Co", "Skincare", 76, "BHA serum for acne-prone skin", "Salicylic acid 2% with niacinamide and zinc; targets acne, blackheads and excess oil."),
+    "the-derma-co-vitamin-c": ("The Derma Co 20% Vitamin C Serum", "The Derma Co", "Skincare", 74, "High-potency vitamin C brightening serum", "20% ascorbic acid with ferulic acid and vitamin E; brightens, evens tone and provides antioxidant protection."),
+    "the-derma-co-retinol": ("The Derma Co Retinol 0.1% Night Cream", "The Derma Co", "Skincare", 72, "Beginner-strength retinol night cream", "Retinol 0.1% with ceramides, bakuchiol and centella; minimises irritation while delivering retinol benefits."),
+    "the-derma-co-ceramide-moisturiser": ("The Derma Co Ceramide & AHA Moisturiser", "The Derma Co", "Skincare", 78, "Exfoliating barrier-repair moisturiser", "Dual-action: ceramide NP/AP triple complex repairs barrier while glycolic and lactic acids resurface."),
+    "the-derma-co-face-wash": ("The Derma Co Foaming Face Wash", "The Derma Co", "Skincare", 78, "SLS-free foaming cleanser for acne", "Sodium cocoyl isethionate base; niacinamide and zinc PCA for oil control; no SLS/SLES."),
+
+    # ─── YOGA BAR ──────────────────────────────────────────────────────────────
+    "yoga-bar-oats": ("Yoga Bar Super Grain Oats", "Yoga Bar", "Nutrition", 90, "100% whole grain rolled oats, no additives", "Pure rolled oats with no added sugar, salt, preservatives or artificial flavours."),
+    "yoga-bar-muesli": ("Yoga Bar Muesli Fruit & Nut", "Yoga Bar", "Nutrition", 82, "Oat muesli with fruits, nuts and seeds", "Oats, raisins, almonds, cashews, sunflower seeds, dried cranberries, dried papaya, coconut flakes, quinoa puffs. No added sugar."),
+    "yoga-bar-energy-bar": ("Yoga Bar Multigrain Energy Bar", "Yoga Bar", "Nutrition", 80, "Whole food energy bar with no refined sugar", "Dates, oats, almonds, cashews, sunflower seeds, pumpkin seeds, rice puffs, honey, dark chocolate chips, cocoa, sea salt. No preservatives."),
+    "yoga-bar-whey-protein": ("Yoga Bar Whey Protein Chocolate Fudge", "Yoga Bar", "Nutrition", 72, "Whey protein blend for muscle recovery", "Whey protein concentrate, whey protein isolate, cocoa powder, natural chocolate flavour, sucralose, soy lecithin."),
+    "yoga-bar-granola-dark-choc": ("Yoga Bar Dark Chocolate & Cranberry Granola", "Yoga Bar", "Nutrition", 80, "Baked granola with oats and dark chocolate", "Oats, dark chocolate chips, cranberries, almonds, honey, coconut oil, cocoa powder, sea salt. No artificial flavours."),
+
+    # ─── McCAFFEINE ────────────────────────────────────────────────────────────
+    "mcaffeine-coffee-face-wash": ("MCaffeine Naked & Raw Coffee Face Wash", "MCaffeine", "Skincare", 68, "Caffeine-infused face wash with SLS", "Coffee seed powder exfoliates and energises; contains SLS — use caution on sensitive skin."),
+    "mcaffeine-coffee-body-scrub": ("MCaffeine Naked & Raw Coffee Body Scrub", "MCaffeine", "Personal Care", 76, "Natural coffee grain body scrub", "Coffee seed powder with cocoa butter, coconut oil and almond oil; no SLS, no parabens."),
+    "mcaffeine-coffee-face-scrub": ("MCaffeine Coffee Face Scrub", "MCaffeine", "Skincare", 70, "Coffee and walnut face scrub", "Coffee powder and walnut shell for physical exfoliation; with kaolin clay and aloe vera."),
+    "mcaffeine-green-tea-shampoo": ("MCaffeine Naked Detox Green Tea Shampoo", "MCaffeine", "Hair Care", 62, "Green tea shampoo with SLS", "Green tea extract with SLS base; niacinamide and arginine for scalp health; DMDM hydantoin preservative."),
+    "mcaffeine-coffee-body-lotion": ("MCaffeine Naked & Raw Coffee Body Lotion", "MCaffeine", "Personal Care", 76, "Moisturising coffee body lotion", "Coffee extract with shea butter, cocoa butter and almond oil; no parabens, no SLS."),
+
+    # ─── FOXTALE ──────────────────────────────────────────────────────────────
+    "foxtale-spf30-moisturiser": ("Foxtale Daily Moisturiser SPF 30", "Foxtale", "Skincare", 80, "Lightweight SPF moisturiser for daily use", "Hybrid sunscreen with zinc oxide and chemical UV filters; niacinamide, HA and squalane for hydration."),
+    "foxtale-vitamin-c-serum": ("Foxtale Vitamin C 15% Brightening Serum", "Foxtale", "Skincare", 78, "Stable vitamin C brightening serum", "15% ascorbic acid with ferulic acid and vitamin E for stability; reduces pigmentation and boosts collagen."),
+    "foxtale-retinol-night-cream": ("Foxtale Retinol 0.1% Night Cream", "Foxtale", "Skincare", 74, "Entry-level retinol anti-ageing cream", "Retinol 0.1% with ceramide NP, bakuchiol and squalane to minimise irritation while improving skin texture."),
+    "foxtale-hydrating-face-wash": ("Foxtale Hydrating Face Wash", "Foxtale", "Skincare", 80, "SLS-free hydrating gel cleanser", "Sodium cocoyl isethionate base with hyaluronic acid and niacinamide; no SLS, no parabens."),
+
+    # ─── RE'EQUIL ─────────────────────────────────────────────────────────────
+    "re-equil-pitstop-cream": ("Re'equil Pitstop Face Cream SPF 30", "Re'equil", "Skincare", 78, "SPF 30 daily moisturiser for acne-prone skin", "Zinc oxide-based sunscreen with niacinamide and hyaluronic acid; oil-free, non-comedogenic formula."),
+    "re-equil-ceramide-serum": ("Re'equil Ceramide & Vitamin C Face Serum", "Re'equil", "Skincare", 80, "Brightening barrier-repair serum", "Ascorbyl glucoside (stable vitamin C) with ceramide NP; ferulic acid enhances antioxidant activity."),
+    "re-equil-under-eye-cream": ("Re'equil Under Eye Recovery Cream", "Re'equil", "Skincare", 78, "Peptide complex for dark circles and puffiness", "Haloxyl, Eyeliss and Syn-Ake peptide complex; niacinamide and caffeine for dark circle reduction."),
+
+    # ─── DOT & KEY (EXPANDED) ─────────────────────────────────────────────────
+    "dot-key-ha-b5-serum": ("Dot & Key Hydrating HA + B5 Serum", "Dot & Key", "Skincare", 82, "Hyaluronic acid and panthenol hydration serum", "Multi-molecular HA with panthenol (B5), centella asiatica and beta-glucan for deep skin hydration."),
+    "dot-key-retinol-night": ("Dot & Key Retinol 0.3% + Peptide Night Cream", "Dot & Key", "Skincare", 74, "Moderate-strength retinol anti-ageing cream", "Retinol 0.3% with Matrixyl 3000 peptides, ceramides and bakuchiol for anti-ageing with reduced irritation."),
+    "dot-key-barrier-body-lotion": ("Dot & Key Barrier Repair Body Lotion", "Dot & Key", "Personal Care", 78, "Ceramide-enriched barrier repair lotion", "Ceramide NP with shea butter, squalane and niacinamide; restores skin barrier and provides 48-hour hydration."),
+
+    # ─── PLUM (EXPANDED) ──────────────────────────────────────────────────────
+    "plum-niacinamide-serum": ("Plum 10% Niacinamide + Rice Water Serum", "Plum", "Skincare", 78, "Brightening serum with rice water", "10% niacinamide with rice water; targets pores, dark spots and uneven skin tone. 100% vegan."),
+    "plum-aha-face-wash": ("Plum 3% AHA + Watermelon Face Wash", "Plum", "Skincare", 74, "Mild AHA exfoliating face wash", "3% glycolic and lactic acid blend gently exfoliates; watermelon extract for hydration. SLS-free."),
+    "plum-spf-moisturiser": ("Plum Hello Aloe Gel Moisturiser SPF 35", "Plum", "Skincare", 78, "Aloe gel moisturiser with SPF 35", "Aloe vera gel base with SPF 35; lightweight, non-greasy, suitable for oily and combination skin."),
+
+    # ─── NEUTROGENA (EXPANDED) ────────────────────────────────────────────────
+    "neutrogena-body-lotion": ("Neutrogena Norwegian Formula Body Lotion", "Neutrogena", "Personal Care", 72, "Concentrated body lotion for very dry skin", "Glycerin-rich formula clinically proven to restore dry skin in one application. Fragrance-free option available."),
+
+    # ─── CETAPHIL (EXPANDED) ──────────────────────────────────────────────────
+    "cetaphil-daily-lotion": ("Cetaphil Daily Advance Ultra Hydrating Lotion", "Cetaphil", "Skincare", 78, "Dermatologist-recommended daily lotion", "Pro-Vitamin B5, shea butter, vitamin E and sweet almond oil; non-comedogenic, hypoallergenic."),
+    "cetaphil-sunscreen": ("Cetaphil Sun SPF 50+ Light Gel", "Cetaphil", "Skincare", 74, "Lightweight gel sunscreen for sensitive skin", "UVA/UVB broad spectrum; lightweight gel texture with moisturising actives; suitable for sensitive skin."),
 }
 
 

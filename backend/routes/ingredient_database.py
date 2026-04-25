@@ -68,12 +68,17 @@ def classify_ingredient(ingredient_name, category=None):
         # Preservatives in personal care
         'methylchloroisothiazolinone': ('Preservative MIT', 'Severe contact dermatitis, skin allergies, EU restricted, neurotoxic'),
         'methylisothiazolinone': ('Preservative MIT', 'Strong allergen, contact dermatitis, banned in leave-on products in EU'),
-        
+        'dmdm hydantoin': ('Formaldehyde-releasing preservative', 'Slowly releases formaldehyde (carcinogen); contact dermatitis, hair loss reports, restricted in EU cosmetics'),
+        'imidazolidinyl urea': ('Formaldehyde-releasing preservative', 'Releases formaldehyde over time; skin sensitiser, potential carcinogen, contact allergy risk'),
+        'diazolidinyl urea': ('Formaldehyde-releasing preservative', 'Releases formaldehyde; strongest formaldehyde releaser in cosmetics, contact dermatitis'),
+        'quaternium-15': ('Formaldehyde-releasing preservative', 'Highest formaldehyde release rate among cosmetic preservatives; restricted in EU'),
+        'phenyl mercuric': ('Mercury-based preservative', 'Mercury compound — toxic to kidneys and nervous system, banned in most countries'),
+
         # Fragrances
         'fragrance': ('Undisclosed fragrance mixture', 'May contain phthalates (hormone disruptors), allergens, no disclosure required'),
         'perfume': ('Undisclosed fragrance mixture', 'May contain hormone disruptors, allergens, respiratory irritants'),
         'parfum': ('Undisclosed fragrance mixture', 'May contain phthalates, allergens, linked to asthma and allergies'),
-        
+
         # Artificial flavors
         'artificial': ('Synthetic flavoring', 'May contain allergens, some linked to behavioral issues in children'),
     }
@@ -102,8 +107,17 @@ def classify_ingredient(ingredient_name, category=None):
         
         # Surfactants in personal care
         'sodium laureth sulfate': ('Surfactant cleanser', 'Strips natural oils, causes dryness, scalp irritation, eye irritation'),
+        'sodium laureth sulphate': ('Surfactant cleanser', 'Strips natural oils, causes dryness, scalp irritation, eye irritation'),
         'sodium lauryl sulfate': ('Surfactant cleanser', 'Harsh, causes skin dryness, irritation, may damage hair protein'),
+        'sodium lauryl sulphate': ('Surfactant cleanser', 'Harsh, causes skin dryness, irritation, may damage hair protein'),
         'cocamidopropyl betaine': ('Surfactant', 'Can cause allergic reactions, contact dermatitis, eye irritation'),
+
+        # Retinoids (topical)
+        'retinol': ('Vitamin A derivative', 'Avoid during pregnancy (teratogenic); increases sun sensitivity — use SPF; causes purging and irritation initially'),
+        'retinyl palmitate': ('Vitamin A ester', 'Milder retinoid; may accelerate skin tumour growth in presence of sunlight — avoid daytime use'),
+        'tretinoin': ('Prescription retinoid', 'Strong retinoid — contraindicated in pregnancy; requires medical supervision'),
+        'hydroxypinacolone retinoate': ('Ester of retinoic acid', 'Gentler retinoid ester; still avoid in pregnancy; less irritating than retinol'),
+        'retinal': ('Aldehyde form of Vitamin A', 'More potent than retinol; increases sun sensitivity; avoid in pregnancy'),
         
         # Silicones
         'dimethiconol': ('Silicone', 'Builds up on hair/skin, clogs pores, environmental persistence, hard to remove'),
