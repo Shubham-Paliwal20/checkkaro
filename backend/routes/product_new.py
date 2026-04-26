@@ -101,6 +101,73 @@ async def search_product(name: str = Query(..., description="Product name to sea
     )
 
 
+@router.get("/browse")
+async def browse_products(
+    category: str = Query(None, description="Filter by category"),
+    brand: str = Query(None, description="Filter by brand"),
+    q: str = Query(None, description="Search within results"),
+    page: int = Query(1, ge=1),
+    limit: int = Query(24, ge=1, le=100),
+    sort: str = Query("score", description="sort: score | name | brand"),
+):
+    """Browse all products with category/brand filters and pagination."""
+    items = list(SAMPLE_PRODUCTS.values())
+
+    # Filter
+    if category and category != "All":
+        items = [p for p in items if p["category"] == category]
+    if brand and brand != "All":
+        items = [p for p in items if p["brand"] == brand]
+    if q:
+        q_lower = q.lower()
+        items = [
+            p for p in items
+            if q_lower in p["name"].lower() or q_lower in p["brand"].lower()
+        ]
+
+    # Sort
+    if sort == "name":
+        items.sort(key=lambda p: p["name"].lower())
+    elif sort == "brand":
+        items.sort(key=lambda p: (p["brand"].lower(), p["name"].lower()))
+    else:
+        items.sort(key=lambda p: p["awareness_score"], reverse=True)
+
+    total = len(items)
+
+    # Paginate
+    start = (page - 1) * limit
+    page_items = items[start: start + limit]
+
+    # Build available categories and brands from the full filtered set (before pagination)
+    all_cats = sorted({p["category"] for p in SAMPLE_PRODUCTS.values()})
+    # Brands available in the current category filter
+    if category and category != "All":
+        avail_brands = sorted({p["brand"] for p in SAMPLE_PRODUCTS.values() if p["category"] == category})
+    else:
+        avail_brands = sorted({p["brand"] for p in SAMPLE_PRODUCTS.values()})
+
+    return {
+        "products": [
+            {
+                "id": p["id"],
+                "name": p["name"],
+                "brand": p["brand"],
+                "category": p["category"],
+                "image_url": p["image_url"],
+                "awareness_score": p["awareness_score"],
+                "verdict": p["verdict"],
+            }
+            for p in page_items
+        ],
+        "total": total,
+        "page": page,
+        "pages": max(1, -(-total // limit)),
+        "categories": all_cats,
+        "brands": avail_brands,
+    }
+
+
 @router.get("/suggestions")
 async def get_search_suggestions(q: str = Query(..., description="Search query for suggestions")):
     if len(q) < 1:
