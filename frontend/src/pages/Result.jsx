@@ -4,6 +4,7 @@ import { motion } from 'framer-motion'
 import axios from 'axios'
 import ScoreCircle from '../components/ScoreCircle'
 import DisclaimerBox from '../components/DisclaimerBox'
+import ProductReviews from '../components/ProductReviews'
 
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:8000'
 
@@ -15,8 +16,10 @@ function Result() {
   const [showCorrectionForm, setShowCorrectionForm] = useState(false)
   const [correctionText, setCorrectionText] = useState('')
   const [submitting, setSubmitting] = useState(false)
+  const [imgError, setImgError] = useState(false)
 
   useEffect(() => {
+    setImgError(false)
     fetchProduct()
   }, [productName])
 
@@ -135,15 +138,18 @@ function Result() {
         <div className="card p-4 sm:p-6 mb-6">
           <div className="flex flex-col md:flex-row gap-4 sm:gap-6">
             {/* Product Image */}
-            <div className="w-full md:w-48 h-48 bg-gray-100 rounded-xl overflow-hidden flex-shrink-0 mx-auto md:mx-0">
-              {product.image_url ? (
-                <img src={product.image_url} alt={product.name} className="w-full h-full object-cover" />
+            <div className="w-full md:w-48 h-48 bg-gray-50 rounded-xl overflow-hidden flex-shrink-0 mx-auto md:mx-0 flex items-center justify-center">
+              {product.image_url && !imgError ? (
+                <img
+                  src={product.image_url}
+                  alt={product.name}
+                  className="w-full h-full object-contain p-3"
+                  onError={() => setImgError(true)}
+                />
               ) : (
-                <div className="w-full h-full flex items-center justify-center text-gray-400">
-                  <svg className="w-16 sm:w-20 h-16 sm:h-20" fill="currentColor" viewBox="0 0 20 20">
-                    <path fillRule="evenodd" d="M4 3a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V5a2 2 0 00-2-2H4zm12 12H4l4-8 3 6 2-4 3 6z" clipRule="evenodd" />
-                  </svg>
-                </div>
+                <svg className="w-16 sm:w-20 h-16 sm:h-20 text-gray-300" fill="currentColor" viewBox="0 0 20 20">
+                  <path fillRule="evenodd" d="M4 3a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V5a2 2 0 00-2-2H4zm12 12H4l4-8 3 6 2-4 3 6z" clipRule="evenodd" />
+                </svg>
               )}
             </div>
 
@@ -448,6 +454,9 @@ function Result() {
             </div>
           </div>
         )}
+
+        {/* Ratings & Reviews */}
+        <ProductReviews productId={product.id} productName={product.name} />
 
         {/* Disclaimer */}
         <div className="mb-6">
