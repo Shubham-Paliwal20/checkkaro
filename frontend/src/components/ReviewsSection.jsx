@@ -103,7 +103,7 @@ function ReviewFormModal({ onClose, onSubmitted }) {
     setLoading(true); setError('')
     try {
       const { data: { user } } = await supabase.auth.getUser()
-      const { error: e } = await supabase.from('reviews').insert({ user_id: user?.id, reviewer_name: name.trim(), review_text: text.trim(), rating })
+      const { error: e } = await supabase.from('reviews').insert({ user_id: user?.id, reviewer_name: name.trim(), review_text: text.trim(), rating, is_approved: true })
       if (e) throw e
       onSubmitted(); onClose()
     } catch (e) { setError(e.message || 'Failed to submit.') }
@@ -155,7 +155,7 @@ export default function ReviewsSection() {
   const timerRef = useRef(null)
 
   const fetchReviews = async () => {
-    const { data } = await supabase.from('reviews').select('*').eq('is_approved', true).order('created_at', { ascending: false })
+    const { data } = await supabase.from('reviews').select('*').order('created_at', { ascending: false })
     if (data && data.length > 0) setReviews(data)
   }
 

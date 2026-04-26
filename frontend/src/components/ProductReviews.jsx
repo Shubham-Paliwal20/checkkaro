@@ -4,6 +4,9 @@ import { useAuth } from '../context/AuthContext'
 
 const BRAND_BLUE = '#1B3F8A'
 const ORANGE     = '#FF9933'
+
+// Strip "sample-" prefix so reviews match regardless of which backend path served the product
+function normId(id) { return id ? String(id).replace(/^sample-/, '') : '' }
 const AVATAR_COLORS = ['#1B3F8A', '#0d7c66', '#9333ea', '#c2410c', '#0369a1', '#b45309']
 
 function getAvatarColor(name) {
@@ -165,19 +168,25 @@ export default function ProductReviews({ productId, productName }) {
 
   const fetchReviews = async () => {
     setLoading(true)
+    const pid = normId(productId)
     const { data, error } = await supabase
       .from('product_reviews')
       .select('*')
-      .eq('product_id', productId)
+      .eq('product_id', pid)
       .order('created_at', { ascending: false })
     if (error) console.error('[Reviews] fetch error:', error)
     const list = data || []
     setReviews(list)
-    if (user) setMyReview(list.find(r => r.user_id === user.id) || null)
     setLoading(false)
   }
 
-  useEffect(() => { if (productId) fetchReviews() }, [productId, user])
+  // Fetch only when productId changes — NOT when user changes (avoids double-fetch)
+  useEffect(() => { if (productId) fetchReviews() }, [productId])
+
+  // Derive myReview from cached list whenever user or list updates (no extra network call)
+  useEffect(() => {
+    setMyReview(user ? (reviews.find(r => r.user_id === user.id) || null) : null)
+  }, [user, reviews])
 
   useEffect(() => {
     if (myReview && editing) {
@@ -207,7 +216,7 @@ export default function ProductReviews({ productId, productName }) {
 
     setSubmitting(true)
     const payload = {
-      product_id:    String(productId),
+      product_id:    normId(productId),
       product_name:  productName,
       user_id:       user.id,
       reviewer_name: name.trim(),
