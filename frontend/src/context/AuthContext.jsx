@@ -3,9 +3,17 @@ import { supabase } from '../lib/supabaseClient'
 
 const AuthContext = createContext(null)
 
+// Decode JWT iat claim to tell fresh logins from page-load token restores
+function tokenAge(accessToken) {
+  try {
+    const payload = JSON.parse(atob(accessToken.split('.')[1]))
+    return Math.floor(Date.now() / 1000) - (payload.iat || 0)
+  } catch { return Infinity }
+}
+
 export function AuthProvider({ children }) {
-  const [user, setUser] = useState(null)
-  const [loading, setLoading] = useState(true)
+  const [user, setUser]               = useState(null)
+  const [loading, setLoading]         = useState(true)
   const [showAuthModal, setShowAuthModal] = useState(false)
   const [authModalStep, setAuthModalStep] = useState('main')
 
@@ -18,8 +26,11 @@ export function AuthProvider({ children }) {
     const { data: { subscription } } = supabase.auth.onAuthStateChange(async (event, session) => {
       setUser(session?.user ?? null)
 
-      // On every sign-in: show quiz until completed (handles Google OAuth redirect & magic link)
-      if (event === 'SIGNED_IN' && session?.user) {
+      // Only show quiz on a genuinely fresh sign-in (token issued < 90s ago).
+      // This prevents the quiz modal from firing on every page reload.
+      if (event === 'SIGNED_IN' && session?.user && session.access_token) {
+        if (tokenAge(session.access_token) > 90) return   // page-load token restore
+
         const userId = session.user.id
         const { data: profile } = await supabase
           .from('user_profiles')
@@ -40,18 +51,19 @@ export function AuthProvider({ children }) {
     return () => subscription.unsubscribe()
   }, [])
 
+  // Clear UI instantly — don't wait for network so mobile never feels stuck
   const signOut = async () => {
-    setShowAuthModal(false)
-    await supabase.auth.signOut()
     setUser(null)
+    setShowAuthModal(false)
+    try { await supabase.auth.signOut() } catch (e) { console.warn('signOut:', e) }
   }
 
   const openAuthModal = (step) => {
-    // Guard: if called as onClick handler, step will be a SyntheticEvent — ignore it
     const s = typeof step === 'string' ? step : 'main'
     setAuthModalStep(s)
     setShowAuthModal(true)
   }
+
   const closeAuthModal = () => {
     setShowAuthModal(false)
     setAuthModalStep('main')

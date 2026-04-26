@@ -22,6 +22,10 @@
   }
 }
 
+/* ── Review carousel — hide scrollbar, enable touch snap ── */
+.review-carousel::-webkit-scrollbar { display: none; }
+.review-carousel { -ms-overflow-style: none; scrollbar-width: none; }
+
 /* ── Auth Modal — bottom sheet on mobile, centred dialog on desktop ── */
 .auth-modal-overlay {
   position: fixed;
