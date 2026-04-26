@@ -140,7 +140,19 @@ export default function AuthModal({ onClose, initialStep }) {
     setLoading(true); clearError()
     const { data, error: e } = await supabase.auth.signInWithPassword({ email: email.trim(), password })
     setLoading(false)
-    if (e) { setError(e.message); return }
+    if (e) {
+      const msg = e.message?.toLowerCase() || ''
+      if (msg.includes('not confirmed') || msg.includes('email not confirmed')) {
+        setError('Please confirm your email first — check your inbox for the link we sent.')
+        return
+      }
+      if (msg.includes('invalid login') || msg.includes('invalid credentials') || msg.includes('wrong password')) {
+        setError('Incorrect email or password. Please try again.')
+        return
+      }
+      setError(e.message)
+      return
+    }
     await handlePostLogin(data.user?.id)
   }
 
@@ -150,13 +162,33 @@ export default function AuthModal({ onClose, initialStep }) {
     if (password.length < 6) { setError('Password must be at least 6 characters.'); return }
     setLoading(true); clearError()
     const { data, error: e } = await supabase.auth.signUp({ email: email.trim(), password })
+
+    if (e) {
+      const msg = e.message?.toLowerCase() || ''
+      // Already registered — try signing in with the same password
+      if (msg.includes('already registered') || msg.includes('already exists') || msg.includes('already been registered')) {
+        const { data: d2, error: e2 } = await supabase.auth.signInWithPassword({ email: email.trim(), password })
+        setLoading(false)
+        if (e2) { setError('This email is already registered. Switch to "Sign In" tab.'); return }
+        await handlePostLogin(d2.user?.id)
+        return
+      }
+      // Email sending failed (rate limit / SMTP) — account may have been created; show check-email screen
+      if (msg.includes('email') || msg.includes('sending') || msg.includes('rate') || msg.includes('smtp')) {
+        setLoading(false)
+        setStep('check_email')
+        return
+      }
+      setLoading(false)
+      setError(e.message)
+      return
+    }
+
     setLoading(false)
-    if (e) { setError(e.message); return }
-    // If email confirmation is disabled in Supabase → user is created instantly
+    // Email confirmation disabled in Supabase → session returned immediately
     if (data.session) {
       await handlePostLogin(data.user?.id)
     } else {
-      // Email confirmation required
       setStep('check_email')
     }
   }
