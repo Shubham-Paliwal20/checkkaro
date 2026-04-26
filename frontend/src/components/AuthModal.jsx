@@ -242,10 +242,10 @@ export default function AuthModal({ onClose, initialStep }) {
 
   // ─────────────────── RENDER ───────────────────
   return (
-    <div style={{ position: 'fixed', inset: 0, zIndex: 9999, backgroundColor: 'rgba(0,0,0,0.55)', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: 16 }}>
+    <div className="auth-modal-overlay">
       <div style={{ position: 'absolute', inset: 0 }} onClick={onClose} />
 
-      <div style={{ position: 'relative', backgroundColor: '#fff', borderRadius: 20, boxShadow: '0 24px 64px rgba(0,0,0,0.25)', width: '100%', maxWidth: 420, maxHeight: '90vh', overflowY: 'auto' }}>
+      <div className="auth-modal-card">
 
         {/* Top accent bar */}
         <div style={{ height: 4, background: `linear-gradient(90deg, ${ORANGE}, ${BLUE})`, borderRadius: '20px 20px 0 0' }} />

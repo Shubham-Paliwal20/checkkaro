@@ -40,12 +40,15 @@ export function AuthProvider({ children }) {
   }, [])
 
   const signOut = async () => {
+    setShowAuthModal(false)
     await supabase.auth.signOut()
     setUser(null)
   }
 
-  const openAuthModal = (step = 'main') => {
-    setAuthModalStep(step)
+  const openAuthModal = (step) => {
+    // Guard: if called as onClick handler, step will be a SyntheticEvent — ignore it
+    const s = typeof step === 'string' ? step : 'main'
+    setAuthModalStep(s)
     setShowAuthModal(true)
   }
   const closeAuthModal = () => {

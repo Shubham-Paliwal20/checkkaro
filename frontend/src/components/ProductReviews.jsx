@@ -309,7 +309,7 @@ export default function ProductReviews({ productId, productName }) {
                 Login to share your experience. Only verified users can submit reviews.
               </p>
               <button
-                onClick={openAuthModal}
+                onClick={() => openAuthModal()}
                 style={{
                   background: BRAND_BLUE, color: '#fff', border: 'none',
                   borderRadius: 10, padding: '11px 28px', fontSize: 14,

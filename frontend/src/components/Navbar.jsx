@@ -164,7 +164,7 @@ function Navbar() {
                     {user.email || user.phone}
                   </span>
                   <button
-                    onClick={() => { signOut(); closeMobile() }}
+                    onClick={async () => { closeMobile(); await signOut() }}
                     className="text-sm text-gray-600 border border-gray-300 px-3 py-1.5 rounded-lg hover:bg-gray-50"
                   >
                     Logout
