@@ -109,12 +109,18 @@ export default function AuthModal({ onClose, initialStep }) {
 
   const clearError = () => setError('')
 
-  // ── After successful login: check if new user → quiz, else → done ──
+  // ── After successful login: show quiz until user completes it once ──
   const handlePostLogin = async (userId) => {
     if (!userId) { setStep('done'); setTimeout(onClose, 1600); return }
-    const { data: prof } = await supabase.from('user_profiles').select('id').eq('id', userId).maybeSingle()
+    const { data: prof } = await supabase
+      .from('user_profiles')
+      .select('id, quiz_completed')
+      .eq('id', userId)
+      .maybeSingle()
     if (!prof) {
-      await supabase.from('user_profiles').insert({ id: userId })
+      await supabase.from('user_profiles').upsert({ id: userId })
+    }
+    if (!prof?.quiz_completed) {
       setStep('quiz')
     } else {
       setStep('done')

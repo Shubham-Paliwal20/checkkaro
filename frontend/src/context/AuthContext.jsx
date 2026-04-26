@@ -18,18 +18,19 @@ export function AuthProvider({ children }) {
     const { data: { subscription } } = supabase.auth.onAuthStateChange(async (event, session) => {
       setUser(session?.user ?? null)
 
-      // When user comes back after clicking the magic link email
+      // On every sign-in: show quiz until completed (handles Google OAuth redirect & magic link)
       if (event === 'SIGNED_IN' && session?.user) {
         const userId = session.user.id
         const { data: profile } = await supabase
           .from('user_profiles')
-          .select('id')
+          .select('id, quiz_completed')
           .eq('id', userId)
           .maybeSingle()
 
         if (!profile) {
-          // New user — create profile row and open quiz
-          await supabase.from('user_profiles').insert({ id: userId })
+          await supabase.from('user_profiles').upsert({ id: userId })
+        }
+        if (!profile?.quiz_completed) {
           setAuthModalStep('quiz')
           setShowAuthModal(true)
         }
