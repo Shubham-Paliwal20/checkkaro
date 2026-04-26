@@ -196,7 +196,11 @@ export default function ProductReviews({ productId, productName }) {
       setText(myReview.review_text || '')
     } else if (!myReview && user) {
       const meta = user.user_metadata
-      setName(meta?.full_name || meta?.name || '')
+      // Fallback chain: Google full_name → metadata name → email prefix → phone
+      const defaultName = meta?.full_name || meta?.name
+        || (user.email ? user.email.split('@')[0] : '')
+        || user.phone || ''
+      setName(defaultName)
       setRating(0)
       setText('')
     }
@@ -206,14 +210,16 @@ export default function ProductReviews({ productId, productName }) {
   const avg = total > 0 ? reviews.reduce((s, r) => s + r.rating, 0) / total : 0
 
   const handleSubmit = async () => {
-    if (!rating) { setFormError('Please select a star rating.'); return }
-    if (!name.trim()) { setFormError('Please enter your display name.'); return }
-    if (text.trim() && text.trim().length < 5) { setFormError('Review text must be at least 5 characters.'); return }
-    setSubmitting(true)
     setFormError('')
+    if (!rating) { setFormError('⭐ Please select a star rating first.'); return }
+    if (!name.trim()) { setFormError('Please enter your display name.'); return }
+    if (text.trim().length > 0 && text.trim().length < 5) { setFormError('Review text must be at least 5 characters.'); return }
+    if (!productId) { setFormError('Product ID is missing — please reload the page.'); return }
+
+    setSubmitting(true)
 
     const payload = {
-      product_id: productId,
+      product_id: String(productId),
       product_name: productName,
       user_id: user.id,
       reviewer_name: name.trim(),
@@ -221,21 +227,35 @@ export default function ProductReviews({ productId, productName }) {
       review_text: text.trim(),
     }
 
+    console.log('[Review] submitting payload:', payload)
+
     let err
     if (myReview && editing) {
       const { error } = await supabase
         .from('product_reviews')
-        .update({ reviewer_name: payload.reviewer_name, rating: payload.rating, review_text: payload.review_text })
+        .update({
+          reviewer_name: payload.reviewer_name,
+          rating: payload.rating,
+          review_text: payload.review_text,
+        })
         .eq('id', myReview.id)
+        .eq('user_id', user.id)
       err = error
     } else {
-      const { error } = await supabase.from('product_reviews').insert(payload)
+      const { error } = await supabase
+        .from('product_reviews')
+        .upsert(payload, { onConflict: 'product_id,user_id' })
       err = error
     }
 
     if (err) {
-      setFormError(err.message || 'Something went wrong. Please try again.')
+      console.error('[Review] Supabase error:', err)
+      let msg = err.message || 'Something went wrong. Please try again.'
+      if (err.code === '42P01') msg = 'Reviews table not found — please contact support.'
+      if (err.code === '42501' || err.message?.includes('policy')) msg = 'Permission denied. Please log out and log in again.'
+      setFormError(msg)
     } else {
+      console.log('[Review] submitted successfully')
       setSuccess(true)
       setEditing(false)
       await fetchReviews()
@@ -412,8 +432,24 @@ export default function ProductReviews({ productId, productName }) {
                 />
               </div>
 
-              {formError && <p style={{ color: '#ef4444', fontSize: 13, margin: '0 0 12px' }}>{formError}</p>}
-              {success && <p style={{ color: '#16a34a', fontSize: 13, margin: '0 0 12px' }}>✓ Review submitted! Thank you.</p>}
+              {formError && (
+                <div style={{
+                  background: '#fef2f2', border: '1px solid #fecaca',
+                  borderRadius: 10, padding: '10px 14px', marginBottom: 12,
+                  color: '#dc2626', fontSize: 13, fontWeight: 500,
+                }}>
+                  {formError}
+                </div>
+              )}
+              {success && (
+                <div style={{
+                  background: '#f0fdf4', border: '1px solid #bbf7d0',
+                  borderRadius: 10, padding: '10px 14px', marginBottom: 12,
+                  color: '#16a34a', fontSize: 13, fontWeight: 600,
+                }}>
+                  ✓ Review submitted! Thank you.
+                </div>
+              )}
 
               <div style={{ display: 'flex', gap: 10, flexWrap: 'wrap' }}>
                 <button
