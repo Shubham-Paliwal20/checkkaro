@@ -37,6 +37,55 @@ function EyeIcon({ show }) {
   )
 }
 
+function Divider({ label = 'or' }) {
+  return (
+    <div style={{ display: 'flex', alignItems: 'center', margin: '14px 0' }}>
+      <div style={{ flex: 1, height: 1, background: '#e5e7eb' }} />
+      <span style={{ margin: '0 12px', fontSize: 11, color: '#9ca3af', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.08em' }}>{label}</span>
+      <div style={{ flex: 1, height: 1, background: '#e5e7eb' }} />
+    </div>
+  )
+}
+
+function Input({ type = 'text', value, onChange, placeholder, suffix }) {
+  return (
+    <div style={{ position: 'relative', marginBottom: 12 }}>
+      <input
+        type={type}
+        value={value}
+        onChange={onChange}
+        placeholder={placeholder}
+        style={{ width: '100%', border: '1.5px solid #d1d5db', borderRadius: 10, padding: suffix ? '11px 40px 11px 14px' : '11px 14px', fontSize: 14, outline: 'none', boxSizing: 'border-box', fontFamily: 'inherit', color: '#111827' }}
+        onFocus={e => { e.target.style.borderColor = ORANGE; e.target.style.boxShadow = `0 0 0 2px ${ORANGE}22` }}
+        onBlur={e => { e.target.style.borderColor = '#d1d5db'; e.target.style.boxShadow = '' }}
+      />
+      {suffix && (
+        <button type="button" onClick={suffix.onClick} tabIndex={-1}
+          style={{ position: 'absolute', right: 12, top: '50%', transform: 'translateY(-50%)', background: 'none', border: 'none', cursor: 'pointer', color: '#9ca3af', padding: 0, display: 'flex' }}>
+          {suffix.icon}
+        </button>
+      )}
+    </div>
+  )
+}
+
+function PrimaryBtn({ children, onClick, disabled, loading }) {
+  return (
+    <button onClick={onClick} disabled={disabled || loading}
+      style={{ width: '100%', background: ORANGE, color: '#fff', border: 'none', borderRadius: 10, padding: '13px 14px', fontSize: 15, fontWeight: 700, cursor: (disabled || loading) ? 'not-allowed' : 'pointer', opacity: (disabled || loading) ? 0.65 : 1, fontFamily: 'inherit', marginTop: 4 }}>
+      {children}
+    </button>
+  )
+}
+
+function GhostBtn({ children, onClick }) {
+  return (
+    <button onClick={onClick} style={{ background: 'none', border: 'none', color: ORANGE, fontSize: 13, fontWeight: 500, cursor: 'pointer', fontFamily: 'inherit', padding: 0 }}>
+      {children}
+    </button>
+  )
+}
+
 export default function AuthModal({ onClose, initialStep }) {
   const [step,         setStep]         = useState(initialStep || 'main')
   const [authTab,      setAuthTab]      = useState('email')   // 'email' | 'phone'
@@ -159,48 +208,6 @@ export default function AuthModal({ onClose, initialStep }) {
     setTimeout(onClose, 1600)
   }
 
-  // ─────────────────── UI helpers ───────────────────
-  const Divider = ({ label = 'or' }) => (
-    <div style={{ display: 'flex', alignItems: 'center', margin: '14px 0' }}>
-      <div style={{ flex: 1, height: 1, background: '#e5e7eb' }} />
-      <span style={{ margin: '0 12px', fontSize: 11, color: '#9ca3af', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.08em' }}>{label}</span>
-      <div style={{ flex: 1, height: 1, background: '#e5e7eb' }} />
-    </div>
-  )
-
-  const Input = ({ type = 'text', value, onChange, placeholder, suffix }) => (
-    <div style={{ position: 'relative', marginBottom: 12 }}>
-      <input
-        type={type}
-        value={value}
-        onChange={onChange}
-        placeholder={placeholder}
-        style={{ width: '100%', border: '1.5px solid #d1d5db', borderRadius: 10, padding: suffix ? '11px 40px 11px 14px' : '11px 14px', fontSize: 14, outline: 'none', boxSizing: 'border-box', fontFamily: 'inherit', color: '#111827' }}
-        onFocus={e => { e.target.style.borderColor = ORANGE; e.target.style.boxShadow = `0 0 0 2px ${ORANGE}22` }}
-        onBlur={e => { e.target.style.borderColor = '#d1d5db'; e.target.style.boxShadow = '' }}
-      />
-      {suffix && (
-        <button type="button" onClick={suffix.onClick} tabIndex={-1}
-          style={{ position: 'absolute', right: 12, top: '50%', transform: 'translateY(-50%)', background: 'none', border: 'none', cursor: 'pointer', color: '#9ca3af', padding: 0, display: 'flex' }}>
-          {suffix.icon}
-        </button>
-      )}
-    </div>
-  )
-
-  const PrimaryBtn = ({ children, onClick, disabled }) => (
-    <button onClick={onClick} disabled={disabled || loading}
-      style={{ width: '100%', background: ORANGE, color: '#fff', border: 'none', borderRadius: 10, padding: '13px 14px', fontSize: 15, fontWeight: 700, cursor: (disabled || loading) ? 'not-allowed' : 'pointer', opacity: (disabled || loading) ? 0.65 : 1, fontFamily: 'inherit', marginTop: 4 }}>
-      {children}
-    </button>
-  )
-
-  const GhostBtn = ({ children, onClick }) => (
-    <button onClick={onClick} style={{ background: 'none', border: 'none', color: ORANGE, fontSize: 13, fontWeight: 500, cursor: 'pointer', fontFamily: 'inherit', padding: 0 }}>
-      {children}
-    </button>
-  )
-
   // ─────────────────── RENDER ───────────────────
   return (
     <div style={{ position: 'fixed', inset: 0, zIndex: 9999, backgroundColor: 'rgba(0,0,0,0.55)', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: 16 }}>
@@ -287,7 +294,7 @@ export default function AuthModal({ onClose, initialStep }) {
 
                   {error && <p style={{ color: '#ef4444', fontSize: 12, margin: '-6px 0 8px' }}>{error}</p>}
 
-                  <PrimaryBtn onClick={isSignUp ? handleEmailSignUp : handleEmailSignIn}>
+                  <PrimaryBtn onClick={isSignUp ? handleEmailSignUp : handleEmailSignIn} loading={loading}>
                     {loading ? (isSignUp ? 'Creating account…' : 'Signing in…') : (isSignUp ? 'Create Account →' : 'Sign In →')}
                   </PrimaryBtn>
 
@@ -321,7 +328,7 @@ export default function AuthModal({ onClose, initialStep }) {
 
                   {error && <p style={{ color: '#ef4444', fontSize: 12, margin: '-6px 0 8px' }}>{error}</p>}
 
-                  <PrimaryBtn onClick={handleSendOtp}>
+                  <PrimaryBtn onClick={handleSendOtp} loading={loading}>
                     {loading ? 'Sending OTP…' : 'Send OTP →'}
                   </PrimaryBtn>
                 </>
@@ -349,7 +356,7 @@ export default function AuthModal({ onClose, initialStep }) {
                 onBlur={e => { e.target.style.borderColor = '#d1d5db' }}
               />
               {error && <p style={{ color: '#ef4444', fontSize: 12, margin: '4px 0 8px' }}>{error}</p>}
-              <PrimaryBtn onClick={handleVerifyOtp}>{loading ? 'Verifying…' : 'Verify OTP'}</PrimaryBtn>
+              <PrimaryBtn onClick={handleVerifyOtp} loading={loading}>{loading ? 'Verifying…' : 'Verify OTP'}</PrimaryBtn>
               <div style={{ textAlign: 'center', marginTop: 12 }}>
                 <GhostBtn onClick={() => { setStep('main'); setOtp(''); clearError() }}>← Change number</GhostBtn>
               </div>
@@ -379,7 +386,7 @@ export default function AuthModal({ onClose, initialStep }) {
               <p style={{ fontSize: 13, color: '#6b7280', margin: '0 0 18px' }}>Enter your email and we'll send a reset link.</p>
               <Input type="email" value={resetEmail} onChange={e => { setResetEmail(e.target.value); clearError() }} placeholder="you@example.com" />
               {error && <p style={{ color: '#ef4444', fontSize: 12, margin: '-6px 0 8px' }}>{error}</p>}
-              <PrimaryBtn onClick={handleForgotPassword}>{loading ? 'Sending…' : 'Send Reset Link'}</PrimaryBtn>
+              <PrimaryBtn onClick={handleForgotPassword} loading={loading}>{loading ? 'Sending…' : 'Send Reset Link'}</PrimaryBtn>
               <div style={{ textAlign: 'center', marginTop: 12 }}>
                 <GhostBtn onClick={() => { setStep('main'); clearError() }}>← Back to login</GhostBtn>
               </div>
