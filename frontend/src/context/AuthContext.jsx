@@ -7,7 +7,7 @@ export function AuthProvider({ children }) {
   const [user, setUser] = useState(null)
   const [loading, setLoading] = useState(true)
   const [showAuthModal, setShowAuthModal] = useState(false)
-  const [authModalStep, setAuthModalStep] = useState('contact')
+  const [authModalStep, setAuthModalStep] = useState('main')
 
   useEffect(() => {
     supabase.auth.getSession().then(({ data: { session } }) => {
@@ -44,13 +44,13 @@ export function AuthProvider({ children }) {
     setUser(null)
   }
 
-  const openAuthModal = (step = 'contact') => {
+  const openAuthModal = (step = 'main') => {
     setAuthModalStep(step)
     setShowAuthModal(true)
   }
   const closeAuthModal = () => {
     setShowAuthModal(false)
-    setAuthModalStep('contact')
+    setAuthModalStep('main')
   }
 
   return (
