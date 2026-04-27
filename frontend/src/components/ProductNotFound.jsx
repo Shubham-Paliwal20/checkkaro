@@ -120,7 +120,7 @@ export default function ProductNotFound({ productName }) {
           </h2>
           <p style={{ color: '#6b7280', fontSize: 14, lineHeight: 1.6, margin: '0 0 24px' }}>
             Thank you! Our team will review your submission and add it to CheckKaro.
-            Once approved, <strong>₹1 per Products will be sent to your UPI / mobile number</strong>.
+            Once approved, <strong>₹1 per Product will be sent to your UPI / mobile number</strong>.
           </p>
           <button onClick={() => window.history.back()}
             style={{ background: '#FF9933', color: '#fff', border: 'none', borderRadius: 999, padding: '14px 36px', fontSize: 15, fontWeight: 700, cursor: 'pointer', fontFamily: 'inherit', width: isMobile ? '100%' : 'auto' }}>
@@ -158,10 +158,10 @@ export default function ProductNotFound({ productName }) {
           </div>
           <div>
             <div style={{ fontWeight: 800, fontSize: isMobile ? 14 : 15, color: '#92400e' }}>
-              Add Products &amp; Earn ₹1 per Products
+              Add Products &amp; Earn ₹1 per Product
             </div>
             <div style={{ fontSize: isMobile ? 11 : 12, color: '#b45309' }}>
-              ₹1 per Products — upload → approve → receive reward
+              ₹1 per Product — upload → approve → receive reward
             </div>
           </div>
         </div>
@@ -291,7 +291,7 @@ export default function ProductNotFound({ productName }) {
             style={{ ...inputStyle, marginBottom: 6 }}
           />
           <p style={{ color: '#9ca3af', fontSize: 12, margin: '0 0 20px', lineHeight: 1.4 }}>
-            We'll send ₹1 per Products here once your submission is approved.
+            We'll send ₹1 per Product here once your submission is approved.
           </p>
 
           {error && (
