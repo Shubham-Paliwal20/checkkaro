@@ -7,7 +7,7 @@ router = APIRouter()
 
 
 @router.get("/search", response_model=IngredientRuleResponse)
-async def search_ingredient(name: str = Query(..., description="Ingredient name to search")):
+async def search_ingredient(name: str = Query(..., description="Ingredient name to search", min_length=1, max_length=100)):
     """
     Search for ingredient information using centralized database
     Ensures consistency with product search results

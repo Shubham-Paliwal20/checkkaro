@@ -1,57 +1,119 @@
-from fastapi import FastAPI
-from fastapi.middleware.cors import CORSMiddleware
-from dotenv import load_dotenv
 import os
+import time
+from collections import defaultdict
+from fastapi import FastAPI, Request
+from fastapi.middleware.cors import CORSMiddleware
+from fastapi.responses import JSONResponse
+from starlette.middleware.base import BaseHTTPMiddleware
+from dotenv import load_dotenv
 
 # Import routers
 from routes import product_new, ingredient, history, admin_extract
 
-# Load environment variables
 load_dotenv()
 
-# Create FastAPI app
+# ── Rate limiter (in-memory, per IP) ──────────────────────────────────────────
+# Slots: { ip: [timestamp, ...] }
+_rate_store: dict = defaultdict(list)
+
+RATE_LIMIT_NORMAL   = 60   # requests
+RATE_LIMIT_ADMIN    = 10   # tighter for admin/extraction
+RATE_WINDOW_SECONDS = 60
+
+
+def _is_rate_limited(ip: str, max_calls: int) -> bool:
+    now = time.monotonic()
+    window_start = now - RATE_WINDOW_SECONDS
+    timestamps = [t for t in _rate_store[ip] if t > window_start]
+    _rate_store[ip] = timestamps
+    if len(timestamps) >= max_calls:
+        return True
+    _rate_store[ip].append(now)
+    return False
+
+
+# ── Security headers middleware ────────────────────────────────────────────────
+class SecurityHeadersMiddleware(BaseHTTPMiddleware):
+    async def dispatch(self, request: Request, call_next):
+        response = await call_next(request)
+        response.headers["X-Content-Type-Options"]    = "nosniff"
+        response.headers["X-Frame-Options"]           = "DENY"
+        response.headers["X-XSS-Protection"]          = "1; mode=block"
+        response.headers["Referrer-Policy"]           = "strict-origin-when-cross-origin"
+        response.headers["Permissions-Policy"]        = "geolocation=(), camera=(), microphone=()"
+        # Only set HSTS on HTTPS (not localhost dev)
+        if request.url.scheme == "https":
+            response.headers["Strict-Transport-Security"] = "max-age=31536000; includeSubDomains"
+        return response
+
+
+# ── Rate limiting middleware ───────────────────────────────────────────────────
+class RateLimitMiddleware(BaseHTTPMiddleware):
+    async def dispatch(self, request: Request, call_next):
+        ip = request.client.host if request.client else "unknown"
+
+        # Tighter limit for admin / extraction endpoints
+        is_admin = request.url.path.startswith("/api/admin")
+        limit = RATE_LIMIT_ADMIN if is_admin else RATE_LIMIT_NORMAL
+
+        if _is_rate_limited(ip, limit):
+            return JSONResponse(
+                status_code=429,
+                content={"detail": "Too many requests. Please slow down."},
+            )
+        return await call_next(request)
+
+
+# ── App setup ─────────────────────────────────────────────────────────────────
 app = FastAPI(
     title="CheckKaro API",
     description="Indian product ingredient awareness platform",
-    version="1.0.0"
+    version="1.0.0",
+    # Disable automatic OpenAPI docs in production
+    docs_url="/docs" if os.getenv("ENV", "development") != "production" else None,
+    redoc_url="/redoc" if os.getenv("ENV", "development") != "production" else None,
 )
 
-# Configure CORS
-allowed_origins = os.getenv("ALLOWED_ORIGINS", "*").split(",")
+# CORS — no wildcard fallback; must be explicitly configured
+_raw_origins = os.getenv("ALLOWED_ORIGINS", "")
+allowed_origins = [o.strip() for o in _raw_origins.split(",") if o.strip()]
+if not allowed_origins:
+    raise RuntimeError(
+        "ALLOWED_ORIGINS environment variable is not set. "
+        "Set it to a comma-separated list of allowed origins (e.g. https://yourcomain.com)."
+    )
+
 app.add_middleware(
     CORSMiddleware,
     allow_origins=allowed_origins,
     allow_credentials=True,
-    allow_methods=["*"],
-    allow_headers=["*"],
+    allow_methods=["GET", "POST"],   # only what we actually use
+    allow_headers=["Content-Type", "Authorization"],
 )
 
-# Include routers
-app.include_router(product_new.router, prefix="/api/product", tags=["Products"])
-app.include_router(ingredient.router, prefix="/api/ingredient", tags=["Ingredients"])
-app.include_router(history.router, prefix="/api/history", tags=["History"])
-app.include_router(admin_extract.router, prefix="/api/admin", tags=["Admin"])
+# Add security middleware (order matters: outermost = last added)
+app.add_middleware(RateLimitMiddleware)
+app.add_middleware(SecurityHeadersMiddleware)
+
+# ── Routers ───────────────────────────────────────────────────────────────────
+app.include_router(product_new.router,    prefix="/api/product",    tags=["Products"])
+app.include_router(ingredient.router,     prefix="/api/ingredient",  tags=["Ingredients"])
+app.include_router(history.router,        prefix="/api/history",     tags=["History"])
+app.include_router(admin_extract.router,  prefix="/api/admin",       tags=["Admin"])
 
 
 @app.get("/health")
 async def health_check():
-    """Health check endpoint"""
-    return {
-        "status": "ok",
-        "service": "CheckKaro API"
-    }
+    return {"status": "ok", "service": "CheckKaro API"}
 
 
 @app.get("/")
 async def root():
-    """Root endpoint"""
-    return {
-        "message": "Welcome to CheckKaro API",
-        "docs": "/docs",
-        "health": "/health"
-    }
+    return {"message": "Welcome to CheckKaro API"}
+
+
 if __name__ == "__main__":
     import uvicorn
-    print("Total products loaded: 118")
+    print("Total products loaded: 570")
     print("Starting CheckKaro API server...")
     uvicorn.run(app, host="0.0.0.0", port=8000)

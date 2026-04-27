@@ -196,10 +196,17 @@ export default function Admin() {
     setExtracting(id)
     setExtractMsg(null)
     try {
+      // Get current Supabase session JWT — proves identity server-side
+      const { data: { session } } = await supabase.auth.getSession()
+      if (!session?.access_token) throw new Error('Not authenticated — please log in again')
+
       const res = await fetch(`${API_BASE_URL}/api/admin/extract-product`, {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ submission_id: id, admin_email: user.email }),
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${session.access_token}`,
+        },
+        body: JSON.stringify({ submission_id: id }),
       })
       const data = await res.json()
       if (!res.ok) throw new Error(data.detail || 'Extraction failed')

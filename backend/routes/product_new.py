@@ -47,7 +47,7 @@ def normalize_name(name: str) -> str:
 
 
 @router.get("/search")
-async def search_product(name: str = Query(..., description="Product name to search")):
+async def search_product(name: str = Query(..., description="Product name to search", min_length=1, max_length=120)):
     """
     DATABASE-ONLY SEARCH - NO AI (with sample data until you load real database)
     """
@@ -214,7 +214,7 @@ async def browse_products(
 
 
 @router.get("/suggestions")
-async def get_search_suggestions(q: str = Query(..., description="Search query for suggestions")):
+async def get_search_suggestions(q: str = Query(..., description="Search query for suggestions", min_length=1, max_length=80)):
     if len(q) < 1:
         return {"suggestions": []}
 
