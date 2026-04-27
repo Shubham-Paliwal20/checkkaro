@@ -95,8 +95,7 @@ export default function ProductNotFound({ productName }) {
       const { error: dbErr } = await supabase.from('product_submissions').insert({
         user_id:               user.id,
         email:                 user.email || '',
-        product_name_searched: productName,
-        product_name:          productLabel.trim(),
+        product_name_searched: productLabel.trim(),
         images:                imageUrls,
         contact:               contact.trim(),
         status:                'pending',
