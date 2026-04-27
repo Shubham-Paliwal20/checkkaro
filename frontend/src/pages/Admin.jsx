@@ -168,27 +168,41 @@ export default function Admin() {
 
   const fetchSubs = async (status) => {
     setFetching(true)
-    const { data } = await supabase
-      .from('product_submissions').select('*')
-      .eq('status', status).order('created_at', { ascending: false })
-    setSubs(data || [])
-    setFetching(false)
+    try {
+      const { data, error } = await supabase
+        .from('product_submissions').select('*')
+        .eq('status', status).order('created_at', { ascending: false })
+      if (error) console.error('[Admin] fetchSubs:', error.message, error.code)
+      setSubs(data || [])
+    } catch (e) {
+      console.error('[Admin] fetchSubs exception:', e)
+      setSubs([])
+    } finally {
+      setFetching(false)
+    }
   }
 
   const fetchAll = async () => {
-    const { data } = await supabase.from('product_submissions').select('status')
-    if (!data) return
-    const c = { pending: 0, approved: 0, rejected: 0, extracted: 0 }
-    data.forEach(r => { if (c[r.status] !== undefined) c[r.status]++ })
-    setCounts(c)
+    try {
+      const { data, error } = await supabase.from('product_submissions').select('status')
+      if (error) { console.error('[Admin] fetchAll:', error.message, error.code); return }
+      if (!data) return
+      const c = { pending: 0, approved: 0, rejected: 0, extracted: 0 }
+      data.forEach(r => { if (c[r.status] !== undefined) c[r.status]++ })
+      setCounts(c)
+    } catch (e) {
+      console.error('[Admin] fetchAll exception:', e)
+    }
   }
 
   const handleApprove = async (id) => {
-    await supabase.from('product_submissions').update({ status: 'approved' }).eq('id', id)
+    const { error } = await supabase.from('product_submissions').update({ status: 'approved' }).eq('id', id)
+    if (error) console.error('[Admin] approve:', error.message)
     fetchAll(); fetchSubs(tab)
   }
   const handleReject = async (id) => {
-    await supabase.from('product_submissions').update({ status: 'rejected' }).eq('id', id)
+    const { error } = await supabase.from('product_submissions').update({ status: 'rejected' }).eq('id', id)
+    if (error) console.error('[Admin] reject:', error.message)
     fetchAll(); fetchSubs(tab)
   }
 
