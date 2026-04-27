@@ -25,6 +25,7 @@ export function AuthProvider({ children }) {
 
     const { data: { subscription } } = supabase.auth.onAuthStateChange(async (event, session) => {
       setUser(session?.user ?? null)
+      setLoading(false)   // auth state is now known — stop spinning regardless of source
 
       // Wipe auth tokens from the URL the moment Supabase reads them.
       // Without this, sharing the post-login URL hands over your session to anyone who opens it.

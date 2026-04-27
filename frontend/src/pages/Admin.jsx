@@ -219,7 +219,9 @@ export default function Admin() {
     }
   }
 
-  if (authLoading) {
+  // Only block render while auth is genuinely unknown (no user resolved yet).
+  // If user is already in context the isAdmin check is instant — no spinner needed.
+  if (authLoading && !user) {
     return (
       <div style={{ minHeight: '60vh', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
         <div style={{ color: '#9ca3af', fontSize: 15 }}>Checking access…</div>
