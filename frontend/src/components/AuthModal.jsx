@@ -453,22 +453,47 @@ export default function AuthModal({ onClose, initialStep }) {
               <h2 style={{ fontSize: 20, fontWeight: 700, color: '#111827', margin: '0 0 4px' }}>Quick questions</h2>
               <p style={{ fontSize: 13, color: '#6b7280', margin: '0 0 18px' }}>Help us personalise your experience. <span style={{ color: ORANGE, fontWeight: 600 }}>All optional.</span></p>
               <div style={{ display: 'flex', flexDirection: 'column', gap: 18 }}>
-                {QUIZ_QUESTIONS.map(q => (
-                  <div key={q.id}>
-                    <p style={{ fontSize: 14, fontWeight: 600, color: '#374151', marginBottom: 8 }}>{q.question}</p>
-                    <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8 }}>
-                      {q.options.map(opt => {
-                        const sel = quizAnswers[q.id] === opt
-                        return (
-                          <button key={opt} onClick={() => setQuizAnswers(p => ({ ...p, [q.id]: opt }))}
-                            style={{ padding: '6px 12px', borderRadius: 999, fontSize: 13, fontWeight: 500, cursor: 'pointer', fontFamily: 'inherit', border: `1.5px solid ${sel ? ORANGE : '#d1d5db'}`, background: sel ? ORANGE : '#fff', color: sel ? '#fff' : '#374151' }}>
-                            {opt}
-                          </button>
-                        )
-                      })}
+                {QUIZ_QUESTIONS.map(q => {
+                  const isSingle = q.id === 'age_group'
+                  const getSelected = () => {
+                    const v = quizAnswers[q.id]
+                    if (!v) return []
+                    return Array.isArray(v) ? v : [v]
+                  }
+                  const toggleOpt = (opt) => {
+                    if (isSingle) {
+                      setQuizAnswers(p => ({ ...p, [q.id]: opt }))
+                    } else {
+                      setQuizAnswers(p => {
+                        const cur = Array.isArray(p[q.id]) ? p[q.id] : (p[q.id] ? [p[q.id]] : [])
+                        const next = cur.includes(opt) ? cur.filter(o => o !== opt) : [...cur, opt]
+                        return { ...p, [q.id]: next }
+                      })
+                    }
+                  }
+                  const selected = getSelected()
+                  return (
+                    <div key={q.id}>
+                      <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 8 }}>
+                        <p style={{ fontSize: 14, fontWeight: 600, color: '#374151', margin: 0 }}>{q.question}</p>
+                        <span style={{ fontSize: 10, fontWeight: 700, color: isSingle ? '#6b7280' : ORANGE, background: isSingle ? '#f3f4f6' : '#fff7ed', borderRadius: 99, padding: '2px 8px', whiteSpace: 'nowrap' }}>
+                          {isSingle ? 'Choose one' : 'Choose multiple'}
+                        </span>
+                      </div>
+                      <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8 }}>
+                        {q.options.map(opt => {
+                          const sel = selected.includes(opt)
+                          return (
+                            <button key={opt} onClick={() => toggleOpt(opt)}
+                              style={{ padding: '6px 12px', borderRadius: 999, fontSize: 13, fontWeight: 500, cursor: 'pointer', fontFamily: 'inherit', border: `1.5px solid ${sel ? ORANGE : '#d1d5db'}`, background: sel ? ORANGE : '#fff', color: sel ? '#fff' : '#374151', transition: 'all 0.15s' }}>
+                              {!isSingle && sel && '✓ '}{opt}
+                            </button>
+                          )
+                        })}
+                      </div>
                     </div>
-                  </div>
-                ))}
+                  )
+                })}
               </div>
               <div style={{ display: 'flex', gap: 12, marginTop: 24 }}>
                 <button onClick={() => { setStep('done'); setTimeout(onClose, 1600) }}

@@ -80,7 +80,12 @@ export default function ProductNotFound({ productName }) {
         const { error: uploadErr } = await supabase.storage
           .from('product-submissions')
           .upload(path, file, { upsert: false })
-        if (uploadErr) throw uploadErr
+        if (uploadErr) {
+          if (uploadErr.message?.toLowerCase().includes('bucket')) {
+            throw new Error('Image storage is not set up yet. Please contact the admin.')
+          }
+          throw uploadErr
+        }
         const { data: urlData } = supabase.storage
           .from('product-submissions')
           .getPublicUrl(path)

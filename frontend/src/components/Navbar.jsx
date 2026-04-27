@@ -4,7 +4,6 @@ import { useAuth } from '../context/AuthContext'
 
 function Navbar() {
   const [isScrolled, setIsScrolled] = useState(false)
-  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
   const location = useLocation()
   const { user, signOut, openAuthModal } = useAuth()
 
@@ -12,198 +11,115 @@ function Navbar() {
   const isAdmin = user?.email === 'shubhampaliwal5@gmail.com'
 
   useEffect(() => {
-    const handleScroll = () => setIsScrolled(window.scrollY > 10)
-    window.addEventListener('scroll', handleScroll)
-    return () => window.removeEventListener('scroll', handleScroll)
+    const fn = () => setIsScrolled(window.scrollY > 10)
+    window.addEventListener('scroll', fn)
+    return () => window.removeEventListener('scroll', fn)
   }, [])
 
   const isActive = (path) => location.pathname === path
 
-  const closeMobile = () => setIsMobileMenuOpen(false)
+  const navLinks = [
+    ...(!isHome ? [{ to: '/', label: 'Home' }] : []),
+    { to: '/products',          label: 'Products' },
+    { to: '/check-ingredient',  label: 'Check Ingredient' },
+    { to: '/about',             label: 'About' },
+    ...(isAdmin ? [{ to: '/admin', label: '🔐 Admin' }] : []),
+  ]
 
   return (
     <nav className={`sticky top-0 z-50 bg-white transition-shadow duration-200 ${isScrolled ? 'shadow-md' : 'shadow-sm'}`}>
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex justify-between items-center h-[68px]">
+
+        {/* ── Main header row ── */}
+        <div className="flex justify-between items-center h-[62px]">
+
           {/* Logo */}
-          <Link to="/" className="flex items-center gap-2.5">
-            <svg width="44" height="44" viewBox="0 0 52 52" fill="none" xmlns="http://www.w3.org/2000/svg">
-              {/* Magnifying glass — orange ring, white interior */}
+          <Link to="/" className="flex items-center gap-2">
+            <svg width="40" height="40" viewBox="0 0 52 52" fill="none" xmlns="http://www.w3.org/2000/svg">
               <circle cx="22" cy="22" r="17.5" fill="white" stroke="#FF9933" strokeWidth="4"/>
-              {/* Jar with leaf */}
               <rect x="9" y="14" width="11" height="14" rx="2" fill="#4A87B8"/>
               <ellipse cx="14.5" cy="20" rx="3" ry="4" fill="white" opacity="0.85"/>
               <line x1="14.5" y1="15.5" x2="14.5" y2="24.5" stroke="#4A87B8" strokeWidth="1.2"/>
               <rect x="10" y="12" width="9" height="3" rx="1" fill="#4A87B8"/>
-              {/* Pump bottle */}
               <rect x="21" y="12" width="8" height="16" rx="2.5" fill="#4A87B8"/>
               <rect x="22.5" y="9" width="5" height="4" rx="1.5" fill="#4A87B8"/>
               <rect x="24" y="6.5" width="2" height="3.5" rx="1" fill="#4A87B8"/>
-              {/* Small container */}
               <rect x="30" y="21" width="7.5" height="7" rx="2" fill="#4A87B8"/>
               <rect x="30.5" y="19" width="6.5" height="2.5" rx="1" fill="#4A87B8"/>
-              {/* Handle */}
               <line x1="36" y1="36" x2="48" y2="48" stroke="#FF9933" strokeWidth="5.5" strokeLinecap="round"/>
             </svg>
             <div className="flex flex-col leading-tight">
-              <div className="font-poppins font-bold text-xl">
+              <div className="font-poppins font-bold text-lg md:text-xl">
                 <span style={{ color: '#1B3F8A' }}>Check</span><span style={{ color: '#1B3F8A' }}>Karo</span>
               </div>
               <span className="text-xs text-gray-400" style={{ marginTop: '-1px' }}>Know what's inside</span>
             </div>
           </Link>
 
-          {/* Desktop Navigation */}
+          {/* Desktop nav links */}
           <div className="hidden md:flex items-center space-x-8">
-            {/* Home – only show when not on landing page */}
-            {!isHome && (
-              <Link
-                to="/"
-                className={`text-sm font-medium transition-colors ${isActive('/') ? 'text-orange border-b-2 border-orange' : 'text-gray-700 hover:text-orange'}`}
-              >
-                Home
+            {navLinks.map(({ to, label }) => (
+              <Link key={to} to={to}
+                className={`text-sm font-medium transition-colors ${isActive(to) ? 'text-orange border-b-2 border-orange' : 'text-gray-700 hover:text-orange'}`}
+                style={isActive(to) ? { color: '#FF9933' } : {}}>
+                {label}
               </Link>
-            )}
-            <Link
-              to="/products"
-              className={`text-sm font-medium transition-colors ${isActive('/products') ? 'text-orange border-b-2 border-orange' : 'text-gray-700 hover:text-orange'}`}
-            >
-              Products
-            </Link>
-            <Link
-              to="/check-ingredient"
-              className={`text-sm font-medium transition-colors ${isActive('/check-ingredient') ? 'text-orange border-b-2 border-orange' : 'text-gray-700 hover:text-orange'}`}
-            >
-              Check Ingredient
-            </Link>
-            <Link
-              to="/about"
-              className={`text-sm font-medium transition-colors ${isActive('/about') ? 'text-orange border-b-2 border-orange' : 'text-gray-700 hover:text-orange'}`}
-            >
-              About
-            </Link>
+            ))}
 
-            {/* Admin link — desktop */}
-            {isAdmin && (
-              <Link
-                to="/admin"
-                className={`text-sm font-medium transition-colors ${isActive('/admin') ? 'text-orange border-b-2 border-orange' : 'text-gray-700 hover:text-orange'}`}
-              >
-                Admin
-              </Link>
-            )}
-
-            {/* Login / User */}
+            {/* Desktop login / user */}
             {user ? (
               <div className="flex items-center space-x-3">
-                <span className="text-xs text-gray-500 truncate max-w-[120px]">
-                  {user.email || user.phone}
-                </span>
-                <button
-                  onClick={signOut}
-                  className="text-sm font-medium text-gray-600 border border-gray-300 px-3 py-1.5 rounded-lg hover:bg-gray-50 transition-colors"
-                >
+                <span className="text-xs text-gray-500 truncate max-w-[120px]">{user.email || user.phone}</span>
+                <button onClick={signOut}
+                  className="text-sm font-medium text-gray-600 border border-gray-300 px-3 py-1.5 rounded-lg hover:bg-gray-50 transition-colors">
                   Logout
                 </button>
               </div>
             ) : (
-              <button
-                onClick={() => openAuthModal()}
-                className="text-sm font-semibold text-white bg-orange px-4 py-1.5 rounded-lg hover:bg-orange-600 transition-colors"
-                style={{ backgroundColor: '#FF9933' }}
-              >
+              <button onClick={() => openAuthModal()}
+                className="text-sm font-semibold text-white px-4 py-1.5 rounded-lg transition-colors"
+                style={{ backgroundColor: '#FF9933' }}>
                 Login
               </button>
             )}
           </div>
 
-          {/* Mobile Menu Button */}
-          <button
-            className="md:hidden p-2"
-            onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-            aria-label="Toggle menu"
-          >
-            <svg className="w-6 h-6 text-gray-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              {isMobileMenuOpen ? (
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-              ) : (
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
-              )}
-            </svg>
-          </button>
+          {/* Mobile: Login / Logout always visible in header */}
+          <div className="md:hidden flex items-center gap-2">
+            {user ? (
+              <button onClick={signOut}
+                className="text-xs font-semibold text-gray-600 border border-gray-300 px-3 py-1.5 rounded-lg">
+                Logout
+              </button>
+            ) : (
+              <button onClick={() => openAuthModal()}
+                className="text-xs font-semibold text-white px-3 py-1.5 rounded-lg"
+                style={{ backgroundColor: '#FF9933' }}>
+                Login
+              </button>
+            )}
+          </div>
         </div>
 
-        {/* Mobile Menu */}
-        {isMobileMenuOpen && (
-          <div className="md:hidden py-4 border-t border-gray-100 space-y-1">
-            {!isHome && (
-              <Link
-                to="/"
-                className="block py-2 text-sm font-medium text-gray-700 hover:text-orange"
-                onClick={closeMobile}
-              >
-                Home
-              </Link>
-            )}
-            <Link
-              to="/products"
-              className="block py-2 text-sm font-medium text-gray-700 hover:text-orange"
-              onClick={closeMobile}
-            >
-              Products
+        {/* ── Mobile: scrollable nav strip (always visible, no hamburger) ── */}
+        <div className="md:hidden flex items-center gap-1.5 overflow-x-auto pb-2 pt-0.5"
+          style={{ scrollbarWidth: 'none', WebkitOverflowScrolling: 'touch', msOverflowStyle: 'none' }}>
+          {navLinks.map(({ to, label }) => (
+            <Link key={to} to={to}
+              className="flex-shrink-0 text-xs font-semibold px-3 py-1.5 rounded-full transition-colors whitespace-nowrap"
+              style={{
+                backgroundColor: isActive(to) ? '#FF9933' : '#f3f4f6',
+                color: isActive(to) ? '#fff' : '#374151',
+              }}>
+              {label}
             </Link>
-            <Link
-              to="/check-ingredient"
-              className="block py-2 text-sm font-medium text-gray-700 hover:text-orange"
-              onClick={closeMobile}
-            >
-              Check Ingredient
-            </Link>
-            <Link
-              to="/about"
-              className="block py-2 text-sm font-medium text-gray-700 hover:text-orange"
-              onClick={closeMobile}
-            >
-              About
-            </Link>
+          ))}
+        </div>
 
-            {isAdmin && (
-              <Link
-                to="/admin"
-                className="block py-2 text-sm font-medium text-orange"
-                onClick={closeMobile}
-              >
-                🔐 Admin Panel
-              </Link>
-            )}
-
-            {/* Mobile Login / User */}
-            <div className="pt-2 border-t border-gray-100 mt-2">
-              {user ? (
-                <div className="flex items-center justify-between">
-                  <span className="text-xs text-gray-500 truncate max-w-[180px]">
-                    {user.email || user.phone}
-                  </span>
-                  <button
-                    onClick={() => { closeMobile(); signOut() }}
-                    className="text-sm text-gray-600 border border-gray-300 px-3 py-1.5 rounded-lg hover:bg-gray-50"
-                  >
-                    Logout
-                  </button>
-                </div>
-              ) : (
-                <button
-                  onClick={() => { openAuthModal(); closeMobile() }}
-                  className="w-full text-sm font-semibold text-white py-2.5 rounded-lg transition-colors"
-                  style={{ backgroundColor: '#FF9933' }}
-                >
-                  Login / Sign up
-                </button>
-              )}
-            </div>
-          </div>
-        )}
       </div>
+
+      {/* Hide scrollbar in webkit */}
+      <style>{`.md\\:hidden::-webkit-scrollbar{display:none}`}</style>
     </nav>
   )
 }
