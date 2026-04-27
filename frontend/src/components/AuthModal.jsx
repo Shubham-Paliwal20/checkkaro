@@ -133,7 +133,7 @@ export default function AuthModal({ onClose, initialStep }) {
     setLoading(true); clearError()
     const { error: e } = await supabase.auth.signInWithOAuth({
       provider: 'google',
-      options: { redirectTo: window.location.origin },
+      options: { redirectTo: window.location.href },
     })
     if (e) { setError(e.message); setLoading(false) }
     // On success the page redirects — no further action needed here

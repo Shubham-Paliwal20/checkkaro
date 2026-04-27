@@ -50,8 +50,11 @@ function SubmissionCard({ sub, onApprove, onReject }) {
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 10 }}>
           <div>
             <p style={{ margin: 0, fontWeight: 700, fontSize: 14, color: '#111827' }}>
-              🔍 "{sub.product_name_searched}"
+              {sub.product_name || sub.product_name_searched}
             </p>
+            {sub.product_name && sub.product_name !== sub.product_name_searched && (
+              <p style={{ margin: '1px 0 0', fontSize: 11, color: '#b45309' }}>Searched: "{sub.product_name_searched}"</p>
+            )}
             <p style={{ margin: '2px 0 0', fontSize: 12, color: '#9ca3af' }}>{formatDate(sub.created_at)}</p>
           </div>
           <span style={{ background: STATUS_BG[sub.status], color: STATUS_COLOR[sub.status], fontSize: 11, fontWeight: 700, padding: '3px 10px', borderRadius: 99, textTransform: 'uppercase', letterSpacing: '0.05em', whiteSpace: 'nowrap' }}>

@@ -2,17 +2,25 @@ import { useState, useRef } from 'react'
 import { useAuth } from '../context/AuthContext'
 import { supabase } from '../lib/supabaseClient'
 
+const MIN_IMAGES = 2
 const MAX_IMAGES = 3
 const MAX_FILE_MB = 8
 
+const IMAGE_SLOTS = [
+  { label: 'Front', icon: '🏷️', hint: 'Front of the product' },
+  { label: 'Back',  icon: '📋', hint: 'Back label / ingredients' },
+  { label: 'Other', icon: '📷', hint: 'Any other side (optional)' },
+]
+
 export default function ProductNotFound({ productName }) {
   const { user, openAuthModal } = useAuth()
-  const [images,   setImages]   = useState([])   // File[]
-  const [previews, setPreviews] = useState([])   // data URLs
-  const [contact,  setContact]  = useState('')
-  const [loading,  setLoading]  = useState(false)
-  const [success,  setSuccess]  = useState(false)
-  const [error,    setError]    = useState('')
+  const [images,      setImages]      = useState([])   // File[]
+  const [previews,    setPreviews]    = useState([])   // data URLs
+  const [productLabel, setProductLabel] = useState(productName || '')
+  const [contact,     setContact]     = useState('')
+  const [loading,     setLoading]     = useState(false)
+  const [success,     setSuccess]     = useState(false)
+  const [error,       setError]       = useState('')
   const fileRef = useRef()
 
   const handleFiles = (files) => {
@@ -44,8 +52,12 @@ export default function ProductNotFound({ productName }) {
   }
 
   const handleSubmit = async () => {
-    if (images.length === 0) { setError('Please add at least 1 photo of the product.'); return }
-    if (!contact.trim())     { setError('Please enter your mobile number or UPI ID.'); return }
+    if (!productLabel.trim()) { setError('Please enter the product name.'); return }
+    if (images.length < MIN_IMAGES) {
+      setError(`Please add at least ${MIN_IMAGES} images — front label and back label are required.`)
+      return
+    }
+    if (!contact.trim()) { setError('Please enter your mobile number or UPI ID.'); return }
     setLoading(true); setError('')
 
     try {
@@ -64,12 +76,13 @@ export default function ProductNotFound({ productName }) {
       }
 
       const { error: dbErr } = await supabase.from('product_submissions').insert({
-        user_id:              user.id,
-        email:                user.email || '',
+        user_id:               user.id,
+        email:                 user.email || '',
         product_name_searched: productName,
-        images:               imageUrls,
-        contact:              contact.trim(),
-        status:               'pending',
+        product_name:          productLabel.trim(),
+        images:                imageUrls,
+        contact:               contact.trim(),
+        status:                'pending',
       })
       if (dbErr) throw dbErr
       setSuccess(true)
@@ -142,53 +155,85 @@ export default function ProductNotFound({ productName }) {
         /* ── Logged in: show form ── */
         <div style={{ background: '#fff', border: '1.5px solid #e5e7eb', borderRadius: 16, padding: '24px 20px', boxShadow: '0 2px 16px rgba(0,0,0,0.06)' }}>
 
+          {/* Product name */}
+          <label style={{ fontSize: 12, fontWeight: 700, color: '#374151', display: 'block', marginBottom: 6, textTransform: 'uppercase', letterSpacing: '0.05em' }}>
+            Product Name <span style={{ color: '#ef4444' }}>*</span>
+          </label>
+          <input
+            type="text"
+            placeholder="e.g. Parle-G Original Glucose Biscuits"
+            value={productLabel}
+            onChange={e => { setProductLabel(e.target.value); setError('') }}
+            style={{ width: '100%', border: '1.5px solid #e5e7eb', borderRadius: 10, padding: '12px 14px', fontSize: 15, outline: 'none', boxSizing: 'border-box', fontFamily: 'inherit', marginBottom: 18 }}
+          />
+
           {/* Image upload */}
-          <label style={{ fontSize: 12, fontWeight: 700, color: '#374151', display: 'block', marginBottom: 8, textTransform: 'uppercase', letterSpacing: '0.05em' }}>
+          <label style={{ fontSize: 12, fontWeight: 700, color: '#374151', display: 'block', marginBottom: 4, textTransform: 'uppercase', letterSpacing: '0.05em' }}>
             Product Photos <span style={{ color: '#ef4444' }}>*</span>
-            <span style={{ fontWeight: 400, textTransform: 'none', letterSpacing: 0, color: '#9ca3af' }}> (min 1, max 3)</span>
           </label>
 
-          {/* Previews row */}
-          {previews.length > 0 && (
-            <div style={{ display: 'flex', gap: 10, flexWrap: 'wrap', marginBottom: 12 }}>
-              {previews.map((src, i) => (
-                <div key={i} style={{ position: 'relative', width: 88, height: 88, borderRadius: 10, overflow: 'hidden', border: '1.5px solid #e5e7eb', flexShrink: 0 }}>
-                  <img src={src} alt="" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
-                  <button onClick={() => removeImage(i)}
-                    style={{ position: 'absolute', top: 4, right: 4, background: 'rgba(0,0,0,0.6)', color: '#fff', border: 'none', borderRadius: '50%', width: 22, height: 22, fontSize: 12, cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: 0, lineHeight: 1 }}>
-                    ✕
-                  </button>
+          {/* Slot guide */}
+          <div style={{ display: 'flex', gap: 8, marginBottom: 12 }}>
+            {IMAGE_SLOTS.map((slot, i) => {
+              const filled = previews[i]
+              const isRequired = i < MIN_IMAGES
+              return (
+                <div key={i} style={{ flex: 1, textAlign: 'center' }}>
+                  <div style={{ fontSize: 10, fontWeight: 700, color: isRequired ? '#FF9933' : '#9ca3af', marginBottom: 4, textTransform: 'uppercase', letterSpacing: '0.04em' }}>
+                    {slot.label}{isRequired ? ' *' : ''}
+                  </div>
+                  {filled ? (
+                    <div style={{ position: 'relative', width: '100%', paddingBottom: '100%', borderRadius: 10, overflow: 'hidden', border: '2px solid #86efac', background: '#f0fdf4' }}>
+                      <img src={filled} alt="" style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'cover' }} />
+                      <button onClick={() => removeImage(i)}
+                        style={{ position: 'absolute', top: 3, right: 3, background: 'rgba(0,0,0,0.6)', color: '#fff', border: 'none', borderRadius: '50%', width: 20, height: 20, fontSize: 11, cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: 0, lineHeight: 1 }}>
+                        ✕
+                      </button>
+                    </div>
+                  ) : (
+                    <div onClick={() => fileRef.current?.click()}
+                      style={{ width: '100%', paddingBottom: '100%', position: 'relative', borderRadius: 10, border: `2px dashed ${isRequired ? '#fbbf24' : '#d1d5db'}`, background: isRequired ? '#fffbeb' : '#f9fafb', cursor: 'pointer' }}>
+                      <div style={{ position: 'absolute', inset: 0, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: 2 }}>
+                        <span style={{ fontSize: 20 }}>{slot.icon}</span>
+                        <span style={{ fontSize: 9, color: '#9ca3af', fontWeight: 600 }}>Tap to add</span>
+                      </div>
+                    </div>
+                  )}
+                  <div style={{ fontSize: 9, color: '#9ca3af', marginTop: 4 }}>{slot.hint}</div>
                 </div>
-              ))}
-              {images.length < MAX_IMAGES && (
-                <button onClick={() => fileRef.current?.click()}
-                  style={{ width: 88, height: 88, borderRadius: 10, border: '1.5px dashed #d1d5db', background: '#f9fafb', cursor: 'pointer', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: 4, color: '#9ca3af', fontSize: 11, fontWeight: 600 }}>
-                  <span style={{ fontSize: 22 }}>+</span>
-                  Add
-                </button>
-              )}
-            </div>
-          )}
+              )
+            })}
+          </div>
 
-          {/* Drop zone (shown when no images yet) */}
+          {/* Progress indicator */}
+          <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 16 }}>
+            <div style={{ flex: 1, height: 4, background: '#f3f4f6', borderRadius: 99, overflow: 'hidden' }}>
+              <div style={{ height: '100%', width: `${(images.length / MIN_IMAGES) * 100}%`, maxWidth: '100%', background: images.length >= MIN_IMAGES ? '#16a34a' : '#FF9933', borderRadius: 99, transition: 'width 0.3s' }} />
+            </div>
+            <span style={{ fontSize: 12, color: images.length >= MIN_IMAGES ? '#16a34a' : '#9ca3af', fontWeight: 600, whiteSpace: 'nowrap' }}>
+              {images.length}/{MIN_IMAGES} required
+              {images.length >= MIN_IMAGES && ' ✓'}
+            </span>
+          </div>
+
+          <input ref={fileRef} type="file" accept="image/*" multiple style={{ display: 'none' }}
+            onChange={e => { handleFiles(e.target.files); e.target.value = '' }} />
+
+          {/* Drop zone — shown when no images */}
           {images.length === 0 && (
             <div
               onDrop={handleDrop}
               onDragOver={e => e.preventDefault()}
               onClick={() => fileRef.current?.click()}
-              style={{ border: '2px dashed #d1d5db', borderRadius: 12, padding: '28px 20px', textAlign: 'center', cursor: 'pointer', marginBottom: 18, background: '#fafafa', transition: 'border-color 0.2s' }}
+              style={{ border: '2px dashed #fbbf24', borderRadius: 12, padding: '18px 16px', textAlign: 'center', cursor: 'pointer', marginBottom: 16, background: '#fffbeb' }}
             >
-              <div style={{ fontSize: 36, marginBottom: 6 }}>📷</div>
-              <p style={{ color: '#6b7280', fontSize: 14, margin: '0 0 4px', fontWeight: 600 }}>Tap to add photos</p>
-              <p style={{ color: '#9ca3af', fontSize: 12, margin: 0 }}>or drag &amp; drop here • up to 3 images • max {MAX_FILE_MB}MB each</p>
+              <p style={{ color: '#92400e', fontSize: 13, margin: '0 0 2px', fontWeight: 700 }}>📷 Tap here to add photos</p>
+              <p style={{ color: '#b45309', fontSize: 12, margin: 0 }}>Minimum: Front label + Back label (with ingredients)</p>
             </div>
           )}
 
-          <input ref={fileRef} type="file" accept="image/*" multiple style={{ display: 'none' }}
-            onChange={e => { handleFiles(e.target.files); e.target.value = '' }} />
-
           {/* Contact */}
-          <label style={{ fontSize: 12, fontWeight: 700, color: '#374151', display: 'block', marginBottom: 6, textTransform: 'uppercase', letterSpacing: '0.05em', marginTop: images.length > 0 ? 4 : 0 }}>
+          <label style={{ fontSize: 12, fontWeight: 700, color: '#374151', display: 'block', marginBottom: 6, textTransform: 'uppercase', letterSpacing: '0.05em' }}>
             Mobile Number or UPI ID <span style={{ color: '#ef4444' }}>*</span>
           </label>
           <input
@@ -196,16 +241,11 @@ export default function ProductNotFound({ productName }) {
             placeholder="e.g. 9876543210 or name@upi"
             value={contact}
             onChange={e => { setContact(e.target.value); setError('') }}
-            style={{ width: '100%', border: '1.5px solid #e5e7eb', borderRadius: 10, padding: '12px 14px', fontSize: 15, outline: 'none', boxSizing: 'border-box', fontFamily: 'inherit', marginBottom: 8 }}
+            style={{ width: '100%', border: '1.5px solid #e5e7eb', borderRadius: 10, padding: '12px 14px', fontSize: 15, outline: 'none', boxSizing: 'border-box', fontFamily: 'inherit', marginBottom: 6 }}
           />
-          <p style={{ color: '#9ca3af', fontSize: 12, margin: '0 0 18px' }}>
+          <p style={{ color: '#9ca3af', fontSize: 12, margin: '0 0 20px' }}>
             We'll send your ₹1 reward here once your submission is approved.
           </p>
-
-          {/* Searched for */}
-          <div style={{ background: '#f3f4f6', borderRadius: 8, padding: '8px 12px', marginBottom: 18, fontSize: 13, color: '#6b7280' }}>
-            Submitting for: <strong style={{ color: '#374151' }}>"{productName}"</strong>
-          </div>
 
           {error && (
             <div style={{ background: '#fef2f2', border: '1px solid #fca5a5', borderRadius: 8, padding: '10px 14px', marginBottom: 14 }}>
@@ -213,13 +253,13 @@ export default function ProductNotFound({ productName }) {
             </div>
           )}
 
-          <button onClick={handleSubmit} disabled={loading}
-            style={{ width: '100%', background: loading ? '#d1d5db' : 'linear-gradient(135deg, #FF9933, #e8880a)', color: '#fff', border: 'none', borderRadius: 10, padding: 15, fontSize: 15, fontWeight: 700, cursor: loading ? 'not-allowed' : 'pointer', fontFamily: 'inherit' }}>
-            {loading ? 'Uploading & Submitting…' : '📤 Submit Product'}
+          <button onClick={handleSubmit} disabled={loading || images.length < MIN_IMAGES}
+            style={{ width: '100%', background: (loading || images.length < MIN_IMAGES) ? '#d1d5db' : 'linear-gradient(135deg, #FF9933, #e8880a)', color: '#fff', border: 'none', borderRadius: 10, padding: 15, fontSize: 15, fontWeight: 700, cursor: (loading || images.length < MIN_IMAGES) ? 'not-allowed' : 'pointer', fontFamily: 'inherit', transition: 'background 0.2s' }}>
+            {loading ? 'Uploading & Submitting…' : images.length < MIN_IMAGES ? `Add ${MIN_IMAGES - images.length} more image${MIN_IMAGES - images.length > 1 ? 's' : ''} to continue` : '📤 Submit Product'}
           </button>
 
           <p style={{ textAlign: 'center', color: '#9ca3af', fontSize: 12, margin: '12px 0 0' }}>
-            Logged in as <strong>{user.email}</strong>
+            Submitting as <strong>{user.email}</strong>
           </p>
         </div>
       )}
