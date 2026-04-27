@@ -54,11 +54,12 @@ function ReviewCard({ review, colorIndex }) {
 }
 
 // Modal — handles both new review and editing existing one
-function ReviewFormModal({ onClose, onSubmitted, existingReview }) {
+function ReviewFormModal({ onClose, onSubmitted, existingReview, isMobile }) {
   const { user } = useAuth()
-  const [name,    setName]    = useState(existingReview?.reviewer_name || '')
-  const [text,    setText]    = useState(existingReview?.review_text   || '')
-  const [rating,  setRating]  = useState(existingReview?.rating        || 5)
+  const defaultName = existingReview?.reviewer_name || (user?.email ? user.email.split('@')[0] : '')
+  const [name,    setName]    = useState(defaultName)
+  const [text,    setText]    = useState(existingReview?.review_text || '')
+  const [rating,  setRating]  = useState(existingReview?.rating || 5)
   const [loading, setLoading] = useState(false)
   const [error,   setError]   = useState('')
   const isEdit = !!existingReview
@@ -68,55 +69,81 @@ function ReviewFormModal({ onClose, onSubmitted, existingReview }) {
     if (!text.trim() || text.trim().length < 10) { setError('Please write at least 10 characters.'); return }
     setLoading(true); setError('')
     try {
-      let err
       if (isEdit) {
-        const { error: e } = await supabase
+        const { data, error: e } = await supabase
           .from('reviews')
           .update({ reviewer_name: name.trim(), review_text: text.trim(), rating })
           .eq('id', existingReview.id)
           .eq('user_id', user.id)
-        err = e
+          .select()
+        if (e) throw e
+        if (!data || data.length === 0) throw new Error('Update failed — please check your connection and try again.')
       } else {
         const { error: e } = await supabase
           .from('reviews')
           .insert({ user_id: user.id, reviewer_name: name.trim(), review_text: text.trim(), rating, is_approved: true })
-        err = e
+        if (e) throw e
       }
-      if (err) throw err
-      onSubmitted()
+      await onSubmitted()
       onClose()
-    } catch (e) { setError(e.message || 'Failed to submit.') }
-    setLoading(false)
+    } catch (e) {
+      setError(e.message || 'Failed to submit.')
+      setLoading(false)
+    }
+  }
+
+  // Bottom-sheet on mobile, centered dialog on desktop
+  const overlayStyle = {
+    position: 'fixed', inset: 0, zIndex: 9999,
+    backgroundColor: 'rgba(0,0,0,0.55)',
+    display: 'flex',
+    alignItems: isMobile ? 'flex-end' : 'center',
+    justifyContent: 'center',
+    padding: isMobile ? 0 : 16,
+  }
+  const cardStyle = {
+    position: 'relative',
+    backgroundColor: '#fff',
+    borderRadius: isMobile ? '20px 20px 0 0' : 18,
+    boxShadow: isMobile ? '0 -8px 40px rgba(0,0,0,0.18)' : '0 20px 60px rgba(0,0,0,0.2)',
+    width: '100%',
+    maxWidth: isMobile ? '100%' : 460,
+    maxHeight: isMobile ? '92vh' : '88vh',
+    overflowY: 'auto',
+    WebkitOverflowScrolling: 'touch',
   }
 
   return (
-    <div style={{ position: 'fixed', inset: 0, zIndex: 9999, backgroundColor: 'rgba(0,0,0,0.5)', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: 16 }}>
-      <div style={{ position: 'absolute', inset: 0 }} onClick={onClose} />
-      <div style={{ position: 'relative', backgroundColor: '#fff', borderRadius: 18, boxShadow: '0 20px 60px rgba(0,0,0,0.2)', width: '100%', maxWidth: 460, overflow: 'hidden' }}>
-        <div style={{ height: 5, background: 'linear-gradient(90deg, #FF9933, #138808)' }} />
-        <div style={{ padding: '24px 28px 28px' }}>
-          <button onClick={onClose} style={{ position: 'absolute', top: 18, right: 18, background: 'none', border: 'none', fontSize: 20, color: '#9ca3af', cursor: 'pointer' }}>✕</button>
-          <h3 style={{ fontSize: 20, fontWeight: 800, color: '#111827', margin: '0 0 4px', fontFamily: 'Poppins, sans-serif' }}>
+    <div style={overlayStyle} onClick={onClose}>
+      <div style={cardStyle} onClick={e => e.stopPropagation()}>
+        <div style={{ height: 5, background: 'linear-gradient(90deg, #FF9933, #138808)', borderRadius: isMobile ? '20px 20px 0 0' : '18px 18px 0 0', flexShrink: 0 }} />
+        <div style={{ padding: isMobile ? '20px 20px 32px' : '24px 28px 28px' }}>
+          <button onClick={onClose} style={{ position: 'absolute', top: 16, right: 16, background: 'none', border: 'none', fontSize: 22, color: '#9ca3af', cursor: 'pointer', lineHeight: 1, padding: 4 }}>✕</button>
+          <h3 style={{ fontSize: isMobile ? 18 : 20, fontWeight: 800, color: '#111827', margin: '0 0 4px', fontFamily: 'Poppins, sans-serif', paddingRight: 32 }}>
             {isEdit ? 'Edit your review' : 'Share your experience'}
           </h3>
-          <p style={{ fontSize: 13, color: '#6b7280', margin: '0 0 22px' }}>Help others make smarter choices.</p>
+          <p style={{ fontSize: 13, color: '#6b7280', margin: '0 0 20px' }}>Help others make smarter choices.</p>
 
           <label style={{ fontSize: 12, fontWeight: 700, color: '#374151', display: 'block', marginBottom: 6, textTransform: 'uppercase', letterSpacing: '0.05em' }}>Your Name</label>
           <input type="text" placeholder="e.g. Priya Sharma" value={name} onChange={e => { setName(e.target.value); setError('') }}
-            style={{ width: '100%', border: '1.5px solid #e5e7eb', borderRadius: 10, padding: '11px 14px', fontSize: 14, outline: 'none', boxSizing: 'border-box', marginBottom: 16, fontFamily: 'inherit' }} />
+            style={{ width: '100%', border: '1.5px solid #e5e7eb', borderRadius: 10, padding: '11px 14px', fontSize: 15, outline: 'none', boxSizing: 'border-box', marginBottom: 16, fontFamily: 'inherit' }} />
 
           <label style={{ fontSize: 12, fontWeight: 700, color: '#374151', display: 'block', marginBottom: 8, textTransform: 'uppercase', letterSpacing: '0.05em' }}>Rating</label>
           <div style={{ marginBottom: 16 }}><InteractiveStars rating={rating} onRate={setRating} /></div>
 
           <label style={{ fontSize: 12, fontWeight: 700, color: '#374151', display: 'block', marginBottom: 6, textTransform: 'uppercase', letterSpacing: '0.05em' }}>Your Review</label>
           <textarea placeholder="What do you love about CheckKaro?" value={text} onChange={e => { setText(e.target.value); setError('') }} rows={4}
-            style={{ width: '100%', border: '1.5px solid #e5e7eb', borderRadius: 10, padding: '11px 14px', fontSize: 14, outline: 'none', resize: 'vertical', boxSizing: 'border-box', fontFamily: 'inherit' }} />
+            style={{ width: '100%', border: '1.5px solid #e5e7eb', borderRadius: 10, padding: '11px 14px', fontSize: 15, outline: 'none', resize: 'vertical', boxSizing: 'border-box', fontFamily: 'inherit' }} />
 
-          {error && <p style={{ color: '#ef4444', fontSize: 12, margin: '6px 0 0' }}>{error}</p>}
+          {error && (
+            <div style={{ backgroundColor: '#fef2f2', border: '1px solid #fca5a5', borderRadius: 8, padding: '10px 14px', marginTop: 10 }}>
+              <p style={{ color: '#dc2626', fontSize: 13, margin: 0 }}>{error}</p>
+            </div>
+          )}
 
           <button onClick={submit} disabled={loading}
-            style={{ width: '100%', background: 'linear-gradient(135deg, #FF9933, #e8880a)', color: '#fff', border: 'none', borderRadius: 10, padding: 14, fontSize: 15, fontWeight: 700, cursor: loading ? 'not-allowed' : 'pointer', marginTop: 18, opacity: loading ? 0.7 : 1, fontFamily: 'inherit' }}>
-            {loading ? 'Submitting…' : isEdit ? 'Update Review' : 'Submit Review'}
+            style={{ width: '100%', background: loading ? '#d1d5db' : 'linear-gradient(135deg, #FF9933, #e8880a)', color: '#fff', border: 'none', borderRadius: 10, padding: 15, fontSize: 15, fontWeight: 700, cursor: loading ? 'not-allowed' : 'pointer', marginTop: 18, fontFamily: 'inherit', transition: 'background 0.2s' }}>
+            {loading ? 'Saving…' : isEdit ? 'Update Review' : 'Submit Review'}
           </button>
         </div>
       </div>
@@ -179,7 +206,6 @@ export default function ReviewsSection() {
       const mine = all.find(r => r.user_id === user.id) || null
       setMyReview(mine)
     }
-    setShowForm(false)
   }
 
   return (
@@ -269,6 +295,7 @@ export default function ReviewsSection() {
           onClose={() => setShowForm(false)}
           onSubmitted={handleSubmitted}
           existingReview={myReview}
+          isMobile={isMobile}
         />
       )}
     </section>
