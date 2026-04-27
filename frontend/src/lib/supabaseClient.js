@@ -12,10 +12,9 @@ export const supabase = createClient(
   supabaseAnonKey || 'placeholder',
   {
     auth: {
-      flowType: 'pkce',          // code in URL instead of raw tokens
-      detectSessionInUrl: true,
       autoRefreshToken: true,
       persistSession: true,
+      detectSessionInUrl: true,
     },
   }
 )

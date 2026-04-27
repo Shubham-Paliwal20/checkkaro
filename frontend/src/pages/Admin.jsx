@@ -152,7 +152,7 @@ export default function Admin() {
   const [tab,        setTab]        = useState('pending')
   const [subs,       setSubs]       = useState([])
   const [counts,     setCounts]     = useState({ pending: 0, approved: 0, rejected: 0, extracted: 0 })
-  const [fetching,   setFetching]   = useState(true)
+  const [fetching,   setFetching]   = useState(false)
   const [extracting, setExtracting] = useState(null)  // submission id being extracted
   const [extractMsg, setExtractMsg] = useState(null)  // { type: 'success'|'error', text }
 
