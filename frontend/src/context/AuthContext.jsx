@@ -26,6 +26,12 @@ export function AuthProvider({ children }) {
     const { data: { subscription } } = supabase.auth.onAuthStateChange(async (event, session) => {
       setUser(session?.user ?? null)
 
+      // Wipe auth tokens from the URL the moment Supabase reads them.
+      // Without this, sharing the post-login URL hands over your session to anyone who opens it.
+      if (event === 'SIGNED_IN' && (window.location.hash || window.location.search.includes('code='))) {
+        window.history.replaceState(null, '', window.location.pathname)
+      }
+
       // Only show quiz on a genuinely fresh sign-in (token issued < 90s ago).
       // This prevents the quiz modal from firing on every page reload.
       if (event === 'SIGNED_IN' && session?.user && session.access_token) {
