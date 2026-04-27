@@ -2,15 +2,6 @@ import { useState, useEffect, useRef } from 'react'
 import { supabase } from '../lib/supabaseClient'
 import { useAuth } from '../context/AuthContext'
 
-const PLACEHOLDER = [
-  { id: 'p1', reviewer_name: 'Priya Sharma', review_text: 'Finally I know what\'s actually in my face cream! CheckKaro changed the way I shop. I check every product now before buying.', rating: 5 },
-  { id: 'p2', reviewer_name: 'Rahul Mehta', review_text: 'Checked Maggi ingredients and was genuinely shocked. A must-have tool for every Indian household. Highly recommend!', rating: 5 },
-  { id: 'p3', reviewer_name: 'Anjali Kapoor', review_text: 'So easy to use and very informative. The ingredient breakdown is clear and jargon-free. Love this app!', rating: 5 },
-  { id: 'p4', reviewer_name: 'Vikash Tiwari', review_text: 'Great tool for health-conscious people. Helped me make smarter choices at the supermarket every week.', rating: 5 },
-  { id: 'p5', reviewer_name: 'Sneha Reddy', review_text: 'The cosmetic checker is brilliant! Finally understood what\'s inside my shampoo. Everyone should use this.', rating: 5 },
-  { id: 'p6', reviewer_name: 'Amit Dubey', review_text: 'Simple, clean, and very useful. I recommend CheckKaro to all my friends. It\'s a real eye-opener.', rating: 5 },
-]
-
 const ACCENTS  = ['#FF9933', '#138808', '#FF9933']
 const LIGHT_BG = ['#fff8f0', '#f0faf0', '#fff8f0']
 
@@ -135,7 +126,7 @@ function ReviewFormModal({ onClose, onSubmitted, existingReview }) {
 
 export default function ReviewsSection() {
   const { user, openAuthModal } = useAuth()
-  const [reviews,    setReviews]    = useState(PLACEHOLDER)
+  const [reviews,    setReviews]    = useState([])
   const [myReview,   setMyReview]   = useState(null)   // logged-in user's existing review
   const [currentIdx, setCurrentIdx] = useState(0)
   const [showForm,   setShowForm]   = useState(false)
@@ -144,7 +135,7 @@ export default function ReviewsSection() {
 
   const fetchReviews = async () => {
     const { data } = await supabase.from('reviews').select('*').order('created_at', { ascending: false })
-    if (data && data.length > 0) setReviews(data)
+    setReviews(data || [])
     return data || []
   }
 
@@ -205,29 +196,37 @@ export default function ReviewsSection() {
           <p style={{ fontSize: isMobile ? 13 : 15, color: '#6b7280', margin: 0 }}>Real reviews from real people making smarter choices every day.</p>
         </div>
 
-        {/* Carousel */}
-        <div style={{ overflow: 'hidden', borderRadius: 4 }} onMouseEnter={stopTimer} onMouseLeave={startTimer}>
-          <div style={{ display: 'flex', transform: `translateX(-${currentPage * 100}%)`, transition: 'transform 0.55s cubic-bezier(0.4, 0, 0.2, 1)', willChange: 'transform' }}>
-            {pages.map((pageReviews, pageIdx) => (
-              <div key={pageIdx} style={{ minWidth: '100%', display: 'flex', gap: isMobile ? 0 : 20, alignItems: 'stretch', padding: isMobile ? '0 4px' : 0 }}>
-                {pageReviews.map((review, cardIdx) => (
-                  <ReviewCard key={review.id} review={review} colorIndex={cardIdx} />
-                ))}
-                {!isMobile && pageReviews.length < perPage && Array.from({ length: perPage - pageReviews.length }).map((_, i) => (
-                  <div key={`empty-${i}`} style={{ flex: '1 1 0' }} />
+        {/* Carousel or empty state */}
+        {reviews.length === 0 ? (
+          <div style={{ textAlign: 'center', padding: '40px 20px', color: '#9ca3af', fontSize: 15 }}>
+            No reviews yet. Be the first to share your experience!
+          </div>
+        ) : (
+          <>
+            <div style={{ overflow: 'hidden', borderRadius: 4 }} onMouseEnter={stopTimer} onMouseLeave={startTimer}>
+              <div style={{ display: 'flex', transform: `translateX(-${currentPage * 100}%)`, transition: 'transform 0.55s cubic-bezier(0.4, 0, 0.2, 1)', willChange: 'transform' }}>
+                {pages.map((pageReviews, pageIdx) => (
+                  <div key={pageIdx} style={{ minWidth: '100%', display: 'flex', gap: isMobile ? 0 : 20, alignItems: 'stretch', padding: isMobile ? '0 4px' : 0 }}>
+                    {pageReviews.map((review, cardIdx) => (
+                      <ReviewCard key={review.id} review={review} colorIndex={cardIdx} />
+                    ))}
+                    {!isMobile && pageReviews.length < perPage && Array.from({ length: perPage - pageReviews.length }).map((_, i) => (
+                      <div key={`empty-${i}`} style={{ flex: '1 1 0' }} />
+                    ))}
+                  </div>
                 ))}
               </div>
-            ))}
-          </div>
-        </div>
+            </div>
 
-        {/* Dots */}
-        <div style={{ display: 'flex', justifyContent: 'center', gap: 8, marginTop: 28 }}>
-          {pages.map((_, i) => (
-            <button key={i} onClick={() => goTo(i)} style={{ width: currentPage === i ? 28 : 9, height: 9, borderRadius: 999, border: 'none', cursor: 'pointer', backgroundColor: currentPage === i ? '#FF9933' : '#d1d5db', transition: 'all 0.3s ease', padding: 0 }} />
-          ))}
-        </div>
-        {isMobile && <p style={{ textAlign: 'center', fontSize: 11, color: '#9ca3af', marginTop: 10 }}>Tap dots to navigate</p>}
+            {/* Dots */}
+            <div style={{ display: 'flex', justifyContent: 'center', gap: 8, marginTop: 28 }}>
+              {pages.map((_, i) => (
+                <button key={i} onClick={() => goTo(i)} style={{ width: currentPage === i ? 28 : 9, height: 9, borderRadius: 999, border: 'none', cursor: 'pointer', backgroundColor: currentPage === i ? '#FF9933' : '#d1d5db', transition: 'all 0.3s ease', padding: 0 }} />
+              ))}
+            </div>
+            {isMobile && totalPages > 1 && <p style={{ textAlign: 'center', fontSize: 11, color: '#9ca3af', marginTop: 10 }}>Tap dots to navigate</p>}
+          </>
+        )}
 
         {/* CTA — one review per user */}
         <div style={{ textAlign: 'center', marginTop: 44 }}>
