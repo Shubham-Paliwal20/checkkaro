@@ -74,10 +74,9 @@ function ReviewFormModal({ onClose, onSubmitted, existingReview, isMobile }) {
           .from('reviews')
           .update({ reviewer_name: name.trim(), review_text: text.trim(), rating })
           .eq('id', existingReview.id)
-          .eq('user_id', user.id)
           .select()
         if (e) throw e
-        if (!data || data.length === 0) throw new Error('Update failed — please check your connection and try again.')
+        if (!data || data.length === 0) throw new Error('Permission denied — add an UPDATE policy on the reviews table in your Supabase dashboard.')
       } else {
         const { error: e } = await supabase
           .from('reviews')
