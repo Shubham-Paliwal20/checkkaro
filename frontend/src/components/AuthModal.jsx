@@ -87,25 +87,17 @@ function GhostBtn({ children, onClick }) {
 }
 
 export default function AuthModal({ onClose, initialStep }) {
-  const [step,         setStep]         = useState(initialStep || 'main')
-  const [authTab,      setAuthTab]      = useState('email')   // 'email' | 'phone'
-  const [isSignUp,     setIsSignUp]     = useState(false)
+  const [step,        setStep]        = useState(initialStep || 'main')
+  const [isSignUp,    setIsSignUp]    = useState(false)
 
-  // Email + password
-  const [email,        setEmail]        = useState('')
-  const [password,     setPassword]     = useState('')
-  const [showPass,     setShowPass]     = useState(false)
+  const [email,       setEmail]       = useState('')
+  const [password,    setPassword]    = useState('')
+  const [showPass,    setShowPass]    = useState(false)
+  const [resetEmail,  setResetEmail]  = useState('')
 
-  // Phone OTP
-  const [phone,        setPhone]        = useState('')
-  const [otp,          setOtp]          = useState('')
-
-  // Forgot password
-  const [resetEmail,   setResetEmail]   = useState('')
-
-  const [loading,      setLoading]      = useState(false)
-  const [error,        setError]        = useState('')
-  const [quizAnswers,  setQuizAnswers]  = useState({})
+  const [loading,     setLoading]     = useState(false)
+  const [error,       setError]       = useState('')
+  const [quizAnswers, setQuizAnswers] = useState({})
 
   const clearError = () => setError('')
 
@@ -136,7 +128,6 @@ export default function AuthModal({ onClose, initialStep }) {
       options: { redirectTo: window.location.href },
     })
     if (e) { setError(e.message); setLoading(false) }
-    // On success the page redirects — no further action needed here
   }
 
   // ── Email sign-in ──
@@ -171,15 +162,13 @@ export default function AuthModal({ onClose, initialStep }) {
 
     if (e) {
       const msg = e.message?.toLowerCase() || ''
-      // Already registered — try signing in with the same password
       if (msg.includes('already registered') || msg.includes('already exists') || msg.includes('already been registered')) {
         const { data: d2, error: e2 } = await supabase.auth.signInWithPassword({ email: email.trim(), password })
         setLoading(false)
-        if (e2) { setError('This email is already registered. Switch to "Sign In" tab.'); return }
+        if (e2) { setError('This email is already registered. Switch to "Sign In".'); return }
         await handlePostLogin(d2.user?.id)
         return
       }
-      // Email sending failed (rate limit / SMTP) — account may have been created; show check-email screen
       if (msg.includes('email') || msg.includes('sending') || msg.includes('rate') || msg.includes('smtp')) {
         setLoading(false)
         setStep('check_email')
@@ -191,34 +180,11 @@ export default function AuthModal({ onClose, initialStep }) {
     }
 
     setLoading(false)
-    // Email confirmation disabled in Supabase → session returned immediately
     if (data.session) {
       await handlePostLogin(data.user?.id)
     } else {
       setStep('check_email')
     }
-  }
-
-  // ── Phone OTP send ──
-  const handleSendOtp = async () => {
-    if (!phone.trim()) { setError('Please enter your mobile number.'); return }
-    setLoading(true); clearError()
-    const ph = phone.startsWith('+') ? phone : `+91${phone}`
-    const { error: e } = await supabase.auth.signInWithOtp({ phone: ph })
-    setLoading(false)
-    if (e) { setError(e.message); return }
-    setStep('otp')
-  }
-
-  // ── OTP verify ──
-  const handleVerifyOtp = async () => {
-    if (!otp.trim()) { setError('Please enter the OTP.'); return }
-    setLoading(true); clearError()
-    const ph = phone.startsWith('+') ? phone : `+91${phone}`
-    const { data, error: e } = await supabase.auth.verifyOtp({ phone: ph, token: otp.trim(), type: 'sms' })
-    setLoading(false)
-    if (e) { setError(e.message); return }
-    await handlePostLogin(data.user?.id)
   }
 
   // ── Forgot password ──
@@ -291,113 +257,45 @@ export default function AuthModal({ onClose, initialStep }) {
 
               <Divider />
 
-              {/* Tab toggle — Email | Phone */}
-              <div style={{ display: 'flex', background: '#f3f4f6', borderRadius: 10, padding: 3, marginBottom: 16 }}>
-                {['email', 'phone'].map(t => (
-                  <button key={t} onClick={() => { setAuthTab(t); clearError() }}
-                    style={{ flex: 1, padding: '8px 0', borderRadius: 8, border: 'none', fontFamily: 'inherit', fontSize: 13, fontWeight: 600, cursor: 'pointer', transition: 'all 0.15s',
-                      background: authTab === t ? '#fff' : 'transparent',
-                      color: authTab === t ? '#111827' : '#6b7280',
-                      boxShadow: authTab === t ? '0 1px 4px rgba(0,0,0,0.10)' : 'none',
+              {/* Sign In / Sign Up toggle */}
+              <div style={{ display: 'flex', gap: 8, marginBottom: 14 }}>
+                {[false, true].map(su => (
+                  <button key={String(su)} onClick={() => { setIsSignUp(su); clearError() }}
+                    style={{ flex: 1, padding: '7px 0', borderRadius: 8, border: `1.5px solid ${isSignUp === su ? ORANGE : '#e5e7eb'}`, fontFamily: 'inherit', fontSize: 13, fontWeight: 600, cursor: 'pointer',
+                      background: isSignUp === su ? '#fff7ed' : '#fff',
+                      color: isSignUp === su ? ORANGE : '#6b7280',
                     }}>
-                    {t === 'email' ? '✉ Email' : '📱 Phone OTP'}
+                    {su ? 'New Account' : 'Sign In'}
                   </button>
                 ))}
               </div>
 
-              {/* ── Email tab ── */}
-              {authTab === 'email' && (
-                <>
-                  {/* Sign In / Sign Up pill toggle */}
-                  <div style={{ display: 'flex', gap: 8, marginBottom: 14 }}>
-                    {[false, true].map(su => (
-                      <button key={String(su)} onClick={() => { setIsSignUp(su); clearError() }}
-                        style={{ flex: 1, padding: '7px 0', borderRadius: 8, border: `1.5px solid ${isSignUp === su ? ORANGE : '#e5e7eb'}`, fontFamily: 'inherit', fontSize: 13, fontWeight: 600, cursor: 'pointer',
-                          background: isSignUp === su ? '#fff7ed' : '#fff',
-                          color: isSignUp === su ? ORANGE : '#6b7280',
-                        }}>
-                        {su ? 'New Account' : 'Sign In'}
-                      </button>
-                    ))}
-                  </div>
+              <Input type="email" value={email} onChange={e => { setEmail(e.target.value); clearError() }} placeholder="you@example.com" />
+              <Input
+                type={showPass ? 'text' : 'password'}
+                value={password}
+                onChange={e => { setPassword(e.target.value); clearError() }}
+                placeholder={isSignUp ? 'Create a password (min 6 chars)' : 'Your password'}
+                suffix={{ icon: <EyeIcon show={showPass} />, onClick: () => setShowPass(p => !p) }}
+              />
 
-                  <Input type="email" value={email} onChange={e => { setEmail(e.target.value); clearError() }} placeholder="you@example.com" />
-                  <Input
-                    type={showPass ? 'text' : 'password'}
-                    value={password}
-                    onChange={e => { setPassword(e.target.value); clearError() }}
-                    placeholder={isSignUp ? 'Create a password (min 6 chars)' : 'Your password'}
-                    suffix={{ icon: <EyeIcon show={showPass} />, onClick: () => setShowPass(p => !p) }}
-                  />
+              {error && <p style={{ color: '#ef4444', fontSize: 12, margin: '-6px 0 8px' }}>{error}</p>}
 
-                  {error && <p style={{ color: '#ef4444', fontSize: 12, margin: '-6px 0 8px' }}>{error}</p>}
+              <PrimaryBtn onClick={isSignUp ? handleEmailSignUp : handleEmailSignIn} loading={loading}>
+                {loading ? (isSignUp ? 'Creating account…' : 'Signing in…') : (isSignUp ? 'Create Account →' : 'Sign In →')}
+              </PrimaryBtn>
 
-                  <PrimaryBtn onClick={isSignUp ? handleEmailSignUp : handleEmailSignIn} loading={loading}>
-                    {loading ? (isSignUp ? 'Creating account…' : 'Signing in…') : (isSignUp ? 'Create Account →' : 'Sign In →')}
-                  </PrimaryBtn>
-
-                  {!isSignUp && (
-                    <div style={{ textAlign: 'center', marginTop: 10 }}>
-                      <GhostBtn onClick={() => { setResetEmail(email); setStep('forgot'); clearError() }}>
-                        Forgot password?
-                      </GhostBtn>
-                    </div>
-                  )}
-                </>
-              )}
-
-              {/* ── Phone OTP tab ── */}
-              {authTab === 'phone' && (
-                <>
-                  <div style={{ display: 'flex', marginBottom: 12 }}>
-                    <span style={{ display: 'inline-flex', alignItems: 'center', padding: '0 12px', border: '1.5px solid #d1d5db', borderRight: 'none', borderRadius: '10px 0 0 10px', background: '#f9fafb', fontSize: 14, color: '#6b7280', whiteSpace: 'nowrap' }}>
-                      🇮🇳 +91
-                    </span>
-                    <input
-                      type="tel" inputMode="numeric" maxLength={10}
-                      value={phone}
-                      onChange={e => { setPhone(e.target.value.replace(/\D/g, '')); clearError() }}
-                      placeholder="9876543210"
-                      style={{ flex: 1, border: '1.5px solid #d1d5db', borderLeft: 'none', borderRadius: '0 10px 10px 0', padding: '11px 14px', fontSize: 14, outline: 'none', fontFamily: 'inherit' }}
-                      onFocus={e => { e.target.style.borderColor = ORANGE }}
-                      onBlur={e => { e.target.style.borderColor = '#d1d5db' }}
-                    />
-                  </div>
-
-                  {error && <p style={{ color: '#ef4444', fontSize: 12, margin: '-6px 0 8px' }}>{error}</p>}
-
-                  <PrimaryBtn onClick={handleSendOtp} loading={loading}>
-                    {loading ? 'Sending OTP…' : 'Send OTP →'}
-                  </PrimaryBtn>
-                </>
+              {!isSignUp && (
+                <div style={{ textAlign: 'center', marginTop: 10 }}>
+                  <GhostBtn onClick={() => { setResetEmail(email); setStep('forgot'); clearError() }}>
+                    Forgot password?
+                  </GhostBtn>
+                </div>
               )}
 
               <p style={{ textAlign: 'center', fontSize: 11, color: '#9ca3af', marginTop: 14, marginBottom: 0 }}>
                 You can browse CheckKaro without logging in.
               </p>
-            </>
-          )}
-
-          {/* ══════════════ OTP VERIFY ══════════════ */}
-          {step === 'otp' && (
-            <>
-              <h2 style={{ fontSize: 20, fontWeight: 700, color: '#111827', margin: '0 0 4px' }}>Enter OTP</h2>
-              <p style={{ fontSize: 13, color: '#6b7280', margin: '0 0 18px' }}>Sent via SMS to <strong>+91 {phone}</strong></p>
-              <input
-                type="text" inputMode="numeric" maxLength={6}
-                value={otp}
-                onChange={e => { setOtp(e.target.value.replace(/\D/g, '')); clearError() }}
-                onKeyDown={e => e.key === 'Enter' && handleVerifyOtp()}
-                placeholder="——————"
-                style={{ width: '100%', border: '1.5px solid #d1d5db', borderRadius: 10, padding: '14px', fontSize: 26, textAlign: 'center', letterSpacing: '0.3em', outline: 'none', boxSizing: 'border-box', fontFamily: 'inherit', marginBottom: 4 }}
-                onFocus={e => { e.target.style.borderColor = ORANGE }}
-                onBlur={e => { e.target.style.borderColor = '#d1d5db' }}
-              />
-              {error && <p style={{ color: '#ef4444', fontSize: 12, margin: '4px 0 8px' }}>{error}</p>}
-              <PrimaryBtn onClick={handleVerifyOtp} loading={loading}>{loading ? 'Verifying…' : 'Verify OTP'}</PrimaryBtn>
-              <div style={{ textAlign: 'center', marginTop: 12 }}>
-                <GhostBtn onClick={() => { setStep('main'); setOtp(''); clearError() }}>← Change number</GhostBtn>
-              </div>
             </>
           )}
 
