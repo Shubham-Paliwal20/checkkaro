@@ -5,14 +5,16 @@ import axios from 'axios'
 import ScoreCircle from '../components/ScoreCircle'
 import DisclaimerBox from '../components/DisclaimerBox'
 import ProductReviews from '../components/ProductReviews'
+import ProductNotFound from '../components/ProductNotFound'
 
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:8000'
 
 function Result() {
   const { productName } = useParams()
-  const [loading, setLoading] = useState(true)
-  const [error, setError] = useState(null)
-  const [product, setProduct] = useState(null)
+  const [loading,          setLoading]          = useState(true)
+  const [error,            setError]            = useState(null)
+  const [productNotFound,  setProductNotFound]  = useState(false)
+  const [product,          setProduct]          = useState(null)
   const [showCorrectionForm, setShowCorrectionForm] = useState(false)
   const [correctionText, setCorrectionText] = useState('')
   const [submitting, setSubmitting] = useState(false)
@@ -20,6 +22,7 @@ function Result() {
 
   useEffect(() => {
     setImgError(false)
+    setProductNotFound(false)
     fetchProduct()
   }, [productName])
 
@@ -32,7 +35,11 @@ function Result() {
       })
       setProduct(response.data)
     } catch (err) {
-      setError(err.response?.data?.detail || 'Failed to fetch product information')
+      if (err.response?.status === 404 || (err.response?.data?.detail || '').toLowerCase().includes('not found')) {
+        setProductNotFound(true)
+      } else {
+        setError(err.response?.data?.detail || 'Failed to fetch product information')
+      }
     } finally {
       setLoading(false)
     }
@@ -86,6 +93,10 @@ function Result() {
     )
   }
 
+  if (productNotFound) {
+    return <ProductNotFound productName={productName} />
+  }
+
   if (error) {
     return (
       <div className="min-h-screen flex items-center justify-center px-4">
@@ -93,7 +104,7 @@ function Result() {
           <svg className="w-16 h-16 text-red-500 mx-auto mb-4" fill="currentColor" viewBox="0 0 20 20">
             <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clipRule="evenodd" />
           </svg>
-          <h2 className="text-2xl font-poppins font-bold text-navy mb-2">Error</h2>
+          <h2 className="text-2xl font-poppins font-bold text-navy mb-2">Something went wrong</h2>
           <p className="text-gray-600 mb-4">{error}</p>
           <button onClick={() => window.history.back()} className="btn-primary">
             Go Back

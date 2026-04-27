@@ -8,7 +8,8 @@ function Navbar() {
   const location = useLocation()
   const { user, signOut, openAuthModal } = useAuth()
 
-  const isHome = location.pathname === '/'
+  const isHome  = location.pathname === '/'
+  const isAdmin = user?.email === 'shubhampaliwal5@gmail.com'
 
   useEffect(() => {
     const handleScroll = () => setIsScrolled(window.scrollY > 10)
@@ -81,6 +82,16 @@ function Navbar() {
             >
               About
             </Link>
+
+            {/* Admin link — desktop */}
+            {isAdmin && (
+              <Link
+                to="/admin"
+                className={`text-sm font-medium transition-colors ${isActive('/admin') ? 'text-orange border-b-2 border-orange' : 'text-gray-700 hover:text-orange'}`}
+              >
+                Admin
+              </Link>
+            )}
 
             {/* Login / User */}
             {user ? (
@@ -155,6 +166,16 @@ function Navbar() {
             >
               About
             </Link>
+
+            {isAdmin && (
+              <Link
+                to="/admin"
+                className="block py-2 text-sm font-medium text-orange"
+                onClick={closeMobile}
+              >
+                🔐 Admin Panel
+              </Link>
+            )}
 
             {/* Mobile Login / User */}
             <div className="pt-2 border-t border-gray-100 mt-2">

@@ -9,6 +9,7 @@ import Result from './pages/Result'
 import CheckIngredient from './pages/CheckIngredient'
 import Products from './pages/Products'
 import About from './pages/About'
+import Admin from './pages/Admin'
 
 function AnimatedRoutes() {
   const location = useLocation()
@@ -21,6 +22,7 @@ function AnimatedRoutes() {
         <Route path="/check-ingredient" element={<CheckIngredient />} />
         <Route path="/products" element={<Products />} />
         <Route path="/about" element={<About />} />
+        <Route path="/admin" element={<Admin />} />
       </Routes>
     </AnimatePresence>
   )
