@@ -120,7 +120,7 @@ export default function ProductNotFound({ productName }) {
           </h2>
           <p style={{ color: '#6b7280', fontSize: 14, lineHeight: 1.6, margin: '0 0 24px' }}>
             Thank you! Our team will review your submission and add it to CheckKaro.
-            Once approved, <strong>₹1 will be sent to your UPI / mobile number</strong>.
+            Once approved, <strong>₹1 per <span style={{ textTransform: 'uppercase' }}>PRODUCT</span> will be sent to your UPI / mobile number</strong>.
           </p>
           <button onClick={() => window.history.back()}
             style={{ background: '#FF9933', color: '#fff', border: 'none', borderRadius: 999, padding: '14px 36px', fontSize: 15, fontWeight: 700, cursor: 'pointer', fontFamily: 'inherit', width: isMobile ? '100%' : 'auto' }}>
@@ -153,10 +153,16 @@ export default function ProductNotFound({ productName }) {
           justifyContent: isMobile ? 'center' : 'flex-start',
           textAlign: 'left',
         }}>
-          <span style={{ fontSize: isMobile ? 24 : 28, flexShrink: 0 }}>💰</span>
+          <div style={{ width: isMobile ? 40 : 46, height: isMobile ? 40 : 46, borderRadius: '50%', background: 'linear-gradient(135deg, #FF9933, #e8880a)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0, boxShadow: '0 2px 8px rgba(255,153,51,0.4)' }}>
+            <span style={{ fontSize: isMobile ? 20 : 24, color: '#fff', fontWeight: 900, fontFamily: 'serif', lineHeight: 1 }}>₹</span>
+          </div>
           <div>
-            <div style={{ fontWeight: 800, fontSize: isMobile ? 14 : 15, color: '#92400e' }}>Add Product &amp; Earn ₹1</div>
-            <div style={{ fontSize: isMobile ? 11 : 12, color: '#b45309' }}>Upload photos → get approved → receive reward</div>
+            <div style={{ fontWeight: 800, fontSize: isMobile ? 14 : 15, color: '#92400e' }}>
+              Add <span style={{ textTransform: 'uppercase', letterSpacing: '0.04em' }}>PRODUCT</span> &amp; Earn ₹1
+            </div>
+            <div style={{ fontSize: isMobile ? 11 : 12, color: '#b45309' }}>
+              ₹1 per <strong style={{ textTransform: 'uppercase' }}>PRODUCT</strong> — upload → approve → receive reward
+            </div>
           </div>
         </div>
       </div>
@@ -285,7 +291,7 @@ export default function ProductNotFound({ productName }) {
             style={{ ...inputStyle, marginBottom: 6 }}
           />
           <p style={{ color: '#9ca3af', fontSize: 12, margin: '0 0 20px', lineHeight: 1.4 }}>
-            We'll send your ₹1 reward here once your submission is approved.
+            We'll send ₹1 per <strong style={{ textTransform: 'uppercase' }}>PRODUCT</strong> here once your submission is approved.
           </p>
 
           {error && (
