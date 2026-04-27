@@ -3,10 +3,11 @@ import { useNavigate } from 'react-router-dom'
 import { useAuth } from '../context/AuthContext'
 import { supabase } from '../lib/supabaseClient'
 
-const ADMIN_EMAIL = 'shubhampaliwal5@gmail.com'
-const STATUS_TABS  = ['pending', 'approved', 'rejected']
-const STATUS_COLOR = { pending: '#f59e0b', approved: '#16a34a', rejected: '#dc2626' }
-const STATUS_BG    = { pending: '#fef3c7', approved: '#f0fdf4', rejected: '#fef2f2' }
+const ADMIN_EMAIL  = 'shubhampaliwal5@gmail.com'
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:8000'
+const STATUS_TABS  = ['pending', 'approved', 'rejected', 'extracted']
+const STATUS_COLOR = { pending: '#f59e0b', approved: '#16a34a', rejected: '#dc2626', extracted: '#7c3aed' }
+const STATUS_BG    = { pending: '#fef3c7', approved: '#f0fdf4', rejected: '#fef2f2', extracted: '#f5f3ff' }
 
 function formatDate(iso) {
   if (!iso) return ''
@@ -82,7 +83,7 @@ function ImageViewer({ imgs }) {
   )
 }
 
-function SubmissionCard({ sub, onApprove, onReject }) {
+function SubmissionCard({ sub, onApprove, onReject, onExtract, extracting }) {
   const imgs = sub.images || []
   return (
     <div style={{ background: '#fff', border: '1px solid #e5e7eb', borderRadius: 14, overflow: 'hidden', boxShadow: '0 2px 12px rgba(0,0,0,0.05)' }}>
@@ -103,7 +104,7 @@ function SubmissionCard({ sub, onApprove, onReject }) {
         </div>
 
         {/* Info rows */}
-        <div style={{ display: 'flex', flexDirection: 'column', gap: 7, marginBottom: sub.status === 'pending' ? 14 : 4 }}>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: 7, marginBottom: (sub.status === 'pending' || sub.status === 'approved') ? 14 : 4 }}>
           <div style={{ display: 'flex', gap: 8, alignItems: 'flex-start' }}>
             <span style={{ fontSize: 15, flexShrink: 0, marginTop: 1 }}>📧</span>
             <span style={{ fontSize: 13, color: '#374151', wordBreak: 'break-all', lineHeight: 1.4 }}>{sub.email || '—'}</span>
@@ -130,6 +131,15 @@ function SubmissionCard({ sub, onApprove, onReject }) {
             </button>
           </div>
         )}
+
+        {sub.status === 'approved' && (
+          <button
+            onClick={() => onExtract(sub.id)}
+            disabled={extracting === sub.id}
+            style={{ width: '100%', background: extracting === sub.id ? '#e9d5ff' : '#7c3aed', color: '#fff', border: 'none', borderRadius: 10, padding: '11px 0', fontSize: 14, fontWeight: 700, cursor: extracting === sub.id ? 'not-allowed' : 'pointer', fontFamily: 'inherit', touchAction: 'manipulation', transition: 'background 0.2s' }}>
+            {extracting === sub.id ? '⏳ Extracting…' : '🤖 Extract & Add to DB'}
+          </button>
+        )}
       </div>
     </div>
   )
@@ -139,10 +149,12 @@ export default function Admin() {
   const { user, loading: authLoading } = useAuth()
   const navigate  = useNavigate()
   const isMobile  = useIsMobile()
-  const [tab,      setTab]      = useState('pending')
-  const [subs,     setSubs]     = useState([])
-  const [counts,   setCounts]   = useState({ pending: 0, approved: 0, rejected: 0 })
-  const [fetching, setFetching] = useState(true)
+  const [tab,        setTab]        = useState('pending')
+  const [subs,       setSubs]       = useState([])
+  const [counts,     setCounts]     = useState({ pending: 0, approved: 0, rejected: 0, extracted: 0 })
+  const [fetching,   setFetching]   = useState(true)
+  const [extracting, setExtracting] = useState(null)  // submission id being extracted
+  const [extractMsg, setExtractMsg] = useState(null)  // { type: 'success'|'error', text }
 
   const isAdmin = user?.email === ADMIN_EMAIL
 
@@ -166,7 +178,7 @@ export default function Admin() {
   const fetchAll = async () => {
     const { data } = await supabase.from('product_submissions').select('status')
     if (!data) return
-    const c = { pending: 0, approved: 0, rejected: 0 }
+    const c = { pending: 0, approved: 0, rejected: 0, extracted: 0 }
     data.forEach(r => { if (c[r.status] !== undefined) c[r.status]++ })
     setCounts(c)
   }
@@ -178,6 +190,26 @@ export default function Admin() {
   const handleReject = async (id) => {
     await supabase.from('product_submissions').update({ status: 'rejected' }).eq('id', id)
     fetchAll(); fetchSubs(tab)
+  }
+
+  const handleExtract = async (id) => {
+    setExtracting(id)
+    setExtractMsg(null)
+    try {
+      const res = await fetch(`${API_BASE_URL}/api/admin/extract-product`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ submission_id: id, admin_email: user.email }),
+      })
+      const data = await res.json()
+      if (!res.ok) throw new Error(data.detail || 'Extraction failed')
+      setExtractMsg({ type: 'success', text: `✓ "${data.product_name}" added to DB (score: ${data.awareness_score}, ${data.ingredients_count} ingredients)` })
+      fetchAll(); fetchSubs(tab)
+    } catch (err) {
+      setExtractMsg({ type: 'error', text: `✕ ${err.message}` })
+    } finally {
+      setExtracting(null)
+    }
   }
 
   if (authLoading) {
@@ -225,6 +257,16 @@ export default function Admin() {
         ))}
       </div>
 
+      {/* Extract result message */}
+      {extractMsg && (
+        <div style={{ marginBottom: 16, padding: '12px 16px', borderRadius: 10, fontSize: 13, fontWeight: 600,
+          background: extractMsg.type === 'success' ? '#f0fdf4' : '#fef2f2',
+          color: extractMsg.type === 'success' ? '#16a34a' : '#dc2626',
+          border: `1px solid ${extractMsg.type === 'success' ? '#bbf7d0' : '#fecaca'}` }}>
+          {extractMsg.text}
+        </div>
+      )}
+
       {/* Grid / empty / loading */}
       {fetching ? (
         <div style={{ textAlign: 'center', padding: '48px 0', color: '#9ca3af', fontSize: 15 }}>Loading…</div>
@@ -236,7 +278,7 @@ export default function Admin() {
       ) : (
         <div style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : 'repeat(auto-fill, minmax(300px, 1fr))', gap: 16 }}>
           {subs.map(s => (
-            <SubmissionCard key={s.id} sub={s} onApprove={handleApprove} onReject={handleReject} />
+            <SubmissionCard key={s.id} sub={s} onApprove={handleApprove} onReject={handleReject} onExtract={handleExtract} extracting={extracting} />
           ))}
         </div>
       )}

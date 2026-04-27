@@ -1,5 +1,6 @@
 import os
 import json
+import base64
 import httpx
 from dotenv import load_dotenv
 
@@ -218,6 +219,58 @@ Return ONLY valid JSON, no markdown:
             "fssai_position": "Subject to FSSAI regulations.",
             "error": str(e)
         }
+
+
+async def call_gemini_vision_api(image_url: str, prompt: str, max_tokens: int = 2000) -> str:
+    """Download an image and send it to Gemini Vision; returns raw text response."""
+    async with httpx.AsyncClient(timeout=60.0) as client:
+        img_resp = await client.get(image_url)
+        if img_resp.status_code != 200:
+            raise Exception(f"Could not download image: {img_resp.status_code}")
+
+        img_b64 = base64.b64encode(img_resp.content).decode("utf-8")
+        content_type = img_resp.headers.get("content-type", "image/jpeg").split(";")[0].strip()
+
+        payload = {
+            "contents": [{
+                "parts": [
+                    {"inline_data": {"mime_type": content_type, "data": img_b64}},
+                    {"text": prompt}
+                ]
+            }],
+            "generationConfig": {"temperature": 0.1, "maxOutputTokens": max_tokens}
+        }
+
+        resp = await client.post(
+            f"{GEMINI_API_URL}?key={GEMINI_API_KEY}",
+            json=payload,
+            headers={"Content-Type": "application/json"}
+        )
+        if resp.status_code != 200:
+            raise Exception(f"Gemini Vision API error: {resp.status_code} - {resp.text}")
+
+        result = resp.json()
+        if "candidates" in result and result["candidates"]:
+            parts = result["candidates"][0].get("content", {}).get("parts", [])
+            if parts:
+                return parts[0].get("text", "")
+        raise Exception("Empty response from Gemini Vision")
+
+
+async def extract_ingredients_from_image(image_url: str, product_name: str) -> str:
+    """Use Gemini Vision to read ingredients text from a product label image."""
+    prompt = (
+        f'This is a product label image for "{product_name}". '
+        "Please extract ONLY the ingredients list text exactly as printed on the label. "
+        "Return ONLY the raw ingredients text with no explanation. "
+        'If the ingredients list is not visible, return exactly: NOT_VISIBLE'
+    )
+    try:
+        text = await call_gemini_vision_api(image_url, prompt, max_tokens=1000)
+        return text.strip()
+    except Exception as e:
+        print(f"[GEMINI VISION ERROR] {e}")
+        return "NOT_VISIBLE"
 
 
 async def analyze_ingredients_list(product_name: str, ingredients_text: str) -> dict:

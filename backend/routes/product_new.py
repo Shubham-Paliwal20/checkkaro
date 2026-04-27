@@ -5,6 +5,7 @@ import re
 from routes.product_all_data import ALL_PRODUCTS
 from routes.product_ingredients_full import get_ingredients
 from routes.product_images import PRODUCT_IMAGES
+from db.supabase_client import supabase
 
 router = APIRouter()
 
@@ -93,10 +94,54 @@ async def search_product(name: str = Query(..., description="Product name to sea
                 is_complete=True
             )
     
-    # Product not found
+    # Check Supabase ai_extracted_products for community-submitted products
+    try:
+        db_result = supabase.from_("ai_extracted_products") \
+            .select("*") \
+            .ilike("name", f"%{name}%") \
+            .eq("status", "active") \
+            .order("created_at", desc=True) \
+            .limit(1) \
+            .execute()
+
+        if db_result.data:
+            p = db_result.data[0]
+            raw_ingredients = p.get("ingredients") or []
+            ingredients = [
+                IngredientItem(
+                    name=ing.get("name", ""),
+                    aliases=ing.get("aliases", ""),
+                    classification=ing.get("classification", "generally_recognised"),
+                    one_line_note=ing.get("one_line_note", ""),
+                    regulatory_note=ing.get("regulatory_note", ""),
+                )
+                for ing in raw_ingredients
+            ]
+            print(f"[SUPABASE] Found AI-extracted product: {p['name']}")
+            return ProductResponse(
+                id=str(p.get("id", "")),
+                name=p["name"],
+                brand=p.get("brand") or "Unknown",
+                category=p.get("category") or "General",
+                image_url=p.get("image_url"),
+                awareness_score=int(p.get("awareness_score") or 50),
+                summary=p.get("summary") or "",
+                fssai_note=p.get("fssai_note") or "",
+                verdict=p.get("verdict") or "",
+                recommendation=p.get("recommendation") or "",
+                ingredients=ingredients,
+                search_count=1,
+                data_source="community_verified",
+                confidence="medium",
+                is_complete=True,
+            )
+    except Exception as e:
+        print(f"[SUPABASE SEARCH ERROR] {e}")
+
+    # Product not found anywhere
     available_products = list(SAMPLE_PRODUCTS.keys())
     raise HTTPException(
-        status_code=404, 
+        status_code=404,
         detail=f"Product '{name}' not found in database. Available sample products: {', '.join(available_products[:20])}... ({len(available_products)} total products). Load full database with detailed ingredients using the SQL files."
     )
 

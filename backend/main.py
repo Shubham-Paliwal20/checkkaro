@@ -4,7 +4,7 @@ from dotenv import load_dotenv
 import os
 
 # Import routers
-from routes import product_new, ingredient, history
+from routes import product_new, ingredient, history, admin_extract
 
 # Load environment variables
 load_dotenv()
@@ -30,6 +30,7 @@ app.add_middleware(
 app.include_router(product_new.router, prefix="/api/product", tags=["Products"])
 app.include_router(ingredient.router, prefix="/api/ingredient", tags=["Ingredients"])
 app.include_router(history.router, prefix="/api/history", tags=["History"])
+app.include_router(admin_extract.router, prefix="/api/admin", tags=["Admin"])
 
 
 @app.get("/health")
