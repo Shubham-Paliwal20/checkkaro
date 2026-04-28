@@ -50,7 +50,10 @@ class SecurityHeadersMiddleware(BaseHTTPMiddleware):
 # ── Rate limiting middleware ───────────────────────────────────────────────────
 class RateLimitMiddleware(BaseHTTPMiddleware):
     async def dispatch(self, request: Request, call_next):
-        ip = request.client.host if request.client else "unknown"
+        # Behind Render/Vercel proxies the real IP is in X-Forwarded-For
+        forwarded = request.headers.get("x-forwarded-for")
+        ip = (forwarded.split(",")[0].strip() if forwarded
+              else (request.client.host if request.client else "unknown"))
 
         # Tighter limit for admin / extraction endpoints
         is_admin = request.url.path.startswith("/api/admin")
@@ -83,17 +86,19 @@ if not allowed_origins:
         "Set it to a comma-separated list of allowed origins (e.g. https://yourcomain.com)."
     )
 
+# Middleware order: last added = outermost = first to see requests / last to wrap responses.
+# CORSMiddleware must be outermost so it adds CORS headers to ALL responses,
+# including 429s from RateLimitMiddleware — otherwise browser sees a CORS error
+# and reports "Failed to fetch" instead of the real status code.
+app.add_middleware(SecurityHeadersMiddleware)
+app.add_middleware(RateLimitMiddleware)
 app.add_middleware(
     CORSMiddleware,
     allow_origins=allowed_origins,
     allow_credentials=True,
-    allow_methods=["GET", "POST"],   # only what we actually use
+    allow_methods=["GET", "POST", "OPTIONS"],
     allow_headers=["Content-Type", "Authorization"],
 )
-
-# Add security middleware (order matters: outermost = last added)
-app.add_middleware(RateLimitMiddleware)
-app.add_middleware(SecurityHeadersMiddleware)
 
 # ── Routers ───────────────────────────────────────────────────────────────────
 app.include_router(product_new.router,    prefix="/api/product",    tags=["Products"])
