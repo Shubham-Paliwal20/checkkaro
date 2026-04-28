@@ -11,7 +11,6 @@ ADMIN_EMAIL = os.getenv("ADMIN_EMAIL", "")
 
 
 def _verify_admin(authorization: Optional[str]) -> None:
-    """Verify Supabase JWT token and check admin role. Raises 401/403 on failure."""
     if not authorization or not authorization.startswith("Bearer "):
         raise HTTPException(status_code=401, detail="Missing Authorization header")
 
@@ -35,8 +34,29 @@ def _verify_admin(authorization: Optional[str]) -> None:
         raise HTTPException(status_code=403, detail="Forbidden")
 
 
+def _build_product_data(sub: dict, analysis: dict, ingredients_text: str) -> dict:
+    images: list = sub.get("images") or []
+    product_name: str = (sub.get("product_name_searched") or "Unknown Product")[:200]
+    return {
+        "name": product_name,
+        "brand": (analysis.get("brand") or "Unknown")[:100],
+        "category": (analysis.get("category") or "General")[:100],
+        "image_url": images[0] if images else None,
+        "awareness_score": max(0, min(100, int(analysis.get("awareness_score") or 50))),
+        "summary": (analysis.get("summary") or "")[:2000],
+        "fssai_note": (analysis.get("fssai_note") or "")[:500],
+        "verdict": (analysis.get("verdict") or "")[:200],
+        "recommendation": (analysis.get("recommendation") or "")[:500],
+        "ingredients": analysis.get("ingredients") or [],
+        "ingredients_raw": ingredients_text[:5000],
+        "submission_id": sub["id"],
+    }
+
+
 class ExtractRequest(BaseModel):
     submission_id: str
+    # If provided, skip Gemini Vision and use this text directly
+    ingredients_text: Optional[str] = None
 
 
 @router.post("/extract-product")
@@ -46,7 +66,6 @@ async def extract_product(
 ):
     _verify_admin(authorization)
 
-    # Fetch submission
     result = supabase.from_("product_submissions").select("*").eq("id", req.submission_id).single().execute()
     if not result.data:
         raise HTTPException(status_code=404, detail="Submission not found")
@@ -55,52 +74,46 @@ async def extract_product(
     images: list = sub.get("images") or []
     product_name: str = (sub.get("product_name_searched") or "Unknown Product")[:200]
 
-    if not images:
-        raise HTTPException(status_code=400, detail="No images in this submission")
+    # ── Path A: manual text provided by admin ────────────────────────────────
+    if req.ingredients_text and req.ingredients_text.strip():
+        ingredients_text = req.ingredients_text.strip()
+        print(f"[EXTRACT-MANUAL] Product: {product_name} | Chars: {len(ingredients_text)}")
 
-    # Try back-label image first (index 1), then others
-    ordered = ([images[1]] if len(images) > 1 else []) + [images[0]] + images[2:]
-    ingredients_text = "NOT_VISIBLE"
-    used_url = ordered[0]
+    # ── Path B: AI vision from images ────────────────────────────────────────
+    else:
+        if not images:
+            raise HTTPException(status_code=400, detail="No images in this submission and no manual text provided")
 
-    for url in ordered:
-        text = await extract_ingredients_from_image(url, product_name)
-        if text and text != "NOT_VISIBLE":
-            ingredients_text = text
-            used_url = url
-            break
+        # Try back-label (index 1) first, then front, then rest
+        ordered = ([images[1]] if len(images) > 1 else []) + [images[0]] + images[2:]
+        ingredients_text = "NOT_VISIBLE"
 
-    if ingredients_text == "NOT_VISIBLE":
-        raise HTTPException(
-            status_code=422,
-            detail="Could not read ingredients from any uploaded image. Try a clearer back-label photo.",
-        )
+        for url in ordered:
+            text = await extract_ingredients_from_image(url, product_name)
+            if text and text != "NOT_VISIBLE":
+                ingredients_text = text
+                break
 
-    print(f"[EXTRACT] Product: {product_name} | Chars: {len(ingredients_text)}")
+        if ingredients_text == "NOT_VISIBLE":
+            raise HTTPException(
+                status_code=422,
+                detail=(
+                    "Could not read ingredients from any uploaded image. "
+                    "Try the 'Enter manually' option and paste the ingredients text."
+                ),
+            )
 
-    # Classify ingredients with Gemini
+        print(f"[EXTRACT-VISION] Product: {product_name} | Chars: {len(ingredients_text)}")
+
+    # ── Classify with Gemini ──────────────────────────────────────────────────
     analysis = await analyze_ingredients_list(product_name, ingredients_text)
 
-    product_data = {
-        "name": product_name,
-        "brand": (analysis.get("brand") or "Unknown")[:100],
-        "category": (analysis.get("category") or "General")[:100],
-        "image_url": images[0],
-        "awareness_score": max(0, min(100, int(analysis.get("awareness_score") or 50))),
-        "summary": (analysis.get("summary") or "")[:2000],
-        "fssai_note": (analysis.get("fssai_note") or "")[:500],
-        "verdict": (analysis.get("verdict") or "")[:200],
-        "recommendation": (analysis.get("recommendation") or "")[:500],
-        "ingredients": analysis.get("ingredients") or [],
-        "ingredients_raw": ingredients_text[:5000],
-        "submission_id": req.submission_id,
-    }
+    product_data = _build_product_data(sub, analysis, ingredients_text)
 
     insert_res = supabase.from_("ai_extracted_products").insert(product_data).execute()
     if not insert_res.data:
         raise HTTPException(status_code=500, detail="Failed to save extracted product to database")
 
-    # Mark submission as extracted
     supabase.from_("product_submissions").update({"status": "extracted"}).eq("id", req.submission_id).execute()
 
     return {

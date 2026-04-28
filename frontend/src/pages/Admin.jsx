@@ -85,6 +85,9 @@ function ImageViewer({ imgs }) {
 
 function SubmissionCard({ sub, onApprove, onReject, onExtract, extracting }) {
   const imgs = sub.images || []
+  const [showManual, setShowManual] = useState(false)
+  const [manualText, setManualText] = useState('')
+
   return (
     <div style={{ background: '#fff', border: '1px solid #e5e7eb', borderRadius: 14, overflow: 'hidden', boxShadow: '0 2px 12px rgba(0,0,0,0.05)' }}>
       <ImageViewer imgs={imgs} />
@@ -133,12 +136,43 @@ function SubmissionCard({ sub, onApprove, onReject, onExtract, extracting }) {
         )}
 
         {sub.status === 'approved' && (
-          <button
-            onClick={() => onExtract(sub.id)}
-            disabled={extracting != null}
-            style={{ width: '100%', background: extracting === sub.id ? '#e9d5ff' : extracting != null ? '#f3f4f6' : '#7c3aed', color: extracting != null ? '#9ca3af' : '#fff', border: 'none', borderRadius: 10, padding: '11px 0', fontSize: 14, fontWeight: 700, cursor: extracting != null ? 'not-allowed' : 'pointer', fontFamily: 'inherit', touchAction: 'manipulation', transition: 'background 0.2s' }}>
-            {extracting === sub.id ? '⏳ Working…' : '🤖 Extract & Add to DB'}
-          </button>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
+            {/* AI extract from image */}
+            <button
+              onClick={() => onExtract(sub.id, null)}
+              disabled={extracting != null}
+              style={{ width: '100%', background: extracting === sub.id ? '#e9d5ff' : extracting != null ? '#f3f4f6' : '#7c3aed', color: extracting != null ? '#9ca3af' : '#fff', border: 'none', borderRadius: 10, padding: '11px 0', fontSize: 14, fontWeight: 700, cursor: extracting != null ? 'not-allowed' : 'pointer', fontFamily: 'inherit', touchAction: 'manipulation', transition: 'background 0.2s' }}>
+              {extracting === sub.id && !showManual ? '⏳ Working…' : '🤖 Extract from Image (AI)'}
+            </button>
+
+            {/* Manual toggle */}
+            <button
+              onClick={() => setShowManual(v => !v)}
+              style={{ width: '100%', background: 'none', border: '1.5px solid #d1d5db', borderRadius: 10, padding: '8px 0', fontSize: 13, fontWeight: 600, color: '#6b7280', cursor: 'pointer', fontFamily: 'inherit', touchAction: 'manipulation' }}>
+              {showManual ? '▲ Hide manual entry' : '✏️ Enter ingredients manually'}
+            </button>
+
+            {showManual && (
+              <div style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
+                <p style={{ margin: 0, fontSize: 12, color: '#6b7280', lineHeight: 1.4 }}>
+                  Paste the ingredients list exactly as printed on the label:
+                </p>
+                <textarea
+                  value={manualText}
+                  onChange={e => setManualText(e.target.value)}
+                  placeholder="e.g. Water, Glycerin, Sodium Laureth Sulfate, Cocamidopropyl Betaine..."
+                  rows={5}
+                  style={{ width: '100%', boxSizing: 'border-box', border: '1.5px solid #d1d5db', borderRadius: 8, padding: '10px 12px', fontSize: 13, fontFamily: 'inherit', resize: 'vertical', outline: 'none', color: '#111827' }}
+                />
+                <button
+                  onClick={() => onExtract(sub.id, manualText)}
+                  disabled={extracting != null || !manualText.trim()}
+                  style={{ width: '100%', background: extracting != null || !manualText.trim() ? '#f3f4f6' : '#059669', color: extracting != null || !manualText.trim() ? '#9ca3af' : '#fff', border: 'none', borderRadius: 10, padding: '11px 0', fontSize: 14, fontWeight: 700, cursor: extracting != null || !manualText.trim() ? 'not-allowed' : 'pointer', fontFamily: 'inherit', touchAction: 'manipulation', transition: 'background 0.2s' }}>
+                  {extracting === sub.id && showManual ? '⏳ Working…' : '✓ Analyse & Add to DB'}
+                </button>
+              </div>
+            )}
+          </div>
         )}
       </div>
     </div>
@@ -206,7 +240,7 @@ export default function Admin() {
     fetchAll(); fetchSubs(tab)
   }
 
-  const handleExtract = async (id) => {
+  const handleExtract = async (id, manualText = null) => {
     setExtracting(id)
     setExtractMsg(null)
     try {
@@ -239,24 +273,46 @@ export default function Admin() {
         setExtractMsg(null)
       }
 
-      const res = await fetch(`${API_BASE_URL}/api/admin/extract-product`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${session.access_token}`,
-        },
-        body: JSON.stringify({ submission_id: id }),
-      })
+      const isManual = manualText && manualText.trim()
+      setExtractMsg({ type: 'info', text: isManual ? '⏳ Analysing ingredients with AI…' : '⏳ Reading label with AI vision…' })
+
+      // 3-minute timeout for the extract call (Gemini can be slow)
+      const ctrl = new AbortController()
+      const timer = setTimeout(() => ctrl.abort(), 180000)
+
+      let res
+      try {
+        res = await fetch(`${API_BASE_URL}/api/admin/extract-product`, {
+          method: 'POST',
+          signal: ctrl.signal,
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${session.access_token}`,
+          },
+          body: JSON.stringify({
+            submission_id: id,
+            ...(isManual ? { ingredients_text: manualText.trim() } : {}),
+          }),
+        })
+      } finally {
+        clearTimeout(timer)
+      }
+
       const data = await res.json()
-      if (!res.ok) throw new Error(data.detail || 'Extraction failed')
+      if (!res.ok) throw new Error(data.detail || `Server error ${res.status}`)
       setExtractMsg({ type: 'success', text: `✓ "${data.product_name}" added to DB (score: ${data.awareness_score}, ${data.ingredients_count} ingredients)` })
       fetchAll(); fetchSubs(tab)
     } catch (err) {
       const msg = err.message || ''
       const isNetwork = msg.toLowerCase().includes('failed to fetch') || msg.toLowerCase().includes('networkerror') || msg.toLowerCase().includes('load failed')
+      const isTimeout = err.name === 'AbortError'
       setExtractMsg({
         type: 'error',
-        text: isNetwork ? '✕ Cannot reach backend. Try clicking Extract again — server may need another moment.' : `✕ ${msg}`,
+        text: isTimeout
+          ? '✕ Request timed out (>3 min). If AI vision fails, try the "Enter manually" option.'
+          : isNetwork
+          ? '✕ Cannot reach backend. Try again — or use the "Enter manually" option below.'
+          : `✕ ${msg}`,
       })
     } finally {
       setExtracting(null)
