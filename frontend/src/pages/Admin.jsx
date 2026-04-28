@@ -83,7 +83,7 @@ function ImageViewer({ imgs }) {
   )
 }
 
-function SubmissionCard({ sub, onApprove, onReject, onExtract, extracting }) {
+function SubmissionCard({ sub, onApprove, onReject, onExtract, extracting, cardMsg }) {
   const imgs = sub.images || []
   const [showManual, setShowManual] = useState(false)
   const [manualText, setManualText] = useState('')
@@ -168,8 +168,18 @@ function SubmissionCard({ sub, onApprove, onReject, onExtract, extracting }) {
                   onClick={() => onExtract(sub.id, manualText)}
                   disabled={extracting != null || !manualText.trim()}
                   style={{ width: '100%', background: extracting != null || !manualText.trim() ? '#f3f4f6' : '#059669', color: extracting != null || !manualText.trim() ? '#9ca3af' : '#fff', border: 'none', borderRadius: 10, padding: '11px 0', fontSize: 14, fontWeight: 700, cursor: extracting != null || !manualText.trim() ? 'not-allowed' : 'pointer', fontFamily: 'inherit', touchAction: 'manipulation', transition: 'background 0.2s' }}>
-                  {extracting === sub.id && showManual ? '⏳ Working…' : '✓ Analyse & Add to DB'}
+                  {extracting === sub.id ? '⏳ Working…' : '✓ Analyse & Add to DB'}
                 </button>
+              </div>
+            )}
+
+            {/* Inline status message — visible right here in the card */}
+            {cardMsg && (
+              <div style={{ marginTop: 4, padding: '10px 14px', borderRadius: 8, fontSize: 13, fontWeight: 600, lineHeight: 1.5,
+                background: cardMsg.type === 'success' ? '#f0fdf4' : cardMsg.type === 'info' ? '#fefce8' : '#fef2f2',
+                color: cardMsg.type === 'success' ? '#16a34a' : cardMsg.type === 'info' ? '#92400e' : '#dc2626',
+                border: `1px solid ${cardMsg.type === 'success' ? '#bbf7d0' : cardMsg.type === 'info' ? '#fde68a' : '#fecaca'}` }}>
+                {cardMsg.text}
               </div>
             )}
           </div>
@@ -186,9 +196,9 @@ export default function Admin() {
   const [tab,        setTab]        = useState('pending')
   const [subs,       setSubs]       = useState([])
   const [counts,     setCounts]     = useState({ pending: 0, approved: 0, rejected: 0, extracted: 0 })
-  const [fetching,   setFetching]   = useState(false)
-  const [extracting, setExtracting] = useState(null)  // submission id being extracted
-  const [extractMsg, setExtractMsg] = useState(null)  // { type: 'success'|'error', text }
+  const [fetching,    setFetching]    = useState(false)
+  const [extracting,  setExtracting]  = useState(null)
+  const [cardMsgs,    setCardMsgs]    = useState({})  // { [submissionId]: { type, text } }
 
   const isAdmin = user?.email === ADMIN_EMAIL
 
@@ -240,14 +250,15 @@ export default function Admin() {
     fetchAll(); fetchSubs(tab)
   }
 
+  const setMsg = (id, msg) => setCardMsgs(m => ({ ...m, [id]: msg }))
+
   const handleExtract = async (id, manualText = null) => {
     setExtracting(id)
-    setExtractMsg(null)
+    setMsg(id, null)
     try {
       const { data: { session } } = await supabase.auth.getSession()
       if (!session?.access_token) throw new Error('Not authenticated — please log in again')
 
-      // Ping health endpoint; if backend is sleeping, poll until it wakes (Render free tier cold start)
       const pingHealth = async (timeoutMs = 6000) => {
         const ctrl = new AbortController()
         const t = setTimeout(() => ctrl.abort(), timeoutMs)
@@ -262,21 +273,19 @@ export default function Admin() {
         const MAX_MS = 70000
         const POLL_MS = 5000
         const started = Date.now()
-        setExtractMsg({ type: 'info', text: '⏳ Server is waking up (cold start — usually 30–60s). Please wait…' })
+        setMsg(id, { type: 'info', text: '⏳ Server waking up (cold start ~30–60s)…' })
         while (!alive && (Date.now() - started) < MAX_MS) {
           await new Promise(r => setTimeout(r, POLL_MS))
           const elapsed = Math.round((Date.now() - started) / 1000)
-          setExtractMsg({ type: 'info', text: `⏳ Waking up server… ${elapsed}s elapsed (up to 60s)` })
+          setMsg(id, { type: 'info', text: `⏳ Waking up… ${elapsed}s elapsed` })
           alive = await pingHealth(8000)
         }
-        if (!alive) throw new Error('Server did not wake up in time. Please try again in a moment.')
-        setExtractMsg(null)
+        if (!alive) throw new Error('Server did not wake up in time. Please try again.')
       }
 
-      const isManual = manualText && manualText.trim()
-      setExtractMsg({ type: 'info', text: isManual ? '⏳ Analysing ingredients with AI…' : '⏳ Reading label with AI vision…' })
+      const isManual = !!(manualText && manualText.trim())
+      setMsg(id, { type: 'info', text: isManual ? '⏳ Analysing ingredients with AI…' : '⏳ Reading label with AI vision…' })
 
-      // 3-minute timeout for the extract call (Gemini can be slow)
       const ctrl = new AbortController()
       const timer = setTimeout(() => ctrl.abort(), 180000)
 
@@ -300,18 +309,18 @@ export default function Admin() {
 
       const data = await res.json()
       if (!res.ok) throw new Error(data.detail || `Server error ${res.status}`)
-      setExtractMsg({ type: 'success', text: `✓ "${data.product_name}" added to DB (score: ${data.awareness_score}, ${data.ingredients_count} ingredients)` })
+      setMsg(id, { type: 'success', text: `✓ Added "${data.product_name}" (score: ${data.awareness_score}, ${data.ingredients_count} ingredients)` })
       fetchAll(); fetchSubs(tab)
     } catch (err) {
       const msg = err.message || ''
-      const isNetwork = msg.toLowerCase().includes('failed to fetch') || msg.toLowerCase().includes('networkerror') || msg.toLowerCase().includes('load failed')
       const isTimeout = err.name === 'AbortError'
-      setExtractMsg({
+      const isNetwork = msg.toLowerCase().includes('failed to fetch') || msg.toLowerCase().includes('networkerror') || msg.toLowerCase().includes('load failed')
+      setMsg(id, {
         type: 'error',
         text: isTimeout
-          ? '✕ Request timed out (>3 min). If AI vision fails, try the "Enter manually" option.'
+          ? '✕ Timed out. Use "Enter ingredients manually" below.'
           : isNetwork
-          ? '✕ Cannot reach backend. Try again — or use the "Enter manually" option below.'
+          ? '✕ Cannot reach backend. Try again in a moment.'
           : `✕ ${msg}`,
       })
     } finally {
@@ -366,16 +375,6 @@ export default function Admin() {
         ))}
       </div>
 
-      {/* Extract result message */}
-      {extractMsg && (
-        <div style={{ marginBottom: 16, padding: '12px 16px', borderRadius: 10, fontSize: 13, fontWeight: 600,
-          background: extractMsg.type === 'success' ? '#f0fdf4' : extractMsg.type === 'info' ? '#fefce8' : '#fef2f2',
-          color: extractMsg.type === 'success' ? '#16a34a' : extractMsg.type === 'info' ? '#92400e' : '#dc2626',
-          border: `1px solid ${extractMsg.type === 'success' ? '#bbf7d0' : extractMsg.type === 'info' ? '#fde68a' : '#fecaca'}` }}>
-          {extractMsg.text}
-        </div>
-      )}
-
       {/* Grid / empty / loading */}
       {fetching ? (
         <div style={{ textAlign: 'center', padding: '48px 0', color: '#9ca3af', fontSize: 15 }}>Loading…</div>
@@ -387,7 +386,7 @@ export default function Admin() {
       ) : (
         <div style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : 'repeat(auto-fill, minmax(300px, 1fr))', gap: 16 }}>
           {subs.map(s => (
-            <SubmissionCard key={s.id} sub={s} onApprove={handleApprove} onReject={handleReject} onExtract={handleExtract} extracting={extracting} />
+            <SubmissionCard key={s.id} sub={s} onApprove={handleApprove} onReject={handleReject} onExtract={handleExtract} extracting={extracting} cardMsg={cardMsgs[s.id] || null} />
           ))}
         </div>
       )}
