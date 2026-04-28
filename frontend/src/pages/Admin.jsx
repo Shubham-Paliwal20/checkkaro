@@ -8,60 +8,65 @@ const STATUS_TABS  = ['pending', 'approved', 'rejected', 'extracted']
 const STATUS_COLOR = { pending: '#f59e0b', approved: '#16a34a', rejected: '#dc2626', extracted: '#7c3aed' }
 const STATUS_BG    = { pending: '#fef3c7', approved: '#f0fdf4', rejected: '#fef2f2', extracted: '#f5f3ff' }
 
-// ── Client-side Gemini helpers (no backend needed for extraction) ─────────────
-const GEMINI_KEY = import.meta.env.VITE_GEMINI_API_KEY || ''
-const GEMINI_URL = 'https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent'
+// ── Client-side Claude (Anthropic) helpers — no backend needed ───────────────
+const CLAUDE_KEY   = import.meta.env.VITE_ANTHROPIC_API_KEY || ''
+const CLAUDE_URL   = 'https://api.anthropic.com/v1/messages'
+const CLAUDE_MODEL = 'claude-3-5-haiku-20241022'
+const CLAUDE_HDR   = {
+  'x-api-key': CLAUDE_KEY,
+  'anthropic-version': '2023-06-01',
+  'anthropic-dangerous-direct-browser-access': 'true',
+  'content-type': 'application/json',
+}
 
-const ANALYSIS_PROMPT_PREFIX = `You are an ingredient classification specialist for CheckKaro, an Indian consumer awareness platform.
+const CLASSIFICATION_SYSTEM = `You are an ingredient classification specialist for CheckKaro, an Indian consumer awareness platform.
 Classification: generally_recognised | worth_knowing | commonly_questioned
 Score from 100: worth_knowing -8pts each, commonly_questioned -20pts each, banned in EU/Canada -15pts each.
-Language: never use safe/unsafe/dangerous/toxic/cancer. Use: generally recognised / worth knowing / commonly questioned.
-End summary with: "This information is for general awareness based on publicly available regulatory data. It is not a health assessment or medical advice."
+Language rules: never use safe/unsafe/dangerous/toxic/cancer. Use: generally recognised / worth knowing / commonly questioned.
+End summary with: "This information is for general awareness based on publicly available regulatory data. It is not a health assessment or medical advice."`
 
-`
-
-async function geminiVision(imageUrl, productName) {
-  if (!GEMINI_KEY) return 'NOT_VISIBLE'
+async function claudeVision(imageUrl, productName) {
+  if (!CLAUDE_KEY) return 'NOT_VISIBLE'
   try {
-    const imgResp = await fetch(imageUrl)
-    if (!imgResp.ok) return 'NOT_VISIBLE'
-    const blob = await imgResp.blob()
-    const base64 = await new Promise((res, rej) => {
-      const r = new FileReader(); r.onload = () => res(r.result.split(',')[1]); r.onerror = rej; r.readAsDataURL(blob)
-    })
-    const resp = await fetch(`${GEMINI_URL}?key=${GEMINI_KEY}`, {
-      method: 'POST', headers: { 'Content-Type': 'application/json' },
+    const resp = await fetch(CLAUDE_URL, {
+      method: 'POST',
+      headers: { ...CLAUDE_HDR, 'x-api-key': CLAUDE_KEY },
       body: JSON.stringify({
-        contents: [{ parts: [
-          { inline_data: { mime_type: blob.type || 'image/jpeg', data: base64 } },
-          { text: `This is a "${productName}" product label. Extract ONLY the ingredients list text exactly as printed. If not visible, return: NOT_VISIBLE` },
-        ] }],
-        generationConfig: { temperature: 0.1, maxOutputTokens: 1000 },
+        model: CLAUDE_MODEL,
+        max_tokens: 1024,
+        messages: [{
+          role: 'user',
+          content: [
+            { type: 'image', source: { type: 'url', url: imageUrl } },
+            { type: 'text', text: `This is a "${productName}" product label. Extract ONLY the ingredients list text exactly as printed on the label. Return ONLY the raw text. If the ingredients section is not visible, return: NOT_VISIBLE` },
+          ],
+        }],
       }),
     })
     const data = await resp.json()
-    return data.candidates?.[0]?.content?.parts?.[0]?.text?.trim() || 'NOT_VISIBLE'
+    if (!resp.ok) return 'NOT_VISIBLE'
+    return data.content?.[0]?.text?.trim() || 'NOT_VISIBLE'
   } catch { return 'NOT_VISIBLE' }
 }
 
-async function geminiAnalyze(productName, ingredientsText) {
-  if (!GEMINI_KEY) throw new Error('VITE_GEMINI_API_KEY not set — add it in Vercel Dashboard → Settings → Environment Variables (same key as in Render)')
-  const prompt = `${ANALYSIS_PROMPT_PREFIX}Product: ${productName}
-Ingredients from label: ${ingredientsText}
-
-Classify each ingredient. Return ONLY valid JSON, no markdown:
-{"brand":"string","category":"string","awareness_score":75,"summary":"string","fssai_note":"string","verdict":"string","recommendation":"string","ingredients":[{"name":"string","aliases":"string","classification":"generally_recognised","one_line_note":"string","regulatory_note":"string"}]}`
-
-  const resp = await fetch(`${GEMINI_URL}?key=${GEMINI_KEY}`, {
-    method: 'POST', headers: { 'Content-Type': 'application/json' },
+async function claudeAnalyze(productName, ingredientsText) {
+  if (!CLAUDE_KEY) throw new Error('VITE_ANTHROPIC_API_KEY not set — add it in Vercel Dashboard → Settings → Environment Variables')
+  const resp = await fetch(CLAUDE_URL, {
+    method: 'POST',
+    headers: { ...CLAUDE_HDR, 'x-api-key': CLAUDE_KEY },
     body: JSON.stringify({
-      contents: [{ parts: [{ text: prompt }] }],
-      generationConfig: { temperature: 0.3, maxOutputTokens: 8000 },
+      model: CLAUDE_MODEL,
+      max_tokens: 8000,
+      system: CLASSIFICATION_SYSTEM,
+      messages: [{
+        role: 'user',
+        content: `Product: ${productName}\nIngredients from label: ${ingredientsText}\n\nClassify each ingredient. Return ONLY valid JSON, no markdown:\n{"brand":"string","category":"string","awareness_score":75,"summary":"string","fssai_note":"string","verdict":"string","recommendation":"string","ingredients":[{"name":"string","aliases":"string","classification":"generally_recognised","one_line_note":"string","regulatory_note":"string"}]}`,
+      }],
     }),
   })
-  if (!resp.ok) { const e = await resp.json(); throw new Error(`Gemini: ${e.error?.message || resp.status}`) }
   const data = await resp.json()
-  let text = data.candidates?.[0]?.content?.parts?.[0]?.text || ''
+  if (!resp.ok) throw new Error(`Claude: ${data.error?.message || resp.status}`)
+  let text = data.content?.[0]?.text || ''
   text = text.trim()
   if (text.startsWith('```json')) text = text.slice(7)
   if (text.startsWith('```')) text = text.slice(3)
@@ -340,9 +345,9 @@ export default function Admin() {
         if (!images.length) throw new Error('No images in submission. Use "Enter manually" option.')
         if (!GEMINI_KEY) throw new Error('VITE_GEMINI_API_KEY not configured in Vercel environment variables.')
         const ordered = images.length > 1 ? [images[1], images[0], ...images.slice(2)] : images
-        setMsg(id, { type: 'info', text: '⏳ Reading label with AI vision…' })
+        setMsg(id, { type: 'info', text: '⏳ Reading label with Claude Vision…' })
         for (const url of ordered) {
-          const t = await geminiVision(url, productName)
+          const t = await claudeVision(url, productName)
           if (t && t !== 'NOT_VISIBLE') { ingredientsText = t; break }
         }
         if (!ingredientsText) {
@@ -352,26 +357,9 @@ export default function Admin() {
         }
       }
 
-      // ── Analysis: classify ingredients (with 1 auto-retry on rate limit) ──
-      let analysis
-      let retryLeft = 1
-      while (true) {
-        setMsg(id, { type: 'info', text: '⏳ Classifying ingredients with AI…' })
-        try {
-          analysis = await geminiAnalyze(productName, ingredientsText)
-          break
-        } catch (e) {
-          const m = e.message?.match(/retry in ([\d.]+)s/i)
-          if (m && retryLeft-- > 0) {
-            let secs = Math.ceil(parseFloat(m[1])) + 3
-            while (secs > 0) {
-              setMsg(id, { type: 'info', text: `⏳ Gemini rate limit — retrying in ${secs}s…` })
-              await new Promise(r => setTimeout(r, 1000))
-              secs--
-            }
-          } else throw e
-        }
-      }
+      // ── Analysis: classify ingredients with Claude ────────────────────────
+      setMsg(id, { type: 'info', text: '⏳ Classifying ingredients with Claude AI…' })
+      const analysis = await claudeAnalyze(productName, ingredientsText)
 
       // ── Save directly to Supabase ─────────────────────────────────────────
       setMsg(id, { type: 'info', text: '⏳ Saving to database…' })
