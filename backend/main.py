@@ -16,8 +16,8 @@ load_dotenv()
 # Slots: { ip: [timestamp, ...] }
 _rate_store: dict = defaultdict(list)
 
-RATE_LIMIT_NORMAL   = 60   # requests
-RATE_LIMIT_ADMIN    = 10   # tighter for admin/extraction
+RATE_LIMIT_NORMAL   = 60   # requests per window per IP
+RATE_LIMIT_ADMIN    = 60   # admin endpoints protected by JWT; no extra IP throttle needed
 RATE_WINDOW_SECONDS = 60
 
 
