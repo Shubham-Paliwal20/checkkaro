@@ -321,12 +321,15 @@ export default function Admin() {
       throw new Error('Timed out. The AI may still be working — refresh in a moment.')
 
     } catch (err) {
-      const msg = err.message || ''
+      const msg = err.message || 'Unknown error'
       const isNetwork = msg.toLowerCase().includes('failed to fetch') || msg.toLowerCase().includes('networkerror') || msg.toLowerCase().includes('load failed')
       setMsg(id, {
         type: 'error',
-        text: isNetwork ? '✕ Cannot reach backend — try again in a moment.' : `✕ ${msg}`,
+        text: isNetwork
+          ? '✕ CORS/network error — backend deployed? Check Render logs. Try the manual entry option.'
+          : `✕ ${msg}`,
       })
+      console.error('[Extract error]', err)
     } finally {
       setExtracting(null)
     }

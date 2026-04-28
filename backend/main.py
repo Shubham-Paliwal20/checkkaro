@@ -77,27 +77,16 @@ app = FastAPI(
     redoc_url="/redoc" if os.getenv("ENV", "development") != "production" else None,
 )
 
-# CORS — no wildcard fallback; must be explicitly configured
-_raw_origins = os.getenv("ALLOWED_ORIGINS", "")
-allowed_origins = [o.strip() for o in _raw_origins.split(",") if o.strip()]
-if not allowed_origins:
-    raise RuntimeError(
-        "ALLOWED_ORIGINS environment variable is not set. "
-        "Set it to a comma-separated list of allowed origins (e.g. https://yourcomain.com)."
-    )
-
-# Middleware order: last added = outermost = first to see requests / last to wrap responses.
-# CORSMiddleware must be outermost so it adds CORS headers to ALL responses,
-# including 429s from RateLimitMiddleware — otherwise browser sees a CORS error
-# and reports "Failed to fetch" instead of the real status code.
+# CORS — open to all origins; auth is enforced via JWT bearer tokens, not cookies
+# allow_credentials must be False when allow_origins=["*"] (CORS spec requirement)
 app.add_middleware(SecurityHeadersMiddleware)
 app.add_middleware(RateLimitMiddleware)
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=allowed_origins,
-    allow_credentials=True,
+    allow_origins=["*"],
+    allow_credentials=False,
     allow_methods=["GET", "POST", "OPTIONS"],
-    allow_headers=["Content-Type", "Authorization"],
+    allow_headers=["*"],
 )
 
 # ── Routers ───────────────────────────────────────────────────────────────────
