@@ -274,6 +274,7 @@ export default function Admin() {
   const [extracting,    setExtracting]    = useState(null)
   const [cardMsgs,      setCardMsgs]      = useState({})
   const [openManualIds, setOpenManualIds] = useState(new Set())
+  const [fetchError,    setFetchError]    = useState(null)
 
   const isAdmin = user?.email === ADMIN_EMAIL
 
@@ -287,14 +288,15 @@ export default function Admin() {
 
   const fetchSubs = async (status) => {
     setFetching(true)
+    setFetchError(null)
     try {
       const { data, error } = await supabase
         .from('product_submissions').select('*')
         .eq('status', status).order('created_at', { ascending: false })
-      if (error) console.error('[Admin] fetchSubs:', error.message, error.code)
+      if (error) setFetchError(`DB error: ${error.message} (${error.code})`)
       setSubs(data || [])
     } catch (e) {
-      console.error('[Admin] fetchSubs exception:', e)
+      setFetchError(`Exception: ${e.message}`)
       setSubs([])
     } finally {
       setFetching(false)
@@ -304,24 +306,24 @@ export default function Admin() {
   const fetchAll = async () => {
     try {
       const { data, error } = await supabase.from('product_submissions').select('status')
-      if (error) { console.error('[Admin] fetchAll:', error.message, error.code); return }
+      if (error) { setFetchError(`Count error: ${error.message}`); return }
       if (!data) return
       const c = { pending: 0, approved: 0, rejected: 0, extracted: 0 }
       data.forEach(r => { if (c[r.status] !== undefined) c[r.status]++ })
       setCounts(c)
     } catch (e) {
-      console.error('[Admin] fetchAll exception:', e)
+      setFetchError(`Count exception: ${e.message}`)
     }
   }
 
   const handleApprove = async (id) => {
     const { error } = await supabase.from('product_submissions').update({ status: 'approved' }).eq('id', id)
-    if (error) console.error('[Admin] approve:', error.message)
+    if (error) { setFetchError(`Approve failed: ${error.message} — check Supabase RLS policies`); return }
     fetchAll(); fetchSubs(tab)
   }
   const handleReject = async (id) => {
     const { error } = await supabase.from('product_submissions').update({ status: 'rejected' }).eq('id', id)
-    if (error) console.error('[Admin] reject:', error.message)
+    if (error) { setFetchError(`Reject failed: ${error.message}`); return }
     fetchAll(); fetchSubs(tab)
   }
 
@@ -343,7 +345,7 @@ export default function Admin() {
       // ── Vision: read ingredients from image ──────────────────────────────
       if (!ingredientsText) {
         if (!images.length) throw new Error('No images in submission. Use "Enter manually" option.')
-        if (!GEMINI_KEY) throw new Error('VITE_GEMINI_API_KEY not configured in Vercel environment variables.')
+        if (!CLAUDE_KEY) throw new Error('VITE_ANTHROPIC_API_KEY not configured in Vercel environment variables.')
         const ordered = images.length > 1 ? [images[1], images[0], ...images.slice(2)] : images
         setMsg(id, { type: 'info', text: '⏳ Reading label with Claude Vision…' })
         for (const url of ordered) {
@@ -417,6 +419,11 @@ export default function Admin() {
         <p style={{ color: '#6b7280', fontSize: 13, margin: 0, wordBreak: 'break-all' }}>
           Review submissions · <strong>{user.email}</strong>
         </p>
+        {fetchError && (
+          <div style={{ marginTop: 8, padding: '8px 12px', background: '#fef2f2', border: '1px solid #fecaca', borderRadius: 8, fontSize: 12, color: '#dc2626', fontWeight: 600 }}>
+            ⚠️ {fetchError}
+          </div>
+        )}
       </div>
 
       {/* Stats */}
