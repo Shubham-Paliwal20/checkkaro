@@ -4,10 +4,70 @@ import { useAuth } from '../context/AuthContext'
 import { supabase } from '../lib/supabaseClient'
 
 const ADMIN_EMAIL  = 'shubhampaliwal5@gmail.com'
-const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:8000'
 const STATUS_TABS  = ['pending', 'approved', 'rejected', 'extracted']
 const STATUS_COLOR = { pending: '#f59e0b', approved: '#16a34a', rejected: '#dc2626', extracted: '#7c3aed' }
 const STATUS_BG    = { pending: '#fef3c7', approved: '#f0fdf4', rejected: '#fef2f2', extracted: '#f5f3ff' }
+
+// ── Client-side Gemini helpers (no backend needed for extraction) ─────────────
+const GEMINI_KEY = import.meta.env.VITE_GEMINI_API_KEY || ''
+const GEMINI_URL = 'https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent'
+
+const ANALYSIS_PROMPT_PREFIX = `You are an ingredient classification specialist for CheckKaro, an Indian consumer awareness platform.
+Classification: generally_recognised | worth_knowing | commonly_questioned
+Score from 100: worth_knowing -8pts each, commonly_questioned -20pts each, banned in EU/Canada -15pts each.
+Language: never use safe/unsafe/dangerous/toxic/cancer. Use: generally recognised / worth knowing / commonly questioned.
+End summary with: "This information is for general awareness based on publicly available regulatory data. It is not a health assessment or medical advice."
+
+`
+
+async function geminiVision(imageUrl, productName) {
+  if (!GEMINI_KEY) return 'NOT_VISIBLE'
+  try {
+    const imgResp = await fetch(imageUrl)
+    if (!imgResp.ok) return 'NOT_VISIBLE'
+    const blob = await imgResp.blob()
+    const base64 = await new Promise((res, rej) => {
+      const r = new FileReader(); r.onload = () => res(r.result.split(',')[1]); r.onerror = rej; r.readAsDataURL(blob)
+    })
+    const resp = await fetch(`${GEMINI_URL}?key=${GEMINI_KEY}`, {
+      method: 'POST', headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        contents: [{ parts: [
+          { inline_data: { mime_type: blob.type || 'image/jpeg', data: base64 } },
+          { text: `This is a "${productName}" product label. Extract ONLY the ingredients list text exactly as printed. If not visible, return: NOT_VISIBLE` },
+        ] }],
+        generationConfig: { temperature: 0.1, maxOutputTokens: 1000 },
+      }),
+    })
+    const data = await resp.json()
+    return data.candidates?.[0]?.content?.parts?.[0]?.text?.trim() || 'NOT_VISIBLE'
+  } catch { return 'NOT_VISIBLE' }
+}
+
+async function geminiAnalyze(productName, ingredientsText) {
+  if (!GEMINI_KEY) throw new Error('VITE_GEMINI_API_KEY not set — add it in Vercel Dashboard → Settings → Environment Variables (same key as in Render)')
+  const prompt = `${ANALYSIS_PROMPT_PREFIX}Product: ${productName}
+Ingredients from label: ${ingredientsText}
+
+Classify each ingredient. Return ONLY valid JSON, no markdown:
+{"brand":"string","category":"string","awareness_score":75,"summary":"string","fssai_note":"string","verdict":"string","recommendation":"string","ingredients":[{"name":"string","aliases":"string","classification":"generally_recognised","one_line_note":"string","regulatory_note":"string"}]}`
+
+  const resp = await fetch(`${GEMINI_URL}?key=${GEMINI_KEY}`, {
+    method: 'POST', headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      contents: [{ parts: [{ text: prompt }] }],
+      generationConfig: { temperature: 0.3, maxOutputTokens: 8000 },
+    }),
+  })
+  if (!resp.ok) { const e = await resp.json(); throw new Error(`Gemini: ${e.error?.message || resp.status}`) }
+  const data = await resp.json()
+  let text = data.candidates?.[0]?.content?.parts?.[0]?.text || ''
+  text = text.trim()
+  if (text.startsWith('```json')) text = text.slice(7)
+  if (text.startsWith('```')) text = text.slice(3)
+  if (text.endsWith('```')) text = text.slice(0, -3)
+  return JSON.parse(text.trim())
+}
 
 function formatDate(iso) {
   if (!iso) return ''
@@ -256,79 +316,59 @@ export default function Admin() {
     setExtracting(id)
     setMsg(id, null)
     try {
-      const { data: { session } } = await supabase.auth.getSession()
-      if (!session?.access_token) throw new Error('Not authenticated — please log in again')
+      // Get submission directly from Supabase — no backend needed
+      const { data: sub, error: subErr } = await supabase
+        .from('product_submissions').select('*').eq('id', id).single()
+      if (subErr || !sub) throw new Error('Could not load submission: ' + (subErr?.message || 'not found'))
 
-      // Wake up Render backend if sleeping
-      const pingHealth = async (timeoutMs = 6000) => {
-        const ctrl = new AbortController()
-        const t = setTimeout(() => ctrl.abort(), timeoutMs)
-        try {
-          const r = await fetch(`${API_BASE_URL}/health`, { signal: ctrl.signal })
-          return r.ok
-        } catch { return false } finally { clearTimeout(t) }
-      }
+      const images = sub.images || []
+      const productName = sub.product_name_searched || 'Unknown Product'
+      let ingredientsText = manualText?.trim() || ''
 
-      let alive = await pingHealth(5000)
-      if (!alive) {
-        const MAX_MS = 70000; const POLL_MS = 5000; const started = Date.now()
-        setMsg(id, { type: 'info', text: '⏳ Server waking up (cold start ~30–60s)…' })
-        while (!alive && (Date.now() - started) < MAX_MS) {
-          await new Promise(r => setTimeout(r, POLL_MS))
-          setMsg(id, { type: 'info', text: `⏳ Waking up… ${Math.round((Date.now() - started) / 1000)}s` })
-          alive = await pingHealth(8000)
+      // ── Vision: read ingredients from image ──────────────────────────────
+      if (!ingredientsText) {
+        if (!images.length) throw new Error('No images in submission. Use "Enter manually" option.')
+        if (!GEMINI_KEY) throw new Error('VITE_GEMINI_API_KEY not configured in Vercel environment variables.')
+        const ordered = images.length > 1 ? [images[1], images[0], ...images.slice(2)] : images
+        setMsg(id, { type: 'info', text: '⏳ Reading label with AI vision…' })
+        for (const url of ordered) {
+          const t = await geminiVision(url, productName)
+          if (t && t !== 'NOT_VISIBLE') { ingredientsText = t; break }
         }
-        if (!alive) throw new Error('Server did not wake up. Please try again.')
+        if (!ingredientsText) throw new Error('Could not read ingredients from images. Use "Enter manually" and paste the label text.')
       }
 
-      const isManual = !!(manualText && manualText.trim())
-      setMsg(id, { type: 'info', text: isManual ? '⏳ Sending to AI for analysis…' : '⏳ Starting AI vision…' })
+      // ── Analysis: classify ingredients ────────────────────────────────────
+      setMsg(id, { type: 'info', text: '⏳ Classifying ingredients with AI…' })
+      const analysis = await geminiAnalyze(productName, ingredientsText)
 
-      // POST starts the background task and returns immediately with a task_id
-      const startRes = await fetch(`${API_BASE_URL}/api/admin/extract-product`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${session.access_token}` },
-        body: JSON.stringify({ submission_id: id, ...(isManual ? { ingredients_text: manualText.trim() } : {}) }),
-      })
-      const startData = await startRes.json()
-      if (!startRes.ok) throw new Error(startData.detail || `Server error ${startRes.status}`)
-
-      const { task_id } = startData
-
-      // Poll every 3 seconds for up to 3 minutes
-      const pollStart = Date.now()
-      while (Date.now() - pollStart < 180000) {
-        await new Promise(r => setTimeout(r, 3000))
-        const elapsed = Math.round((Date.now() - pollStart) / 1000)
-
-        const pollRes = await fetch(`${API_BASE_URL}/api/admin/task/${task_id}`, {
-          headers: { 'Authorization': `Bearer ${session.access_token}` },
-        })
-        if (!pollRes.ok) { setMsg(id, { type: 'info', text: `⏳ AI working… ${elapsed}s` }); continue }
-
-        const task = await pollRes.json()
-
-        if (task.status === 'done') {
-          const r = task.result
-          setMsg(id, { type: 'success', text: `✓ Added "${r.product_name}" (score: ${r.awareness_score}, ${r.ingredients_count} ingredients)` })
-          fetchAll(); fetchSubs(tab)
-          return
-        }
-        if (task.status === 'error') throw new Error(task.error || 'Extraction failed')
-
-        setMsg(id, { type: 'info', text: `⏳ AI working… ${elapsed}s` })
+      // ── Save directly to Supabase ─────────────────────────────────────────
+      setMsg(id, { type: 'info', text: '⏳ Saving to database…' })
+      const productData = {
+        name: productName,
+        brand: (analysis.brand || 'Unknown').slice(0, 100),
+        category: (analysis.category || 'General').slice(0, 100),
+        image_url: images[0] || null,
+        awareness_score: Math.max(0, Math.min(100, parseInt(analysis.awareness_score) || 50)),
+        summary: (analysis.summary || '').slice(0, 2000),
+        fssai_note: (analysis.fssai_note || '').slice(0, 500),
+        verdict: (analysis.verdict || '').slice(0, 200),
+        recommendation: (analysis.recommendation || '').slice(0, 500),
+        ingredients: analysis.ingredients || [],
+        ingredients_raw: ingredientsText.slice(0, 5000),
+        submission_id: id,
       }
-      throw new Error('Timed out. The AI may still be working — refresh in a moment.')
+
+      const { error: insertErr } = await supabase.from('ai_extracted_products').insert(productData)
+      if (insertErr) throw new Error('Save failed: ' + insertErr.message)
+
+      await supabase.from('product_submissions').update({ status: 'extracted' }).eq('id', id)
+
+      setMsg(id, { type: 'success', text: `✓ Added "${productName}" — score ${analysis.awareness_score}, ${(analysis.ingredients || []).length} ingredients` })
+      fetchAll(); fetchSubs(tab)
 
     } catch (err) {
-      const msg = err.message || 'Unknown error'
-      const isNetwork = msg.toLowerCase().includes('failed to fetch') || msg.toLowerCase().includes('networkerror') || msg.toLowerCase().includes('load failed')
-      setMsg(id, {
-        type: 'error',
-        text: isNetwork
-          ? '✕ CORS/network error — backend deployed? Check Render logs. Try the manual entry option.'
-          : `✕ ${msg}`,
-      })
+      setMsg(id, { type: 'error', text: `✕ ${err.message || 'Unknown error'}` })
       console.error('[Extract error]', err)
     } finally {
       setExtracting(null)
