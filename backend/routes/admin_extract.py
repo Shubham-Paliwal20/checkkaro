@@ -4,7 +4,7 @@ from fastapi import APIRouter, HTTPException, Header, BackgroundTasks
 from pydantic import BaseModel
 from typing import Optional
 from db.supabase_client import supabase
-from services.claude_service import extract_ingredients_from_image, analyze_ingredients
+from services.gemini_service import extract_ingredients_from_image, analyze_ingredients_list as analyze_ingredients
 
 router = APIRouter()
 
