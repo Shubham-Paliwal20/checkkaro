@@ -227,7 +227,14 @@ export default function Admin() {
       setExtractMsg({ type: 'success', text: `✓ "${data.product_name}" added to DB (score: ${data.awareness_score}, ${data.ingredients_count} ingredients)` })
       fetchAll(); fetchSubs(tab)
     } catch (err) {
-      setExtractMsg({ type: 'error', text: `✕ ${err.message}` })
+      const msg = err.message || ''
+      const isNetwork = msg.toLowerCase().includes('failed to fetch') || msg.toLowerCase().includes('networkerror') || msg.toLowerCase().includes('load failed')
+      setExtractMsg({
+        type: 'error',
+        text: isNetwork
+          ? `✕ Cannot reach backend server (${API_BASE_URL}). Start the backend with: cd backend && uvicorn main:app --reload`
+          : `✕ ${msg}`,
+      })
     } finally {
       setExtracting(null)
     }

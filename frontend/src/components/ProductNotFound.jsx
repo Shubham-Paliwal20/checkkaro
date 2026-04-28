@@ -6,6 +6,27 @@ const MIN_IMAGES = 2
 const MAX_IMAGES = 3
 const MAX_FILE_MB = 8
 
+// Resize + JPEG-compress a File/Blob on a canvas before uploading.
+// Keeps images under ~350 KB so uploads are 10-20x faster.
+function compressImage(file, maxDim = 1400, quality = 0.82) {
+  return new Promise((resolve) => {
+    const url = URL.createObjectURL(file)
+    const img = new Image()
+    img.onload = () => {
+      URL.revokeObjectURL(url)
+      const scale = Math.min(1, maxDim / Math.max(img.width, img.height))
+      const w = Math.round(img.width * scale)
+      const h = Math.round(img.height * scale)
+      const canvas = document.createElement('canvas')
+      canvas.width = w; canvas.height = h
+      canvas.getContext('2d').drawImage(img, 0, 0, w, h)
+      canvas.toBlob(blob => resolve(blob || file), 'image/jpeg', quality)
+    }
+    img.onerror = () => { URL.revokeObjectURL(url); resolve(file) }
+    img.src = url
+  })
+}
+
 const IMAGE_SLOTS = [
   { label: 'Front',  icon: '🏷️', hint: 'Front of product' },
   { label: 'Back',   icon: '📋', hint: 'Back / ingredients' },
@@ -73,13 +94,16 @@ export default function ProductNotFound({ productName }) {
     setLoading(true); setError('')
 
     try {
-      const imageUrls = []
-      for (const file of images) {
-        const ext  = file.name.split('.').pop()
-        const path = `${user.id}/${Date.now()}_${Math.random().toString(36).slice(2)}.${ext}`
+      // Step 1: compress all images in parallel (canvas resize → JPEG ~300 KB each)
+      const compressed = await Promise.all(images.map(f => compressImage(f)))
+
+      // Step 2: upload all compressed images in parallel
+      const ts = Date.now()
+      const imageUrls = await Promise.all(compressed.map(async (blob, i) => {
+        const path = `${user.id}/${ts}_${i}.jpg`
         const { error: uploadErr } = await supabase.storage
           .from('product-submissions')
-          .upload(path, file, { upsert: false })
+          .upload(path, blob, { contentType: 'image/jpeg', upsert: false })
         if (uploadErr) {
           if (uploadErr.message?.toLowerCase().includes('bucket')) {
             throw new Error('Image storage is not set up yet. Please contact the admin.')
@@ -89,8 +113,8 @@ export default function ProductNotFound({ productName }) {
         const { data: urlData } = supabase.storage
           .from('product-submissions')
           .getPublicUrl(path)
-        imageUrls.push(urlData.publicUrl)
-      }
+        return urlData.publicUrl
+      }))
 
       const { error: dbErr } = await supabase.from('product_submissions').insert({
         user_id:               user.id,
