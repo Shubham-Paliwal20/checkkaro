@@ -259,6 +259,7 @@ export default function Admin() {
       const { data: { session } } = await supabase.auth.getSession()
       if (!session?.access_token) throw new Error('Not authenticated — please log in again')
 
+      // Wake up Render backend if sleeping
       const pingHealth = async (timeoutMs = 6000) => {
         const ctrl = new AbortController()
         const t = setTimeout(() => ctrl.abort(), timeoutMs)
@@ -270,58 +271,61 @@ export default function Admin() {
 
       let alive = await pingHealth(5000)
       if (!alive) {
-        const MAX_MS = 70000
-        const POLL_MS = 5000
-        const started = Date.now()
+        const MAX_MS = 70000; const POLL_MS = 5000; const started = Date.now()
         setMsg(id, { type: 'info', text: '⏳ Server waking up (cold start ~30–60s)…' })
         while (!alive && (Date.now() - started) < MAX_MS) {
           await new Promise(r => setTimeout(r, POLL_MS))
-          const elapsed = Math.round((Date.now() - started) / 1000)
-          setMsg(id, { type: 'info', text: `⏳ Waking up… ${elapsed}s elapsed` })
+          setMsg(id, { type: 'info', text: `⏳ Waking up… ${Math.round((Date.now() - started) / 1000)}s` })
           alive = await pingHealth(8000)
         }
-        if (!alive) throw new Error('Server did not wake up in time. Please try again.')
+        if (!alive) throw new Error('Server did not wake up. Please try again.')
       }
 
       const isManual = !!(manualText && manualText.trim())
-      setMsg(id, { type: 'info', text: isManual ? '⏳ Analysing ingredients with AI…' : '⏳ Reading label with AI vision…' })
+      setMsg(id, { type: 'info', text: isManual ? '⏳ Sending to AI for analysis…' : '⏳ Starting AI vision…' })
 
-      const ctrl = new AbortController()
-      const timer = setTimeout(() => ctrl.abort(), 180000)
+      // POST starts the background task and returns immediately with a task_id
+      const startRes = await fetch(`${API_BASE_URL}/api/admin/extract-product`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${session.access_token}` },
+        body: JSON.stringify({ submission_id: id, ...(isManual ? { ingredients_text: manualText.trim() } : {}) }),
+      })
+      const startData = await startRes.json()
+      if (!startRes.ok) throw new Error(startData.detail || `Server error ${startRes.status}`)
 
-      let res
-      try {
-        res = await fetch(`${API_BASE_URL}/api/admin/extract-product`, {
-          method: 'POST',
-          signal: ctrl.signal,
-          headers: {
-            'Content-Type': 'application/json',
-            'Authorization': `Bearer ${session.access_token}`,
-          },
-          body: JSON.stringify({
-            submission_id: id,
-            ...(isManual ? { ingredients_text: manualText.trim() } : {}),
-          }),
+      const { task_id } = startData
+
+      // Poll every 3 seconds for up to 3 minutes
+      const pollStart = Date.now()
+      while (Date.now() - pollStart < 180000) {
+        await new Promise(r => setTimeout(r, 3000))
+        const elapsed = Math.round((Date.now() - pollStart) / 1000)
+
+        const pollRes = await fetch(`${API_BASE_URL}/api/admin/task/${task_id}`, {
+          headers: { 'Authorization': `Bearer ${session.access_token}` },
         })
-      } finally {
-        clearTimeout(timer)
-      }
+        if (!pollRes.ok) { setMsg(id, { type: 'info', text: `⏳ AI working… ${elapsed}s` }); continue }
 
-      const data = await res.json()
-      if (!res.ok) throw new Error(data.detail || `Server error ${res.status}`)
-      setMsg(id, { type: 'success', text: `✓ Added "${data.product_name}" (score: ${data.awareness_score}, ${data.ingredients_count} ingredients)` })
-      fetchAll(); fetchSubs(tab)
+        const task = await pollRes.json()
+
+        if (task.status === 'done') {
+          const r = task.result
+          setMsg(id, { type: 'success', text: `✓ Added "${r.product_name}" (score: ${r.awareness_score}, ${r.ingredients_count} ingredients)` })
+          fetchAll(); fetchSubs(tab)
+          return
+        }
+        if (task.status === 'error') throw new Error(task.error || 'Extraction failed')
+
+        setMsg(id, { type: 'info', text: `⏳ AI working… ${elapsed}s` })
+      }
+      throw new Error('Timed out. The AI may still be working — refresh in a moment.')
+
     } catch (err) {
       const msg = err.message || ''
-      const isTimeout = err.name === 'AbortError'
       const isNetwork = msg.toLowerCase().includes('failed to fetch') || msg.toLowerCase().includes('networkerror') || msg.toLowerCase().includes('load failed')
       setMsg(id, {
         type: 'error',
-        text: isTimeout
-          ? '✕ Timed out. Use "Enter ingredients manually" below.'
-          : isNetwork
-          ? '✕ Cannot reach backend. Try again in a moment.'
-          : `✕ ${msg}`,
+        text: isNetwork ? '✕ Cannot reach backend — try again in a moment.' : `✕ ${msg}`,
       })
     } finally {
       setExtracting(null)
