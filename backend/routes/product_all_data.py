@@ -792,6 +792,29 @@ ALL_PRODUCTS = {
     # Protein Bars
     "ritebite-max-protein-bar": ("RiteBite Max Protein Bar", "RiteBite", "Nutrition", 72, "Whole food protein bar with dark chocolate coating", "Whey + soy protein blend with oats, dates, almonds, cashews; dark chocolate coating with soy lecithin; no sucralose. Added honey and rice syrup."),
     "quest-protein-bar": ("Quest Nutrition Protein Bar", "Quest Nutrition", "Nutrition", 68, "High-protein low-carb bar with sucralose", "WPI + milk protein isolate; almonds, palm kernel oil; L-leucine added; sucralose and steviol glycosides as sweeteners. Imported product."),
+
+    # ── SOAPS (ADDITIONAL — commonly used Indian brands) ─────────────────────────
+    "margo-neem-soap": ("Margo Original Neem Soap", "Margo", "Personal Care", 80, "Genuine neem antiseptic soap", "Contains 0.5% neem extract; glycerin-enriched soap base. No triclosan."),
+    "godrej-no1-sandal": ("Godrej No.1 Sandal & Almond Soap", "Godrej", "Personal Care", 70, "Sandal soap with moisturisers", "Contains sandalwood fragrance, almond oil and glycerin. Standard soap base."),
+    "hamam-neem-soap": ("Hamam Neem Tulsi & Aloevera Soap", "Hamam", "Personal Care", 74, "Ayurvedic neem soap", "Contains neem, tulsi and aloe vera extracts in soap base."),
+    "vivel-aloe-soap": ("Vivel Aloe Vera Soft & Fresh Soap", "Vivel", "Personal Care", 70, "Aloe vera moisturising soap", "Contains aloe vera extract with moisturising agents in soap base."),
+    "palmolive-naturals-soap": ("Palmolive Naturals Milk & Honey Soap", "Palmolive", "Personal Care", 72, "Milk and honey soap", "Contains milk extract and honey; gentle surfactant base."),
+    "chandrika-soap": ("Chandrika Ayurvedic Soap", "Chandrika", "Personal Care", 76, "Traditional Ayurvedic soap with coconut oil", "Contains 18 Ayurvedic oils including coconut, sesame, castor and neem."),
+    "rexona-soap": ("Rexona Deo Soap", "Rexona", "Personal Care", 62, "Deodorising soap", "Contains deodorising agents and antibacterial ingredients in standard soap base."),
+    "nirma-beauty-soap": ("Nirma Beauty Soap", "Nirma", "Personal Care", 60, "Budget beauty soap", "Standard soap base with fragrance and glycerin. Affordable option."),
+    "biotique-orange-soap": ("Biotique Bio Orange Peel Revitalizing Body Soap", "Biotique", "Personal Care", 74, "Orange peel exfoliating Ayurvedic soap", "Contains orange peel powder, lemon juice and wheatgerm oil. Ayurvedic formulation."),
+
+    # ── SHAMPOOS (ADDITIONAL — commonly used brands) ──────────────────────────────
+    "indulekha-bringha-shampoo": ("Indulekha Bringha Anti Hair Fall Shampoo", "Indulekha", "Hair Care", 70, "Ayurvedic anti-hairfall shampoo", "Contains bhringraj and light liquid paraffin; free of parabens."),
+    "mamaearth-onion-shampoo": ("Mamaearth Onion Shampoo for Hair Fall Control", "Mamaearth", "Hair Care", 72, "Onion-based anti hair fall shampoo", "Contains onion extract and plant keratin; free of SLS, parabens and sulphates."),
+    "wow-apple-cider-shampoo": ("WoW Skin Science Apple Cider Vinegar Shampoo", "Wow Skin Science", "Hair Care", 70, "ACV-based clarifying shampoo", "Contains apple cider vinegar and argan oil; SLS-free and paraben-free."),
+    "biotique-bio-kelp-shampoo": ("Biotique Bio Kelp Fresh Growth Shampoo", "Biotique", "Hair Care", 70, "Kelp protein treatment shampoo", "Contains sea kelp extract and bhringraj; Ayurvedic protein treatment shampoo."),
+    "fiama-gel-shampoo": ("Fiama Peach & Avocado Gel Shampoo", "Fiama", "Hair Care", 62, "Gel shampoo with conditioning agents", "Contains avocado oil and peach extracts with mild surfactant base."),
+    "herbal-essences-shampoo": ("Herbal Essences Bio Renew Argan Oil Shampoo", "Herbal Essences", "Hair Care", 64, "Argan oil moisturising shampoo", "Contains argan oil and aloe vera; free of parabens and colorants."),
+    "schwarzkopf-gliss-shampoo": ("Schwarzkopf Gliss Ultimate Repair Shampoo", "Schwarzkopf", "Hair Care", 62, "Liquid keratin repair shampoo", "Contains liquid keratin with conditioning agents for damaged hair."),
+    "khadi-natural-shampoo": ("Khadi Natural Amla & Bhringraj Shampoo", "Khadi Natural", "Hair Care", 74, "Herbal SLS-free shampoo", "Contains amla, bhringraj and hibiscus; free of SLS and parabens."),
+    "head-shoulders-cool-menthol": ("Head & Shoulders Cool Menthol Shampoo", "Head & Shoulders", "Hair Care", 60, "Menthol anti-dandruff shampoo", "Contains zinc pyrithione (1%) and menthol for cooling scalp effect."),
+    "pantene-smooth-silky": ("Pantene Pro-V Smooth & Silky Shampoo", "Pantene", "Hair Care", 56, "Silicone-based smoothing shampoo", "Contains SLES, Pro-Vitamin B5, dimethicone for frizz control."),
 }
 
 
