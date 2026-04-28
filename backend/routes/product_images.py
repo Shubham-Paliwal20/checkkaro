@@ -520,4 +520,169 @@ PRODUCT_IMAGES = {
     "head-shoulders-cool-menthol": "https://images.openbeautyfacts.org/images/products/800/184/101/2094/front_en.3.400.jpg",
     "pantene-smooth-silky": None,
 
+    # NEW BRANDS — BEARDO, THE ORDINARY, MINIMALIST+, USTRAA, BSC, etc.
+    "beardo-godfather-beard-oil": "https://images.openbeautyfacts.org/images/products/890/604/750/4703/front_en.3.400.jpg",
+    "beardo-beard-wash": "https://images.openbeautyfacts.org/images/products/890/604/750/5076/front_en.3.400.jpg",
+    "beardo-activated-charcoal-face-wash": "https://images.openbeautyfacts.org/images/products/890/604/750/5274/front_en.3.400.jpg",
+    "beardo-d-tan-face-wash": None,
+    "beardo-spf50-sunscreen": None,
+    "beardo-beard-hair-wax": "https://images.openbeautyfacts.org/images/products/890/604/750/3041/front_en.3.400.jpg",
+    "beardo-hair-serum": None,
+    "beardo-moisturizer": None,
+    "beardo-beard-growth-serum": None,
+    "the-ordinary-niacinamide": "https://images.openbeautyfacts.org/images/products/769/915/174/1306/front_en.12.400.jpg",
+    "the-ordinary-hyaluronic-acid": "https://images.openbeautyfacts.org/images/products/769/915/174/1245/front_en.8.400.jpg",
+    "the-ordinary-aha-bha-peeling": "https://images.openbeautyfacts.org/images/products/769/915/174/1351/front_en.9.400.jpg",
+    "the-ordinary-vitamin-c-suspension": "https://images.openbeautyfacts.org/images/products/769/915/174/1269/front_en.3.400.jpg",
+    "the-ordinary-retinol": "https://images.openbeautyfacts.org/images/products/769/915/174/1337/front_en.5.400.jpg",
+    "the-ordinary-buffet-serum": "https://images.openbeautyfacts.org/images/products/769/915/174/1221/front_en.6.400.jpg",
+    "the-ordinary-natural-moisturizing": "https://images.openbeautyfacts.org/images/products/769/915/174/1290/front_en.5.400.jpg",
+    "the-ordinary-squalane-cleanser": "https://images.openbeautyfacts.org/images/products/769/915/174/1313/front_en.3.400.jpg",
+    "the-ordinary-lactic-acid": "https://images.openbeautyfacts.org/images/products/769/915/174/1252/front_en.4.400.jpg",
+    "minimalist-zinc-face-wash": "https://images.openbeautyfacts.org/images/products/790/610/078/4464/front_en.3.400.jpg",
+    "minimalist-tranexamic-acid": "https://images.openbeautyfacts.org/images/products/790/610/078/4464/front_en.3.400.jpg",
+    "minimalist-squalane": "https://images.openbeautyfacts.org/images/products/790/610/078/4464/front_en.3.400.jpg",
+    "minimalist-mandelic-acid": "https://images.openbeautyfacts.org/images/products/790/610/078/4464/front_en.3.400.jpg",
+    "minimalist-omega-water-cream": "https://images.openbeautyfacts.org/images/products/790/610/078/4464/front_en.3.400.jpg",
+    "minimalist-sunscreen-spf50-spray": None,
+    "ustraa-beard-oil": "https://images.openbeautyfacts.org/images/products/890/603/270/1148/front_en.3.400.jpg",
+    "ustraa-face-wash-oily": None,
+    "ustraa-hair-wax": None,
+    "ustraa-anti-dandruff-shampoo": None,
+    "ustraa-deo-spray": None,
+    "bsc-charcoal-face-wash": "https://images.openbeautyfacts.org/images/products/890/610/578/3005/front_en.3.400.jpg",
+    "bsc-shaving-cream": "https://images.openbeautyfacts.org/images/products/890/610/578/3111/front_en.3.400.jpg",
+    "bsc-beard-oil": None,
+    "bsc-after-shave-lotion": None,
+    "bsc-sunscreen": None,
+    "old-spice-swagger-deo": "https://images.openbeautyfacts.org/images/products/037/000/261/7862/front_en.3.400.jpg",
+    "old-spice-after-shave": "https://images.openbeautyfacts.org/images/products/037/000/120/0019/front_en.7.400.jpg",
+    "old-spice-body-wash": "https://images.openbeautyfacts.org/images/products/037/000/261/0749/front_en.3.400.jpg",
+    "gillette-mach3-shaving-gel": "https://images.openbeautyfacts.org/images/products/500/017/407/0361/front_en.3.400.jpg",
+    "gillette-fusion-shaving-foam": None,
+    "gillette-after-shave-balm": None,
+    "park-avenue-deo": "https://images.openbeautyfacts.org/images/products/890/172/530/2073/front_en.3.400.jpg",
+    "park-avenue-after-shave": None,
+    "park-avenue-hair-cream": None,
+    "brylcreem-original": "https://images.openbeautyfacts.org/images/products/890/191/900/0182/front_en.3.400.jpg",
+    "brylcreem-anti-dandruff": None,
+    "axe-pulse-body-wash": "https://images.openbeautyfacts.org/images/products/872/018/111/4526/front_en.5.400.jpg",
+    "axe-recharge-deo": None,
+    "axe-signature-deo": None,
+    "pilgrim-aha-face-wash": None,
+    "pilgrim-spf60-sunscreen": "https://images.openbeautyfacts.org/images/products/890/612/058/6184/front_en.4.400.jpg",
+    "earth-rhythm-vitamin-c-serum": None,
+    "earth-rhythm-sunscreen": None,
+    "just-herbs-face-wash": None,
+    "mcaffeine-coffee-shower-gel": None,
+    "the-moms-co-sunscreen": None,
+    "plum-goodness-green-tea-face-wash": "https://images.openbeautyfacts.org/images/products/890/443/020/1070/front_en.3.400.jpg",
+    "sugar-cosmetics-face-wash": None,
+    "wow-retinol-serum": None,
+
+    # Minimalist (additional)
+    "minimalist-salicylic-acid": None,
+    "minimalist-kojic-acid": None,
+    "minimalist-alpha-arbutin": None,
+    "minimalist-ceramide-moisturiser": None,
+    "minimalist-peptide-moisturiser": None,
+    "minimalist-hair-growth-serum": None,
+    "minimalist-azelaic-acid": None,
+    "minimalist-bakuchiol": None,
+    "minimalist-spf-matte": None,
+    "minimalist-sunscreen-aqua": None,
+
+    # The Derma Co
+    "the-derma-co-ha-serum": None,
+    "the-derma-co-niacinamide": None,
+    "the-derma-co-salicylic-serum": None,
+    "the-derma-co-vitamin-c": None,
+    "the-derma-co-retinol": None,
+    "the-derma-co-ceramide-moisturiser": None,
+    "the-derma-co-face-wash": None,
+
+    # Yoga Bar (food/nutrition)
+    "yoga-bar-oats": None,
+    "yoga-bar-muesli": None,
+    "yoga-bar-energy-bar": None,
+    "yoga-bar-whey-protein": None,
+    "yoga-bar-granola-dark-choc": None,
+    "yoga-bar-plant-protein": None,
+
+    # MCaffeine (additional)
+    "mcaffeine-coffee-face-wash": None,
+    "mcaffeine-coffee-body-scrub": None,
+    "mcaffeine-coffee-face-scrub": None,
+    "mcaffeine-green-tea-shampoo": None,
+    "mcaffeine-coffee-body-lotion": None,
+
+    # Foxtale
+    "foxtale-spf30-moisturiser": None,
+    "foxtale-vitamin-c-serum": None,
+    "foxtale-retinol-night-cream": None,
+    "foxtale-hydrating-face-wash": None,
+
+    # Re'equil
+    "re-equil-pitstop-cream": None,
+    "re-equil-ceramide-serum": None,
+    "re-equil-under-eye-cream": None,
+
+    # Dot & Key
+    "dot-key-ha-b5-serum": None,
+    "dot-key-retinol-night": None,
+    "dot-key-barrier-body-lotion": None,
+
+    # Plum (additional)
+    "plum-niacinamide-serum": None,
+    "plum-aha-face-wash": None,
+    "plum-spf-moisturiser": None,
+
+    # Neutrogena / Cetaphil
+    "neutrogena-body-lotion": None,
+    "cetaphil-daily-lotion": None,
+    "cetaphil-sunscreen": None,
+
+    # MuscleBlaze
+    "muscleblaze-whey-gold": None,
+    "muscleblaze-raw-whey": None,
+    "muscleblaze-biozyme-whey": None,
+    "muscleblaze-mass-gainer": None,
+    "muscleblaze-creatine": None,
+    "muscleblaze-high-protein-bar": None,
+
+    # Optimum Nutrition (ON)
+    "on-gold-standard-whey": None,
+    "on-serious-mass": None,
+    "on-creatine": None,
+
+    # MyProtein
+    "myprotein-impact-whey": None,
+    "myprotein-total-protein": None,
+    "myprotein-vegan-blend": None,
+    "myprotein-creatine": None,
+
+    # As It Is Nutrition
+    "as-it-is-whey-protein": None,
+    "as-it-is-creatine": None,
+    "as-it-is-casein": None,
+
+    # Other protein brands
+    "dymatize-iso100": None,
+    "bsn-syntha6": None,
+    "gnc-pro-whey": None,
+    "nakpro-perform-whey": None,
+    "avvatar-whey-protein": None,
+    "scitron-advance-whey": None,
+    "hk-vitals-whey": None,
+    "fast-up-whey": None,
+    "muscletech-nitrotech": None,
+    "muscletech-phase8": None,
+    "abbzorb-whey": None,
+    "sixpack-accelerate-whey": None,
+    "steadfast-whey": None,
+
+    # Protein bars
+    "ritebite-max-protein-bar": None,
+    "quest-protein-bar": None,
+
 }
