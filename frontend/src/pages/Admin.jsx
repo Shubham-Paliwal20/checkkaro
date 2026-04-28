@@ -352,9 +352,26 @@ export default function Admin() {
         }
       }
 
-      // ── Analysis: classify ingredients ────────────────────────────────────
-      setMsg(id, { type: 'info', text: '⏳ Classifying ingredients with AI…' })
-      const analysis = await geminiAnalyze(productName, ingredientsText)
+      // ── Analysis: classify ingredients (with 1 auto-retry on rate limit) ──
+      let analysis
+      let retryLeft = 1
+      while (true) {
+        setMsg(id, { type: 'info', text: '⏳ Classifying ingredients with AI…' })
+        try {
+          analysis = await geminiAnalyze(productName, ingredientsText)
+          break
+        } catch (e) {
+          const m = e.message?.match(/retry in ([\d.]+)s/i)
+          if (m && retryLeft-- > 0) {
+            let secs = Math.ceil(parseFloat(m[1])) + 3
+            while (secs > 0) {
+              setMsg(id, { type: 'info', text: `⏳ Gemini rate limit — retrying in ${secs}s…` })
+              await new Promise(r => setTimeout(r, 1000))
+              secs--
+            }
+          } else throw e
+        }
+      }
 
       // ── Save directly to Supabase ─────────────────────────────────────────
       setMsg(id, { type: 'info', text: '⏳ Saving to database…' })
