@@ -135,9 +135,9 @@ function SubmissionCard({ sub, onApprove, onReject, onExtract, extracting }) {
         {sub.status === 'approved' && (
           <button
             onClick={() => onExtract(sub.id)}
-            disabled={extracting === sub.id}
-            style={{ width: '100%', background: extracting === sub.id ? '#e9d5ff' : '#7c3aed', color: '#fff', border: 'none', borderRadius: 10, padding: '11px 0', fontSize: 14, fontWeight: 700, cursor: extracting === sub.id ? 'not-allowed' : 'pointer', fontFamily: 'inherit', touchAction: 'manipulation', transition: 'background 0.2s' }}>
-            {extracting === sub.id ? '⏳ Extracting…' : '🤖 Extract & Add to DB'}
+            disabled={extracting != null}
+            style={{ width: '100%', background: extracting === sub.id ? '#e9d5ff' : extracting != null ? '#f3f4f6' : '#7c3aed', color: extracting != null ? '#9ca3af' : '#fff', border: 'none', borderRadius: 10, padding: '11px 0', fontSize: 14, fontWeight: 700, cursor: extracting != null ? 'not-allowed' : 'pointer', fontFamily: 'inherit', touchAction: 'manipulation', transition: 'background 0.2s' }}>
+            {extracting === sub.id ? '⏳ Working…' : '🤖 Extract & Add to DB'}
           </button>
         )}
       </div>
@@ -210,9 +210,34 @@ export default function Admin() {
     setExtracting(id)
     setExtractMsg(null)
     try {
-      // Get current Supabase session JWT — proves identity server-side
       const { data: { session } } = await supabase.auth.getSession()
       if (!session?.access_token) throw new Error('Not authenticated — please log in again')
+
+      // Ping health endpoint; if backend is sleeping, poll until it wakes (Render free tier cold start)
+      const pingHealth = async (timeoutMs = 6000) => {
+        const ctrl = new AbortController()
+        const t = setTimeout(() => ctrl.abort(), timeoutMs)
+        try {
+          const r = await fetch(`${API_BASE_URL}/health`, { signal: ctrl.signal })
+          return r.ok
+        } catch { return false } finally { clearTimeout(t) }
+      }
+
+      let alive = await pingHealth(5000)
+      if (!alive) {
+        const MAX_MS = 70000
+        const POLL_MS = 5000
+        const started = Date.now()
+        setExtractMsg({ type: 'info', text: '⏳ Server is waking up (cold start — usually 30–60s). Please wait…' })
+        while (!alive && (Date.now() - started) < MAX_MS) {
+          await new Promise(r => setTimeout(r, POLL_MS))
+          const elapsed = Math.round((Date.now() - started) / 1000)
+          setExtractMsg({ type: 'info', text: `⏳ Waking up server… ${elapsed}s elapsed (up to 60s)` })
+          alive = await pingHealth(8000)
+        }
+        if (!alive) throw new Error('Server did not wake up in time. Please try again in a moment.')
+        setExtractMsg(null)
+      }
 
       const res = await fetch(`${API_BASE_URL}/api/admin/extract-product`, {
         method: 'POST',
@@ -231,9 +256,7 @@ export default function Admin() {
       const isNetwork = msg.toLowerCase().includes('failed to fetch') || msg.toLowerCase().includes('networkerror') || msg.toLowerCase().includes('load failed')
       setExtractMsg({
         type: 'error',
-        text: isNetwork
-          ? `✕ Cannot reach backend server (${API_BASE_URL}). Start the backend with: cd backend && uvicorn main:app --reload`
-          : `✕ ${msg}`,
+        text: isNetwork ? '✕ Cannot reach backend. Try clicking Extract again — server may need another moment.' : `✕ ${msg}`,
       })
     } finally {
       setExtracting(null)
@@ -290,9 +313,9 @@ export default function Admin() {
       {/* Extract result message */}
       {extractMsg && (
         <div style={{ marginBottom: 16, padding: '12px 16px', borderRadius: 10, fontSize: 13, fontWeight: 600,
-          background: extractMsg.type === 'success' ? '#f0fdf4' : '#fef2f2',
-          color: extractMsg.type === 'success' ? '#16a34a' : '#dc2626',
-          border: `1px solid ${extractMsg.type === 'success' ? '#bbf7d0' : '#fecaca'}` }}>
+          background: extractMsg.type === 'success' ? '#f0fdf4' : extractMsg.type === 'info' ? '#fefce8' : '#fef2f2',
+          color: extractMsg.type === 'success' ? '#16a34a' : extractMsg.type === 'info' ? '#92400e' : '#dc2626',
+          border: `1px solid ${extractMsg.type === 'success' ? '#bbf7d0' : extractMsg.type === 'info' ? '#fde68a' : '#fecaca'}` }}>
           {extractMsg.text}
         </div>
       )}
