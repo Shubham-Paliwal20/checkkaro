@@ -143,10 +143,18 @@ function ImageViewer({ imgs }) {
   )
 }
 
-function SubmissionCard({ sub, onApprove, onReject, onExtract, extracting, cardMsg }) {
+function SubmissionCard({ sub, onApprove, onReject, onExtract, extracting, cardMsg, forceManualOpen }) {
   const imgs = sub.images || []
   const [showManual, setShowManual] = useState(false)
   const [manualText, setManualText] = useState('')
+  const textareaRef = useRef(null)
+
+  useEffect(() => {
+    if (forceManualOpen) {
+      setShowManual(true)
+      setTimeout(() => textareaRef.current?.focus(), 100)
+    }
+  }, [forceManualOpen])
 
   return (
     <div style={{ background: '#fff', border: '1px solid #e5e7eb', borderRadius: 14, overflow: 'hidden', boxShadow: '0 2px 12px rgba(0,0,0,0.05)' }}>
@@ -218,6 +226,7 @@ function SubmissionCard({ sub, onApprove, onReject, onExtract, extracting, cardM
                   Paste the ingredients list exactly as printed on the label:
                 </p>
                 <textarea
+                  ref={textareaRef}
                   value={manualText}
                   onChange={e => setManualText(e.target.value)}
                   placeholder="e.g. Water, Glycerin, Sodium Laureth Sulfate, Cocamidopropyl Betaine..."
@@ -256,9 +265,10 @@ export default function Admin() {
   const [tab,        setTab]        = useState('pending')
   const [subs,       setSubs]       = useState([])
   const [counts,     setCounts]     = useState({ pending: 0, approved: 0, rejected: 0, extracted: 0 })
-  const [fetching,    setFetching]    = useState(false)
-  const [extracting,  setExtracting]  = useState(null)
-  const [cardMsgs,    setCardMsgs]    = useState({})  // { [submissionId]: { type, text } }
+  const [fetching,      setFetching]      = useState(false)
+  const [extracting,    setExtracting]    = useState(null)
+  const [cardMsgs,      setCardMsgs]      = useState({})
+  const [openManualIds, setOpenManualIds] = useState(new Set())
 
   const isAdmin = user?.email === ADMIN_EMAIL
 
@@ -335,7 +345,11 @@ export default function Admin() {
           const t = await geminiVision(url, productName)
           if (t && t !== 'NOT_VISIBLE') { ingredientsText = t; break }
         }
-        if (!ingredientsText) throw new Error('Could not read ingredients from images. Use "Enter manually" and paste the label text.')
+        if (!ingredientsText) {
+          // Auto-open manual entry form and show a helpful prompt
+          setOpenManualIds(s => new Set([...s, id]))
+          throw new Error('AI couldn\'t read ingredients from the photos (likely front-label shot). The text box below is now open — paste the ingredients from the back label.')
+        }
       }
 
       // ── Analysis: classify ingredients ────────────────────────────────────
@@ -433,7 +447,7 @@ export default function Admin() {
       ) : (
         <div style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : 'repeat(auto-fill, minmax(300px, 1fr))', gap: 16 }}>
           {subs.map(s => (
-            <SubmissionCard key={s.id} sub={s} onApprove={handleApprove} onReject={handleReject} onExtract={handleExtract} extracting={extracting} cardMsg={cardMsgs[s.id] || null} />
+            <SubmissionCard key={s.id} sub={s} onApprove={handleApprove} onReject={handleReject} onExtract={handleExtract} extracting={extracting} cardMsg={cardMsgs[s.id] || null} forceManualOpen={openManualIds.has(s.id)} />
           ))}
         </div>
       )}
