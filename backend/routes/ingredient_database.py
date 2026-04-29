@@ -27,7 +27,13 @@ COSMETIC_SAFE_OVERRIDES = {
 
 def classify_ingredient(ingredient_name, category=None):
     """Classify ingredients based on regulatory and health concerns - SINGLE SOURCE OF TRUTH"""
-    ingredient_lower = ingredient_name.lower()
+    # Normalize "CI No. 47000" → "ci 47000", collapse extra spaces
+    ingredient_lower = (
+        ingredient_name.lower()
+        .replace('no.', '')
+        .replace('  ', ' ')
+        .strip()
+    )
     is_cosmetic = category in COSMETIC_CATEGORIES
     
     # COMMONLY QUESTIONED INGREDIENTS (RED) - Regulatory concerns, banned substances, health risks
@@ -81,8 +87,32 @@ def classify_ingredient(ingredient_name, category=None):
 
         # Artificial flavors
         'artificial': ('Synthetic flavoring', 'May contain allergens, some linked to behavioral issues in children'),
+
+        # Antioxidant preservatives
+        'butylated hydroxyanisole': ('Antioxidant preservative (BHA)', 'IARC Group 2B possible carcinogen; banned in Japan; EU-restricted in some foods; California Prop 65 listed'),
+        'bha': ('Antioxidant preservative (BHA)', 'IARC Group 2B possible carcinogen; banned in Japan; EU-restricted in some foods; California Prop 65 listed'),
+        'butylated hydroxytoluene': ('Antioxidant preservative (BHT)', 'Liver and thyroid effects in animal studies; hormonal disruption; restricted in several countries'),
+        'bht': ('Antioxidant preservative (BHT)', 'Liver and thyroid effects in animal studies; hormonal disruption; restricted in several countries'),
+        'tert-butylhydroquinone': ('Antioxidant preservative (TBHQ)', 'Banned in Japan; EU-restricted; high doses linked to DNA damage; stomach tumour promotion in animal studies'),
+        'tbhq': ('Antioxidant preservative (TBHQ)', 'Banned in Japan; EU-restricted; high doses linked to DNA damage; stomach tumour promotion in animal studies'),
+
+        # Banned dough conditioners / emulsifiers
+        'potassium bromate': ('Bread improver', 'Banned in EU, UK, Canada, Australia, China — oxidises to bromide; classified as possible carcinogen by IARC'),
+        'azodicarbonamide': ('Dough conditioner', 'Banned in EU, UK, Australia, Singapore — breaks down to semicarbazide, a possible carcinogen'),
+        'brominated vegetable oil': ('Citrus-drink emulsifier', 'Banned in EU, Japan, India — bromine accumulates in body; thyroid and neurological effects'),
+
+        # Talc — asbestos contamination risk
+        'talcum': ('Talcum powder', 'Natural talc deposits may contain asbestos fibres; IARC classifies inhaled talc-with-asbestos as carcinogenic; FDA recalled multiple talc products'),
+        'talc': ('Cosmetic talc', 'Natural talc deposits may contain asbestos fibres; IARC classifies inhaled talc-with-asbestos as carcinogenic; FDA recalled multiple talc products'),
+
+        # CI food/cosmetic colorants banned or restricted in multiple countries
+        'ci 47000': ('Quinoline Yellow (E104)', 'Banned in USA, Canada, Japan, Australia — linked to hyperactivity and ADHD in children; EU requires warning label'),
+        'ci 19140': ('Tartrazine (E102)', 'EU warning label required — hyperactivity and ADHD in children; banned in Austria, Norway; restricted in many countries'),
+        'ci 15985': ('Sunset Yellow (E110)', 'Banned in Norway and Finland; EU warning label required; linked to hyperactivity in children'),
+        'ci 16035': ('Allura Red (E129)', 'EU warning label required; banned in Denmark, Belgium, France, Switzerland, Sweden, Austria, Norway'),
+        'ci 42090': ('Brilliant Blue FCF (E133)', 'Banned in Belgium, France, Germany, Greece, Italy, Spain, Switzerland; chromosomal damage in animal studies'),
     }
-    
+
     # WORTH KNOWING INGREDIENTS (YELLOW) - Generally safe but with considerations
     worth_knowing_patterns = {
         # Sugars and sweeteners
@@ -133,6 +163,16 @@ def classify_ingredient(ingredient_name, category=None):
         # Silicones
         'dimethiconol': ('Silicone', 'Builds up on hair/skin, clogs pores, environmental persistence, hard to remove'),
         'dimethicone': ('Silicone', 'Can trap dirt/bacteria, may cause breakouts, environmental concerns'),
+
+        # CI cosmetic colorants — permitted but limited long-term safety data
+        'ci 26100': ('Cosmetic colorant Red 17 (Solvent Red 23)', 'Synthetic azo dye permitted in cosmetics; limited long-term human data; restricted in some countries'),
+        'ci 61565': ('Cosmetic colorant Vat Green 1', 'Synthetic vat dye permitted in EU cosmetics; limited toxicology data; patch test advised for sensitive skin'),
+        'ci 17200': ('Cosmetic colorant Red 33 (Acid Red 33)', 'Synthetic dye; restricted in some countries; may cause contact dermatitis in sensitive individuals'),
+        'ci 15510': ('Cosmetic colorant Orange 4 (Acid Orange 7)', 'Synthetic azo dye; permitted in most countries; may cause contact dermatitis'),
+        'ci 45410': ('Cosmetic colorant Red 27 (Acid Red 92)', 'Synthetic dye permitted in EU; some data suggesting skin sensitization'),
+
+        # Titanium Dioxide
+        'titanium dioxide': ('White pigment (E171)', 'Banned as food additive in EU since 2022 (genotoxicity concerns); nanoparticles may penetrate skin; inhalation risk'),
         
         # Chelating agents
         'tetrasodium edta': ('Chelating agent', 'Binds essential minerals, environmental persistence, may enhance absorption of toxins'),
@@ -145,7 +185,6 @@ def classify_ingredient(ingredient_name, category=None):
         'citric acid': ('Preservative/acidulant E330', 'Tooth enamel erosion with frequent exposure, stomach upset in large amounts'),
         
         # Colorants (natural/mineral)
-        'titanium dioxide': ('White pigment E171', 'Nanoparticles may penetrate skin, inhalation concerns, under EU review'),
         'beta carotene': ('Orange color E160a', 'Safe but high doses linked to lung cancer risk in smokers'),
         'caramel': ('Brown color', 'Natural but may contain trace amounts of carcinogenic compounds'),
         
@@ -331,6 +370,12 @@ def classify_ingredient(ingredient_name, category=None):
         'plant extract': ('Natural plant extract', 'Natural plant-derived ingredient, safe'),
         'herbal extract': ('Natural herbal extract', 'Natural plant-derived ingredient, safe'),
         'botanical extract': ('Natural botanical extract', 'Natural plant-derived ingredient, safe'),
+
+        # Iron oxide mineral pigments — FDA & EU approved, no known health concerns
+        'ci 77491': ('Iron Oxide Red', 'FDA and EU approved mineral pigment; widely used in cosmetics; no known health concerns'),
+        'ci 77492': ('Iron Oxide Yellow', 'FDA and EU approved mineral pigment; widely used in cosmetics; no known health concerns'),
+        'ci 77499': ('Iron Oxide Black', 'FDA and EU approved mineral pigment; widely used in cosmetics; no known health concerns'),
+        'iron oxide': ('Mineral pigment', 'FDA and EU approved; widely used in cosmetics and food colouring; no known health concerns'),
     }
 
     # For cosmetic/topical products, override food-context concerns with cosmetic-appropriate classification

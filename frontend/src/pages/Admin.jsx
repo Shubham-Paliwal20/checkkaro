@@ -40,7 +40,17 @@ const COMMONLY_QUESTIONED = [
   // Meat preservatives
   'sodium nitrite', 'e250', 'sodium nitrate', 'e251',
   // Others
-  'potassium bromate', 'formaldehyde',
+  'potassium bromate', 'azodicarbonamide', 'brominated vegetable oil', 'formaldehyde',
+  // Antioxidant preservatives (by abbreviation — full names above)
+  'bha', 'bht',
+  // Talc (potential asbestos contamination; IARC Group 1 when asbestos-contaminated)
+  'talc', 'talcum',
+  // CI food/cosmetic colorants banned or restricted in multiple countries
+  'ci 47000',  // Quinoline Yellow E104 — banned USA, Canada, Japan, Australia
+  'ci 19140',  // Tartrazine E102 — EU warning label, banned several countries
+  'ci 15985',  // Sunset Yellow E110 — banned Norway, Finland; EU warning label
+  'ci 16035',  // Allura Red E129 — EU warning label; banned several European countries
+  'ci 42090',  // Brilliant Blue E133 — banned in 6 EU countries; neurotoxicity data
 ]
 
 const WORTH_KNOWING = [
@@ -69,13 +79,12 @@ const WORTH_KNOWING = [
   'high fructose corn syrup', 'monosodium glutamate', 'e621',
   'carrageenan', 'e407',
   'hydrogenated', 'partially hydrogenated',
-  // Talc, Titanium Dioxide
-  'talc', 'talcum', 'titanium dioxide',
-  // CI colours (cosmetic colourants — commonly used, some with regional restrictions)
-  'ci 26100', 'ci 47000', 'ci 61565', 'ci 19140', 'ci 15985', 'ci 17200', 'ci 42090', 'ci 16035',
-  'ci 15510', 'ci 45410', 'ci 77491', 'ci 77492', 'ci 77499',
-  // BHA/BHT (catch partial names)
-  'bha', 'bht',
+  // Titanium Dioxide (EU banned as food additive E171; nanoparticle concerns)
+  'titanium dioxide',
+  // CI cosmetic colorants (permitted, limited long-term safety data)
+  'ci 26100', 'ci 61565', 'ci 17200', 'ci 15510', 'ci 45410',
+  // Iron oxides (ci 77491/77492/77499) are safe mineral pigments — not listed here,
+  // they fall through to generally_recognised
 ]
 
 function classifyIngredient(name) {
