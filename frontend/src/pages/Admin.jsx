@@ -8,7 +8,36 @@ const STATUS_TABS  = ['pending', 'approved', 'rejected', 'extracted']
 const STATUS_COLOR = { pending: '#f59e0b', approved: '#16a34a', rejected: '#dc2626', extracted: '#7c3aed' }
 const STATUS_BG    = { pending: '#fef3c7', approved: '#f0fdf4', rejected: '#fef2f2', extracted: '#f5f3ff' }
 
-const API_BASE = import.meta.env.VITE_API_BASE_URL || 'http://localhost:8000'
+const CATEGORIES = ['Personal Care', 'Skincare', 'Haircare', 'Food & Beverages', 'Supplements', 'Baby Care', 'Other']
+
+// Parse "Water, Glycerin, Sodium Laureth Sulfate..." into ingredient objects
+function parseIngredients(text) {
+  return text
+    .split(/[,;]/)
+    .map(s => s.trim())
+    .filter(s => s.length > 0)
+    .map(name => ({
+      name: name.slice(0, 100),
+      aliases: '',
+      classification: 'generally_recognised',
+      one_line_note: '',
+      regulatory_note: '',
+    }))
+}
+
+function verdictFromScore(score) {
+  if (score >= 80) return 'Clean formulation'
+  if (score >= 60) return 'Average formulation'
+  if (score >= 40) return 'Worth reviewing'
+  return 'Review carefully'
+}
+
+function recommendationFromScore(score) {
+  if (score >= 80) return 'Generally suitable for regular use. Check for personal allergies.'
+  if (score >= 60) return 'Suitable for most people. Some ingredients may warrant attention.'
+  if (score >= 40) return 'Review ingredient list before regular use, especially for sensitive individuals.'
+  return 'Consider checking with a professional before regular use.'
+}
 
 function formatDate(iso) {
   if (!iso) return ''
@@ -73,18 +102,21 @@ function ImageViewer({ imgs }) {
   )
 }
 
-function SubmissionCard({ sub, onApprove, onReject, onAnalyse, saving, cardMsg }) {
+function SubmissionCard({ sub, onApprove, onReject, onSave, saving, cardMsg }) {
   const imgs = sub.images || []
   const [ingredients, setIngredients] = useState('')
-  const textareaRef = useRef(null)
-
-  const inputStyle = {
-    width: '100%', boxSizing: 'border-box', border: '1.5px solid #d1d5db',
-    borderRadius: 8, padding: '10px 12px', fontSize: 13, fontFamily: 'inherit',
-    outline: 'none', color: '#111827', background: '#fff', resize: 'vertical',
-  }
+  const [brand,       setBrand]       = useState('')
+  const [category,    setCategory]    = useState('Personal Care')
+  const [score,       setScore]       = useState(70)
 
   const isSaving = saving === sub.id
+  const parsed = ingredients.trim() ? parseIngredients(ingredients) : []
+
+  const field = {
+    width: '100%', boxSizing: 'border-box', border: '1.5px solid #d1d5db',
+    borderRadius: 8, padding: '9px 12px', fontSize: 13, fontFamily: 'inherit',
+    outline: 'none', color: '#111827', background: '#fff',
+  }
 
   return (
     <div style={{ background: '#fff', border: '1px solid #e5e7eb', borderRadius: 14, overflow: 'hidden', boxShadow: '0 2px 12px rgba(0,0,0,0.05)' }}>
@@ -104,7 +136,7 @@ function SubmissionCard({ sub, onApprove, onReject, onAnalyse, saving, cardMsg }
           </span>
         </div>
 
-        {/* Info */}
+        {/* Info rows */}
         <div style={{ display: 'flex', flexDirection: 'column', gap: 7, marginBottom: 14 }}>
           <div style={{ display: 'flex', gap: 8 }}>
             <span style={{ fontSize: 15 }}>📧</span>
@@ -134,47 +166,85 @@ function SubmissionCard({ sub, onApprove, onReject, onAnalyse, saving, cardMsg }
           </div>
         )}
 
-        {/* Approved — manual ingredients entry + AI classify via backend */}
+        {/* Approved — manual form, saves directly to Supabase */}
         {sub.status === 'approved' && (
           <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
-            <p style={{ margin: 0, fontSize: 12, color: '#6b7280', lineHeight: 1.5 }}>
-              Paste the ingredients list from the back label. Our AI will classify each one and save the product to the database.
-            </p>
-            <textarea
-              ref={textareaRef}
-              value={ingredients}
-              onChange={e => setIngredients(e.target.value)}
-              placeholder="e.g. Water, Glycerin, Sodium Laureth Sulfate, Cocamidopropyl Betaine, Fragrance..."
-              rows={5}
-              style={inputStyle}
-              disabled={isSaving}
-            />
-            {ingredients.trim() && !isSaving && (
-              <p style={{ margin: '-4px 0 0', fontSize: 11, color: '#9ca3af' }}>
-                ~{ingredients.split(',').filter(s => s.trim()).length} ingredients
-              </p>
-            )}
 
+            {/* Brand + Category */}
+            <div style={{ display: 'flex', gap: 8 }}>
+              <input
+                placeholder="Brand (e.g. Dove)"
+                value={brand}
+                onChange={e => setBrand(e.target.value)}
+                style={{ ...field, flex: 1 }}
+                disabled={isSaving}
+              />
+              <select
+                value={category}
+                onChange={e => setCategory(e.target.value)}
+                style={{ ...field, flex: 1, cursor: 'pointer' }}
+                disabled={isSaving}
+              >
+                {CATEGORIES.map(c => <option key={c}>{c}</option>)}
+              </select>
+            </div>
+
+            {/* Score */}
+            <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+              <label style={{ fontSize: 12, color: '#6b7280', fontWeight: 600, whiteSpace: 'nowrap' }}>Score (0–100):</label>
+              <input
+                type="number" min={0} max={100}
+                value={score}
+                onChange={e => setScore(e.target.value)}
+                style={{ ...field, width: 72 }}
+                disabled={isSaving}
+              />
+              <span style={{ fontSize: 12, color: '#6b7280' }}>
+                {score >= 80 ? '🟢 Clean' : score >= 60 ? '🟡 Average' : score >= 40 ? '🟠 Review' : '🔴 Caution'}
+              </span>
+            </div>
+
+            {/* Ingredients textarea */}
+            <div>
+              <p style={{ margin: '0 0 5px', fontSize: 12, color: '#6b7280', fontWeight: 600 }}>
+                Paste ingredients (comma-separated, from back label):
+              </p>
+              <textarea
+                value={ingredients}
+                onChange={e => setIngredients(e.target.value)}
+                placeholder="Water, Glycerin, Sodium Laureth Sulfate, Cocamidopropyl Betaine, Fragrance..."
+                rows={5}
+                style={{ ...field, resize: 'vertical' }}
+                disabled={isSaving}
+              />
+              {parsed.length > 0 && (
+                <p style={{ margin: '3px 0 0', fontSize: 11, color: '#9ca3af' }}>
+                  {parsed.length} ingredients detected
+                </p>
+              )}
+            </div>
+
+            {/* Save button */}
             <button
-              onClick={() => onAnalyse(sub.id, ingredients)}
+              onClick={() => onSave(sub.id, { text: ingredients, brand, category, score })}
               disabled={isSaving || !ingredients.trim()}
               style={{
                 width: '100%',
-                background: isSaving ? '#ede9fe' : !ingredients.trim() ? '#f3f4f6' : '#7c3aed',
+                background: isSaving ? '#d1fae5' : !ingredients.trim() ? '#f3f4f6' : '#059669',
                 color: isSaving || !ingredients.trim() ? '#9ca3af' : '#fff',
                 border: 'none', borderRadius: 10, padding: '12px 0', fontSize: 15, fontWeight: 700,
                 cursor: isSaving || !ingredients.trim() ? 'not-allowed' : 'pointer',
                 fontFamily: 'inherit', transition: 'background 0.2s',
               }}>
-              {isSaving ? '⏳ Analysing & saving…' : '🤖 Analyse & Add to DB'}
+              {isSaving ? '⏳ Saving…' : '💾 Save to Database'}
             </button>
 
             {cardMsg && (
               <div style={{
                 padding: '10px 14px', borderRadius: 8, fontSize: 13, fontWeight: 600, lineHeight: 1.5,
-                background: cardMsg.type === 'success' ? '#f0fdf4' : cardMsg.type === 'info' ? '#fefce8' : '#fef2f2',
-                color: cardMsg.type === 'success' ? '#16a34a' : cardMsg.type === 'info' ? '#92400e' : '#dc2626',
-                border: `1px solid ${cardMsg.type === 'success' ? '#bbf7d0' : cardMsg.type === 'info' ? '#fde68a' : '#fecaca'}`,
+                background: cardMsg.type === 'success' ? '#f0fdf4' : '#fef2f2',
+                color: cardMsg.type === 'success' ? '#16a34a' : '#dc2626',
+                border: `1px solid ${cardMsg.type === 'success' ? '#bbf7d0' : '#fecaca'}`,
               }}>
                 {cardMsg.text}
               </div>
@@ -258,66 +328,44 @@ export default function Admin() {
 
   const setMsg = (id, msg) => setCardMsgs(m => ({ ...m, [id]: msg }))
 
-  const handleAnalyse = async (id, text) => {
+  // Save directly to Supabase — no backend, no AI, no external API calls
+  const handleSave = async (id, { text, brand, category, score }) => {
     if (!text?.trim()) return
     setSaving(id)
     setMsg(id, null)
-
     try {
-      // Get Supabase auth token
-      const { data: sessionData } = await supabase.auth.getSession()
-      const token = sessionData?.session?.access_token
-      if (!token) throw new Error('Not authenticated — please sign out and back in.')
+      const { data: sub, error: subErr } = await supabase
+        .from('product_submissions').select('*').eq('id', id).single()
+      if (subErr || !sub) throw new Error('Could not load submission: ' + (subErr?.message || 'not found'))
 
-      setMsg(id, { type: 'info', text: '⏳ Sending to backend…' })
+      const images     = sub.images || []
+      const productName = sub.product_name_searched || 'Unknown Product'
+      const parsed     = parseIngredients(text.trim())
+      const numScore   = Math.max(0, Math.min(100, parseInt(score) || 70))
+      const brandName  = (brand || '').trim() || productName.split(' ')[0]
 
-      // POST to backend — returns task_id immediately
-      const postResp = await fetch(`${API_BASE}/api/admin/extract-product`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${token}`,
-        },
-        body: JSON.stringify({ submission_id: id, ingredients_text: text.trim() }),
+      const { error: insertErr } = await supabase.from('ai_extracted_products').insert({
+        name:            productName,
+        brand:           brandName.slice(0, 100),
+        category:        category || 'Personal Care',
+        image_url:       images[0] || null,
+        images:          images,
+        awareness_score: numScore,
+        summary:         `${productName} contains ${parsed.length} ingredients. This information is for general awareness based on publicly available regulatory data. It is not a health assessment or medical advice.`,
+        fssai_note:      'Subject to applicable FSSAI regulations.',
+        verdict:         verdictFromScore(numScore),
+        recommendation:  recommendationFromScore(numScore),
+        ingredients:     parsed,
+        ingredients_raw: text.trim().slice(0, 5000),
+        submission_id:   id,
+        status:          'active',
       })
+      if (insertErr) throw new Error('Save failed: ' + insertErr.message)
 
-      if (!postResp.ok) {
-        const err = await postResp.json().catch(() => ({}))
-        throw new Error(err.detail || `Backend error ${postResp.status}`)
-      }
+      await supabase.from('product_submissions').update({ status: 'extracted' }).eq('id', id)
 
-      const { task_id } = await postResp.json()
-      setMsg(id, { type: 'info', text: '⏳ AI is classifying ingredients… (takes ~30s)' })
-
-      // Poll for completion every 3 seconds, max 90s
-      for (let i = 0; i < 30; i++) {
-        await new Promise(r => setTimeout(r, 3000))
-
-        const pollResp = await fetch(`${API_BASE}/api/admin/task/${task_id}`, {
-          headers: { 'Authorization': `Bearer ${token}` },
-        })
-        if (!pollResp.ok) continue
-
-        const task = await pollResp.json()
-
-        if (task.status === 'done') {
-          const r = task.result
-          setMsg(id, { type: 'success', text: `✓ "${r.product_name}" added — score ${r.awareness_score}/100, ${r.ingredients_count} ingredients` })
-          fetchAll(); fetchSubs(tab)
-          return
-        }
-
-        if (task.status === 'error') {
-          throw new Error(task.error || 'Analysis failed on server')
-        }
-
-        // Still processing — update countdown
-        const remaining = (30 - i - 1) * 3
-        setMsg(id, { type: 'info', text: `⏳ Classifying… (~${remaining}s left)` })
-      }
-
-      throw new Error('Timed out waiting for server. The product may still be saved — check the Extracted tab.')
-
+      setMsg(id, { type: 'success', text: `✓ "${productName}" saved — ${parsed.length} ingredients, score ${numScore}/100` })
+      fetchAll(); fetchSubs(tab)
     } catch (err) {
       setMsg(id, { type: 'error', text: `✕ ${err.message}` })
     } finally {
@@ -388,7 +436,7 @@ export default function Admin() {
             <SubmissionCard key={s.id} sub={s}
               onApprove={handleApprove}
               onReject={handleReject}
-              onAnalyse={handleAnalyse}
+              onSave={handleSave}
               saving={saving}
               cardMsg={cardMsgs[s.id] || null}
             />
