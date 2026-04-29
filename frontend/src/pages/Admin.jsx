@@ -17,14 +17,20 @@ const COMMONLY_QUESTIONED = [
   // SLS (strong irritant)
   'sodium lauryl sulfate',
   // Formaldehyde releasers
-  'dmdm hydantoin', 'imidazolidinyl urea', 'diazolidinyl urea', 'quaternium-15', 'bronopol', '2-bromo-2-nitropropane',
+  'dmdm hydantoin', 'imidazolidinyl urea', 'diazolidinyl urea', 'quaternium-15', 'bronopol', '2-bromo-2-nitropropane', 'formaldehyde',
   // Phthalates
   'dibutyl phthalate', 'diethyl phthalate', 'dimethyl phthalate',
   // Antimicrobials
   'triclosan', 'triclocarban',
+  // Preservatives with serious concerns (forms benzene, EU carcinogen concern)
+  'sodium benzoate', 'e211',
+  'sodium metabisulphite', 'e223',
+  'sulfur dioxide', 'e220',
+  // Preservatives in personal care (EU banned in leave-on products)
+  'methylisothiazolinone', 'methylchloroisothiazolinone',
   // Antioxidants (potential carcinogens)
   'butylated hydroxyanisole', 'butylated hydroxytoluene', 'tbhq',
-  // EU-restricted food colours
+  // EU-restricted food colours (with E-number aliases for label matching)
   'allura red', 'red 40', 'e129',
   'tartrazine', 'yellow 5', 'e102',
   'sunset yellow', 'yellow 6', 'e110',
@@ -34,13 +40,22 @@ const COMMONLY_QUESTIONED = [
   'patent blue v', 'e131',
   'indigo carmine', 'e132',
   'brown ht', 'e155',
+  'brilliant blue', 'e133',
+  'quinoline yellow', 'e104',
+  // Flavor enhancers with MSG-like concerns
+  'disodium guanylate', 'e627',
+  'disodium inosinate', 'e631',
+  // Acids with bone/tooth concerns
+  'phosphoric acid', 'e338',
+  // Caramel (Class III/IV — contains 4-MEI)
+  'caramel colour', 'caramel color', 'e150',
   // Sweeteners
   'aspartame', 'e951',
   'acesulfame-k', 'acesulfame k', 'e950',
   // Meat preservatives
   'sodium nitrite', 'e250', 'sodium nitrate', 'e251',
   // Others
-  'potassium bromate', 'azodicarbonamide', 'brominated vegetable oil', 'formaldehyde',
+  'potassium bromate', 'azodicarbonamide', 'brominated vegetable oil',
   // Antioxidant preservatives (by abbreviation — full names above)
   'bha', 'bht',
   // Talc (potential asbestos contamination; IARC Group 1 when asbestos-contaminated)
@@ -57,8 +72,7 @@ const WORTH_KNOWING = [
   // SLES (milder than SLS but can be irritant)
   'sodium laureth sulfate', 'ammonium laureth sulfate',
   // Preservatives
-  'phenoxyethanol', 'sodium benzoate', 'e211', 'potassium sorbate', 'e202', 'benzyl alcohol',
-  'methylisothiazolinone', 'methylchloroisothiazolinone',
+  'phenoxyethanol', 'potassium sorbate', 'e202', 'benzyl alcohol',
   // Fragrance (hides unknowns)
   'fragrance', 'parfum', 'artificial flavor', 'artificial flavour',
   // Sensitizers

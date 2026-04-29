@@ -39,54 +39,82 @@ def classify_ingredient(ingredient_name, category=None):
     # COMMONLY QUESTIONED INGREDIENTS (RED) - Regulatory concerns, banned substances, health risks
     commonly_questioned_patterns = {
         # Preservatives with serious concerns
-        'triclosan': ('Antibacterial agent banned in EU cosmetics', 'Hormone disruption, antibiotic resistance, thyroid problems'),
-        'sodium benzoate': ('Preservative E211', 'Forms benzene (carcinogen) with vitamin C, linked to hyperactivity in children'),
-        'sodium metabisulphite': ('Sulfite preservative E223', 'Severe allergic reactions, asthma attacks, can cause anaphylaxis'),
-        'sodium nitrite': ('Meat preservative E250', 'Forms nitrosamines (cancer-causing) when cooked at high heat'),
+        'triclosan': ('Antibacterial agent', 'Hormone disruption, antibiotic resistance, thyroid problems; banned in EU cosmetics; FDA banned from USA hand soaps'),
+        'triclocarban': ('Antimicrobial agent TCC', 'Endocrine disruptor; environmental persistence; FDA banned from USA antiseptic products'),
+        'sodium benzoate': ('Preservative E211', 'Forms benzene (carcinogen) with vitamin C in acidic drinks; linked to hyperactivity in children; EU/India require label declaration'),
+        'e211': ('Sodium benzoate (E211)', 'Forms benzene with vitamin C; hyperactivity link in children; mandatory label declaration in EU'),
+        'sodium metabisulphite': ('Sulfite preservative E223', 'Severe allergic reactions, asthma attacks, can cause anaphylaxis; must be declared on labels'),
+        'e223': ('Sodium metabisulphite (E223)', 'Severe allergic reactions, asthma attacks; mandatory label declaration as allergen'),
+        'sulfur dioxide': ('Preservative E220', 'Destroys vitamin B1, triggers severe asthma attacks, allergic reactions; declared as allergen on labels'),
+        'e220': ('Sulfur dioxide (E220)', 'Destroys vitamin B1; triggers asthma; mandatory allergen declaration'),
+        'sodium nitrite': ('Meat preservative E250', 'Forms nitrosamines (cancer-causing) when cooked at high heat; linked to colorectal cancer'),
+        'e250': ('Sodium nitrite (E250)', 'Forms nitrosamines (carcinogens) when cooked at high heat; colorectal cancer risk'),
         'sodium nitrate': ('Meat preservative E251', 'Converts to nitrite in body, linked to colorectal cancer'),
-        'sulfur dioxide': ('Preservative E220', 'Destroys vitamin B1, triggers severe asthma, allergic reactions'),
-        'methylparaben': ('Paraben preservative E218', 'Mimics estrogen, hormone disruption, accumulates in breast tissue'),
-        'propylparaben': ('Paraben preservative E216', 'Endocrine disruptor, linked to reduced sperm count, reproductive harm'),
-        'butylparaben': ('Paraben preservative E214', 'Strongest hormone disruptor, bioaccumulation, reproductive toxicity'),
+        'e251': ('Sodium nitrate (E251)', 'Converts to nitrite in body; colorectal cancer concerns'),
+        'methylparaben': ('Paraben preservative', 'Mimics estrogen, hormone disruption, accumulates in breast tissue; EU restricts concentration'),
+        'propylparaben': ('Paraben preservative', 'Endocrine disruptor, linked to reduced sperm count, reproductive harm; banned in children\'s products in Denmark/EU'),
+        'butylparaben': ('Paraben preservative', 'Strongest hormone disruptor among parabens; bioaccumulation; reproductive toxicity; banned for children under 3 in EU'),
+
+        # Harsh surfactants
+        'sodium lauryl sulfate': ('Harsh surfactant SLS', 'Strong skin irritant; strips protective oils; can cause mouth ulcers; scalp damage; EU requires safety testing'),
+        'sodium lauryl sulphate': ('Harsh surfactant SLS', 'Strong skin irritant; strips protective oils; mouth ulcers; scalp damage'),
         
         # Artificial colors with serious concerns
-        'tartrazine': ('Yellow artificial color E102', 'Hyperactivity & ADHD in children, asthma attacks, requires EU warning label'),
-        'sunset yellow': ('Orange artificial color E110', 'Hyperactivity in children, allergic reactions, banned in Norway & Finland'),
-        'allura red': ('Red artificial color E129', 'Hyperactivity, immune system tumors in mice, allergic reactions'),
-        'ponceau 4r': ('Red artificial color E124', 'Banned in USA/Norway/Finland - cancer concerns, hyperactivity'),
-        'carmoisine': ('Red artificial color E122', 'Banned in USA/Canada/Japan - hyperactivity, asthma, allergic reactions'),
-        'brilliant blue': ('Blue artificial color E133', 'Crosses blood-brain barrier, neurotoxicity, chromosomal damage'),
-        'indigo carmine': ('Blue artificial color E132', 'Brain tumors in animal studies, banned in Norway'),
-        'erythrosine': ('Red artificial color E127', 'Thyroid tumors in rats, interferes with thyroid function'),
-        'quinoline yellow': ('Yellow artificial color E104', 'Banned in USA/Canada/Japan/Australia - hyperactivity, dermatitis'),
-        'brown ht': ('Brown artificial color E155', 'Banned in USA/Canada/Australia - hyperactivity, asthma'),
-        
+        'tartrazine': ('Yellow artificial color E102', 'Hyperactivity & ADHD in children, asthma attacks; EU warning label required; banned in Austria, Norway'),
+        'e102': ('Tartrazine (E102)', 'EU warning label required; hyperactivity and ADHD in children; banned in several countries'),
+        'sunset yellow': ('Orange artificial color E110', 'Hyperactivity in children, allergic reactions; banned in Norway & Finland; EU warning label'),
+        'e110': ('Sunset Yellow (E110)', 'Banned in Norway and Finland; EU warning label required; hyperactivity concerns'),
+        'allura red': ('Red artificial color E129', 'Hyperactivity, immune system tumors in mice; EU warning label; banned in several European countries'),
+        'red 40': ('Allura Red (Red 40 / E129)', 'EU warning label required; banned in Denmark, Belgium, France, Switzerland, Sweden, Austria, Norway'),
+        'e129': ('Allura Red (E129)', 'EU warning label required; banned in multiple European countries; hyperactivity concerns'),
+        'ponceau 4r': ('Red artificial color E124', 'Banned in USA, Norway, Finland — cancer concerns, hyperactivity'),
+        'e124': ('Ponceau 4R (E124)', 'Banned in USA, Norway, Finland — cancer and hyperactivity concerns'),
+        'carmoisine': ('Red artificial color E122', 'Banned in USA, Canada, Japan — hyperactivity, asthma, allergic reactions'),
+        'e122': ('Carmoisine (E122)', 'Banned in USA, Canada, Japan — hyperactivity and allergic reactions'),
+        'brilliant blue': ('Blue artificial color E133', 'Crosses blood-brain barrier, neurotoxicity, chromosomal damage; banned in 6 EU countries'),
+        'e133': ('Brilliant Blue FCF (E133)', 'Banned in Belgium, France, Germany, Greece, Italy, Spain, Switzerland'),
+        'indigo carmine': ('Blue artificial color E132', 'Brain tumors in animal studies; banned in Norway'),
+        'e132': ('Indigo Carmine (E132)', 'Brain tumors in animal studies; banned in Norway'),
+        'erythrosine': ('Red artificial color E127', 'Thyroid tumors in rats; interferes with thyroid function'),
+        'e127': ('Erythrosine (E127)', 'Thyroid tumors in animal studies; banned in cosmetics in USA'),
+        'quinoline yellow': ('Yellow artificial color E104', 'Banned in USA, Canada, Japan, Australia — hyperactivity, dermatitis'),
+        'e104': ('Quinoline Yellow (E104)', 'Banned in USA, Canada, Japan, Australia — hyperactivity and dermatitis'),
+        'brown ht': ('Brown artificial color E155', 'Banned in USA, Canada, Australia — hyperactivity, asthma'),
+        'e155': ('Brown HT (E155)', 'Banned in USA, Canada, Australia — hyperactivity and asthma'),
+        'patent blue v': ('Blue artificial color E131', 'May cause anaphylaxis, urticaria; banned in USA, Canada, Australia'),
+        'e131': ('Patent Blue V (E131)', 'May cause severe allergic reactions including anaphylaxis; banned in USA, Canada, Australia'),
+        'azorubine': ('Red artificial color E122', 'Banned in USA, Canada, Japan; hyperactivity, asthma concerns (same as Carmoisine)'),
+        'e951': ('Aspartame (E951)', 'IARC Group 2B possible carcinogen (2023); phenylalanine risk for PKU sufferers'),
+        'e950': ('Acesulfame potassium (E950)', 'Animal studies show effects on gut bacteria and insulin; FDA approved but limited human long-term data'),
+
         # Flavor enhancers
-        'disodium guanylate': ('Flavor enhancer E627', 'MSG-like effects: headaches, numbness, flushing, neurotoxicity concerns'),
-        'disodium inosinate': ('Flavor enhancer E631', 'MSG-like effects: headaches, sweating, chest pain, avoid if MSG-sensitive'),
-        'monosodium glutamate': ('Flavor enhancer MSG', 'Headaches, nausea, chest pain, neurotoxicity at high doses'),
-        
+        'disodium guanylate': ('Flavor enhancer E627', 'MSG-like effects: headaches, numbness, flushing; avoid if MSG-sensitive; neurotoxicity concerns at high doses'),
+        'e627': ('Disodium guanylate (E627)', 'MSG-like effects; headaches, numbness; avoid if MSG-sensitive'),
+        'disodium inosinate': ('Flavor enhancer E631', 'MSG-like effects: headaches, sweating, chest pain; avoid if MSG-sensitive'),
+        'e631': ('Disodium inosinate (E631)', 'MSG-like effects; headaches, sweating, chest pain; avoid if MSG-sensitive'),
+
         # Acids with concerns
         'phosphoric acid': ('Acidulant E338', 'Erodes tooth enamel, reduces bone density, kidney stones, calcium depletion'),
-        'caramel colour': ('Color additive E150', 'Contains 4-MEI (potential carcinogen), linked to cancer in animal studies'),
-        'caramel color': ('Color additive E150', 'Contains 4-MEI (potential carcinogen), linked to cancer in animal studies'),
-        
+        'e338': ('Phosphoric acid (E338)', 'Erodes tooth enamel, reduces bone density, calcium depletion'),
+        'caramel colour': ('Color additive E150c/d', 'Class III/IV caramel contains 4-MEI (potential carcinogen in animal studies); California Prop 65 listed'),
+        'caramel color': ('Color additive E150c/d', 'Class III/IV caramel contains 4-MEI (potential carcinogen); California Prop 65 listed'),
+        'e150': ('Caramel colour (E150)', 'Class III/IV contains 4-MEI — potential carcinogen in animal studies; California Prop 65 listed'),
+
         # Preservatives in personal care
-        'methylchloroisothiazolinone': ('Preservative MIT', 'Severe contact dermatitis, skin allergies, EU restricted, neurotoxic'),
-        'methylisothiazolinone': ('Preservative MIT', 'Strong allergen, contact dermatitis, banned in leave-on products in EU'),
-        'dmdm hydantoin': ('Formaldehyde-releasing preservative', 'Slowly releases formaldehyde (carcinogen); contact dermatitis, hair loss reports, restricted in EU cosmetics'),
+        'methylchloroisothiazolinone': ('Preservative MCI', 'Severe contact dermatitis, skin allergies, neurotoxic; EU banned in leave-on cosmetics; strong allergen'),
+        'methylisothiazolinone': ('Preservative MI', 'Strong allergen, contact dermatitis; EU banned in all leave-on cosmetics; frequent occupational allergen'),
+        'dmdm hydantoin': ('Formaldehyde-releasing preservative', 'Slowly releases formaldehyde (IARC Group 1 carcinogen); contact dermatitis, hair loss reports; restricted in EU cosmetics'),
         'imidazolidinyl urea': ('Formaldehyde-releasing preservative', 'Releases formaldehyde over time; skin sensitiser, potential carcinogen, contact allergy risk'),
-        'diazolidinyl urea': ('Formaldehyde-releasing preservative', 'Releases formaldehyde; strongest formaldehyde releaser in cosmetics, contact dermatitis'),
+        'diazolidinyl urea': ('Formaldehyde-releasing preservative', 'Releases formaldehyde; strongest formaldehyde releaser in cosmetics; contact dermatitis'),
         'quaternium-15': ('Formaldehyde-releasing preservative', 'Highest formaldehyde release rate among cosmetic preservatives; restricted in EU'),
-        'phenyl mercuric': ('Mercury-based preservative', 'Mercury compound — toxic to kidneys and nervous system, banned in most countries'),
+        'phenyl mercuric': ('Mercury-based preservative', 'Mercury compound — toxic to kidneys and nervous system; banned in most countries'),
+        'formaldehyde': ('Known carcinogen (IARC Group 1)', 'Direct carcinogen; causes DNA damage and cancer; banned as preservative in EU cosmetics; released by formaldehyde-releaser preservatives'),
+        'bronopol': ('Formaldehyde-releasing preservative', 'Releases formaldehyde and can form nitrosamines; EU restricted; skin and eye irritant'),
 
-        # Fragrances
-        'fragrance': ('Undisclosed fragrance mixture', 'May contain phthalates (hormone disruptors), allergens, no disclosure required'),
-        'perfume': ('Undisclosed fragrance mixture', 'May contain hormone disruptors, allergens, respiratory irritants'),
-        'parfum': ('Undisclosed fragrance mixture', 'May contain phthalates, allergens, linked to asthma and allergies'),
-
-        # Artificial flavors
-        'artificial': ('Synthetic flavoring', 'May contain allergens, some linked to behavioral issues in children'),
+        # Sweeteners — commonly questioned
+        'aspartame': ('Artificial sweetener E951', 'IARC Group 2B possible carcinogen (2023); contains phenylalanine — dangerous for PKU sufferers; headaches, mood changes reported'),
+        'acesulfame potassium': ('Artificial sweetener Ace-K (E950)', 'Animal studies show effects on gut bacteria and insulin signalling; FDA-approved but limited long-term human data'),
+        'acesulfame-k': ('Artificial sweetener Ace-K (E950)', 'Animal studies show metabolic effects; FDA-approved but limited long-term human data'),
 
         # Antioxidant preservatives
         'butylated hydroxyanisole': ('Antioxidant preservative (BHA)', 'IARC Group 2B possible carcinogen; banned in Japan; EU-restricted in some foods; California Prop 65 listed'),
@@ -123,11 +151,22 @@ def classify_ingredient(ingredient_name, category=None):
         'maltodextrin': ('Carbohydrate additive', 'Very high glycemic index — faster blood sugar spike than table sugar; may harm gut microbiome with regular use'),
         'corn syrup solids': ('Dried glucose syrup', 'High-GI refined carbohydrate; rapid blood sugar spike; often used in creamers in protein powders'),
 
-        # Artificial sweeteners
+        # Artificial sweeteners (moderate evidence)
         'sucralose': ('Artificial sweetener E955', 'Alters gut microbiome composition; may impair insulin response; some studies link to increased appetite and glucose intolerance'),
-        'acesulfame potassium': ('Artificial sweetener E950 (Ace-K)', 'Animal studies show potential effects on gut bacteria and insulin; typically used with sucralose in protein powders'),
-        'acesulfame-k': ('Artificial sweetener E950', 'Same as acesulfame potassium; animal studies suggest metabolic effects; FDA-approved but long-term human data limited'),
-        'aspartame': ('Artificial sweetener E951', 'Contains phenylalanine (PKU risk); headaches and mood changes reported; classified possible carcinogen (Group 2B) by IARC 2023'),
+        'e955': ('Sucralose (E955)', 'Alters gut microbiome; may impair insulin response; glucose intolerance in some studies'),
+        'saccharin': ('Artificial sweetener E954', 'Bladder cancer in rats at high doses; FDA required warning label until 2000; now considered safe for most at normal levels'),
+        'e954': ('Saccharin (E954)', 'Historical bladder cancer concerns in animals; FDA now considers safe at normal intake levels'),
+
+        # Fragrance — hides complex chemical mixtures
+        'fragrance': ('Undisclosed fragrance mixture', 'May contain phthalates, allergens, or sensitizers; EU requires declaration of 26 specific fragrance allergens'),
+        'perfume': ('Undisclosed fragrance mixture', 'May contain hormone disruptors and allergens; EU requires declaration of 26 fragrance allergens'),
+        'parfum': ('Undisclosed fragrance mixture', 'May contain phthalates and allergens; EU requires 26 specific allergen disclosures on labels'),
+        'artificial flavor': ('Synthetic flavoring', 'May contain allergens; no ingredient-level disclosure required; source may vary widely'),
+        'artificial flavour': ('Synthetic flavoring', 'May contain allergens; no ingredient-level disclosure required; source may vary widely'),
+
+        # MSG — flavor enhancer (FDA GRAS, some sensitivity)
+        'monosodium glutamate': ('Flavor enhancer MSG (E621)', 'FDA-approved GRAS; double-blind studies mostly found no link to "Chinese Restaurant Syndrome"; some individuals report sensitivity'),
+        'e621': ('MSG / Monosodium glutamate (E621)', 'FDA-approved GRAS; some people report sensitivity; generally safe for most at normal dietary levels'),
 
         # Fiber additives
         'inulin': ('Prebiotic fiber', 'Causes gas, bloating and abdominal discomfort in doses above 5g; ferments rapidly in colon — problematic for IBS sufferers'),
@@ -146,12 +185,48 @@ def classify_ingredient(ingredient_name, category=None):
         'ammonium phosphatides': ('Emulsifier E442', 'Synthetic, limited safety data, may affect mineral absorption'),
         'carrageenan': ('Thickener E407', 'Digestive inflammation, may trigger IBS, linked to colon issues in studies'),
         
-        # Surfactants in personal care
-        'sodium laureth sulfate': ('Surfactant cleanser', 'Strips natural oils, causes dryness, scalp irritation, eye irritation'),
-        'sodium laureth sulphate': ('Surfactant cleanser', 'Strips natural oils, causes dryness, scalp irritation, eye irritation'),
-        'sodium lauryl sulfate': ('Surfactant cleanser', 'Harsh, causes skin dryness, irritation, may damage hair protein'),
-        'sodium lauryl sulphate': ('Surfactant cleanser', 'Harsh, causes skin dryness, irritation, may damage hair protein'),
-        'cocamidopropyl betaine': ('Surfactant', 'Can cause allergic reactions, contact dermatitis, eye irritation'),
+        # Surfactants in personal care (SLS moved to commonly_questioned)
+        'sodium laureth sulfate': ('Surfactant SLES', 'Milder than SLS but strips natural oils; scalp and eye irritation; dryness'),
+        'sodium laureth sulphate': ('Surfactant SLES', 'Milder than SLS but strips natural oils; scalp and eye irritation; dryness'),
+        'ammonium laureth sulfate': ('Surfactant ALES', 'Similar to SLES; strips natural oils; scalp irritation possible'),
+        'cocamidopropyl betaine': ('Amphoteric surfactant', 'Can cause allergic contact dermatitis; sensitization; eye irritation'),
+
+        # Preservatives (milder concerns)
+        'phenoxyethanol': ('Preservative', 'EU restricts to 1% in cosmetics; skin and eye irritant; reproductive toxicity concerns at higher concentrations'),
+        'benzyl alcohol': ('Preservative/solvent', 'Contact dermatitis in some individuals; toxic to neonates in large doses; restricted in baby products'),
+        'potassium sorbate': ('Preservative E202', 'Generally safe; may cause skin irritation and allergic reactions; migraines reported'),
+        'e202': ('Potassium sorbate (E202)', 'Generally safe preservative; may cause contact allergies in sensitive individuals'),
+        'e407': ('Carrageenan (E407)', 'Digestive inflammation; may trigger IBS symptoms; linked to colon issues in studies'),
+        'e955': ('Sucralose (E955)', 'Alters gut microbiome; may impair insulin response; glucose intolerance in some studies'),
+        'e954': ('Saccharin (E954)', 'Bladder cancer in rats at high doses; now considered safe for most at normal intake'),
+
+        # Petroleum-derived ingredients
+        'mineral oil': ('Mineral oil (petroleum-derived)', 'Petroleum-derived; may contain PAH contaminants if not highly refined; can trap bacteria; EU restricts in food'),
+        'petrolatum': ('Petroleum jelly', 'Petroleum-derived; EU restricts unless PAH safety established; may contain carcinogenic impurities'),
+        'paraffinum liquidum': ('Liquid paraffin (mineral oil)', 'Petroleum-derived; EU requires safety data due to PAH risk; cheap emollient'),
+        'paraffin wax': ('Paraffin wax', 'Petroleum-derived; may contain trace PAH impurities; limited skin benefit'),
+
+        # PEG compounds
+        'peg-': ('PEG compound', 'May be contaminated with 1,4-dioxane (carcinogen); increases skin penetration of other chemicals'),
+        'polyethylene glycol': ('PEG emollient/thickener', 'May contain 1,4-dioxane contamination; increases skin permeability'),
+
+        # Denatured alcohols
+        'alcohol denat': ('Denatured alcohol', 'Drying to skin; disrupts protective skin barrier with repeated use; may cause sensitivity'),
+        'denatured alcohol': ('Denatured alcohol', 'Drying to skin and scalp; disrupts skin barrier function with repeated use'),
+        'sd alcohol': ('Specially denatured alcohol', 'Drying to skin; disrupts barrier; can cause irritation with frequent use'),
+
+        # Allergens
+        'lanolin': ('Wool-derived emollient', 'Natural but common allergen (~1.7% population); may contain pesticide residues from sheep wool'),
+        'wool wax': ('Lanolin derivative', 'Wool-derived; contact allergy risk in lanolin-sensitive individuals'),
+
+        # Silicones (cyclic — environmental concern)
+        'cyclomethicone': ('Cyclic silicone', 'EU restricts in wash-off cosmetics; environmental persistence; accumulates in aquatic organisms'),
+        'cyclopentasiloxane': ('Cyclic silicone D5', 'EU banned in wash-off cosmetics >0.1%; endocrine disruption concerns; persistent environmental pollutant'),
+        'cyclohexasiloxane': ('Cyclic silicone D6', 'EU restricted; environmental persistence; similar concerns to D5'),
+        'amodimethicone': ('Modified silicone', 'Builds up on hair; environmental persistence; hard to biodegrade'),
+
+        # Sweeteners
+        'saccharin': ('Artificial sweetener E954', 'Bladder cancer in rats at high doses; now considered safe at normal intake; FDA removed warning label in 2000'),
 
         # Retinoids (topical)
         'retinol': ('Vitamin A derivative', 'Avoid during pregnancy (teratogenic); increases sun sensitivity — use SPF; causes purging and irritation initially'),
@@ -179,9 +254,7 @@ def classify_ingredient(ingredient_name, category=None):
         'disodium edta': ('Chelating agent', 'Removes beneficial minerals, environmental pollutant, penetration enhancer'),
         'tetrasodium etidronate': ('Chelating agent', 'Binds minerals like calcium, may affect bone health with long-term use'),
         
-        # Preservatives (milder)
-        'sodium benzoate': ('Preservative E211', 'Can form benzene with vitamin C (carcinogen), asthma trigger in sensitive people'),
-        'potassium sorbate': ('Preservative E202', 'Generally safe but may cause allergic reactions, skin irritation, migraines'),
+        # Mild acids
         'citric acid': ('Preservative/acidulant E330', 'Tooth enamel erosion with frequent exposure, stomach upset in large amounts'),
         
         # Colorants (natural/mineral)
