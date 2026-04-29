@@ -10,7 +10,85 @@ const STATUS_BG    = { pending: '#fef3c7', approved: '#f0fdf4', rejected: '#fef2
 
 const CATEGORIES = ['Personal Care', 'Skincare', 'Haircare', 'Food & Beverages', 'Supplements', 'Baby Care', 'Other']
 
-// Parse "Water, Glycerin, Sodium Laureth Sulfate..." into ingredient objects
+// ── Ingredient classification keyword lists ───────────────────────────────────
+const COMMONLY_QUESTIONED = [
+  // Parabens
+  'methylparaben', 'ethylparaben', 'propylparaben', 'butylparaben', 'isobutylparaben',
+  // SLS (strong irritant)
+  'sodium lauryl sulfate',
+  // Formaldehyde releasers
+  'dmdm hydantoin', 'imidazolidinyl urea', 'diazolidinyl urea', 'quaternium-15', 'bronopol', '2-bromo-2-nitropropane',
+  // Phthalates
+  'dibutyl phthalate', 'diethyl phthalate', 'dimethyl phthalate',
+  // Antimicrobials
+  'triclosan', 'triclocarban',
+  // Antioxidants (potential carcinogens)
+  'butylated hydroxyanisole', 'butylated hydroxytoluene', 'tbhq',
+  // EU-restricted food colours
+  'allura red', 'red 40', 'e129',
+  'tartrazine', 'yellow 5', 'e102',
+  'sunset yellow', 'yellow 6', 'e110',
+  'carmoisine', 'azorubine', 'e122',
+  'ponceau 4r', 'e124',
+  'erythrosine', 'red 3', 'e127',
+  'patent blue v', 'e131',
+  'indigo carmine', 'e132',
+  'brown ht', 'e155',
+  // Sweeteners
+  'aspartame', 'e951',
+  'acesulfame-k', 'acesulfame k', 'e950',
+  // Meat preservatives
+  'sodium nitrite', 'e250', 'sodium nitrate', 'e251',
+  // Others
+  'potassium bromate', 'formaldehyde',
+]
+
+const WORTH_KNOWING = [
+  // SLES (milder than SLS but can be irritant)
+  'sodium laureth sulfate', 'ammonium laureth sulfate',
+  // Preservatives
+  'phenoxyethanol', 'sodium benzoate', 'e211', 'potassium sorbate', 'e202', 'benzyl alcohol',
+  'methylisothiazolinone', 'methylchloroisothiazolinone',
+  // Fragrance (hides unknowns)
+  'fragrance', 'parfum', 'artificial flavor', 'artificial flavour',
+  // Sensitizers
+  'cocamidopropyl betaine',
+  // Silicones
+  'dimethicone', 'cyclomethicone', 'cyclopentasiloxane', 'cyclohexasiloxane', 'dimethiconol', 'amodimethicone',
+  // PEGs
+  'peg-', 'polyethylene glycol',
+  // Petroleum-derived
+  'mineral oil', 'petrolatum', 'paraffinum liquidum', 'paraffin wax',
+  // Alcohol
+  'alcohol denat', 'denatured alcohol', 'sd alcohol',
+  // Allergens
+  'lanolin', 'wool wax',
+  // Sweeteners (moderate evidence)
+  'sucralose', 'e955', 'saccharin', 'e954',
+  // Food additives
+  'high fructose corn syrup', 'monosodium glutamate', 'e621',
+  'carrageenan', 'e407',
+  'hydrogenated', 'partially hydrogenated',
+  // Talc
+  'talc', 'talcum',
+  // CI colours (cosmetic colourants — commonly used, some with regional restrictions)
+  'ci 26100', 'ci 47000', 'ci 61565', 'ci 19140', 'ci 15985', 'ci 17200', 'ci 42090', 'ci 16035',
+  'ci 15510', 'ci 45410', 'ci 77491', 'ci 77492', 'ci 77499',
+  // BHA/BHT (catch partial names)
+  'bha', 'bht',
+]
+
+function classifyIngredient(name) {
+  const n = name.toLowerCase()
+  for (const kw of COMMONLY_QUESTIONED) {
+    if (n.includes(kw)) return 'commonly_questioned'
+  }
+  for (const kw of WORTH_KNOWING) {
+    if (n.includes(kw)) return 'worth_knowing'
+  }
+  return 'generally_recognised'
+}
+
 function parseIngredients(text) {
   return text
     .split(/[,;]/)
@@ -19,10 +97,19 @@ function parseIngredients(text) {
     .map(name => ({
       name: name.slice(0, 100),
       aliases: '',
-      classification: 'generally_recognised',
+      classification: classifyIngredient(name),
       one_line_note: '',
       regulatory_note: '',
     }))
+}
+
+function calculateScore(ingredients) {
+  let score = 100
+  for (const ing of ingredients) {
+    if (ing.classification === 'commonly_questioned') score -= 20
+    else if (ing.classification === 'worth_knowing') score -= 8
+  }
+  return Math.max(0, score)
 }
 
 function verdictFromScore(score) {
@@ -37,6 +124,24 @@ function recommendationFromScore(score) {
   if (score >= 60) return 'Suitable for most people. Some ingredients may warrant attention.'
   if (score >= 40) return 'Review ingredient list before regular use, especially for sensitive individuals.'
   return 'Consider checking with a professional before regular use.'
+}
+
+async function downloadImg(url, filename) {
+  try {
+    const resp = await fetch(url, { mode: 'cors' })
+    if (!resp.ok) throw new Error()
+    const blob = await resp.blob()
+    const blobUrl = URL.createObjectURL(blob)
+    const a = document.createElement('a')
+    a.href = blobUrl
+    a.download = filename || 'image.jpg'
+    document.body.appendChild(a)
+    a.click()
+    document.body.removeChild(a)
+    setTimeout(() => URL.revokeObjectURL(blobUrl), 1000)
+  } catch {
+    window.open(url, '_blank')
+  }
 }
 
 function formatDate(iso) {
@@ -107,10 +212,15 @@ function SubmissionCard({ sub, onApprove, onReject, onSave, saving, cardMsg }) {
   const [ingredients, setIngredients] = useState('')
   const [brand,       setBrand]       = useState('')
   const [category,    setCategory]    = useState('Personal Care')
-  const [score,       setScore]       = useState(70)
 
   const isSaving = saving === sub.id
+
+  // Live classification preview
   const parsed = ingredients.trim() ? parseIngredients(ingredients) : []
+  const autoScore = parsed.length > 0 ? calculateScore(parsed) : null
+  const cq = parsed.filter(i => i.classification === 'commonly_questioned').length
+  const wk = parsed.filter(i => i.classification === 'worth_knowing').length
+  const gr = parsed.filter(i => i.classification === 'generally_recognised').length
 
   const field = {
     width: '100%', boxSizing: 'border-box', border: '1.5px solid #d1d5db',
@@ -136,7 +246,7 @@ function SubmissionCard({ sub, onApprove, onReject, onSave, saving, cardMsg }) {
           </span>
         </div>
 
-        {/* Info rows */}
+        {/* Info */}
         <div style={{ display: 'flex', flexDirection: 'column', gap: 7, marginBottom: 14 }}>
           <div style={{ display: 'flex', gap: 8 }}>
             <span style={{ fontSize: 15 }}>📧</span>
@@ -166,7 +276,7 @@ function SubmissionCard({ sub, onApprove, onReject, onSave, saving, cardMsg }) {
           </div>
         )}
 
-        {/* Approved — manual form, saves directly to Supabase */}
+        {/* Approved — manual form */}
         {sub.status === 'approved' && (
           <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
 
@@ -189,21 +299,6 @@ function SubmissionCard({ sub, onApprove, onReject, onSave, saving, cardMsg }) {
               </select>
             </div>
 
-            {/* Score */}
-            <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-              <label style={{ fontSize: 12, color: '#6b7280', fontWeight: 600, whiteSpace: 'nowrap' }}>Score (0–100):</label>
-              <input
-                type="number" min={0} max={100}
-                value={score}
-                onChange={e => setScore(e.target.value)}
-                style={{ ...field, width: 72 }}
-                disabled={isSaving}
-              />
-              <span style={{ fontSize: 12, color: '#6b7280' }}>
-                {score >= 80 ? '🟢 Clean' : score >= 60 ? '🟡 Average' : score >= 40 ? '🟠 Review' : '🔴 Caution'}
-              </span>
-            </div>
-
             {/* Ingredients textarea */}
             <div>
               <p style={{ margin: '0 0 5px', fontSize: 12, color: '#6b7280', fontWeight: 600 }}>
@@ -217,16 +312,30 @@ function SubmissionCard({ sub, onApprove, onReject, onSave, saving, cardMsg }) {
                 style={{ ...field, resize: 'vertical' }}
                 disabled={isSaving}
               />
-              {parsed.length > 0 && (
-                <p style={{ margin: '3px 0 0', fontSize: 11, color: '#9ca3af' }}>
-                  {parsed.length} ingredients detected
-                </p>
-              )}
             </div>
+
+            {/* Live classification preview */}
+            {parsed.length > 0 && (
+              <div style={{ background: '#f8fafc', border: '1px solid #e2e8f0', borderRadius: 8, padding: '10px 12px' }}>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 6 }}>
+                  <span style={{ fontSize: 12, fontWeight: 700, color: '#374151' }}>
+                    {parsed.length} ingredients detected
+                  </span>
+                  <span style={{ fontSize: 14, fontWeight: 800, color: autoScore >= 80 ? '#16a34a' : autoScore >= 60 ? '#ca8a04' : autoScore >= 40 ? '#ea580c' : '#dc2626' }}>
+                    Score: {autoScore}/100
+                  </span>
+                </div>
+                <div style={{ display: 'flex', gap: 6, flexWrap: 'wrap' }}>
+                  {gr > 0 && <span style={{ fontSize: 11, fontWeight: 600, background: '#f0fdf4', color: '#16a34a', border: '1px solid #bbf7d0', borderRadius: 99, padding: '2px 8px' }}>🟢 {gr} clean</span>}
+                  {wk > 0 && <span style={{ fontSize: 11, fontWeight: 600, background: '#fefce8', color: '#ca8a04', border: '1px solid #fde68a', borderRadius: 99, padding: '2px 8px' }}>🟡 {wk} worth knowing</span>}
+                  {cq > 0 && <span style={{ fontSize: 11, fontWeight: 600, background: '#fef2f2', color: '#dc2626', border: '1px solid #fecaca', borderRadius: 99, padding: '2px 8px' }}>🔴 {cq} questioned</span>}
+                </div>
+              </div>
+            )}
 
             {/* Save button */}
             <button
-              onClick={() => onSave(sub.id, { text: ingredients, brand, category, score })}
+              onClick={() => onSave(sub.id, { text: ingredients, brand, category })}
               disabled={isSaving || !ingredients.trim()}
               style={{
                 width: '100%',
@@ -252,9 +361,28 @@ function SubmissionCard({ sub, onApprove, onReject, onSave, saving, cardMsg }) {
           </div>
         )}
 
+        {/* Extracted — success + downloadable images */}
         {sub.status === 'extracted' && (
-          <div style={{ fontSize: 13, color: '#7c3aed', fontWeight: 600, paddingTop: 4 }}>
-            ✓ Added to database
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
+            <div style={{ fontSize: 13, color: '#7c3aed', fontWeight: 700 }}>
+              ✓ Added to database
+            </div>
+            {imgs.length > 0 && (
+              <div>
+                <p style={{ margin: '0 0 6px', fontSize: 12, fontWeight: 600, color: '#6b7280' }}>
+                  Download product images:
+                </p>
+                <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6 }}>
+                  {imgs.map((url, i) => (
+                    <button key={i}
+                      onClick={() => downloadImg(url, `${sub.product_name_searched.replace(/\s+/g, '_')}_${i + 1}.jpg`)}
+                      style={{ background: '#eff6ff', border: '1px solid #bfdbfe', borderRadius: 8, padding: '7px 14px', fontSize: 12, fontWeight: 700, color: '#1d4ed8', cursor: 'pointer', fontFamily: 'inherit' }}>
+                      ⬇ Image {i + 1}
+                    </button>
+                  ))}
+                </div>
+              </div>
+            )}
           </div>
         )}
       </div>
@@ -328,8 +456,7 @@ export default function Admin() {
 
   const setMsg = (id, msg) => setCardMsgs(m => ({ ...m, [id]: msg }))
 
-  // Save directly to Supabase — no backend, no AI, no external API calls
-  const handleSave = async (id, { text, brand, category, score }) => {
+  const handleSave = async (id, { text, brand, category }) => {
     if (!text?.trim()) return
     setSaving(id)
     setMsg(id, null)
@@ -338,11 +465,11 @@ export default function Admin() {
         .from('product_submissions').select('*').eq('id', id).single()
       if (subErr || !sub) throw new Error('Could not load submission: ' + (subErr?.message || 'not found'))
 
-      const images     = sub.images || []
+      const images      = sub.images || []
       const productName = sub.product_name_searched || 'Unknown Product'
-      const parsed     = parseIngredients(text.trim())
-      const numScore   = Math.max(0, Math.min(100, parseInt(score) || 70))
-      const brandName  = (brand || '').trim() || productName.split(' ')[0]
+      const parsed      = parseIngredients(text.trim())
+      const score       = calculateScore(parsed)
+      const brandName   = (brand || '').trim() || productName.split(' ')[0]
 
       const { error: insertErr } = await supabase.from('ai_extracted_products').insert({
         name:            productName,
@@ -350,11 +477,11 @@ export default function Admin() {
         category:        category || 'Personal Care',
         image_url:       images[0] || null,
         images:          images,
-        awareness_score: numScore,
-        summary:         `${productName} contains ${parsed.length} ingredients. This information is for general awareness based on publicly available regulatory data. It is not a health assessment or medical advice.`,
+        awareness_score: score,
+        summary:         `${productName} contains ${parsed.length} ingredients. ${parsed.filter(i => i.classification === 'commonly_questioned').length} are commonly questioned and ${parsed.filter(i => i.classification === 'worth_knowing').length} are worth knowing. This information is for general awareness based on publicly available regulatory data. It is not a health assessment or medical advice.`,
         fssai_note:      'Subject to applicable FSSAI regulations.',
-        verdict:         verdictFromScore(numScore),
-        recommendation:  recommendationFromScore(numScore),
+        verdict:         verdictFromScore(score),
+        recommendation:  recommendationFromScore(score),
         ingredients:     parsed,
         ingredients_raw: text.trim().slice(0, 5000),
         submission_id:   id,
@@ -362,9 +489,11 @@ export default function Admin() {
       })
       if (insertErr) throw new Error('Save failed: ' + insertErr.message)
 
-      await supabase.from('product_submissions').update({ status: 'extracted' }).eq('id', id)
+      const { error: updateErr } = await supabase
+        .from('product_submissions').update({ status: 'extracted' }).eq('id', id)
+      if (updateErr) console.warn('Status update failed:', updateErr.message)
 
-      setMsg(id, { type: 'success', text: `✓ "${productName}" saved — ${parsed.length} ingredients, score ${numScore}/100` })
+      setMsg(id, { type: 'success', text: `✓ "${productName}" saved — score ${score}/100, ${parsed.length} ingredients` })
       fetchAll(); fetchSubs(tab)
     } catch (err) {
       setMsg(id, { type: 'error', text: `✕ ${err.message}` })

@@ -255,17 +255,39 @@ async def get_search_suggestions(q: str = Query(..., description="Search query f
     prefix = []
     substring = []
 
+    # Static products
     for p in SEARCH_INDEX:
         name_match = q_lower in p["name_lower"]
         brand_match = q_lower in p["brand_lower"]
         if not name_match and not brand_match:
             continue
         entry = {"name": p["name"], "brand": p["brand"], "category": p["category"]}
-        # Prefix matches in name rank first
         if p["name_lower"].startswith(q_lower):
             prefix.append(entry)
         else:
             substring.append(entry)
+
+    # Community-submitted products from Supabase
+    try:
+        community = supabase.from_("ai_extracted_products") \
+            .select("name, brand, category") \
+            .ilike("name", f"%{q}%") \
+            .limit(5) \
+            .execute()
+        for p in (community.data or []):
+            if not p.get("name"):
+                continue
+            entry = {
+                "name": p["name"],
+                "brand": p.get("brand") or "",
+                "category": p.get("category") or "General",
+            }
+            if p["name"].lower().startswith(q_lower):
+                prefix.insert(0, entry)   # community prefix match gets top priority
+            else:
+                substring.insert(0, entry)
+    except Exception as e:
+        print(f"[SUGGESTIONS SUPABASE ERROR] {e}")
 
     suggestions = (prefix + substring)[:8]
     return {"suggestions": suggestions}
