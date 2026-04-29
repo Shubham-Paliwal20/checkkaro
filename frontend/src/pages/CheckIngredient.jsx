@@ -311,19 +311,28 @@ function CheckIngredient() {
                     <div className="mb-6">
                       <h3 className="font-poppins font-semibold text-navy mb-3">What is it?</h3>
                       <div className={`p-4 rounded-lg border-2 ${
-                        ingredient.classification === 'generally_recognised' 
-                          ? 'bg-green-50 border-green-300' 
+                        ingredient.classification === 'generally_recognised'
+                          ? 'bg-green-50 border-green-300'
                           : ingredient.classification === 'worth_knowing'
                           ? 'bg-yellow-50 border-yellow-400'
                           : 'bg-red-50 border-red-400'
                       }`}>
-                        <p className={`leading-relaxed font-medium text-base ${
-                          ingredient.classification === 'generally_recognised' ? 'text-green-900' : 
+                        <p className={`font-semibold text-base mb-2 ${
+                          ingredient.classification === 'generally_recognised' ? 'text-green-900' :
                           ingredient.classification === 'worth_knowing' ? 'text-yellow-900' :
                           'text-red-900'
                         }`}>
                           {ingredient.what_it_is}
                         </p>
+                        {ingredient.one_line_note && (
+                          <p className={`text-sm leading-relaxed ${
+                            ingredient.classification === 'generally_recognised' ? 'text-green-800' :
+                            ingredient.classification === 'worth_knowing' ? 'text-yellow-800' :
+                            'text-red-800'
+                          }`}>
+                            {ingredient.one_line_note}
+                          </p>
+                        )}
                       </div>
                     </div>
                   )}
@@ -358,16 +367,31 @@ function CheckIngredient() {
                           <svg className="w-6 h-6 text-yellow-600 flex-shrink-0 mt-1" fill="currentColor" viewBox="0 0 20 20">
                             <path fillRule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clipRule="evenodd"/>
                           </svg>
-                          <div>
-                            <h4 className="font-semibold text-yellow-900 mb-2">Worth Knowing About</h4>
-                            <p className="text-yellow-900 text-sm leading-relaxed mb-3">
-                              This ingredient has some concerns or restrictions. While permitted, it may cause issues in sensitive individuals or at high doses.
-                            </p>
-                            <div className="bg-yellow-100 p-3 rounded border border-yellow-300">
-                              <p className="text-yellow-900 text-sm font-medium">
-                                <strong>Potential Effects:</strong> {ingredient.one_line_note || 'May cause reactions in sensitive individuals.'}
-                              </p>
-                            </div>
+                          <div className="w-full">
+                            <h4 className="font-semibold text-yellow-900 mb-3">Worth Knowing About</h4>
+                            {ingredient.health_effects ? (
+                              <div className="space-y-2">
+                                {ingredient.health_effects.short_term && (
+                                  <div className="bg-yellow-100 p-3 rounded border border-yellow-300">
+                                    <p className="text-yellow-900 text-sm"><strong>Short-term:</strong> {ingredient.health_effects.short_term}</p>
+                                  </div>
+                                )}
+                                {ingredient.health_effects.long_term && (
+                                  <div className="bg-yellow-100 p-3 rounded border border-yellow-300">
+                                    <p className="text-yellow-900 text-sm"><strong>Long-term:</strong> {ingredient.health_effects.long_term}</p>
+                                  </div>
+                                )}
+                                {ingredient.health_effects.vulnerable_groups && (
+                                  <div className="bg-orange-50 p-3 rounded border border-orange-300">
+                                    <p className="text-orange-900 text-sm"><strong>Most affected:</strong> {ingredient.health_effects.vulnerable_groups}</p>
+                                  </div>
+                                )}
+                              </div>
+                            ) : (
+                              <div className="bg-yellow-100 p-3 rounded border border-yellow-300">
+                                <p className="text-yellow-900 text-sm">May cause reactions in sensitive individuals or at high doses.</p>
+                              </div>
+                            )}
                           </div>
                         </div>
                       </div>
@@ -377,16 +401,31 @@ function CheckIngredient() {
                           <svg className="w-6 h-6 text-red-600 flex-shrink-0 mt-1" fill="currentColor" viewBox="0 0 20 20">
                             <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clipRule="evenodd"/>
                           </svg>
-                          <div>
-                            <h4 className="font-semibold text-red-900 mb-2">Commonly Questioned</h4>
-                            <p className="text-red-900 text-sm leading-relaxed mb-3">
-                              This ingredient has significant concerns backed by scientific research. It may be restricted or banned in some countries.
-                            </p>
-                            <div className="bg-red-100 p-3 rounded border border-red-400">
-                              <p className="text-red-900 text-sm font-semibold">
-                                <strong>Health Concerns:</strong> {ingredient.one_line_note || 'Linked to adverse health effects in scientific studies.'}
-                              </p>
-                            </div>
+                          <div className="w-full">
+                            <h4 className="font-semibold text-red-900 mb-3">Commonly Questioned</h4>
+                            {ingredient.health_effects ? (
+                              <div className="space-y-2">
+                                {ingredient.health_effects.short_term && (
+                                  <div className="bg-red-100 p-3 rounded border border-red-300">
+                                    <p className="text-red-900 text-sm"><strong>Short-term:</strong> {ingredient.health_effects.short_term}</p>
+                                  </div>
+                                )}
+                                {ingredient.health_effects.long_term && (
+                                  <div className="bg-red-100 p-3 rounded border border-red-300">
+                                    <p className="text-red-900 text-sm"><strong>Long-term:</strong> {ingredient.health_effects.long_term}</p>
+                                  </div>
+                                )}
+                                {ingredient.health_effects.vulnerable_groups && (
+                                  <div className="bg-red-200 p-3 rounded border border-red-400">
+                                    <p className="text-red-900 text-sm"><strong>Most affected:</strong> {ingredient.health_effects.vulnerable_groups}</p>
+                                  </div>
+                                )}
+                              </div>
+                            ) : (
+                              <div className="bg-red-100 p-3 rounded border border-red-400">
+                                <p className="text-red-900 text-sm font-semibold">Linked to adverse health effects in scientific studies. May be restricted or banned in some countries.</p>
+                              </div>
+                            )}
                           </div>
                         </div>
                       </div>
