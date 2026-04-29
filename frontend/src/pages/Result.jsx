@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { useParams } from 'react-router-dom'
 import { motion } from 'framer-motion'
 import axios from 'axios'
@@ -9,6 +9,75 @@ import ProductNotFound from '../components/ProductNotFound'
 
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:8000'
 
+function ProductImageGallery({ imageUrl, images, name }) {
+  const allImgs = (images && images.length > 0) ? images : (imageUrl ? [imageUrl] : [])
+  const [idx, setIdx] = useState(0)
+  const touchStartX = useRef(null)
+
+  const prev = () => setIdx(i => (i - 1 + allImgs.length) % allImgs.length)
+  const next = () => setIdx(i => (i + 1) % allImgs.length)
+  const onTouchStart = e => { touchStartX.current = e.touches[0].clientX }
+  const onTouchEnd = e => {
+    if (touchStartX.current === null) return
+    const dx = e.changedTouches[0].clientX - touchStartX.current
+    if (Math.abs(dx) > 40) { dx < 0 ? next() : prev() }
+    touchStartX.current = null
+  }
+
+  if (!allImgs.length) return (
+    <div className="w-full md:w-64 flex-shrink-0 h-64 bg-gray-50 rounded-xl flex items-center justify-center mx-auto md:mx-0">
+      <svg className="w-20 h-20 text-gray-300" fill="currentColor" viewBox="0 0 20 20">
+        <path fillRule="evenodd" d="M4 3a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V5a2 2 0 00-2-2H4zm12 12H4l4-8 3 6 2-4 3 6z" clipRule="evenodd" />
+      </svg>
+    </div>
+  )
+
+  return (
+    <div className="w-full md:w-64 flex-shrink-0 mx-auto md:mx-0" style={{ userSelect: 'none' }}>
+      {/* Main image */}
+      <div className="relative rounded-xl overflow-hidden bg-gray-50"
+        style={{ height: 240 }}
+        onTouchStart={onTouchStart} onTouchEnd={onTouchEnd}>
+        <img
+          src={allImgs[idx]}
+          alt={name}
+          className="w-full h-full object-contain p-3"
+          onError={e => { e.target.style.display = 'none' }}
+        />
+        {allImgs.length > 1 && (
+          <>
+            <button onClick={prev}
+              className="absolute left-2 top-1/2 -translate-y-1/2 w-8 h-8 rounded-full flex items-center justify-center text-white text-lg font-bold"
+              style={{ background: 'rgba(0,0,0,0.4)', border: 'none', cursor: 'pointer' }}>‹</button>
+            <button onClick={next}
+              className="absolute right-2 top-1/2 -translate-y-1/2 w-8 h-8 rounded-full flex items-center justify-center text-white text-lg font-bold"
+              style={{ background: 'rgba(0,0,0,0.4)', border: 'none', cursor: 'pointer' }}>›</button>
+            <span className="absolute top-2 right-2 text-white text-xs font-bold px-2 py-1 rounded-md"
+              style={{ background: 'rgba(0,0,0,0.45)' }}>{idx + 1}/{allImgs.length}</span>
+          </>
+        )}
+      </div>
+
+      {/* Thumbnails (only when multiple images) */}
+      {allImgs.length > 1 && (
+        <div className="flex gap-2 mt-2 overflow-x-auto pb-1" style={{ WebkitOverflowScrolling: 'touch' }}>
+          {allImgs.map((src, i) => (
+            <button key={i} onClick={() => setIdx(i)}
+              className="flex-shrink-0 rounded-lg overflow-hidden"
+              style={{
+                width: 52, height: 52,
+                border: i === idx ? '2.5px solid #FF9933' : '2px solid #e5e7eb',
+                background: '#f9fafb', padding: 0, cursor: 'pointer',
+              }}>
+              <img src={src} alt="" style={{ width: '100%', height: '100%', objectFit: 'contain', padding: 3 }} />
+            </button>
+          ))}
+        </div>
+      )}
+    </div>
+  )
+}
+
 function Result() {
   const { productName } = useParams()
   const [loading,          setLoading]          = useState(true)
@@ -18,10 +87,8 @@ function Result() {
   const [showCorrectionForm, setShowCorrectionForm] = useState(false)
   const [correctionText, setCorrectionText] = useState('')
   const [submitting, setSubmitting] = useState(false)
-  const [imgError, setImgError] = useState(false)
 
   useEffect(() => {
-    setImgError(false)
     setProductNotFound(false)
     fetchProduct()
   }, [productName])
@@ -148,21 +215,8 @@ function Result() {
         {/* Product Header Card */}
         <div className="card p-4 sm:p-6 mb-6">
           <div className="flex flex-col md:flex-row gap-4 sm:gap-6">
-            {/* Product Image */}
-            <div className="w-full md:w-48 h-48 bg-gray-50 rounded-xl overflow-hidden flex-shrink-0 mx-auto md:mx-0 flex items-center justify-center">
-              {product.image_url && !imgError ? (
-                <img
-                  src={product.image_url}
-                  alt={product.name}
-                  className="w-full h-full object-contain p-3"
-                  onError={() => setImgError(true)}
-                />
-              ) : (
-                <svg className="w-16 sm:w-20 h-16 sm:h-20 text-gray-300" fill="currentColor" viewBox="0 0 20 20">
-                  <path fillRule="evenodd" d="M4 3a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V5a2 2 0 00-2-2H4zm12 12H4l4-8 3 6 2-4 3 6z" clipRule="evenodd" />
-                </svg>
-              )}
-            </div>
+            {/* Product Image Gallery */}
+            <ProductImageGallery imageUrl={product.image_url} images={product.images} name={product.name} />
 
             {/* Product Info */}
             <div className="flex-1 text-center md:text-left">

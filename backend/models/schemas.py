@@ -18,6 +18,7 @@ class ProductResponse(BaseModel):
     brand: Optional[str] = None
     category: Optional[str] = None
     image_url: Optional[str] = None
+    images: Optional[List[str]] = None
     awareness_score: int = 50
     summary: Optional[str] = None
     fssai_note: Optional[str] = None

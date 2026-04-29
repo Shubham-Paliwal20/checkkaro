@@ -85,6 +85,7 @@ async def _do_extract(task_id: str, sub: dict, manual_text: Optional[str]) -> No
             "brand": (analysis.get("brand") or "Unknown")[:100],
             "category": (analysis.get("category") or "General")[:100],
             "image_url": images[0] if images else None,
+            "images": images,
             "awareness_score": max(0, min(100, int(analysis.get("awareness_score") or 50))),
             "summary": (analysis.get("summary") or "")[:2000],
             "fssai_note": (analysis.get("fssai_note") or "")[:500],
@@ -93,6 +94,7 @@ async def _do_extract(task_id: str, sub: dict, manual_text: Optional[str]) -> No
             "ingredients": analysis.get("ingredients") or [],
             "ingredients_raw": ingredients_text[:5000],
             "submission_id": sub["id"],
+            "status": "active",
         }
 
         insert_res = supabase.from_("ai_extracted_products").insert(product_data).execute()

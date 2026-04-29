@@ -118,12 +118,16 @@ async def search_product(name: str = Query(..., description="Product name to sea
                 for ing in raw_ingredients
             ]
             print(f"[SUPABASE] Found AI-extracted product: {p['name']}")
+            raw_images = p.get("images") or []
+            if not raw_images and p.get("image_url"):
+                raw_images = [p["image_url"]]
             return ProductResponse(
                 id=str(p.get("id", "")),
                 name=p["name"],
                 brand=p.get("brand") or "Unknown",
                 category=p.get("category") or "General",
                 image_url=p.get("image_url"),
+                images=raw_images if raw_images else None,
                 awareness_score=int(p.get("awareness_score") or 50),
                 summary=p.get("summary") or "",
                 fssai_note=p.get("fssai_note") or "",
