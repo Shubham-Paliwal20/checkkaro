@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef } from 'react'
+import { useSearchParams } from 'react-router-dom'
 import { motion } from 'framer-motion'
 import axios from 'axios'
 import DisclaimerBox from '../components/DisclaimerBox'
@@ -17,6 +18,16 @@ function CheckIngredient() {
 
   const searchRef = useRef(null)
   const resultRef = useRef(null)
+  const [searchParams] = useSearchParams()
+
+  // Auto-search when ?q= param is present (e.g. clicked from product page)
+  useEffect(() => {
+    const q = searchParams.get('q')
+    if (q) {
+      setQuery(q)
+      handleSearch(q)
+    }
+  }, [])
 
   // Auto-scroll to result when ingredient data arrives
   useEffect(() => {
