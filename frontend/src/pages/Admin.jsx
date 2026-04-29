@@ -69,8 +69,8 @@ const WORTH_KNOWING = [
   'high fructose corn syrup', 'monosodium glutamate', 'e621',
   'carrageenan', 'e407',
   'hydrogenated', 'partially hydrogenated',
-  // Talc
-  'talc', 'talcum',
+  // Talc, Titanium Dioxide
+  'talc', 'talcum', 'titanium dioxide',
   // CI colours (cosmetic colourants — commonly used, some with regional restrictions)
   'ci 26100', 'ci 47000', 'ci 61565', 'ci 19140', 'ci 15985', 'ci 17200', 'ci 42090', 'ci 16035',
   'ci 15510', 'ci 45410', 'ci 77491', 'ci 77492', 'ci 77499',
@@ -79,7 +79,11 @@ const WORTH_KNOWING = [
 ]
 
 function classifyIngredient(name) {
+  // Normalize: "CI No. 47000" → "ci 47000", collapse spaces
   const n = name.toLowerCase()
+    .replace(/\bno\.\s*/g, '')
+    .replace(/\s+/g, ' ')
+    .trim()
   for (const kw of COMMONLY_QUESTIONED) {
     if (n.includes(kw)) return 'commonly_questioned'
   }

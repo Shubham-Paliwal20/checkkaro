@@ -2,6 +2,7 @@ import { useState, useEffect, useRef } from 'react'
 import { useParams } from 'react-router-dom'
 import { motion } from 'framer-motion'
 import axios from 'axios'
+import { supabase } from '../lib/supabaseClient'
 import ScoreCircle from '../components/ScoreCircle'
 import DisclaimerBox from '../components/DisclaimerBox'
 import ProductReviews from '../components/ProductReviews'
@@ -97,10 +98,56 @@ function Result() {
     try {
       setLoading(true)
       setError(null)
-      const response = await axios.get(`${API_BASE_URL}/api/product/search`, {
-        params: { name: productName }
-      })
-      setProduct(response.data)
+
+      // Try backend first (has static products + Supabase)
+      try {
+        const response = await axios.get(`${API_BASE_URL}/api/product/search`, {
+          params: { name: productName },
+          timeout: 10000,
+        })
+        setProduct(response.data)
+        return
+      } catch (backendErr) {
+        // If it's a definitive 404 from backend (not a timeout/connection error),
+        // still fall through to Supabase direct before giving up
+        if (backendErr.response?.status && backendErr.response.status !== 404 && backendErr.response.status !== 500) {
+          throw backendErr
+        }
+      }
+
+      // Backend unavailable or returned 404 — query Supabase directly
+      const { data: rows } = await supabase
+        .from('ai_extracted_products')
+        .select('*')
+        .ilike('name', `%${productName}%`)
+        .order('created_at', { ascending: false })
+        .limit(1)
+
+      if (rows && rows.length > 0) {
+        const p = rows[0]
+        const rawImages = p.images || (p.image_url ? [p.image_url] : [])
+        setProduct({
+          id: String(p.id),
+          name: p.name,
+          brand: p.brand || 'Unknown',
+          category: p.category || 'General',
+          image_url: p.image_url || null,
+          images: rawImages.length > 0 ? rawImages : null,
+          awareness_score: parseInt(p.awareness_score) || 50,
+          summary: p.summary || '',
+          fssai_note: p.fssai_note || '',
+          verdict: p.verdict || '',
+          recommendation: p.recommendation || '',
+          ingredients: p.ingredients || [],
+          data_source: 'community_verified',
+          confidence: 'medium',
+          is_complete: true,
+        })
+        return
+      }
+
+      // Nothing found anywhere
+      setProductNotFound(true)
     } catch (err) {
       if (err.response?.status === 404 || (err.response?.data?.detail || '').toLowerCase().includes('not found')) {
         setProductNotFound(true)
