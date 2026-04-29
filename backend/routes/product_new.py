@@ -99,7 +99,6 @@ async def search_product(name: str = Query(..., description="Product name to sea
         db_result = supabase.from_("ai_extracted_products") \
             .select("*") \
             .ilike("name", f"%{name}%") \
-            .eq("status", "active") \
             .order("created_at", desc=True) \
             .limit(1) \
             .execute()
@@ -160,7 +159,28 @@ async def browse_products(
     sort: str = Query("score", description="sort: score | name | brand"),
 ):
     """Browse all products with category/brand filters and pagination."""
+    # Start with static products
     items = list(SAMPLE_PRODUCTS.values())
+
+    # Add community-submitted products from Supabase
+    try:
+        community = supabase.from_("ai_extracted_products") \
+            .select("id, name, brand, category, image_url, awareness_score, verdict") \
+            .order("created_at", desc=True) \
+            .limit(500) \
+            .execute()
+        for p in (community.data or []):
+            items.append({
+                "id":              str(p.get("id", "")),
+                "name":            p.get("name", ""),
+                "brand":           p.get("brand") or "Unknown",
+                "category":        p.get("category") or "General",
+                "image_url":       p.get("image_url"),
+                "awareness_score": int(p.get("awareness_score") or 50),
+                "verdict":         p.get("verdict") or "",
+            })
+    except Exception as e:
+        print(f"[BROWSE SUPABASE ERROR] {e}")
 
     # Filter
     if category and category != "All":
@@ -188,24 +208,33 @@ async def browse_products(
     start = (page - 1) * limit
     page_items = items[start: start + limit]
 
-    # Build available categories and brands from the full filtered set (before pagination)
-    all_cats = sorted({p["category"] for p in SAMPLE_PRODUCTS.values()})
-    # Brands available in the current category filter
-    if category and category != "All":
-        avail_brands = sorted({p["brand"] for p in SAMPLE_PRODUCTS.values() if p["category"] == category})
-    else:
-        avail_brands = sorted({p["brand"] for p in SAMPLE_PRODUCTS.values()})
+    # Categories and brands from all items (static + community)
+    all_items = list(SAMPLE_PRODUCTS.values())
+    try:
+        all_cats   = sorted({p["category"] for p in all_items} | {p["category"] for p in (community.data or []) if p.get("category")})
+        base_brand = {p["brand"] for p in all_items}
+        comm_brand = {p.get("brand") for p in (community.data or []) if p.get("brand")}
+        if category and category != "All":
+            avail_brands = sorted(
+                {p["brand"] for p in all_items if p["category"] == category} |
+                {p.get("brand") for p in (community.data or []) if p.get("category") == category and p.get("brand")}
+            )
+        else:
+            avail_brands = sorted(base_brand | comm_brand)
+    except Exception:
+        all_cats     = sorted({p["category"] for p in all_items})
+        avail_brands = sorted({p["brand"] for p in all_items})
 
     return {
         "products": [
             {
-                "id": p["id"],
-                "name": p["name"],
-                "brand": p["brand"],
-                "category": p["category"],
-                "image_url": p["image_url"],
+                "id":              p["id"],
+                "name":            p["name"],
+                "brand":           p["brand"],
+                "category":        p["category"],
+                "image_url":       p["image_url"],
                 "awareness_score": p["awareness_score"],
-                "verdict": p["verdict"],
+                "verdict":         p["verdict"],
             }
             for p in page_items
         ],
