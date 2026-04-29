@@ -495,7 +495,7 @@ export default function Admin() {
 
       const { error: updateErr } = await supabase
         .from('product_submissions').update({ status: 'extracted' }).eq('id', id)
-      if (updateErr) console.warn('Status update failed:', updateErr.message)
+      if (updateErr) throw new Error('Saved to DB but could not move to extracted: ' + updateErr.message)
 
       setMsg(id, { type: 'success', text: `✓ "${productName}" saved — score ${score}/100, ${parsed.length} ingredients` })
       fetchAll(); fetchSubs(tab)
