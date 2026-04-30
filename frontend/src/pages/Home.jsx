@@ -2,6 +2,7 @@ import { motion } from 'framer-motion'
 import { useNavigate } from 'react-router-dom'
 import SearchBar from '../components/SearchBar'
 import ReviewsSection from '../components/ReviewsSection'
+import SEO from '../components/SEO'
 
 function Home() {
   const navigate = useNavigate()
@@ -17,7 +18,46 @@ function Home() {
     { label: '🌶 Kurkure', query: 'Kurkure Masala Munch', cat: 'Snack' },
   ]
 
+  const homeStructuredData = {
+    '@context': 'https://schema.org',
+    '@type': 'FAQPage',
+    mainEntity: [
+      {
+        '@type': 'Question',
+        name: 'How do I check ingredients in Indian food products?',
+        acceptedAnswer: {
+          '@type': 'Answer',
+          text: 'Use CheckKaro to search any Indian product by name. Our database covers 600+ food and cosmetic products with ingredient-by-ingredient breakdowns and FSSAI regulatory context.',
+        },
+      },
+      {
+        '@type': 'Question',
+        name: 'Is CheckKaro free to use?',
+        acceptedAnswer: {
+          '@type': 'Answer',
+          text: 'Yes, CheckKaro is completely free. Search any Indian food or cosmetic product to understand its ingredients instantly.',
+        },
+      },
+      {
+        '@type': 'Question',
+        name: 'What products can I check on CheckKaro?',
+        acceptedAnswer: {
+          '@type': 'Answer',
+          text: 'CheckKaro covers Indian food products (biscuits, noodles, beverages, snacks, dairy) and cosmetic products (soaps, shampoos, skincare, hair care) — 600+ products in total.',
+        },
+      },
+    ],
+  }
+
   return (
+    <>
+      <SEO
+        title="Know Your Food & Cosmetic Products"
+        description="Search any Indian food or cosmetic product and understand every ingredient — explained simply, no jargon, no confusion. Free ingredient checker with FSSAI data."
+        keywords="ingredient checker India, food product ingredients, cosmetic ingredients India, FSSAI product search, check food additives, E numbers India, what is in my food, CheckKaro"
+        canonical="/"
+        structuredData={homeStructuredData}
+      />
     <motion.div
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
@@ -233,6 +273,7 @@ function Home() {
         </div>
       </section>
     </motion.div>
+    </>
   )
 }
 

@@ -2,6 +2,7 @@ import { useState, useEffect, useCallback, useRef } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { motion, AnimatePresence } from 'framer-motion'
 import axios from 'axios'
+import SEO from '../components/SEO'
 
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:8000'
 
@@ -174,6 +175,13 @@ export default function Products() {
   const anyFilter = category || brand || q
 
   return (
+    <>
+      <SEO
+        title="Product Directory — Browse 600+ Indian Products"
+        description="Browse and search 600+ Indian food and cosmetic products. Filter by category or brand, check ingredients, and see FSSAI awareness scores."
+        keywords="Indian food products list, cosmetic products India, browse product ingredients, FSSAI product database, food product directory India"
+        canonical="/products"
+      />
     <div className="min-h-screen bg-gray-50">
 
       {/* ── Hero strip ── */}
@@ -372,5 +380,6 @@ export default function Products() {
         )}
       </div>
     </div>
+    </>
   )
 }

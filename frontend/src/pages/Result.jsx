@@ -7,6 +7,7 @@ import ScoreCircle from '../components/ScoreCircle'
 import DisclaimerBox from '../components/DisclaimerBox'
 import ProductReviews from '../components/ProductReviews'
 import ProductNotFound from '../components/ProductNotFound'
+import SEO from '../components/SEO'
 
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:8000'
 
@@ -252,7 +253,27 @@ function Result() {
     return 'bg-red-50 border-red-200'
   }
 
+  const productSEO = product ? {
+    title: `${product.name} Ingredients & Awareness Score`,
+    description: `Check ingredients in ${product.name} by ${product.brand || 'Indian brand'}. Awareness score: ${product.awareness_score}/100. ${product.verdict || ''} See full ingredient breakdown with FSSAI data.`,
+    keywords: `${product.name} ingredients, ${product.brand || ''} product review, ${product.name} food additives, is ${product.name} safe`,
+    canonical: `/result/${encodeURIComponent(productName)}`,
+    ogImage: product.image_url || undefined,
+    ogType: 'article',
+    structuredData: {
+      '@context': 'https://schema.org',
+      '@type': 'Product',
+      name: product.name,
+      brand: { '@type': 'Brand', name: product.brand || 'Unknown' },
+      description: product.summary || product.verdict,
+      image: product.image_url || undefined,
+      category: product.category,
+    },
+  } : null
+
   return (
+    <>
+      {productSEO && <SEO {...productSEO} />}
     <motion.div
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
@@ -603,6 +624,7 @@ function Result() {
         </div>
       </div>
     </motion.div>
+    </>
   )
 }
 

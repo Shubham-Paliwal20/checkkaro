@@ -1,8 +1,16 @@
 import { motion } from 'framer-motion'
 import DisclaimerBox from '../components/DisclaimerBox'
+import SEO from '../components/SEO'
 
 function About() {
   return (
+    <>
+      <SEO
+        title="About CheckKaro — Empowering Indian Consumers"
+        description="CheckKaro helps Indian consumers understand food and cosmetic product ingredients with FSSAI regulatory data — explained simply, no jargon, no confusion."
+        keywords="about CheckKaro, ingredient awareness India, FSSAI information, food transparency India, consumer awareness app India"
+        canonical="/about"
+      />
     <motion.div
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
@@ -190,6 +198,7 @@ function About() {
         </section>
       </div>
     </motion.div>
+    </>
   )
 }
 

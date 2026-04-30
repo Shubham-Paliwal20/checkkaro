@@ -3,6 +3,7 @@ import { useSearchParams } from 'react-router-dom'
 import { motion } from 'framer-motion'
 import axios from 'axios'
 import DisclaimerBox from '../components/DisclaimerBox'
+import SEO from '../components/SEO'
 
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'https://checkkaro.onrender.com'
 
@@ -208,6 +209,13 @@ function CheckIngredient() {
   }
 
   return (
+    <>
+      <SEO
+        title="Check Any Ingredient — Food Additives & E-Numbers Explained"
+        description="Look up any food additive, E-number, or cosmetic ingredient. Understand what it is, why it's used, and its regulatory status in India."
+        keywords="food additives checker India, E numbers explained, check ingredient safety, food preservatives India, what is E102, what is MSG, cosmetic chemicals checker"
+        canonical="/check-ingredient"
+      />
     <motion.div
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
@@ -702,6 +710,7 @@ function CheckIngredient() {
       </section>
       
     </motion.div>
+    </>
   )
 }
 
