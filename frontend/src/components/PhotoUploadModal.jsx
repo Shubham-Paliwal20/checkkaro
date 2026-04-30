@@ -181,10 +181,10 @@ export default function PhotoUploadModal({ productId, productName, currentCount,
                     </div>
                   ))}
                   {!isAdmin && files.length < MIN_PHOTOS && (
-                    <div style={{ width: 76, height: 76, borderRadius: 10, border: '2px dashed #fbbf24', background: '#fefce8', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: 2 }}>
+                    <button onClick={() => inputRef.current?.click()} style={{ width: 76, height: 76, borderRadius: 10, border: '2px dashed #fbbf24', background: '#fefce8', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: 2, cursor: 'pointer', fontFamily: 'inherit' }}>
                       <span style={{ fontSize: 18 }}>📷</span>
-                      <span style={{ fontSize: 9, color: '#92400e', fontWeight: 700 }}>BACK NEEDED</span>
-                    </div>
+                      <span style={{ fontSize: 9, color: '#92400e', fontWeight: 700 }}>TAP TO ADD</span>
+                    </button>
                   )}
                 </div>
               )}
