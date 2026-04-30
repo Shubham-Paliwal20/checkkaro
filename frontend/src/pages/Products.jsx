@@ -2,6 +2,7 @@ import { useState, useEffect, useCallback, useRef } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { motion, AnimatePresence } from 'framer-motion'
 import axios from 'axios'
+import { supabase } from '../lib/supabaseClient'
 import SEO from '../components/SEO'
 
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:8000'
@@ -135,7 +136,24 @@ export default function Products() {
       if (q)        params.q        = q
       const res = await axios.get(`${API_BASE_URL}/api/product/browse`, { params })
       const data = res.data
-      setProducts(data.products || [])
+      const pageProducts = data.products || []
+
+      // Batch-fetch uploaded photos for this page's products
+      if (pageProducts.length > 0) {
+        const ids = pageProducts.map(p => p.id)
+        const { data: photos } = await supabase
+          .from('product_photos')
+          .select('product_id, image_url')
+          .in('product_id', ids)
+          .order('created_at')
+        if (photos?.length) {
+          const photoMap = {}
+          photos.forEach(ph => { if (!photoMap[ph.product_id]) photoMap[ph.product_id] = ph.image_url })
+          pageProducts.forEach(p => { if (!p.image_url && photoMap[p.id]) p.image_url = photoMap[p.id] })
+        }
+      }
+
+      setProducts(pageProducts)
       setTotal(data.total || 0)
       setPages(data.pages || 1)
       if (data.categories?.length) setAllCats(data.categories)
