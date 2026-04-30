@@ -591,15 +591,18 @@ export default function Admin() {
 
   if (!isAdmin) return null
 
+  const adminPage = tab === 'photos' ? 'photos' : 'products'
+
   return (
     <div style={{ maxWidth: 1100, margin: '0 auto', padding: isMobile ? '20px 14px 48px' : '32px 20px 60px' }}>
 
-      <div style={{ marginBottom: isMobile ? 16 : 28 }}>
+      {/* Header */}
+      <div style={{ marginBottom: 20 }}>
         <h1 style={{ fontFamily: 'Poppins, sans-serif', fontSize: isMobile ? 20 : 26, fontWeight: 800, color: '#0D1B2A', margin: '0 0 4px' }}>
           🔐 Admin Panel
         </h1>
         <p style={{ color: '#6b7280', fontSize: 13, margin: 0, wordBreak: 'break-all' }}>
-          Review submissions · <strong>{user.email}</strong>
+          <strong>{user.email}</strong>
         </p>
         {fetchError && (
           <div style={{ marginTop: 8, padding: '8px 12px', background: '#fef2f2', border: '1px solid #fecaca', borderRadius: 8, fontSize: 12, color: '#dc2626', fontWeight: 600 }}>
@@ -608,95 +611,146 @@ export default function Admin() {
         )}
       </div>
 
-      {/* Stats */}
-      <div style={{ display: 'flex', gap: 10, marginBottom: 20 }}>
-        {STATUS_TABS.map(s => (
-          <button key={s} onClick={() => setTab(s)}
-            style={{ flex: 1, background: tab === s ? STATUS_BG[s] : '#f9fafb', border: `1.5px solid ${tab === s ? STATUS_COLOR[s] + '66' : '#e5e7eb'}`, borderRadius: 12, padding: isMobile ? '10px 4px' : '12px 8px', cursor: 'pointer', fontFamily: 'inherit', textAlign: 'center' }}>
-            <div style={{ fontSize: isMobile ? 20 : 22, fontWeight: 800, color: STATUS_COLOR[s] }}>{counts[s]}</div>
-            <div style={{ fontSize: isMobile ? 10 : 12, color: '#6b7280', textTransform: 'capitalize', fontWeight: 600, marginTop: 2 }}>{s}</div>
-          </button>
-        ))}
+      {/* Top-level page switcher */}
+      <div style={{ display: 'flex', gap: 10, marginBottom: 24 }}>
+        <button
+          onClick={() => setTab('pending')}
+          style={{
+            flex: 1, padding: isMobile ? '14px 8px' : '16px 12px', borderRadius: 14, border: 'none', cursor: 'pointer', fontFamily: 'inherit', textAlign: 'center',
+            background: adminPage === 'products' ? '#1B3F8A' : '#f1f5f9',
+            color: adminPage === 'products' ? '#fff' : '#475569',
+            boxShadow: adminPage === 'products' ? '0 4px 14px rgba(27,63,138,0.25)' : 'none',
+            transition: 'all 0.15s',
+          }}>
+          <div style={{ fontSize: isMobile ? 22 : 26 }}>📋</div>
+          <div style={{ fontSize: isMobile ? 12 : 14, fontWeight: 700, marginTop: 4 }}>Product Submissions</div>
+          <div style={{ fontSize: 11, marginTop: 2, opacity: 0.8 }}>{counts.pending} pending</div>
+        </button>
+        <button
+          onClick={() => setTab('photos')}
+          style={{
+            flex: 1, padding: isMobile ? '14px 8px' : '16px 12px', borderRadius: 14, border: 'none', cursor: 'pointer', fontFamily: 'inherit', textAlign: 'center',
+            background: adminPage === 'photos' ? '#0ea5e9' : '#f1f5f9',
+            color: adminPage === 'photos' ? '#fff' : '#475569',
+            boxShadow: adminPage === 'photos' ? '0 4px 14px rgba(14,165,233,0.25)' : 'none',
+            transition: 'all 0.15s',
+          }}>
+          <div style={{ fontSize: isMobile ? 22 : 26 }}>📸</div>
+          <div style={{ fontSize: isMobile ? 12 : 14, fontWeight: 700, marginTop: 4 }}>Photo Approvals</div>
+          <div style={{ fontSize: 11, marginTop: 2, opacity: 0.8 }}>{counts.photos} pending</div>
+        </button>
       </div>
 
-      {/* Tab strip */}
-      <div style={{ display: 'flex', borderBottom: '1.5px solid #e5e7eb', marginBottom: 20, overflowX: 'auto' }}>
-        {STATUS_TABS.map(s => (
-          <button key={s} onClick={() => setTab(s)}
-            style={{ flexShrink: 0, background: 'none', border: 'none', borderBottom: tab === s ? `2.5px solid ${STATUS_COLOR[s]}` : '2.5px solid transparent', color: tab === s ? STATUS_COLOR[s] : '#6b7280', fontWeight: tab === s ? 700 : 500, fontSize: isMobile ? 13 : 14, padding: isMobile ? '8px 14px' : '8px 20px', cursor: 'pointer', textTransform: 'capitalize', fontFamily: 'inherit', marginBottom: -1.5, whiteSpace: 'nowrap' }}>
-            {s}
-            <span style={{ background: tab === s ? STATUS_BG[s] : '#f3f4f6', color: tab === s ? STATUS_COLOR[s] : '#9ca3af', borderRadius: 99, padding: '1px 7px', fontSize: 11, fontWeight: 700, marginLeft: 6 }}>{counts[s]}</span>
-          </button>
-        ))}
-      </div>
-
-      {/* Grid — Photo submissions tab */}
-      {tab === 'photos' && (
-        photoFetching ? (
-          <div style={{ textAlign: 'center', padding: '48px 0', color: '#9ca3af', fontSize: 15 }}>Loading…</div>
-        ) : photoSubs.length === 0 ? (
-          <div style={{ textAlign: 'center', padding: '48px 0' }}>
-            <div style={{ fontSize: 48, marginBottom: 12 }}>📸</div>
-            <p style={{ color: '#9ca3af', fontSize: 15 }}>No pending photo submissions</p>
-          </div>
-        ) : (
-          <div style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : 'repeat(auto-fill, minmax(300px, 1fr))', gap: 16 }}>
-            {photoSubs.map(sub => (
-              <div key={sub.id} style={{ background: '#fff', border: '1px solid #e5e7eb', borderRadius: 14, overflow: 'hidden', boxShadow: '0 2px 12px rgba(0,0,0,0.05)' }}>
-                {/* Images preview */}
-                <div style={{ display: 'flex', gap: 4, padding: 8, background: '#f9fafb', flexWrap: 'wrap' }}>
-                  {(sub.image_urls || []).map((url, i) => (
-                    <a key={i} href={url} target="_blank" rel="noreferrer">
-                      <img src={url} alt="" style={{ width: 72, height: 72, objectFit: 'cover', borderRadius: 8, border: '1px solid #e5e7eb' }} />
-                    </a>
-                  ))}
-                </div>
-                <div style={{ padding: '12px 14px' }}>
-                  <p style={{ margin: '0 0 4px', fontWeight: 700, fontSize: 14, color: '#111827' }}>
-                    {sub.product_name || sub.product_id}
-                  </p>
-                  <p style={{ margin: '0 0 8px', fontSize: 12, color: '#9ca3af' }}>{formatDate(sub.created_at)}</p>
-                  <p style={{ margin: '0 0 10px', fontSize: 12, color: '#6b7280' }}>
-                    {sub.image_urls?.length || 0} photo(s) · Reward: ₹{sub.image_urls?.length || 0}
-                  </p>
-                  <div style={{ display: 'flex', gap: 8 }}>
-                    <button onClick={() => handleApprovePhoto(sub)}
-                      style={{ flex: 1, background: '#16a34a', color: '#fff', border: 'none', borderRadius: 10, padding: '10px 0', fontSize: 13, fontWeight: 700, cursor: 'pointer', fontFamily: 'inherit' }}>
-                      ✓ Approve + Credit ₹{sub.image_urls?.length || 0}
-                    </button>
-                    <button onClick={() => handleRejectPhoto(sub.id)}
-                      style={{ flex: 1, background: '#fff', color: '#dc2626', border: '1.5px solid #dc2626', borderRadius: 10, padding: '10px 0', fontSize: 13, fontWeight: 700, cursor: 'pointer', fontFamily: 'inherit' }}>
-                      ✕ Reject
-                    </button>
+      {/* ── PHOTO APPROVALS PAGE ── */}
+      {adminPage === 'photos' && (
+        <>
+          <h2 style={{ fontFamily: 'Poppins,sans-serif', fontSize: 16, fontWeight: 700, color: '#111827', marginBottom: 16 }}>
+            📸 Photo Approvals
+          </h2>
+          {photoFetching ? (
+            <div style={{ textAlign: 'center', padding: '48px 0', color: '#9ca3af', fontSize: 15 }}>Loading…</div>
+          ) : photoSubs.length === 0 ? (
+            <div style={{ textAlign: 'center', padding: '48px 0' }}>
+              <div style={{ fontSize: 48, marginBottom: 12 }}>📸</div>
+              <p style={{ color: '#9ca3af', fontSize: 15 }}>No pending photo submissions</p>
+            </div>
+          ) : (
+            <div style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : 'repeat(auto-fill, minmax(300px, 1fr))', gap: 16 }}>
+              {photoSubs.map(sub => (
+                <div key={sub.id} style={{ background: '#fff', border: '1px solid #e5e7eb', borderRadius: 14, overflow: 'hidden', boxShadow: '0 2px 12px rgba(0,0,0,0.05)' }}>
+                  {/* Images preview */}
+                  <div style={{ display: 'flex', gap: 4, padding: 10, background: '#f9fafb', flexWrap: 'wrap' }}>
+                    {(sub.image_urls || []).map((url, i) => (
+                      <a key={i} href={url} target="_blank" rel="noreferrer" style={{ flexShrink: 0 }}>
+                        <img src={url} alt="" style={{ width: 80, height: 80, objectFit: 'cover', borderRadius: 8, border: '1px solid #e5e7eb', display: 'block' }} />
+                      </a>
+                    ))}
+                  </div>
+                  <div style={{ padding: '12px 14px' }}>
+                    <p style={{ margin: '0 0 3px', fontWeight: 700, fontSize: 14, color: '#111827' }}>
+                      {sub.product_name || sub.product_id}
+                    </p>
+                    <p style={{ margin: '0 0 6px', fontSize: 12, color: '#9ca3af' }}>{formatDate(sub.created_at)}</p>
+                    <div style={{ display: 'flex', gap: 6, marginBottom: 10, flexWrap: 'wrap' }}>
+                      <span style={{ fontSize: 11, background: '#f0fdf4', color: '#16a34a', border: '1px solid #bbf7d0', borderRadius: 99, padding: '2px 8px', fontWeight: 600 }}>
+                        {sub.image_urls?.length || 0} photo(s)
+                      </span>
+                      {sub.upi_or_mobile && (
+                        <span style={{ fontSize: 11, background: '#eff6ff', color: '#1d4ed8', border: '1px solid #bfdbfe', borderRadius: 99, padding: '2px 8px', fontWeight: 600 }}>
+                          💳 {sub.upi_or_mobile}
+                        </span>
+                      )}
+                      <span style={{ fontSize: 11, background: '#fefce8', color: '#ca8a04', border: '1px solid #fde68a', borderRadius: 99, padding: '2px 8px', fontWeight: 600 }}>
+                        Reward: ₹1
+                      </span>
+                    </div>
+                    <div style={{ display: 'flex', gap: 8 }}>
+                      <button onClick={() => handleApprovePhoto(sub)}
+                        style={{ flex: 1, background: '#16a34a', color: '#fff', border: 'none', borderRadius: 10, padding: '10px 0', fontSize: 13, fontWeight: 700, cursor: 'pointer', fontFamily: 'inherit' }}>
+                        ✓ Approve + Save
+                      </button>
+                      <button onClick={() => handleRejectPhoto(sub.id)}
+                        style={{ flex: 1, background: '#fff', color: '#dc2626', border: '1.5px solid #dc2626', borderRadius: 10, padding: '10px 0', fontSize: 13, fontWeight: 700, cursor: 'pointer', fontFamily: 'inherit' }}>
+                        ✕ Reject
+                      </button>
+                    </div>
                   </div>
                 </div>
-              </div>
-            ))}
-          </div>
-        )
+              ))}
+            </div>
+          )}
+        </>
       )}
 
-      {/* Grid — Regular submissions */}
-      {tab !== 'photos' && (fetching ? (
-        <div style={{ textAlign: 'center', padding: '48px 0', color: '#9ca3af', fontSize: 15 }}>Loading…</div>
-      ) : subs.length === 0 ? (
-        <div style={{ textAlign: 'center', padding: '48px 0' }}>
-          <div style={{ fontSize: 48, marginBottom: 12 }}>📭</div>
-          <p style={{ color: '#9ca3af', fontSize: 15 }}>No {tab} submissions</p>
-        </div>
-      ) : (
-        <div style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : 'repeat(auto-fill, minmax(300px, 1fr))', gap: 16 }}>
-          {subs.map(s => (
-            <SubmissionCard key={s.id} sub={s}
-              onApprove={handleApprove}
-              onReject={handleReject}
-              onSave={handleSave}
-              saving={saving}
-              cardMsg={cardMsgs[s.id] || null}
-            />
-          ))}
-        </div>
-      ))}
+      {/* ── PRODUCT SUBMISSIONS PAGE ── */}
+      {adminPage === 'products' && (
+        <>
+          {/* Stats bar */}
+          <div style={{ display: 'flex', gap: 8, marginBottom: 16, overflowX: 'auto' }}>
+            {STATUS_TABS.filter(s => s !== 'photos').map(s => (
+              <button key={s} onClick={() => setTab(s)}
+                style={{ flexShrink: 0, flex: 1, minWidth: 64, background: tab === s ? STATUS_BG[s] : '#f9fafb', border: `1.5px solid ${tab === s ? STATUS_COLOR[s] + '66' : '#e5e7eb'}`, borderRadius: 10, padding: isMobile ? '8px 4px' : '10px 6px', cursor: 'pointer', fontFamily: 'inherit', textAlign: 'center' }}>
+                <div style={{ fontSize: isMobile ? 17 : 20, fontWeight: 800, color: STATUS_COLOR[s] }}>{counts[s]}</div>
+                <div style={{ fontSize: isMobile ? 9 : 11, color: '#6b7280', textTransform: 'capitalize', fontWeight: 600, marginTop: 2 }}>{s}</div>
+              </button>
+            ))}
+          </div>
+
+          {/* Tab strip */}
+          <div style={{ display: 'flex', borderBottom: '1.5px solid #e5e7eb', marginBottom: 20, overflowX: 'auto' }}>
+            {STATUS_TABS.filter(s => s !== 'photos').map(s => (
+              <button key={s} onClick={() => setTab(s)}
+                style={{ flexShrink: 0, background: 'none', border: 'none', borderBottom: tab === s ? `2.5px solid ${STATUS_COLOR[s]}` : '2.5px solid transparent', color: tab === s ? STATUS_COLOR[s] : '#6b7280', fontWeight: tab === s ? 700 : 500, fontSize: isMobile ? 13 : 14, padding: isMobile ? '8px 14px' : '8px 20px', cursor: 'pointer', textTransform: 'capitalize', fontFamily: 'inherit', marginBottom: -1.5, whiteSpace: 'nowrap' }}>
+                {s}
+                <span style={{ background: tab === s ? STATUS_BG[s] : '#f3f4f6', color: tab === s ? STATUS_COLOR[s] : '#9ca3af', borderRadius: 99, padding: '1px 7px', fontSize: 11, fontWeight: 700, marginLeft: 6 }}>{counts[s]}</span>
+              </button>
+            ))}
+          </div>
+
+          {/* Submissions grid */}
+          {fetching ? (
+            <div style={{ textAlign: 'center', padding: '48px 0', color: '#9ca3af', fontSize: 15 }}>Loading…</div>
+          ) : subs.length === 0 ? (
+            <div style={{ textAlign: 'center', padding: '48px 0' }}>
+              <div style={{ fontSize: 48, marginBottom: 12 }}>📭</div>
+              <p style={{ color: '#9ca3af', fontSize: 15 }}>No {tab} submissions</p>
+            </div>
+          ) : (
+            <div style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : 'repeat(auto-fill, minmax(300px, 1fr))', gap: 16 }}>
+              {subs.map(s => (
+                <SubmissionCard key={s.id} sub={s}
+                  onApprove={handleApprove}
+                  onReject={handleReject}
+                  onSave={handleSave}
+                  saving={saving}
+                  cardMsg={cardMsgs[s.id] || null}
+                />
+              ))}
+            </div>
+          )}
+        </>
+      )}
+
     </div>
   )
 }

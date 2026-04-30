@@ -15,7 +15,7 @@ const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:8000
 
 const ADMIN_EMAIL = 'shubhampaliwal5@gmail.com'
 
-function ProductImageGallery({ imageUrl, images, name, dbPhotos, onDeleteDbPhoto, isAdmin, user, onOpenUpload }) {
+function ProductImageGallery({ imageUrl, images, name, dbPhotos, onDeleteDbPhoto, isAdmin, user, onOpenUpload, onNeedLogin }) {
   const backendImgs = (images && images.length > 0) ? images : (imageUrl ? [imageUrl] : [])
   const dbImgUrls = (dbPhotos || []).map(p => p.image_url)
 
@@ -132,12 +132,12 @@ function ProductImageGallery({ imageUrl, images, name, dbPhotos, onDeleteDbPhoto
         )}
       </div>
 
-      {/* User: suggest photo button */}
-      {!isAdmin && user && allImgs.length < 5 && (
+      {/* Suggest photo — only when product has NO images at all, visible to everyone */}
+      {!isAdmin && noImage && (
         <button
-          onClick={onOpenUpload}
-          style={{ width: '100%', marginTop: 8, padding: '7px 0', background: '#fff7ed', border: '1.5px solid #fed7aa', borderRadius: 10, color: '#c2410c', fontSize: 12, fontWeight: 700, cursor: 'pointer', fontFamily: 'inherit' }}>
-          📸 Suggest a photo · earn ₹1
+          onClick={user ? onOpenUpload : onNeedLogin}
+          style={{ width: '100%', marginTop: 8, padding: '9px 0', background: '#fff7ed', border: '1.5px solid #fed7aa', borderRadius: 10, color: '#c2410c', fontSize: 12, fontWeight: 700, cursor: 'pointer', fontFamily: 'inherit', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 6 }}>
+          📸 Suggest a product image · earn ₹1
         </button>
       )}
     </div>
@@ -147,7 +147,7 @@ function ProductImageGallery({ imageUrl, images, name, dbPhotos, onDeleteDbPhoto
 function Result() {
   const { productName } = useParams()
   const navigate = useNavigate()
-  const { user } = useAuth()
+  const { user, openAuthModal } = useAuth()
   const [loading,          setLoading]          = useState(true)
   const [error,            setError]            = useState(null)
   const [productNotFound,  setProductNotFound]  = useState(false)
@@ -411,6 +411,7 @@ function Result() {
               isAdmin={isAdmin}
               user={user}
               onOpenUpload={() => setShowPhotoModal(true)}
+              onNeedLogin={() => openAuthModal('main')}
             />
 
             {/* Product Info */}
