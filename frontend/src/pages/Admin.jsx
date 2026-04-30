@@ -430,6 +430,8 @@ export default function Admin() {
   const [fetchError, setFetchError] = useState(null)
   const [photoSubs,  setPhotoSubs]  = useState([])
   const [photoFetching, setPhotoFetching] = useState(false)
+  const [photoTab, setPhotoTab] = useState('pending')
+  const [photoCounts, setPhotoCounts] = useState({ pending: 0, approved: 0, rejected: 0 })
 
   const isAdmin = user?.email === ADMIN_EMAIL
 
@@ -440,10 +442,14 @@ export default function Admin() {
   useEffect(() => {
     if (isAdmin) {
       fetchAll()
-      if (tab === 'photos') fetchPhotoSubs()
+      if (tab === 'photos') fetchPhotoSubs(photoTab)
       else fetchSubs(tab)
     }
   }, [isAdmin, tab])
+
+  useEffect(() => {
+    if (isAdmin && tab === 'photos') fetchPhotoSubs(photoTab)
+  }, [photoTab])
 
   const fetchSubs = async (status) => {
     setFetching(true)
@@ -464,25 +470,28 @@ export default function Admin() {
 
   const fetchAll = async () => {
     try {
-      const [{ data }, { data: photoData }] = await Promise.all([
+      const [{ data }, { data: allPhotoData }] = await Promise.all([
         supabase.from('product_submissions').select('status'),
-        supabase.from('product_photo_submissions').select('status').eq('status', 'pending'),
+        supabase.from('product_photo_submissions').select('status'),
       ])
       const c = { pending: 0, approved: 0, rejected: 0, extracted: 0, photos: 0 }
       if (data) data.forEach(r => { if (c[r.status] !== undefined) c[r.status]++ })
-      c.photos = photoData?.length || 0
+      const pc = { pending: 0, approved: 0, rejected: 0 }
+      if (allPhotoData) allPhotoData.forEach(r => { if (pc[r.status] !== undefined) pc[r.status]++ })
+      c.photos = pc.pending
       setCounts(c)
+      setPhotoCounts(pc)
     } catch (e) {
       setFetchError(`Count exception: ${e.message}`)
     }
   }
 
-  const fetchPhotoSubs = async () => {
+  const fetchPhotoSubs = async (status = 'pending') => {
     setPhotoFetching(true)
     try {
       const { data, error } = await supabase
         .from('product_photo_submissions').select('*')
-        .eq('status', 'pending').order('created_at', { ascending: false })
+        .eq('status', status).order('created_at', { ascending: false })
       if (error) setFetchError(`Photo fetch error: ${error.message}`)
       setPhotoSubs(data || [])
     } catch (e) {
@@ -510,7 +519,7 @@ export default function Admin() {
 
       // Mark submission approved
       await supabase.from('product_photo_submissions').update({ status: 'approved' }).eq('id', sub.id)
-      fetchAll(); fetchPhotoSubs()
+      fetchAll(); fetchPhotoSubs(photoTab)
     } catch (e) {
       setFetchError(`Approve photo error: ${e.message}`)
     }
@@ -518,7 +527,7 @@ export default function Admin() {
 
   const handleRejectPhoto = async (id) => {
     await supabase.from('product_photo_submissions').update({ status: 'rejected' }).eq('id', id)
-    fetchAll(); fetchPhotoSubs()
+    fetchAll(); fetchPhotoSubs(photoTab)
   }
 
   const handleApprove = async (id) => {
@@ -644,9 +653,40 @@ export default function Admin() {
       {/* ── PHOTO APPROVALS PAGE ── */}
       {adminPage === 'photos' && (
         <>
-          <h2 style={{ fontFamily: 'Poppins,sans-serif', fontSize: 16, fontWeight: 700, color: '#111827', marginBottom: 16 }}>
+          <h2 style={{ fontFamily: 'Poppins,sans-serif', fontSize: 16, fontWeight: 700, color: '#111827', marginBottom: 14 }}>
             📸 Photo Approvals
           </h2>
+
+          {/* Photo status counts */}
+          <div style={{ display: 'flex', gap: 8, marginBottom: 16 }}>
+            {[
+              { key: 'pending', label: 'Pending', color: '#f59e0b', bg: '#fef3c7' },
+              { key: 'approved', label: 'Approved', color: '#16a34a', bg: '#f0fdf4' },
+              { key: 'rejected', label: 'Rejected', color: '#dc2626', bg: '#fef2f2' },
+            ].map(({ key, label, color, bg }) => (
+              <button key={key} onClick={() => setPhotoTab(key)}
+                style={{ flex: 1, borderRadius: 10, border: `1.5px solid ${photoTab === key ? color + '88' : '#e5e7eb'}`, background: photoTab === key ? bg : '#f9fafb', padding: isMobile ? '8px 4px' : '10px 6px', cursor: 'pointer', fontFamily: 'inherit', textAlign: 'center' }}>
+                <div style={{ fontSize: isMobile ? 17 : 20, fontWeight: 800, color }}>{photoCounts[key]}</div>
+                <div style={{ fontSize: isMobile ? 9 : 11, color: '#6b7280', fontWeight: 600, marginTop: 2 }}>{label}</div>
+              </button>
+            ))}
+          </div>
+
+          {/* Photo tab strip */}
+          <div style={{ display: 'flex', borderBottom: '1.5px solid #e5e7eb', marginBottom: 18 }}>
+            {[
+              { key: 'pending', label: 'Pending', color: '#f59e0b' },
+              { key: 'approved', label: 'Saved Photos', color: '#16a34a' },
+              { key: 'rejected', label: 'Rejected', color: '#dc2626' },
+            ].map(({ key, label, color }) => (
+              <button key={key} onClick={() => setPhotoTab(key)}
+                style={{ flexShrink: 0, background: 'none', border: 'none', borderBottom: photoTab === key ? `2.5px solid ${color}` : '2.5px solid transparent', color: photoTab === key ? color : '#6b7280', fontWeight: photoTab === key ? 700 : 500, fontSize: isMobile ? 13 : 14, padding: isMobile ? '8px 14px' : '8px 20px', cursor: 'pointer', fontFamily: 'inherit', marginBottom: -1.5, whiteSpace: 'nowrap' }}>
+                {label}
+                <span style={{ background: photoTab === key ? '#f3f4f6' : '#f3f4f6', color: photoTab === key ? color : '#9ca3af', borderRadius: 99, padding: '1px 7px', fontSize: 11, fontWeight: 700, marginLeft: 6 }}>{photoCounts[key]}</span>
+              </button>
+            ))}
+          </div>
+
           {photoFetching ? (
             <div style={{ textAlign: 'center', padding: '48px 0', color: '#9ca3af', fontSize: 15 }}>Loading…</div>
           ) : photoSubs.length === 0 ? (
@@ -684,16 +724,32 @@ export default function Admin() {
                         Reward: ₹1
                       </span>
                     </div>
-                    <div style={{ display: 'flex', gap: 8 }}>
-                      <button onClick={() => handleApprovePhoto(sub)}
-                        style={{ flex: 1, background: '#16a34a', color: '#fff', border: 'none', borderRadius: 10, padding: '10px 0', fontSize: 13, fontWeight: 700, cursor: 'pointer', fontFamily: 'inherit' }}>
-                        ✓ Approve + Save
-                      </button>
-                      <button onClick={() => handleRejectPhoto(sub.id)}
-                        style={{ flex: 1, background: '#fff', color: '#dc2626', border: '1.5px solid #dc2626', borderRadius: 10, padding: '10px 0', fontSize: 13, fontWeight: 700, cursor: 'pointer', fontFamily: 'inherit' }}>
-                        ✕ Reject
-                      </button>
-                    </div>
+                    {photoTab === 'pending' && (
+                      <div style={{ display: 'flex', gap: 8 }}>
+                        <button onClick={() => handleApprovePhoto(sub)}
+                          style={{ flex: 1, background: '#16a34a', color: '#fff', border: 'none', borderRadius: 10, padding: '10px 0', fontSize: 13, fontWeight: 700, cursor: 'pointer', fontFamily: 'inherit' }}>
+                          ✓ Approve + Save
+                        </button>
+                        <button onClick={() => handleRejectPhoto(sub.id)}
+                          style={{ flex: 1, background: '#fff', color: '#dc2626', border: '1.5px solid #dc2626', borderRadius: 10, padding: '10px 0', fontSize: 13, fontWeight: 700, cursor: 'pointer', fontFamily: 'inherit' }}>
+                          ✕ Reject
+                        </button>
+                      </div>
+                    )}
+                    {photoTab === 'approved' && (
+                      <div style={{ padding: '8px 12px', background: '#f0fdf4', border: '1px solid #bbf7d0', borderRadius: 8, fontSize: 12, fontWeight: 700, color: '#16a34a' }}>
+                        ✓ Approved · Photos saved · ₹1 credited
+                      </div>
+                    )}
+                    {photoTab === 'rejected' && (
+                      <div style={{ padding: '8px 12px', background: '#fef2f2', border: '1px solid #fecaca', borderRadius: 8, fontSize: 12, fontWeight: 700, color: '#dc2626', display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 8 }}>
+                        <span>✕ Rejected</span>
+                        <button onClick={() => handleApprovePhoto(sub)}
+                          style={{ background: '#16a34a', color: '#fff', border: 'none', borderRadius: 7, padding: '5px 12px', fontSize: 12, fontWeight: 700, cursor: 'pointer', fontFamily: 'inherit' }}>
+                          Re-approve
+                        </button>
+                      </div>
+                    )}
                   </div>
                 </div>
               ))}
