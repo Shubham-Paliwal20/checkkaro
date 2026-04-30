@@ -7,6 +7,266 @@ COSMETIC_CATEGORIES = {
     "Skincare", "Hair Care", "Cosmetics", "Personal Care", "Baby Care", "Oral Care", "Household"
 }
 
+# Factual "what is it" descriptions shown in the Check Ingredient page
+# Keys match the pattern keys in classify_ingredient (lowercased)
+INGREDIENT_DESCRIPTIONS = {
+    # --- Preservatives ---
+    'triclosan': 'An antimicrobial agent first used in hospitals in the 1960s, later added to soaps, toothpastes and body washes. It was one of the most widely used antibacterial additives in consumer products for over 40 years.',
+    'triclocarban': 'An antimicrobial compound (TCC) used in bar soaps and personal care products to kill bacteria and fungi. Structurally similar to triclosan, it was a common ingredient in antibacterial bar soaps.',
+    'sodium benzoate': 'The sodium salt of benzoic acid (E211), used as a preservative in acidic foods and beverages since the 1900s. It occurs naturally in small amounts in cranberries, prunes and cinnamon.',
+    'e211': 'E211 is the EU code for sodium benzoate, a widely used preservative in soft drinks, pickles, condiments and fruit juices that prevents the growth of bacteria, yeast and mould.',
+    'sodium metabisulphite': 'A sulfite-based preservative and antioxidant (E223) used to prevent discolouration and bacterial growth in foods, beverages and medicines. Also widely used in winemaking and brewing.',
+    'e223': 'E223 is the EU code for sodium metabisulphite, a sulfite preservative used to preserve colour and freshness in dried fruits, wine, fruit juices and processed foods.',
+    'sulfur dioxide': 'Sulfur dioxide (E220) is a gaseous preservative and antioxidant used since ancient times to preserve food and wine. It prevents browning and inhibits microbial growth in dried fruits, wine and fruit products.',
+    'e220': 'E220 is the EU code for sulfur dioxide, one of the oldest preservatives used in winemaking and food processing to prevent spoilage, oxidation and maintain colour.',
+    'sodium nitrite': 'A salt used as a curing agent and colour fixative in processed meats like bacon, ham, hot dogs and sausages. It has been used in meat preservation since the 1920s and prevents the dangerous bacterium Clostridium botulinum.',
+    'e250': 'E250 is the EU code for sodium nitrite, the curing salt used in processed meats to prevent botulism, fix the characteristic pink colour and extend shelf life.',
+    'sodium nitrate': 'A salt used as a curing agent in preserved meats and a slow-release source of nitrite during the curing process. Also found naturally in many vegetables like spinach, celery and beetroot.',
+    'e251': 'E251 is the EU code for sodium nitrate, a curing salt used in processed and preserved meats that converts to nitrite during curing.',
+    'methylparaben': 'A paraben ester preservative widely used since the 1920s in cosmetics, pharmaceuticals and foods to prevent mould and bacterial growth. One of the most commonly used preservatives in personal care products worldwide.',
+    'propylparaben': 'A longer-chain paraben ester used as a preservative in cosmetics, pharmaceuticals and foods. More potent as an antimicrobial agent than methylparaben but also more closely regulated.',
+    'butylparaben': 'The longest-chain of the common parabens, used as a preservative in cosmetics and pharmaceuticals. More potent than shorter-chain parabens but also the most tightly regulated member of the family.',
+    'sodium lauryl sulfate': 'A powerful foaming surfactant (SLS) derived from coconut or palm oil, used since the 1930s in shampoos, toothpastes, face washes and household cleaners to create lather and remove oils and dirt.',
+    'sodium lauryl sulphate': 'The UK/Australian spelling of sodium lauryl sulfate (SLS), a strong surfactant derived from coconut or palm oil used as a foaming and cleansing agent in shampoos and toothpastes.',
+    # --- Artificial colours ---
+    'tartrazine': 'A synthetic lemon-yellow azo dye (E102) used to colour foods, drinks, medicines and cosmetics. Derived from petroleum, it produces a vivid yellow and is one of the oldest synthetic food dyes, first used in the 1880s.',
+    'e102': 'E102 is the EU code for tartrazine, a synthetic yellow food dye used in sweets, soft drinks, crisps, breakfast cereals and medicines to add a bright yellow colour.',
+    'sunset yellow': 'A synthetic orange-yellow azo dye (E110) used to colour foods and beverages. Also called FD&C Yellow 6 in the USA, it was first approved for food use in 1929.',
+    'e110': 'E110 is the EU code for Sunset Yellow FCF, a synthetic orange food dye used in snacks, jelly, drinks and medicines. Also known as FD&C Yellow 6 in North America.',
+    'allura red': 'A synthetic dark-red azo dye (E129) used to colour foods and beverages. Also called FD&C Red 40, it is the most widely used red food dye in the United States and was approved in 1971.',
+    'red 40': 'Red 40 (Allura Red / E129) is a synthetic dark-red azo dye used to colour sweets, drinks, cereals and snack foods. It is the most widely used food dye in the USA.',
+    'e129': 'E129 is the EU code for Allura Red AC, a synthetic red food dye used in sweets, soft drinks and snacks. Known as Red 40 or FD&C Red 40 in North America.',
+    'ponceau 4r': 'A synthetic red azo dye (E124) used to add red or pink colour to foods and drinks. Also known as Cochineal Red A, it has been used in food since the early 20th century.',
+    'e124': 'E124 is the EU code for Ponceau 4R (Cochineal Red A), a synthetic red food dye used in strawberry desserts, tinned cherries and some fizzy drinks.',
+    'carmoisine': 'A synthetic red azo dye (E122) also known as Azorubine, used to colour jams, jellies, desserts and alcoholic drinks with a deep reddish-crimson shade.',
+    'e122': 'E122 is the EU code for Carmoisine (Azorubine), a synthetic crimson-red food dye used in sweets, jellies, soft drinks and some medicines.',
+    'brilliant blue': 'A synthetic blue triphenylmethane dye (E133) used to colour foods, drinks, cosmetics and medicines. Also known as FD&C Blue 1, it has been approved for food use in the USA since 1929.',
+    'e133': 'E133 is the EU code for Brilliant Blue FCF (FD&C Blue 1), a synthetic blue food and cosmetic dye used in sweets, ice cream, cereals and sports drinks.',
+    'indigo carmine': 'A synthetic blue dye (E132) based on the indigo structure, used to colour foods, medicines and surgical marking. Also known as FD&C Blue 2, it was one of the first synthetic dyes approved for food.',
+    'e132': 'E132 is the EU code for Indigo Carmine (FD&C Blue 2), a synthetic blue food dye used in confectionery, pharmaceuticals and as a diagnostic dye in medicine.',
+    'erythrosine': 'A synthetic cherry-red dye (E127) based on fluorescein, used to colour maraschino cherries, tinned strawberries, some confectionery and medicines. Also known as FD&C Red 3.',
+    'e127': 'E127 is the EU code for Erythrosine (FD&C Red 3), a synthetic pink food dye used in cocktail cherries, canned fruit and pharmaceutical tablets.',
+    'quinoline yellow': 'A synthetic yellow dye (E104) used to colour foods, medicines and cosmetics with a dull yellow or greenish-yellow shade. Produced from coal tar derivatives.',
+    'e104': 'E104 is the EU code for Quinoline Yellow, a synthetic yellow food and pharmaceutical dye used to give medicines and some foods a distinctive yellow-green shade.',
+    'brown ht': 'A synthetic brown azo dye (E155) used to colour chocolate-flavoured products like cakes, biscuits, desserts and drinks with a warm brown hue.',
+    'e155': 'E155 is the EU code for Brown HT, a synthetic food dye used to colour chocolate cakes, biscuits and desserts. The HT stands for "high temperature" stability.',
+    'patent blue v': 'A synthetic blue dye (E131) used to colour foods, drinks and medicines with a bright blue or violet shade. Also used as a lymphatic tracer in sentinel lymph node biopsies.',
+    'e131': 'E131 is the EU code for Patent Blue V, a synthetic triarylmethane dye used in food, pharmaceutical and cosmetic applications as a blue colorant.',
+    'azorubine': 'A synthetic crimson-red azo dye (E122) also called Carmoisine, used to colour jams, jellies, alcoholic beverages and other products with a deep red shade.',
+    'e951': 'E951 is the EU code for aspartame, an artificial sweetener approximately 200 times sweeter than sugar, widely used in diet drinks, chewing gum and sugar-free foods since FDA approval in 1981.',
+    'e950': 'E950 is the EU code for acesulfame potassium (Ace-K), an artificial sweetener about 200 times sweeter than sugar, commonly blended with aspartame in diet beverages and sugar-free products.',
+    # --- Flavor enhancers ---
+    'disodium guanylate': 'A flavour enhancer (E627) made from dried fish or seaweed, used to intensify savoury umami flavours in processed foods. Almost always used in combination with MSG and disodium inosinate.',
+    'e627': 'E627 is the EU code for disodium guanylate, a nucleotide-based flavour enhancer extracted from dried fish or yeast that amplifies the savoury taste of foods.',
+    'disodium inosinate': 'A flavour enhancer (E631) derived from meat or fish, used to boost the savoury umami taste in soups, crisps and instant noodles. Typically used alongside MSG and disodium guanylate.',
+    'e631': 'E631 is the EU code for disodium inosinate, a nucleotide flavour enhancer derived from meat or sardines, commonly found in instant noodles, crisps and savoury snacks.',
+    # --- Acids ---
+    'phosphoric acid': 'E338 is the E number for phosphoric acid, a common inorganic acidulant used in the food industry to add a sharp, sour or tangy taste to cola drinks and processed foods. It also acts as a pH regulator and flavour balancer.',
+    'e338': 'E338 is the EU code for phosphoric acid, an inorganic acid used as an acidulant, pH regulator and flavour agent in cola beverages, processed cheese and baked goods.',
+    'caramel colour': 'A brown food colouring (E150) produced by controlled heating of carbohydrates like sugar or corn syrup. One of the oldest and most widely used food colourings in the world, used in cola drinks, beer, soy sauce and baked goods.',
+    'caramel color': 'A brown food colouring (E150) made by heating sugars under controlled conditions, used to give cola beverages, beer and many sauces their characteristic brown colour.',
+    'e150': 'E150 is the EU code for caramel colouring, one of the most widely produced food additives globally, made by heating carbohydrates and used in cola drinks, beer, biscuits, bread and soy sauce.',
+    # --- Personal care preservatives ---
+    'methylchloroisothiazolinone': 'A synthetic preservative (MCI/CMIT) used in rinse-off personal care products like shampoos, conditioners and body washes to prevent microbial growth. Usually paired with methylisothiazolinone (MIT).',
+    'methylisothiazolinone': 'A synthetic preservative (MI/MIT) used in personal care products and household cleaners to prevent mould and bacterial contamination. Part of the isothiazolinone family of biocides, first introduced in the 1970s.',
+    'dmdm hydantoin': 'A synthetic preservative used in cosmetics and personal care products that works by slowly releasing small amounts of formaldehyde to prevent bacterial and fungal growth.',
+    'imidazolidinyl urea': 'A synthetic preservative widely used in cosmetics and personal care products since the 1950s. It releases formaldehyde gradually, providing broad-spectrum antimicrobial protection.',
+    'diazolidinyl urea': 'A synthetic preservative derived from allantoin, used in cosmetics and personal care products. It releases formaldehyde over time to prevent microbial contamination.',
+    'quaternium-15': 'A synthetic quaternary ammonium preservative used in cosmetics, shampoos and skincare products. It is one of the most commonly used formaldehyde-releasing preservatives in personal care.',
+    'phenyl mercuric': 'A mercury-containing compound historically used as a preservative in eye drops, nasal sprays and some topical preparations. Now largely phased out due to toxicity concerns.',
+    'formaldehyde': 'A simple aldehyde (CH₂O) naturally produced in small amounts by all living organisms. Industrially used as a preservative, disinfectant and in the production of resins and plastics.',
+    'bronopol': 'A synthetic broad-spectrum preservative (2-bromo-2-nitropropane-1,3-diol) used in personal care products, cosmetics and industrial water systems to prevent bacterial and fungal growth.',
+    # --- Sweeteners ---
+    'aspartame': 'An artificial sweetener approximately 200 times sweeter than sugar, made from two amino acids (aspartic acid and phenylalanine). Used in diet drinks, chewing gum, sugar-free foods and medicines since FDA approval in 1981.',
+    'acesulfame potassium': 'An artificial sweetener (Ace-K / E950) about 200 times sweeter than sucrose, often blended with aspartame to improve taste in diet beverages and sugar-free products. Passes through the body without being metabolised.',
+    'acesulfame-k': 'Acesulfame-K (E950) is an artificial sweetener about 200 times sweeter than sugar. Widely used in diet drinks, sugar-free sweets and pharmaceuticals since the 1980s.',
+    # --- Antioxidant preservatives ---
+    'butylated hydroxyanisole': 'BHA is a synthetic antioxidant preservative approved since the 1940s, added to edible fats, snack foods, cereals and cosmetics to prevent oxidation and extend shelf life.',
+    'bha': 'BHA (butylated hydroxyanisole) is a synthetic antioxidant added to fatty foods, snack packaging, cereals and cosmetics to prevent oils from going rancid.',
+    'butylated hydroxytoluene': 'BHT is a synthetic antioxidant preservative used in fats, oils, cereals and packaged foods to prevent oxidative rancidity and extend shelf life. Chemically similar to BHA.',
+    'bht': 'BHT (butylated hydroxytoluene) is a synthetic phenolic antioxidant used to stabilise fats and oils in packaged foods, cosmetics and rubber products.',
+    'tert-butylhydroquinone': 'TBHQ is a synthetic antioxidant used in edible fats and oils, instant noodles, chips and packaged goods to prevent oxidation. Commonly used in fast-food frying oils.',
+    'tbhq': 'TBHQ (tert-butylhydroquinone) is a synthetic antioxidant preservative found in cooking oils, chips, instant noodles and crackers to slow rancidity and extend shelf life.',
+    # --- Banned additives ---
+    'potassium bromate': 'A bread-improving oxidising agent that strengthens dough and produces a consistent, high-rising loaf. Used in commercial baking since the early 20th century.',
+    'azodicarbonamide': 'A synthetic dough conditioner and bleaching agent used in the baking industry to improve flour performance, speed bread rising and create a fine, consistent crumb texture.',
+    'brominated vegetable oil': 'An emulsifier made by reacting bromine with vegetable oil, used to keep citrus flavour oils suspended in water-based soft drinks and sports beverages.',
+    # --- Talc ---
+    'talcum': 'Talcum is a finely ground mineral powder (hydrated magnesium silicate) derived from natural talc deposits. Used in baby powders, cosmetics, pharmaceuticals and industrial applications for its absorbent and lubricating properties.',
+    'talc': 'Talc is a naturally occurring clay mineral (magnesium silicate) mined worldwide. Ground into a fine powder, it is used as a filler, lubricant and anti-caking agent in cosmetics, food supplements and pharmaceuticals.',
+    # --- CI colorants (commonly questioned) ---
+    'ci 47000': 'CI 47000 is the Colour Index number for Quinoline Yellow (E104), a synthetic yellow azo dye used in food products, pharmaceuticals and some cosmetics.',
+    'ci 19140': 'CI 19140 is the Colour Index number for Tartrazine (E102), a synthetic lemon-yellow food dye widely used in sweets, drinks and medicines.',
+    'ci 15985': 'CI 15985 is the Colour Index number for Sunset Yellow FCF (E110), a synthetic orange food dye used in snacks, drinks and confectionery.',
+    'ci 16035': 'CI 16035 is the Colour Index number for Allura Red AC (E129 / Red 40), a widely used synthetic red food dye in beverages and confectionery.',
+    'ci 42090': 'CI 42090 is the Colour Index number for Brilliant Blue FCF (E133 / FD&C Blue 1), a synthetic blue dye used in food and cosmetics.',
+    # --- Sugars and sweeteners ---
+    'sugar': 'Sucrose extracted from sugar cane or sugar beet, the most widely consumed sweetener in the world. A simple carbohydrate that provides 4 calories per gram and has been used in food for thousands of years.',
+    'high fructose corn syrup': 'A liquid sweetener made by enzymatically converting glucose in corn starch to fructose. Developed in the 1960s and widely used in North American soft drinks, condiments and processed foods from the 1970s onwards.',
+    'glucose syrup': 'A refined liquid sweetener produced by hydrolysing starch (from corn, wheat or potato) into shorter glucose chains. Used in confectionery, baked goods and soft drinks to add sweetness, moisture retention and smooth texture.',
+    'invert sugar': 'A mixture of equal parts glucose and fructose produced by splitting sucrose molecules, used in confectionery and baking to retain moisture, improve texture and prevent sugar crystallisation.',
+    'maltodextrin': 'A refined carbohydrate powder produced from starch (corn, wheat or potato) by partial hydrolysis. Used as a filler, thickener, texture agent and carrier in protein powders, sauces, infant formula and processed foods.',
+    'corn syrup solids': 'Dried glucose syrup made from corn starch, with most of the water removed. Used as a sweetener, filler and texturiser in creamers, infant formula and processed foods.',
+    # --- Sweeteners (moderate) ---
+    'sucralose': 'A zero-calorie artificial sweetener (E955) made by selectively chlorinating sugar molecules, approximately 600 times sweeter than sucrose. Discovered in 1976 and used widely in diet drinks, sugar-free products and baked goods.',
+    'e955': 'E955 is the EU code for sucralose, a zero-calorie artificial sweetener about 600 times sweeter than table sugar, used in diet drinks, sugar-free sweets and baked goods.',
+    'saccharin': 'The oldest artificial sweetener, first discovered in 1879. About 300–400 times sweeter than sugar with no caloric value, used in diet soft drinks, tabletop sweeteners and pharmaceutical preparations.',
+    'e954': 'E954 is the EU code for saccharin, the world\'s first artificial sweetener (discovered 1879), used in diet soft drinks, sugar-free confectionery and pharmaceutical products.',
+    # --- Fragrance ---
+    'fragrance': 'A complex proprietary mixture of aromatic chemicals used to give personal care products their distinctive scent. A single "fragrance" entry on a label may represent dozens or even hundreds of individual chemical ingredients.',
+    'perfume': 'A mixture of natural and synthetic aromatic compounds used to create a pleasant scent, listed as a single ingredient to protect proprietary formulas. May contain essential oils, synthetic musks and fixatives.',
+    'parfum': 'The French/EU INCI term for fragrance in cosmetics. Under EU Regulation, 26 specific fragrance allergens found within a parfum mixture must be individually declared on the label.',
+    'artificial flavor': 'A synthetic flavour compound created in a laboratory to replicate or enhance specific natural tastes. Used widely in processed foods, drinks and confectionery to deliver consistent flavour at lower cost.',
+    'artificial flavour': 'A synthetically produced flavouring agent used in processed food products to add or enhance taste. Used in snacks, drinks, confectionery and instant foods for flavour consistency.',
+    # --- MSG ---
+    'monosodium glutamate': 'The sodium salt of glutamic acid (E621), an amino acid that occurs naturally in tomatoes, parmesan, mushrooms and fermented foods. Used as a flavour enhancer to intensify savoury umami taste, discovered in Japan in 1908.',
+    'msg': 'MSG (monosodium glutamate / E621) is a flavour enhancer and the sodium salt of glutamic acid, an amino acid naturally present in tomatoes, aged cheese and mushrooms. Produced commercially by fermenting plant starch or sugar.',
+    'e621': 'E621 is the EU code for monosodium glutamate (MSG), a flavour enhancer produced by fermentation of starch or sugar that amplifies the savoury umami taste in foods.',
+    # --- Fiber additives ---
+    'inulin': 'A naturally occurring prebiotic dietary fibre extracted from chicory root, Jerusalem artichoke or agave. Used as a fat replacer, texture agent and probiotic supplement in yoghurts, baked goods and protein bars.',
+    'polydextrose': 'A synthetic soluble fibre (E1200) made from glucose by polymerisation. Used as a low-calorie bulking agent and fat replacer in reduced-calorie foods like baked goods, dairy products and sweets.',
+    # --- Oils and fats ---
+    'palm oil': 'A vegetable oil extracted from the fruit of the oil palm tree (Elaeis guineensis), originating from West Africa. One of the most widely produced vegetable oils in the world, used in frying, baking, margarine and a vast range of packaged foods.',
+    'palmolein': 'The liquid fraction of palm oil separated by fractional crystallisation. Widely used as a cooking and frying oil in tropical countries and in the manufacture of packaged foods.',
+    'hydrogenated': 'A fat produced by adding hydrogen to liquid vegetable oil under pressure, turning it solid or semi-solid at room temperature. Used to improve texture, spreadability and shelf life in margarine, biscuits and baked goods.',
+    'partially hydrogenated': 'A fat produced by the incomplete hydrogenation of liquid vegetable oils, resulting in a semi-solid fat with a long shelf life. The hydrogenation process creates trans fatty acids as a by-product.',
+    # --- Emulsifiers and stabilizers ---
+    'soy lecithin': 'A natural emulsifier (E322) extracted from soybean oil during processing. Widely used in chocolate, bread, margarine and baked goods to blend fats and water smoothly and improve texture.',
+    'mono and diglycerides': 'Emulsifiers (E471) made from glycerol combined with one or two fatty acids. Found in baked goods, margarine and dairy products to improve texture, extend freshness and help fats and water mix.',
+    'polyglycerol polyricinoleate': 'A synthetic emulsifier (E476) made from glycerol and castor bean oil (ricinoleic acid), used primarily in chocolate manufacturing to improve flow properties and reduce the amount of cocoa butter needed.',
+    'ammonium phosphatides': 'An emulsifier (E442) derived from rapeseed oil, used in chocolate and cocoa products as an alternative to soy lecithin to improve texture and consistency.',
+    'carrageenan': 'A natural thickener and gelling agent (E407) extracted from red edible seaweed, used for over 600 years in food preparation. Widely used in dairy products, plant milks, deli meats and infant formula to improve texture.',
+    # --- Surfactants (personal care) ---
+    'sodium laureth sulfate': 'A milder sulfate surfactant (SLES) derived from coconut or palm oil, created by ethoxylating SLS to reduce its irritation potential. Used in shampoos, body washes and skin cleansers as a foaming agent.',
+    'sodium laureth sulphate': 'The sulphate spelling variant of SLES (sodium laureth sulfate), a widely used foaming surfactant in shampoos, shower gels and skin cleansers.',
+    'ammonium laureth sulfate': 'An ammonium-based sulfate surfactant similar to SLES, used in shampoos and body washes as a foaming and cleansing agent. Slightly different pH profile to its sodium counterpart.',
+    'cocamidopropyl betaine': 'A mild amphoteric surfactant derived from coconut oil, used in shampoos, body washes and baby products. Added to reduce irritation from stronger surfactants and to improve conditioning and lather.',
+    # --- Preservatives (milder) ---
+    'phenoxyethanol': 'A synthetic preservative and solvent used in cosmetics and pharmaceuticals since the 1950s to prevent microbial growth. Found in skincare, haircare, eye cosmetics and baby products.',
+    'benzyl alcohol': 'A naturally occurring aromatic alcohol found in jasmine, hyacinth and ylang-ylang, also produced synthetically. Used as a preservative, solvent and fragrance ingredient in cosmetics and pharmaceuticals.',
+    'potassium sorbate': 'The potassium salt of sorbic acid (E202), a natural preservative originally isolated from rowan berries. Used to inhibit mould and yeast in cheese, wine, dried fruits, baked goods and cosmetics.',
+    'e202': 'E202 is the EU code for potassium sorbate, a widely used food and cosmetic preservative that inhibits the growth of mould, yeast and some bacteria at low concentrations.',
+    'e407': 'E407 is the EU code for carrageenan, a natural thickener and stabiliser extracted from red seaweed, used in dairy products, meat products and plant-based alternatives.',
+    # --- Petroleum-derived ---
+    'mineral oil': 'A highly refined petroleum-derived oil used as a moisturiser and emollient in cosmetics and as a laxative in medicines. Also used as a food-grade lubricant on processing machinery and as a coating on some foods.',
+    'petrolatum': 'Petroleum jelly (e.g., Vaseline), a semi-solid mixture of hydrocarbons refined from petroleum. Used as a skin protectant and occlusive moisturiser since 1872 and as a base for ointments.',
+    'paraffinum liquidum': 'The INCI name for liquid paraffin or white mineral oil, a highly refined petroleum-derived ingredient used as an emollient and skin-conditioning agent in cosmetics and as a laxative.',
+    'paraffin wax': 'A petroleum-derived solid wax used as a coating and glazing agent in food (E905) and as an occlusive ingredient in cosmetics. Also widely used in candles and as a waterproofing material.',
+    # --- PEG compounds ---
+    'peg-': 'PEG (polyethylene glycol) compounds are petroleum-derived polymers used as emollients, emulsifiers, thickeners and surfactants in cosmetics and pharmaceuticals. The number after PEG indicates the average molecular weight.',
+    'polyethylene glycol': 'A synthetic polymer made from ethylene oxide, used as a solvent, emollient, thickener and penetration enhancer in cosmetics, pharmaceuticals and industrial products.',
+    # --- Denatured alcohols ---
+    'alcohol denat': 'Denatured ethyl alcohol with bittering or denaturing agents added to make it unfit for drinking. Used as a solvent, antiseptic and quick-drying carrier in cosmetics, toiletries and household products.',
+    'denatured alcohol': 'Ethanol made undrinkable by adding denaturants such as denatonium. Used widely as a solvent, astringent and preservative in cosmetics, skin toners, antiseptics and cleaning products.',
+    'sd alcohol': 'Specially denatured (SD) alcohol, a form of denatured ethanol approved for specific industrial and cosmetic uses. Functions as a solvent, antiseptic and quick-drying ingredient in personal care products.',
+    # --- Allergens ---
+    'lanolin': 'A natural waxy substance produced by the sebaceous glands of wool-bearing animals, mainly sheep. Extracted during wool processing, it is used as a skin softener and emollient in lip balms, creams and nipple creams.',
+    'wool wax': 'Another name for lanolin, the natural secretion produced by sheep to waterproof their wool. Used in cosmetics, ointments, leather conditioners and industrial lubricants.',
+    # --- Silicones (cyclic) ---
+    'cyclomethicone': 'A blend of cyclic silicone compounds (typically D4, D5 and D6) used in cosmetics as a lightweight, volatile carrier. Found in hair products, moisturisers and deodorants, it evaporates after application leaving other ingredients behind.',
+    'cyclopentasiloxane': 'A cyclic silicone (D5) widely used in haircare and skincare as a lightweight conditioning agent that evaporates after application, leaving no residue and imparting silky smoothness.',
+    'cyclohexasiloxane': 'A cyclic silicone (D6) used in personal care products as a lightweight emollient and carrier ingredient that evaporates quickly after application.',
+    'amodimethicone': 'A modified silicone polymer with reactive amino groups, used in hair conditioners and treatments to provide slip, reduce frizz and deposit evenly on damaged areas of the hair shaft.',
+    # --- Retinoids ---
+    'retinol': 'The alcohol form of Vitamin A (a retinoid), used in anti-ageing skincare since the 1980s to increase cell turnover, stimulate collagen production and improve fine lines, wrinkles and uneven skin tone.',
+    'retinyl palmitate': 'An ester of retinol (Vitamin A) and palmitic acid, used as a milder retinoid in cosmetics and as a Vitamin A supplement and antioxidant in skincare and some food products.',
+    'tretinoin': 'The acid form of Vitamin A (all-trans retinoic acid), a prescription-only topical retinoid used to treat acne, photodamage and wrinkles. Regarded as the gold standard topical anti-ageing agent.',
+    'hydroxypinacolone retinoate': 'A newer ester of retinoic acid used in over-the-counter cosmetics as a gentler alternative to retinol, designed to deliver anti-ageing benefits with reportedly less irritation and dryness.',
+    'retinal': 'Retinaldehyde, an intermediate form of Vitamin A between retinol and retinoic acid, used in high-performance anti-ageing skincare. Converts to retinoic acid on the skin more readily than retinol.',
+    # --- Silicones ---
+    'dimethiconol': 'A high-molecular-weight silicone polymer used in hair conditioners and styling products to add shine, smooth the cuticle and improve detangling. Unlike cyclic silicones, it is non-volatile and remains on the hair.',
+    'dimethicone': 'The most widely used silicone in cosmetics, a linear polydimethylsiloxane polymer. Creates a smooth, silky feel on skin and hair, acts as a skin protectant and is used in everything from moisturisers to wound dressings.',
+    # --- CI cosmetic colorants (worth knowing) ---
+    'ci 26100': 'CI 26100 (Solvent Red 23 / D&C Red No. 17) is a synthetic azo dye used to add red colour to cosmetics such as lipsticks, nail polish and hair products.',
+    'ci 61565': 'CI 61565 (Vat Green 1) is a synthetic vat dye used to impart green colour in some cosmetics and textile dyeing applications.',
+    'ci 17200': 'CI 17200 (Acid Red 33 / D&C Red No. 33) is a synthetic azo dye used to colour cosmetics and pharmaceutical products red.',
+    'ci 15510': 'CI 15510 (Acid Orange 7) is a synthetic azo dye used in cosmetics, hair dyes and pharmaceutical colouring applications.',
+    'ci 45410': 'CI 45410 (Acid Red 92 / D&C Red No. 27) is a synthetic fluorescein dye used to add red or pink colour to lip products and other cosmetics.',
+    # --- Titanium Dioxide ---
+    'titanium dioxide': 'A naturally occurring white mineral (E171) mined from ilmenite or rutile ore. Used as a bright white pigment in paints, sunscreens, toothpastes, tablets and food products since the early 20th century.',
+    # --- Chelating agents ---
+    'tetrasodium edta': 'A synthetic chelating agent (a tetrasodium salt of EDTA) used in cosmetics, pharmaceuticals and food products to bind and inactivate trace metal ions that could otherwise cause discolouration or product degradation.',
+    'disodium edta': 'A synthetic chelating agent used in cosmetics, shampoos and food products to sequester metal ions (like calcium and magnesium) that could interfere with product performance or cause oxidation.',
+    'tetrasodium etidronate': 'A chelating and sequestering agent used as an alternative to EDTA in cosmetic formulations, particularly in rinse-off products and oral care, to improve product stability.',
+    # --- Mild acids ---
+    'citric acid': 'A naturally occurring weak organic acid found abundantly in citrus fruits, produced commercially by fermenting sugars. Widely used as an acidulant, flavour enhancer, pH adjuster and preservative in foods, drinks and cosmetics.',
+    # --- Colorants ---
+    'beta carotene': 'A naturally occurring orange-red pigment (provitamin A / E160a) found in carrots, sweet potatoes and leafy greens. Used as a food colorant and as a precursor that the body converts to Vitamin A.',
+    'caramel': 'A natural brown colouring and flavouring produced by heating sugar. The word caramel refers both to the confectionery and to the flavour/colour ingredient used in biscuits, beverages and desserts.',
+    # --- Thickeners ---
+    'guar gum': 'A natural thickener and emulsifier (E412) ground from the endosperm of guar beans, grown primarily in India and Pakistan. Widely used in ice cream, dairy products, sauces and gluten-free baked goods.',
+    'xanthan gum': 'A natural polysaccharide (E415) produced by fermenting glucose with the bacterium Xanthomonas campestris. Used as a thickener and stabiliser in salad dressings, sauces, gluten-free bread and cosmetics.',
+    # --- Humectants ---
+    'propylene glycol': 'A synthetic, odourless viscous liquid derived from petroleum or bio-based sources. Used as a humectant, solvent and stabiliser in food, cosmetics, pharmaceuticals and as an aircraft de-icing fluid.',
+    'glycerin': 'Also known as glycerol, a naturally occurring compound found in all plant and animal fats. A versatile ingredient used as a humectant, sweetener and solvent in foods, cosmetics and medicines for over 150 years.',
+    'sorbitol': 'A naturally occurring sugar alcohol found in apples, pears and plums, also produced commercially from glucose. Used as a low-calorie sweetener, humectant and laxative in foods, cosmetics and pharmaceutical preparations.',
+    # --- Caffeine ---
+    'caffeine': 'A natural alkaloid stimulant found in coffee beans, tea leaves, cacao pods and guarana berries, and also produced synthetically. The world\'s most widely consumed psychoactive substance, used in beverages, medicines and topical cosmetics.',
+    # --- Alcohol ---
+    'alcohol': 'Ethyl alcohol (ethanol), a short-chain alcohol produced by fermentation of sugars. Used across industries as a solvent, preservative, antiseptic and carrier in cosmetics, medicines and cleaning products.',
+    'ethanol': 'The chemical name for drinking alcohol, produced by fermentation of plant sugars. In cosmetics and personal care products, it is usually denatured (made undrinkable) and used as a solvent, antiseptic and quick-drying carrier.',
+    # --- Salts ---
+    'salt': 'Sodium chloride (NaCl), an essential mineral found in seawater and rock deposits. The most widely used food seasoning and preservative in human history, essential for nerve function and fluid balance.',
+    'sodium chloride': 'The chemical compound commonly known as table salt, consisting of sodium and chloride ions. An essential dietary mineral used as a seasoning, preservative and ingredient in thousands of food, cosmetic and pharmaceutical products.',
+    # --- Acids (milder) ---
+    'lactic acid': 'An organic acid naturally produced during fermentation (in yoghurt, cheese, sauerkraut) and by muscles during exercise. Used as a preservative, acidulant and pH adjuster in foods, beverages and skincare products.',
+    'malic acid': 'A naturally occurring organic acid found abundantly in apples, pears and other fruits. Used as a flavour enhancer, acidulant and pH balancer in foods, beverages and oral care products.',
+    # --- Vitamins ---
+    'ascorbic acid': 'The chemical name for Vitamin C, an essential water-soluble vitamin found in citrus fruits, berries and vegetables. Used as a nutritional supplement, antioxidant preservative and skin-brightening agent in foods and cosmetics.',
+    'tocopherol': 'The chemical name for Vitamin E, a fat-soluble antioxidant found in nuts, seeds and vegetable oils. Used as a natural antioxidant preservative and skin-conditioning ingredient in foods, cosmetics and supplements.',
+    'vitamin': 'An essential organic micronutrient that the body requires in small amounts. Added to food products for fortification, to replace vitamins lost during processing or to supplement dietary intake.',
+    'mineral': 'An inorganic element required by the body in small amounts for functions including bone formation, enzyme activity and fluid regulation. Added to foods for fortification purposes.',
+    # --- Proteins ---
+    'whey': 'The liquid portion of milk that separates during cheese-making, containing whey proteins (beta-lactoglobulin, alpha-lactalbumin). Dried into whey powder and widely used as a protein supplement and in baked goods.',
+    'casein': 'The dominant protein in cow\'s milk, making up about 80% of total milk protein. Used as a slow-digesting protein supplement and as a food ingredient in processed cheese, adhesives and pharmaceutical tablets.',
+    'lactose': 'The natural disaccharide sugar found in milk and dairy products, composed of glucose and galactose. Widely used as a filler, binder and mild sweetener in pharmaceuticals and processed foods.',
+    # --- Starches ---
+    'starch': 'A natural carbohydrate polymer (polysaccharide) found in wheat, maize, potato and rice. The most widely used thickening and texturising agent in processed foods worldwide.',
+    'modified starch': 'Starch that has been chemically or physically treated (e.g., by cross-linking or acetylation) to improve its functional properties such as stability under heat, acid or freezing.',
+    # --- Raising agents ---
+    'sodium bicarbonate': 'Also known as baking soda (E500), a naturally occurring white crystalline mineral that produces carbon dioxide gas when combined with acid or heat, used as a leavening agent in baking.',
+    'ammonium bicarbonate': 'A raising agent (E503) used in baking that decomposes completely during baking into ammonia, carbon dioxide and water, leaving no residue in the finished product.',
+    'sodium carbonate': 'A raising agent and pH adjuster (E500ii) also known as washing soda, used in baked goods, noodles and as a food-grade alkali to adjust acidity.',
+    'potassium carbonate': 'A raising agent (E501) and pH adjuster used in baked goods, cocoa processing and some Asian noodles to improve texture and alkalinity.',
+    # --- Anticaking ---
+    'silicon dioxide': 'A naturally occurring mineral (E551) that occurs as quartz sand and diatomite. Purified to a fine powder, it is used as an anticaking agent to prevent clumping in powdered foods, spices, salt and nutritional supplements.',
+    # --- Flavor enhancers (natural) ---
+    'yeast extract': 'A concentrated paste or powder made from the cellular contents of yeast, rich in amino acids, B vitamins and natural glutamates. Used as a savoury, umami-rich flavour enhancer in soups, sauces, stocks and snack foods.',
+    'hydrolysed': 'A protein that has been broken down into amino acids and shorter peptide chains by hydrolysis using acid, base or enzymes. Used as a natural-source flavour enhancer in soups, sauces and processed meat products.',
+    # --- Natural colorants ---
+    'annatto': 'A natural orange-yellow food colouring (E160b) extracted from the seeds of the achiote tree (Bixa orellana), native to tropical America. Used for centuries to colour cheeses like Red Leicester, butter, rice dishes and snacks.',
+    'paprika': 'A spice and natural food colorant made from dried and ground red peppers (Capsicum annuum). Used both for its warm, slightly sweet flavour and as a natural red-orange colouring agent in foods.',
+    'beetroot': 'A natural red-purple food colorant extracted from the juice of red beets (Beta vulgaris). Used to colour juices, jams, meat products, confectionery and some cosmetics.',
+    # --- Waxes ---
+    'shellac': 'A natural resin secreted by the female lac bug (Kerria lacca) on trees in India and Thailand. Used as a glazing agent (E904) on confectionery, fresh fruit and pharmaceutical tablets to add shine and reduce moisture loss.',
+    'beeswax': 'A natural wax produced by honey bees to build honeycomb. Used as a glazing and coating agent (E901) in confectionery and cheese, and widely used in cosmetics as a thickener, emulsifier and emollient.',
+    'carnauba wax': 'A natural wax obtained from the leaves of the carnauba palm tree (Copernicia prunifera) in Brazil. The hardest natural wax available, used as a glazing agent (E903) in confectionery, cosmetics and car polish.',
+    # --- Herbal / generally recognised ---
+    'neem': 'An extract from the neem tree (Azadirachta indica), an evergreen native to the Indian subcontinent. Used for thousands of years in Ayurvedic medicine, today found in soaps, shampoos, toothpastes and skincare products.',
+    'neem extract': 'A concentrated extract from the neem tree (Azadirachta indica), prized in Ayurvedic practice for its antimicrobial and antifungal properties. Used in personal care and oral care products.',
+    'neem oil': 'A cold-pressed vegetable oil extracted from the fruits and seeds of the neem tree. Used in Ayurvedic medicine, agriculture and personal care products for its antibacterial, antifungal and insecticidal properties.',
+    'tulsi': 'Holy basil (Ocimum tenuiflorum), a plant sacred in Hinduism and a cornerstone of Ayurvedic medicine for over 3,000 years. Used in herbal teas, supplements and personal care products for its adaptogenic and antimicrobial properties.',
+    'aloe vera': 'A succulent plant native to the Arabian Peninsula, used medicinally for over 6,000 years. The clear gel from its leaves is used in skincare, cosmetics, beverages and medicines for its soothing and moisturising properties.',
+    'aloe': 'Extract from the aloe vera plant (Aloe barbadensis miller), used in skincare and haircare products for its soothing, moisturising and wound-healing properties.',
+    'turmeric extract': 'A concentrated extract of turmeric root (Curcuma longa) standardised for curcumin, the primary active polyphenol. Used in dietary supplements and functional foods for its anti-inflammatory properties.',
+    'turmeric': 'A bright yellow spice derived from the rhizome of Curcuma longa, a plant in the ginger family. Cultivated in South Asia for over 4,000 years, used in cooking, traditional medicine and as a natural yellow food colorant.',
+    'haldi': 'The Hindi/Urdu name for turmeric (Curcuma longa), a traditional Indian spice used in cooking, Ayurvedic medicine and religious ceremonies.',
+    'ashwagandha': 'An Ayurvedic medicinal herb (Withania somnifera), also called Indian ginseng or winter cherry. Used for over 3,000 years in traditional Indian medicine to reduce stress and support vitality.',
+    'aloe vera gel': 'The translucent gel extracted from inside the leaves of the aloe vera plant. Widely used in skincare and hair products for its hydrating, soothing and cooling properties.',
+    'coconut oil': 'A natural plant oil extracted from the kernel of mature coconuts. One of the most widely used plant oils, prized for its high lauric acid content and used in cooking, cosmetics and haircare.',
+    'olive oil': 'A natural oil extracted from the fruit of the olive tree (Olea europaea), a staple of Mediterranean cuisine for millennia. Rich in oleic acid and polyphenol antioxidants, used in cooking and cosmetics.',
+    'honey': 'A natural viscous sweetener produced by bees from flower nectar. Composed primarily of fructose and glucose, honey has been used as food, medicine and a cosmetic ingredient for thousands of years.',
+    'salicylic acid': 'A naturally occurring beta hydroxy acid (BHA) found in willow bark and other plants. Used as a keratolytic and acne treatment in skincare and as a food preservative in some applications.',
+    'hyaluronic acid': 'A natural polysaccharide (glycosaminoglycan) found in the skin, eyes and joint fluid of all vertebrates. Used extensively in skincare for its exceptional ability to bind and retain moisture.',
+    'ceramide': 'A class of lipid molecules that are the primary component of the skin\'s stratum corneum (outer barrier layer). Used in skincare products to reinforce the skin barrier and prevent moisture loss.',
+    'collagen': 'The most abundant structural protein in the human body, found in skin, tendons, bones and cartilage. Used in skincare products and dietary supplements for skin elasticity and wound healing.',
+    # --- CI iron oxides (generally recognised) ---
+    'ci 77491': 'CI 77491 is the Colour Index number for Iron Oxide Red, a naturally occurring mineral pigment widely used in cosmetics, face makeup and some foods as a safe, stable red colourant.',
+    'ci 77492': 'CI 77492 is the Colour Index number for Iron Oxide Yellow, a naturally occurring mineral pigment used in cosmetics and some food colourants as a safe yellow or buff colourant.',
+    'ci 77499': 'CI 77499 is the Colour Index number for Iron Oxide Black, a naturally occurring mineral pigment used in cosmetics like mascara, eyeliner and nail products as a stable black colourant.',
+    'iron oxide': 'Iron oxide is a naturally occurring mineral pigment (rust) that comes in red, yellow and black forms. Approved by FDA and EU as a safe colourant in cosmetics and some food applications.',
+}
+
 # Ingredients that are standard/safe in cosmetics but have dietary concerns in food
 COSMETIC_SAFE_OVERRIDES = {
     'sodium chloride': ('Isotonic agent / texture ingredient', 'Standard cosmetic ingredient; the salt-intake concern applies only to food, not topical use'),
@@ -166,6 +426,7 @@ def classify_ingredient(ingredient_name, category=None):
 
         # MSG — flavor enhancer (FDA GRAS, some sensitivity)
         'monosodium glutamate': ('Flavor enhancer MSG (E621)', 'FDA-approved GRAS; double-blind studies mostly found no link to "Chinese Restaurant Syndrome"; some individuals report sensitivity'),
+        'msg': ('Monosodium glutamate (MSG / E621)', 'FDA-approved GRAS; some people report sensitivity; generally safe for most at normal dietary levels'),
         'e621': ('MSG / Monosodium glutamate (E621)', 'FDA-approved GRAS; some people report sensitivity; generally safe for most at normal dietary levels'),
 
         # Fiber additives
@@ -434,6 +695,11 @@ def classify_ingredient(ingredient_name, category=None):
         'vitamin c': ('Ascorbic acid', 'Essential vitamin, antioxidant, safe'),
         'vitamin e': ('Tocopherol', 'Essential vitamin, antioxidant, safe'),
         'zinc': ('Essential mineral', 'Essential mineral, safe at normal levels'),
+        # Iron oxide must come before generic 'iron' so more specific pattern wins
+        'iron oxide': ('Mineral pigment', 'FDA and EU approved; widely used in cosmetics and food colouring; no known health concerns'),
+        'ci 77491': ('Iron Oxide Red', 'FDA and EU approved mineral pigment; widely used in cosmetics; no known health concerns'),
+        'ci 77492': ('Iron Oxide Yellow', 'FDA and EU approved mineral pigment; widely used in cosmetics; no known health concerns'),
+        'ci 77499': ('Iron Oxide Black', 'FDA and EU approved mineral pigment; widely used in cosmetics; no known health concerns'),
         'iron': ('Essential mineral', 'Essential mineral, safe at normal levels'),
         'calcium': ('Essential mineral', 'Essential mineral for bones, safe'),
         'potassium': ('Essential mineral', 'Essential mineral, safe at normal levels'),
@@ -443,12 +709,6 @@ def classify_ingredient(ingredient_name, category=None):
         'plant extract': ('Natural plant extract', 'Natural plant-derived ingredient, safe'),
         'herbal extract': ('Natural herbal extract', 'Natural plant-derived ingredient, safe'),
         'botanical extract': ('Natural botanical extract', 'Natural plant-derived ingredient, safe'),
-
-        # Iron oxide mineral pigments — FDA & EU approved, no known health concerns
-        'ci 77491': ('Iron Oxide Red', 'FDA and EU approved mineral pigment; widely used in cosmetics; no known health concerns'),
-        'ci 77492': ('Iron Oxide Yellow', 'FDA and EU approved mineral pigment; widely used in cosmetics; no known health concerns'),
-        'ci 77499': ('Iron Oxide Black', 'FDA and EU approved mineral pigment; widely used in cosmetics; no known health concerns'),
-        'iron oxide': ('Mineral pigment', 'FDA and EU approved; widely used in cosmetics and food colouring; no known health concerns'),
     }
 
     # For cosmetic/topical products, override food-context concerns with cosmetic-appropriate classification
@@ -468,7 +728,7 @@ def classify_ingredient(ingredient_name, category=None):
             return {
                 'classification': 'commonly_questioned',
                 'what_it_is': what_it_is,
-                'one_line_note': note,
+                'one_line_note': INGREDIENT_DESCRIPTIONS.get(pattern, note),
                 'regulatory_note': 'Check usage guidelines and restrictions'
             }
 
@@ -478,7 +738,7 @@ def classify_ingredient(ingredient_name, category=None):
             return {
                 'classification': 'worth_knowing',
                 'what_it_is': what_it_is,
-                'one_line_note': note,
+                'one_line_note': INGREDIENT_DESCRIPTIONS.get(pattern, note),
                 'regulatory_note': 'FSSAI approved with usage guidelines'
             }
 
@@ -488,15 +748,15 @@ def classify_ingredient(ingredient_name, category=None):
             return {
                 'classification': 'generally_recognised',
                 'what_it_is': what_it_is,
-                'one_line_note': note,
+                'one_line_note': INGREDIENT_DESCRIPTIONS.get(pattern, note),
                 'regulatory_note': 'No specific restrictions, widely used'
             }
-    
+
     # Default to generally recognised
     return {
         'classification': 'generally_recognised',
         'what_it_is': 'Food or cosmetic ingredient',
-        'one_line_note': 'Generally recognised as safe',
+        'one_line_note': 'Generally recognised as safe for use in food and cosmetic products.',
         'regulatory_note': 'No specific restrictions'
     }
 
