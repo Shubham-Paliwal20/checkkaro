@@ -1,8 +1,10 @@
-import { useState, useEffect, useRef } from 'react'
+import { useState, useEffect, useRef, useMemo } from 'react'
 import { useParams, useNavigate } from 'react-router-dom'
 import { motion } from 'framer-motion'
 import axios from 'axios'
 import { supabase } from '../lib/supabaseClient'
+import { useAuth } from '../context/AuthContext'
+import PhotoUploadModal from '../components/PhotoUploadModal'
 import ScoreCircle from '../components/ScoreCircle'
 import DisclaimerBox from '../components/DisclaimerBox'
 import ProductReviews from '../components/ProductReviews'
@@ -11,10 +13,23 @@ import SEO from '../components/SEO'
 
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:8000'
 
-function ProductImageGallery({ imageUrl, images, name }) {
-  const allImgs = (images && images.length > 0) ? images : (imageUrl ? [imageUrl] : [])
+const ADMIN_EMAIL = 'shubhampaliwal5@gmail.com'
+
+function ProductImageGallery({ imageUrl, images, name, dbPhotos, onDeleteDbPhoto, isAdmin, user, onOpenUpload }) {
+  const backendImgs = (images && images.length > 0) ? images : (imageUrl ? [imageUrl] : [])
+  const dbImgUrls = (dbPhotos || []).map(p => p.image_url)
+
+  // Merge, deduplicate
+  const seen = new Set()
+  const allImgs = [...backendImgs, ...dbImgUrls].filter(u => {
+    if (!u || seen.has(u)) return false
+    seen.add(u); return true
+  })
+
   const [idx, setIdx] = useState(0)
   const touchStartX = useRef(null)
+
+  useEffect(() => { if (idx >= allImgs.length && allImgs.length > 0) setIdx(allImgs.length - 1) }, [allImgs.length])
 
   const prev = () => setIdx(i => (i - 1 + allImgs.length) % allImgs.length)
   const next = () => setIdx(i => (i + 1) % allImgs.length)
@@ -26,55 +41,104 @@ function ProductImageGallery({ imageUrl, images, name }) {
     touchStartX.current = null
   }
 
-  if (!allImgs.length) return (
-    <div className="w-full md:w-64 flex-shrink-0 h-64 bg-gray-50 rounded-xl flex items-center justify-center mx-auto md:mx-0">
-      <svg className="w-20 h-20 text-gray-300" fill="currentColor" viewBox="0 0 20 20">
-        <path fillRule="evenodd" d="M4 3a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V5a2 2 0 00-2-2H4zm12 12H4l4-8 3 6 2-4 3 6z" clipRule="evenodd" />
-      </svg>
-    </div>
-  )
+  // Find if current image is a db photo (deletable by admin)
+  const currentDbPhoto = (dbPhotos || []).find(p => p.image_url === allImgs[idx])
+
+  const noImage = allImgs.length === 0
 
   return (
     <div className="w-full md:w-64 flex-shrink-0 mx-auto md:mx-0" style={{ userSelect: 'none' }}>
-      {/* Main image */}
+      {/* Main image area */}
       <div className="relative rounded-xl overflow-hidden bg-gray-50"
         style={{ height: 240 }}
         onTouchStart={onTouchStart} onTouchEnd={onTouchEnd}>
-        <img
-          src={allImgs[idx]}
-          alt={name}
-          className="w-full h-full object-contain p-3"
-          onError={e => { e.target.style.display = 'none' }}
-        />
+        {noImage ? (
+          <div style={{ height: '100%', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: 8 }}>
+            <svg className="w-16 h-16 text-gray-300" fill="currentColor" viewBox="0 0 20 20">
+              <path fillRule="evenodd" d="M4 3a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V5a2 2 0 00-2-2H4zm12 12H4l4-8 3 6 2-4 3 6z" clipRule="evenodd" />
+            </svg>
+            <span style={{ fontSize: 11, color: '#9ca3af' }}>No image yet</span>
+          </div>
+        ) : (
+          <img
+            src={allImgs[idx]}
+            alt={name}
+            className="w-full h-full object-contain p-3"
+            onError={e => { e.target.style.display = 'none' }}
+          />
+        )}
+
+        {/* Navigation arrows */}
         {allImgs.length > 1 && (
           <>
-            <button onClick={prev}
-              className="absolute left-2 top-1/2 -translate-y-1/2 w-8 h-8 rounded-full flex items-center justify-center text-white text-lg font-bold"
+            <button onClick={prev} className="absolute left-2 top-1/2 -translate-y-1/2 w-8 h-8 rounded-full flex items-center justify-center text-white text-lg font-bold"
               style={{ background: 'rgba(0,0,0,0.4)', border: 'none', cursor: 'pointer' }}>‹</button>
-            <button onClick={next}
-              className="absolute right-2 top-1/2 -translate-y-1/2 w-8 h-8 rounded-full flex items-center justify-center text-white text-lg font-bold"
+            <button onClick={next} className="absolute right-2 top-1/2 -translate-y-1/2 w-8 h-8 rounded-full flex items-center justify-center text-white text-lg font-bold"
               style={{ background: 'rgba(0,0,0,0.4)', border: 'none', cursor: 'pointer' }}>›</button>
             <span className="absolute top-2 right-2 text-white text-xs font-bold px-2 py-1 rounded-md"
               style={{ background: 'rgba(0,0,0,0.45)' }}>{idx + 1}/{allImgs.length}</span>
           </>
         )}
+
+        {/* Admin: delete current db photo */}
+        {isAdmin && currentDbPhoto && (
+          <button
+            onClick={() => onDeleteDbPhoto(currentDbPhoto.id)}
+            title="Delete this photo"
+            style={{ position: 'absolute', bottom: 8, right: 8, background: '#dc2626', border: 'none', color: '#fff', borderRadius: 8, padding: '5px 10px', fontSize: 12, fontWeight: 700, cursor: 'pointer', display: 'flex', alignItems: 'center', gap: 4 }}>
+            🗑 Delete
+          </button>
+        )}
+
+        {/* Admin badge */}
+        {isAdmin && (
+          <span style={{ position: 'absolute', top: 8, left: 8, background: '#1B3F8A', color: '#fff', fontSize: 10, fontWeight: 700, padding: '3px 7px', borderRadius: 6 }}>
+            ADMIN
+          </span>
+        )}
       </div>
 
-      {/* Thumbnails (only when multiple images) */}
-      {allImgs.length > 1 && (
-        <div className="flex gap-2 mt-2 overflow-x-auto pb-1" style={{ WebkitOverflowScrolling: 'touch' }}>
-          {allImgs.map((src, i) => (
-            <button key={i} onClick={() => setIdx(i)}
-              className="flex-shrink-0 rounded-lg overflow-hidden"
-              style={{
-                width: 52, height: 52,
-                border: i === idx ? '2.5px solid #FF9933' : '2px solid #e5e7eb',
-                background: '#f9fafb', padding: 0, cursor: 'pointer',
-              }}>
-              <img src={src} alt="" style={{ width: '100%', height: '100%', objectFit: 'contain', padding: 3 }} />
-            </button>
-          ))}
-        </div>
+      {/* Thumbnails row */}
+      <div className="flex gap-2 mt-2 overflow-x-auto pb-1" style={{ WebkitOverflowScrolling: 'touch' }}>
+        {allImgs.map((src, i) => {
+          const isDb = (dbPhotos || []).some(p => p.image_url === src)
+          return (
+            <div key={i} style={{ position: 'relative', flexShrink: 0 }}>
+              <button onClick={() => setIdx(i)}
+                style={{
+                  width: 52, height: 52, borderRadius: 10, overflow: 'hidden', display: 'block',
+                  border: i === idx ? '2.5px solid #FF9933' : '2px solid #e5e7eb',
+                  background: '#f9fafb', padding: 0, cursor: 'pointer',
+                }}>
+                <img src={src} alt="" style={{ width: '100%', height: '100%', objectFit: 'contain', padding: 3 }} />
+              </button>
+              {/* Admin: delete badge on thumbnail for db photos */}
+              {isAdmin && isDb && (
+                <button
+                  onClick={() => onDeleteDbPhoto((dbPhotos || []).find(p => p.image_url === src)?.id)}
+                  title="Delete"
+                  style={{ position: 'absolute', top: -5, right: -5, width: 16, height: 16, borderRadius: '50%', background: '#dc2626', border: '1.5px solid #fff', color: '#fff', fontSize: 10, cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', lineHeight: 1, padding: 0 }}>×</button>
+              )}
+            </div>
+          )
+        })}
+
+        {/* Admin: + add button */}
+        {isAdmin && allImgs.length < 5 && (
+          <button
+            onClick={onOpenUpload}
+            title="Add photo"
+            style={{ flexShrink: 0, width: 52, height: 52, borderRadius: 10, border: '2px dashed #1B3F8A', background: '#eff6ff', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 22, color: '#1B3F8A' }}>+</button>
+        )}
+      </div>
+
+      {/* User: suggest photo button */}
+      {!isAdmin && user && allImgs.length < 5 && (
+        <button
+          onClick={onOpenUpload}
+          style={{ width: '100%', marginTop: 8, padding: '7px 0', background: '#fff7ed', border: '1.5px solid #fed7aa', borderRadius: 10, color: '#c2410c', fontSize: 12, fontWeight: 700, cursor: 'pointer', fontFamily: 'inherit' }}>
+          📸 Suggest a photo · earn ₹1
+        </button>
       )}
     </div>
   )
@@ -83,6 +147,7 @@ function ProductImageGallery({ imageUrl, images, name }) {
 function Result() {
   const { productName } = useParams()
   const navigate = useNavigate()
+  const { user } = useAuth()
   const [loading,          setLoading]          = useState(true)
   const [error,            setError]            = useState(null)
   const [productNotFound,  setProductNotFound]  = useState(false)
@@ -90,11 +155,45 @@ function Result() {
   const [showCorrectionForm, setShowCorrectionForm] = useState(false)
   const [correctionText, setCorrectionText] = useState('')
   const [submitting, setSubmitting] = useState(false)
+  const [dbPhotos, setDbPhotos] = useState([])
+  const [showPhotoModal, setShowPhotoModal] = useState(false)
+  const [photoToast, setPhotoToast] = useState(null)
+
+  const isAdmin = user?.email === ADMIN_EMAIL
 
   useEffect(() => {
     setProductNotFound(false)
+    setDbPhotos([])
     fetchProduct()
   }, [productName])
+
+  useEffect(() => {
+    if (product?.id) fetchDbPhotos(product.id)
+  }, [product?.id])
+
+  const fetchDbPhotos = async (productId) => {
+    try {
+      const { data } = await supabase.from('product_photos')
+        .select('*').eq('product_id', productId).order('created_at')
+      setDbPhotos(data || [])
+    } catch { /* silent */ }
+  }
+
+  const handleDeletePhoto = async (photoId) => {
+    const { error } = await supabase.from('product_photos').delete().eq('id', photoId)
+    if (!error) setDbPhotos(prev => prev.filter(p => p.id !== photoId))
+  }
+
+  const handlePhotoSuccess = (msg, isAdminAdd) => {
+    setPhotoToast(msg)
+    if (isAdminAdd && product?.id) fetchDbPhotos(product.id)
+    setTimeout(() => setPhotoToast(null), 4000)
+  }
+
+  const totalPhotoCount = useMemo(() => {
+    const backendImgs = (product?.images?.length > 0) ? product.images : (product?.image_url ? [product.image_url] : [])
+    return [...new Set([...backendImgs, ...dbPhotos.map(p => p.image_url)])].length
+  }, [product, dbPhotos])
 
   const fetchProduct = async () => {
     try {
@@ -274,6 +373,24 @@ function Result() {
   return (
     <>
       {productSEO && <SEO {...productSEO} />}
+
+      {showPhotoModal && product && (
+        <PhotoUploadModal
+          productId={product.id}
+          productName={product.name}
+          currentCount={totalPhotoCount}
+          user={user}
+          onClose={() => setShowPhotoModal(false)}
+          onSuccess={handlePhotoSuccess}
+        />
+      )}
+
+      {photoToast && (
+        <div style={{ position: 'fixed', bottom: 24, left: '50%', transform: 'translateX(-50%)', zIndex: 999, background: '#111827', color: '#fff', padding: '12px 20px', borderRadius: 12, fontSize: 13, fontWeight: 600, boxShadow: '0 8px 24px rgba(0,0,0,0.25)', maxWidth: 340, textAlign: 'center' }}>
+          {photoToast}
+        </div>
+      )}
+
     <motion.div
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
@@ -285,7 +402,16 @@ function Result() {
         <div className="card p-4 sm:p-6 mb-6">
           <div className="flex flex-col md:flex-row gap-4 sm:gap-6">
             {/* Product Image Gallery */}
-            <ProductImageGallery imageUrl={product.image_url} images={product.images} name={product.name} />
+            <ProductImageGallery
+              imageUrl={product.image_url}
+              images={product.images}
+              name={product.name}
+              dbPhotos={dbPhotos}
+              onDeleteDbPhoto={handleDeletePhoto}
+              isAdmin={isAdmin}
+              user={user}
+              onOpenUpload={() => setShowPhotoModal(true)}
+            />
 
             {/* Product Info */}
             <div className="flex-1 text-center md:text-left">

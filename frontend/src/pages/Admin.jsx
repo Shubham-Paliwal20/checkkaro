@@ -4,9 +4,9 @@ import { useAuth } from '../context/AuthContext'
 import { supabase } from '../lib/supabaseClient'
 
 const ADMIN_EMAIL = 'shubhampaliwal5@gmail.com'
-const STATUS_TABS  = ['pending', 'approved', 'rejected', 'extracted']
-const STATUS_COLOR = { pending: '#f59e0b', approved: '#16a34a', rejected: '#dc2626', extracted: '#7c3aed' }
-const STATUS_BG    = { pending: '#fef3c7', approved: '#f0fdf4', rejected: '#fef2f2', extracted: '#f5f3ff' }
+const STATUS_TABS  = ['pending', 'approved', 'rejected', 'extracted', 'photos']
+const STATUS_COLOR = { pending: '#f59e0b', approved: '#16a34a', rejected: '#dc2626', extracted: '#7c3aed', photos: '#0ea5e9' }
+const STATUS_BG    = { pending: '#fef3c7', approved: '#f0fdf4', rejected: '#fef2f2', extracted: '#f5f3ff', photos: '#f0f9ff' }
 
 const CATEGORIES = ['Personal Care', 'Skincare', 'Haircare', 'Food & Beverages', 'Supplements', 'Baby Care', 'Other']
 
@@ -423,11 +423,13 @@ export default function Admin() {
   const isMobile = useIsMobile()
   const [tab,        setTab]        = useState('pending')
   const [subs,       setSubs]       = useState([])
-  const [counts,     setCounts]     = useState({ pending: 0, approved: 0, rejected: 0, extracted: 0 })
+  const [counts,     setCounts]     = useState({ pending: 0, approved: 0, rejected: 0, extracted: 0, photos: 0 })
   const [fetching,   setFetching]   = useState(false)
   const [saving,     setSaving]     = useState(null)
   const [cardMsgs,   setCardMsgs]   = useState({})
   const [fetchError, setFetchError] = useState(null)
+  const [photoSubs,  setPhotoSubs]  = useState([])
+  const [photoFetching, setPhotoFetching] = useState(false)
 
   const isAdmin = user?.email === ADMIN_EMAIL
 
@@ -436,7 +438,11 @@ export default function Admin() {
   }, [user, authLoading, isAdmin, navigate])
 
   useEffect(() => {
-    if (isAdmin) { fetchAll(); fetchSubs(tab) }
+    if (isAdmin) {
+      fetchAll()
+      if (tab === 'photos') fetchPhotoSubs()
+      else fetchSubs(tab)
+    }
   }, [isAdmin, tab])
 
   const fetchSubs = async (status) => {
@@ -458,15 +464,61 @@ export default function Admin() {
 
   const fetchAll = async () => {
     try {
-      const { data, error } = await supabase.from('product_submissions').select('status')
-      if (error) { setFetchError(`Count error: ${error.message}`); return }
-      if (!data) return
-      const c = { pending: 0, approved: 0, rejected: 0, extracted: 0 }
-      data.forEach(r => { if (c[r.status] !== undefined) c[r.status]++ })
+      const [{ data }, { data: photoData }] = await Promise.all([
+        supabase.from('product_submissions').select('status'),
+        supabase.from('product_photo_submissions').select('status').eq('status', 'pending'),
+      ])
+      const c = { pending: 0, approved: 0, rejected: 0, extracted: 0, photos: 0 }
+      if (data) data.forEach(r => { if (c[r.status] !== undefined) c[r.status]++ })
+      c.photos = photoData?.length || 0
       setCounts(c)
     } catch (e) {
       setFetchError(`Count exception: ${e.message}`)
     }
+  }
+
+  const fetchPhotoSubs = async () => {
+    setPhotoFetching(true)
+    try {
+      const { data, error } = await supabase
+        .from('product_photo_submissions').select('*')
+        .eq('status', 'pending').order('created_at', { ascending: false })
+      if (error) setFetchError(`Photo fetch error: ${error.message}`)
+      setPhotoSubs(data || [])
+    } catch (e) {
+      setFetchError(`Photo exception: ${e.message}`)
+    } finally {
+      setPhotoFetching(false)
+    }
+  }
+
+  const handleApprovePhoto = async (sub) => {
+    try {
+      // Copy each image to product_photos
+      const inserts = sub.image_urls.map(url => ({
+        product_id: sub.product_id,
+        image_url: url,
+        added_by: sub.user_id,
+        is_admin_added: false,
+      }))
+      const { error: insertErr } = await supabase.from('product_photos').insert(inserts)
+      if (insertErr) throw new Error(insertErr.message)
+
+      // Credit ₹1 per photo to user
+      const earned = sub.image_urls.length
+      await supabase.rpc('increment_earnings', { uid: sub.user_id, amount: earned })
+
+      // Mark submission approved
+      await supabase.from('product_photo_submissions').update({ status: 'approved' }).eq('id', sub.id)
+      fetchAll(); fetchPhotoSubs()
+    } catch (e) {
+      setFetchError(`Approve photo error: ${e.message}`)
+    }
+  }
+
+  const handleRejectPhoto = async (id) => {
+    await supabase.from('product_photo_submissions').update({ status: 'rejected' }).eq('id', id)
+    fetchAll(); fetchPhotoSubs()
   }
 
   const handleApprove = async (id) => {
@@ -578,8 +630,54 @@ export default function Admin() {
         ))}
       </div>
 
-      {/* Grid */}
-      {fetching ? (
+      {/* Grid — Photo submissions tab */}
+      {tab === 'photos' && (
+        photoFetching ? (
+          <div style={{ textAlign: 'center', padding: '48px 0', color: '#9ca3af', fontSize: 15 }}>Loading…</div>
+        ) : photoSubs.length === 0 ? (
+          <div style={{ textAlign: 'center', padding: '48px 0' }}>
+            <div style={{ fontSize: 48, marginBottom: 12 }}>📸</div>
+            <p style={{ color: '#9ca3af', fontSize: 15 }}>No pending photo submissions</p>
+          </div>
+        ) : (
+          <div style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : 'repeat(auto-fill, minmax(300px, 1fr))', gap: 16 }}>
+            {photoSubs.map(sub => (
+              <div key={sub.id} style={{ background: '#fff', border: '1px solid #e5e7eb', borderRadius: 14, overflow: 'hidden', boxShadow: '0 2px 12px rgba(0,0,0,0.05)' }}>
+                {/* Images preview */}
+                <div style={{ display: 'flex', gap: 4, padding: 8, background: '#f9fafb', flexWrap: 'wrap' }}>
+                  {(sub.image_urls || []).map((url, i) => (
+                    <a key={i} href={url} target="_blank" rel="noreferrer">
+                      <img src={url} alt="" style={{ width: 72, height: 72, objectFit: 'cover', borderRadius: 8, border: '1px solid #e5e7eb' }} />
+                    </a>
+                  ))}
+                </div>
+                <div style={{ padding: '12px 14px' }}>
+                  <p style={{ margin: '0 0 4px', fontWeight: 700, fontSize: 14, color: '#111827' }}>
+                    {sub.product_name || sub.product_id}
+                  </p>
+                  <p style={{ margin: '0 0 8px', fontSize: 12, color: '#9ca3af' }}>{formatDate(sub.created_at)}</p>
+                  <p style={{ margin: '0 0 10px', fontSize: 12, color: '#6b7280' }}>
+                    {sub.image_urls?.length || 0} photo(s) · Reward: ₹{sub.image_urls?.length || 0}
+                  </p>
+                  <div style={{ display: 'flex', gap: 8 }}>
+                    <button onClick={() => handleApprovePhoto(sub)}
+                      style={{ flex: 1, background: '#16a34a', color: '#fff', border: 'none', borderRadius: 10, padding: '10px 0', fontSize: 13, fontWeight: 700, cursor: 'pointer', fontFamily: 'inherit' }}>
+                      ✓ Approve + Credit ₹{sub.image_urls?.length || 0}
+                    </button>
+                    <button onClick={() => handleRejectPhoto(sub.id)}
+                      style={{ flex: 1, background: '#fff', color: '#dc2626', border: '1.5px solid #dc2626', borderRadius: 10, padding: '10px 0', fontSize: 13, fontWeight: 700, cursor: 'pointer', fontFamily: 'inherit' }}>
+                      ✕ Reject
+                    </button>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+        )
+      )}
+
+      {/* Grid — Regular submissions */}
+      {tab !== 'photos' && (fetching ? (
         <div style={{ textAlign: 'center', padding: '48px 0', color: '#9ca3af', fontSize: 15 }}>Loading…</div>
       ) : subs.length === 0 ? (
         <div style={{ textAlign: 'center', padding: '48px 0' }}>
@@ -598,7 +696,7 @@ export default function Admin() {
             />
           ))}
         </div>
-      )}
+      ))}
     </div>
   )
 }
