@@ -1,0 +1,327 @@
+Total products loaded: 495
+
+Products to fix/fill: 322
+[1/322] ITC Aashirvaad Atta (ITC) [Food] ... OK
+[2/322] Aashirvaad Multigrain Atta (ITC) [Food] ... OK
+[3/322] Aashirvaad Sambhar Masala (ITC) [Spices] ... not found
+[4/322] Alpenliebe Caramel Candy (Perfetti Van Melle) [Confectionery] ... not found
+[5/322] Amrutanjan Pain Relief Balm (Amrutanjan Health Care) [Personal Care] ... not found
+[6/322] Amul Kool Chocolate Flavoured Milk (Amul) [Dairy] ... not found
+[7/322] Amul Milk Chocolate (Amul) [Chocolate] ... OK
+[8/322] Amul Mithai Mate Condensed Milk (Amul) [Dairy] ... not found
+[9/322] Amul Peanut Butter Crunchy (Amul) [Food] ... not found
+[10/322] Amul Vanilla Ice Cream (Amul) [Dessert] ... OK
+[11/322] Ariel Matic Detergent (Ariel) [Household] ... OK
+[12/322] Axe Dark Temptation Deo (Axe) [Personal Care] ... OK
+[13/322] B Natural Mango Juice (B Natural) [Beverages] ... not found
+[14/322] Baidyanath Special Chyawanprash (Baidyanath) [Health Supplement] ... not found
+[15/322] Balaji Wafers Masala Masti (Balaji) [Snacks] ... not found
+[16/322] Banana Boat SPF 50 Sunscreen (Banana Boat) [Skincare] ... OK
+[17/322] Bikano Aloo Lachha (Bikano) [Snacks] ... not found
+[18/322] Bingo Original Style Salted (Bingo) [Snacks] ... not found
+[19/322] Biotique Bio Morning Nectar Flawless Skin Lotion (Biotique) [Skincare] ... OK
+[20/322] Biotique Bio Coconut Whitening & Brightening Cream (Biotique) [Skincare] ... OK
+[21/322] Biotique Bio Kelp Fresh Growth Conditioner (Biotique) [Hair Care] ... OK
+[22/322] Biotique Bio Bhringraj Therapeutic Hair Pack (Biotique) [Hair Care] ... OK
+[23/322] Biotique Bio Berry Lip Balm (Biotique) [Personal Care] ... OK
+[24/322] Biotique Morning Nectar Moisturizer (Biotique) [Skincare] ... OK
+[25/322] Biotique Bio Rose Water Toner (Biotique) [Skincare] ... OK
+[26/322] Bisleri Packaged Drinking Water (Bisleri) [Beverages] ... OK
+[27/322] Boost Health Drink (Boost) [Health Drink] ... OK
+[28/322] Boost Energy & Sports Nutrition Drink (GSK) [Health Drink] ... not found
+[29/322] Boroline Antiseptic Cream (GD Pharmaceuticals) [Skincare] ... not found
+[30/322] Bournvita Health Drink (Cadbury) [Health Drink] ... not found
+[31/322] Britannia Bourbon Chocolate Cream Biscuits (Britannia) [Biscuits] ... not found
+[32/322] Britannia Cheese Croissant (Britannia) [Bakery] ... not found
+[33/322] Britannia 100% Whole Wheat Bread (Britannia) [Bakery] ... kept existing
+[34/322] Bru Gold Freeze Dried Coffee (Bru) [Beverages] ... not found
+[35/322] Cadbury Gems (Cadbury) [Chocolate] ... not found
+[36/322] Cadbury Perk Chocolate Wafer (Cadbury) [Chocolate] ... OK
+[37/322] Cadbury Dairy Milk Silk (Cadbury) [Chocolate] ... OK
+[38/322] Captain Cook Free Flow Iodised Salt (Tata) [Food] ... not found
+[39/322] Catch Turmeric Powder (Catch) [Spices] ... OK
+[40/322] Center Fresh Spearmint Gum (Perfetti Van Melle) [Confectionery] ... not found
+[41/322] Cetaphil Moisturising Cream (Cetaphil) [Skincare] ... OK
+[42/322] Chaayos Instant Masala Chai Mix (Chaayos) [Beverages] ... not found
+[43/322] Cheetos Flamin Hot (Cheetos) [Snacks] ... OK
+[44/322] Cinthol Original Soap (Cinthol) [Personal Care] ... OK
+[45/322] Clinic Plus Strong & Long Conditioner (Clinic Plus) [Hair Care] ... OK
+[46/322] Close Up Red Hot Toothpaste (Close Up) [Oral Care] ... OK
+[47/322] Closeup Ever Fresh+ Aqua Fresh Gel Toothpaste (Close Up) [Oral Care] ... OK
+[48/322] Colgate MaxFresh Blue Gel Toothpaste (Colgate) [Oral Care] ... OK
+[49/322] Colgate Strong Teeth Toothpaste (Colgate) [Oral Care] ... OK
+[50/322] Colgate Total Advanced Health (Colgate) [Oral Care] ... OK
+[51/322] Colorbar Radiant White BB Cream (Colorbar) [Cosmetics] ... not found
+[52/322] Colorbar Soft Touch Kajal (Colorbar) [Cosmetics] ... not found
+[53/322] Colorbar Nail Lacquer (Colorbar) [Cosmetics] ... not found
+[54/322] Comfort Fabric Conditioner After Wash (Comfort) [Household] ... OK
+[55/322] Complan Nutrition Drink (Complan) [Health Drink] ... not found
+[56/322] Complan Chocolate Nutrition Drink (Zydus Wellness) [Health Drink] ... not found
+[57/322] Daawat Extra Long Basmati Rice (Daawat) [Food] ... not found
+[58/322] Dabur Amla Juice (Dabur) [Health Supplement] ... not found
+[59/322] Dabur Chyawanprash (Dabur) [Health Supplement] ... not found
+[60/322] Dabur Gulabari Premium Rose Water (Dabur) [Skincare] ... OK
+[61/322] Dabur Meswak Complete Oral Care Toothpaste (Dabur) [Oral Care] ... OK
+[62/322] Dalda Vanaspati (Dalda) [Cooking Oil] ... not found
+[63/322] Dettol Original Liquid Handwash (Reckitt) [Personal Care] ... OK
+[64/322] Dettol Original Antibacterial Handwash (Reckitt) [Personal Care] ... OK
+[65/322] Domex Toilet Cleaner Original (Domex) [Household] ... not found
+[66/322] Doritos Nacho Cheese (Doritos) [Snacks] ... not found
+[67/322] Dot & Key Waterlight SPF 50 Sunscreen (Dot & Key) [Skincare] ... OK
+[68/322] Dot & Key Vitamin C + E Serum (Dot & Key) [Skincare] ... OK
+[69/322] Dove Deeply Nourishing Body Wash (Dove) [Personal Care] ... OK
+[70/322] Dove Hair Therapy Dry Shampoo (Dove) [Hair Care] ... OK
+[71/322] Dove Intense Repair Shampoo (Dove) [Hair Care] ... OK
+[72/322] Dove Men+Care Hydrate+ Face Wash (Dove) [Personal Care] ... OK
+[73/322] Dr. Oetker FunFoods Veg Mayonnaise (Dr. Oetker) [Condiments] ... OK
+[74/322] Eastern Fish Curry Masala (Eastern) [Spices] ... not found
+[75/322] Engage W1 Perfume Body Spray (Engage) [Personal Care] ... OK
+[76/322] Everest Chana Masala (Everest) [Spices] ... not found
+[77/322] Everest Garam Masala (Everest) [Spices] ... not found
+[78/322] Everest Kitchen King Masala (Everest) [Spices] ... not found
+[79/322] Fa Fresh Morning Deodorant (Fa) [Personal Care] ... OK
+[80/322] Farmley Premium Almonds (Farmley) [Food] ... not found
+[81/322] Fiama Lemongrass Body Wash (Fiama) [Personal Care] ... OK
+[82/322] Fiama Di Wills Gel Bar (Fiama) [Personal Care] ... OK
+[83/322] Forest Essentials Sandalwood Face Mask (Forest Essentials) [Skincare] ... not found
+[84/322] Forest Essentials Japakusum Hair Oil (Forest Essentials) [Hair Care] ... not found
+[85/322] Forest Essentials Tejus Facial Serum (Forest Essentials) [Skincare] ... not found
+[86/322] Fortune Biryani Special Basmati Rice (Fortune) [Food] ... not found
+[87/322] Garnier Fructis Strengthening Shampoo (Garnier) [Hair Care] ... OK
+[88/322] Garnier Micellar Cleansing Water (Garnier) [Skincare] ... OK
+[89/322] Garnier Bright Complete Vitamin C Booster Serum (Garnier) [Skincare] ... OK
+[90/322] Gatorade Lemon Electrolyte Drink (PepsiCo) [Sports Drink] ... not found
+[91/322] Glow & Lovely Advanced Multivitamin Face Cream (HUL) [Skincare] ... OK
+[92/322] Glucon-D Original Energy Drink (Heinz India) [Health Drink] ... not found
+[93/322] Go Processed Cheese Spread (Britannia) [Dairy] ... not found
+[94/322] Haldiram Bhujia Mix Namkeen (Haldiram) [Snacks] ... not found
+[95/322] Haldirams Navrattan Mixture (Haldiram) [Snacks] ... not found
+[96/322] Haldirams Ready to Eat Pav Bhaji (Haldiram) [Ready to Eat] ... not found
+[97/322] Haldirams Sev Bhujia (Haldiram) [Snacks] ... OK
+[98/322] Halls Mentho-Lyptus Candy (Mondelez) [Confectionery] ... not found
+[99/322] Happilo Premium Whole Cashews (Happilo) [Food] ... not found
+[100/322] Happydent White Xylitol Gum (Happydent) [Confectionery] ... not found
+[101/322] Head & Shoulders Anti-Dandruff Shampoo (Head & Shoulders) [Hair Care] ... OK
+[102/322] Hell Energy Drink (Hell) [Energy Drink] ... not found
+[103/322] Himalaya Aloe Vera Gel (Himalaya) [Skincare] ... OK
+[104/322] Himalaya Ashwagandha Tablets (Himalaya) [Health Supplement] ... not found
+[105/322] Himalaya Soothing Body Wash (Himalaya) [Personal Care] ... OK
+[106/322] Himalaya Anti-Breakage Hair Conditioner (Himalaya) [Hair Care] ... OK
+[107/322] Himalaya Gentle Baby Powder (Himalaya) [Baby Care] ... OK
+[108/322] Himalaya Herbals Lip Balm Strawberry (Himalaya) [Personal Care] ... OK
+[109/322] Himalaya Liv.52 Syrup (Himalaya) [Health Supplement] ... not found
+[110/322] Himalaya Purifying Neem Face Wash (Himalaya) [Skincare] ... OK
+[111/322] Himalaya Purifying Neem Handwash (Himalaya) [Personal Care] ... OK
+[112/322] Himalaya Anti-Dandruff Shampoo (Himalaya) [Hair Care] ... OK
+[113/322] Himalaya Triphala Tablets (Himalaya) [Health Supplement] ... not found
+[114/322] Horlicks Lite Health & Nutrition Drink (Horlicks) [Health Drink] ... not found
+[115/322] iD Fresh Food Dosa Batter (iD Fresh Food) [Food] ... not found
+[116/322] iD Fresh Food Idli Batter (iD Fresh Food) [Food] ... not found
+[117/322] Indulekha Bringha Anti Hair Fall Shampoo (HUL) [Hair Care] ... not found
+[118/322] Indulekha Bringha Hair Oil (Indulekha) [Hair Care] ... OK
+[119/322] Iodex Fast Relief Spray (GSK) [Personal Care] ... not found
+[120/322] Johnson's Vita-Rich Softening Body Wash (Johnson's) [Personal Care] ... OK
+[121/322] Junior Horlicks (Horlicks) [Health Drink] ... OK
+[122/322] Kama Ayurveda Kumkumadi Miraculous Beauty Fluid (Kama Ayurveda) [Skincare] ... not found
+[123/322] Kapiva Aloe Vera Juice (Kapiva) [Health Supplement] ... OK
+[124/322] Khadi Natural Amla & Bhringraj Hair Oil (Khadi Natural) [Hair Care] ... not found
+[125/322] Kinley Drinking Water (Coca-Cola India) [Beverages] ... not found
+[126/322] Kissan Mixed Fruit Jam (Kissan) [Condiments] ... OK
+[127/322] Knorr Classic Hot & Sour Veg Soup (Knorr) [Beverages] ... not found
+[128/322] Knorr Soupy Noodles (Knorr) [Instant Noodles] ... not found
+[129/322] Kurkure Masala Munch (Kurkure) [Snacks] ... not found
+[130/322] Kurkure Triangles Chilli Chatka (Kurkure) [Snacks] ... not found
+[131/322] Lacto Calamine Lotion (Piramal) [Skincare] ... OK
+[132/322] Lakme 9 to 5 Gel Eye Liner (Lakme) [Cosmetics] ... OK
+[133/322] Lakme 9 to 5 Primer + Matte Perfect Cover Foundation (Lakme) [Cosmetics] ... OK
+[134/322] Lakme Absolute Matte Ultimate Lip Color (Lakme) [Cosmetics] ... OK
+[135/322] Lakme Absolute Perfect Radiance Serum (Lakme) [Skincare] ... OK
+[136/322] Lakme Absolute White Intense Face Wash (Lakme) [Personal Care] ... OK
+[137/322] Lakme Radiance Complexion Compact (Lakme) [Cosmetics] ... OK
+[138/322] Lakme Blush & Glow Face Wash (Lakme) [Personal Care] ... OK
+[139/322] Lakme Eyeconic Kajal (Lakme) [Cosmetics] ... OK
+[140/322] Lakme Enrich Matte Lipstick (Lakme) [Cosmetics] ... OK
+[141/322] Lakme Luminous Skin Tint SPF 15 Cream (Lakme) [Skincare] ... OK
+[142/322] Lakme Absolute Eye Artist Mascara (Lakme) [Cosmetics] ... OK
+[143/322] Lakme Color Crush Nailart (Lakme) [Cosmetics] ... OK
+[144/322] Lakme 9 to 5 Naturale BB Cream SPF 20 (Lakme) [Cosmetics] ... OK
+[145/322] Lakme Sun Expert SPF 50 PA+++ Sunscreen (Lakme) [Skincare] ... OK
+[146/322] Lakme Sun Expert Ultra Matte SPF 50 PA+++ Tinted Sunscreen (Lakme) [Skincare] ... OK
+[147/322] Lakme Sun Expert SPF 50 (Lakme) [Personal Care] ... OK
+[148/322] Lifebuoy Total 10 Soap (Lifebuoy) [Personal Care] ... OK
+[149/322] Lifebuoy Total 10 Handwash (HUL) [Personal Care] ... not found
+[150/322] Limca Lemon & Lime Drink (Coca-Cola India) [Soft Drink] ... OK
+[151/322] Lipton Honey Lemon Green Tea (Lipton) [Beverages] ... OK
+[152/322] Loreal Paris Total Repair 5 Conditioner (Loreal) [Hair Care] ... OK
+[153/322] Loreal Paris Elvive Extraordinary Oil Serum (Loreal) [Hair Care] ... OK
+[154/322] Loreal Paris Total Repair 5 Hair Mask (Loreal) [Hair Care] ... OK
+[155/322] Loreal Paris Infallible Foundation (Loreal) [Cosmetics] ... OK
+[156/322] Loreal Paris Kajal Magique (Loreal) [Cosmetics] ... OK
+[157/322] Loreal Paris Rouge Signature Matte Lip Ink (Loreal) [Cosmetics] ... OK
+[158/322] Loreal Paris Total Repair 5 Shampoo (Loreal) [Hair Care] ... OK
+[159/322] Loreal Paris True Match Powder (Loreal) [Cosmetics] ... OK
+[160/322] Lotus Herbals Safe Sun SPF 50 (Lotus Herbals) [Skincare] ... OK
+[161/322] Lotus Herbals White Glow Skin Whitening Gel Cream SPF 25 (Lotus Herbals) [Skincare] ... OK
+[162/322] Lux Soft Touch Soap (Lux) [Personal Care] ... OK
+[163/322] Maaza Mango Drink (Maaza) [Fruit Drink] ... OK
+[164/322] MAC Studio Fix Fluid Foundation (MAC) [Cosmetics] ... OK
+[165/322] Maggi Hot & Sweet Tomato Chilli Sauce (Nestle) [Condiments] ... not found
+[166/322] Maggi Pazzta Masala Twist Pasta (Nestle) [Instant Noodles] ... not found
+[167/322] Mamaearth Daily Moisturizing Baby Massage Oil (Mamaearth) [Baby Care] ... OK
+[168/322] Mamaearth Ubtan Natural Body Wash (Mamaearth) [Personal Care] ... OK
+[169/322] Mamaearth Onion Conditioner for Hair Fall (Mamaearth) [Hair Care] ... OK
+[170/322] Mamaearth Argan Hair Mask (Mamaearth) [Hair Care] ... OK
+[171/322] Mamaearth Vitamin C Lip Balm (Mamaearth) [Personal Care] ... OK
+[172/322] Mamaearth SPF 20 Daily Moisturizer (Mamaearth) [Skincare] ... OK
+[173/322] Mamaearth Skin Illuminate Face Toner (Mamaearth) [Skincare] ... OK
+[174/322] Mamaearth Ubtan Moisturizer (Mamaearth) [Skincare] ... OK
+[175/322] Mamaearth Vitamin C Face Serum (Mamaearth) [Skincare] ... OK
+[176/322] Mango Bite Candy (Perfetti Van Melle) [Confectionery] ... not found
+[177/322] Margo Original Neem Soap (Emami) [Personal Care] ... not found
+[178/322] Maybelline Colossal Volume Express Mascara (Maybelline) [Cosmetics] ... OK
+[179/322] Maybelline Colossal Kajal (Maybelline) [Cosmetics] ... OK
+[180/322] McCain Smiles Potato Snacks (McCain) [Snacks] ... not found
+[181/322] McVitie's Digestive Biscuits (McVitie's) [Biscuits] ... OK
+[182/322] MDH Dal Makhani Masala (MDH) [Spices] ... OK
+[183/322] MDH Rajma Masala (MDH) [Spices] ... not found
+[184/322] Milky Bar Choc Lairs (Nestle) [Confectionery] ... not found
+[185/322] Minimalist AHA 25% + BHA 2% Exfoliant (Minimalist) [Skincare] ... OK
+[186/322] Minimalist Hyaluronic Acid 2% + PGA (Minimalist) [Skincare] ... OK
+[187/322] Minimalist 10% Niacinamide Face Serum (Minimalist) [Skincare] ... OK
+[188/322] Minimalist PGA 3% Pore Minimising Toner (Minimalist) [Skincare] ... OK
+[189/322] Minimalist Granactive Retinoid 2% (Minimalist) [Skincare] ... OK
+[190/322] Minimalist SPF 50 PA++++ Sunscreen (Minimalist) [Skincare] ... OK
+[191/322] Minimalist Vitamin C 10% Face Serum (Minimalist) [Skincare] ... OK
+[192/322] Minute Maid Pulpy Orange (Coca-Cola India) [Fruit Drink] ... OK
+[193/322] Monster Energy Original (Monster) [Energy Drink] ... OK
+[194/322] Mother Dairy Full Cream Milk (Mother Dairy) [Dairy] ... OK
+[195/322] MTR Ready to Eat Dal Makhani (MTR) [Ready to Eat] ... not found
+[196/322] MTR Gulab Jamun Mix (MTR) [Food] ... not found
+[197/322] MTR Ready to Eat Palak Paneer (MTR) [Ready to Eat] ... not found
+[198/322] MTR Ready to Eat Paneer Butter Masala (MTR) [Ready to Eat] ... not found
+[199/322] MTR Rava Idli Mix (MTR) [Food] ... not found
+[200/322] My Fitness Peanut Butter Original Crunchy (My Fitness) [Food] ... not found
+[201/322] Nescafe Classic Coffee (Nescafe) [Beverages] ... OK
+[202/322] Nestle Milkybar (Nestle) [Chocolate] ... OK
+[203/322] Neutrogena Deep Clean Face Wash (Neutrogena) [Personal Care] ... OK
+[204/322] Neutrogena Rapid Wrinkle Repair Retinol Serum (Neutrogena) [Skincare] ... OK
+[205/322] Neutrogena Ultra Sheer Dry Touch SPF 50+ (Neutrogena) [Skincare] ... OK
+[206/322] Nimbooz Lemon Drink (PepsiCo) [Fruit Drink] ... not found
+[207/322] Nissin Cup Noodles Masala (Nissin Foods) [Instant Noodles] ... OK
+[208/322] Nivea Men Fresh Active Deo (Nivea) [Personal Care] ... OK
+[209/322] Nykaa Skin Loves Vitamin C BB Cream (Nykaa Cosmetics) [Cosmetics] ... OK
+[210/322] Nykaa Cosmetix Sky High Blush Palette (Nykaa Cosmetics) [Cosmetics] ... OK
+[211/322] Nykaa Matte To Last Lip Gloss (Nykaa Cosmetics) [Cosmetics] ... OK
+[212/322] Odomos Mosquito Repellent Cream (Dabur) [Personal Care] ... not found
+[213/322] Olay Regenerist Micro-Sculpting Serum (Olay) [Skincare] ... OK
+[214/322] Olay Total Effects 7-in-1 Day Cream (Olay) [Skincare] ... OK
+[215/322] Onelife Protein Bar Choco Almond (Onelife) [Nutrition] ... not found
+[216/322] Pantene Pro-V Smooth & Silky Conditioner (Pantene) [Hair Care] ... OK
+[217/322] Paper Boat Aamras (Paper Boat) [Beverages] ... not found
+[218/322] Parachute Advansed Deep Nourish Body Lotion (Marico) [Personal Care] ... OK
+[219/322] Parachute Advanced Coconut Hair Oil (Parachute) [Hair Care] ... OK
+[220/322] Parachute Advansed Jasmine Coconut Hair Oil (Marico) [Hair Care] ... OK
+[221/322] Parle Cheeselings Snack (Parle) [Biscuits] ... not found
+[222/322] Parle Hide & Seek Chocolate Chip Cookies (Parle) [Biscuits] ... not found
+[223/322] Parle Krackjack Sweet & Salty Biscuits (Parle) [Biscuits] ... not found
+[224/322] Parle Kreams Gold Biscuits (Parle) [Biscuits] ... OK
+[225/322] Patanjali Ashwagandha Churna (Patanjali) [Health Supplement] ... not found
+[226/322] Patanjali Atta (Patanjali) [Food] ... OK
+[227/322] Patanjali Atta Noodles (Patanjali) [Instant Noodles] ... not found
+[228/322] Patanjali Besan (Patanjali) [Food] ... not found
+[229/322] Patanjali Cow Ghee (Patanjali) [Cooking Oil] ... OK
+[230/322] Patanjali Haldi Powder (Patanjali) [Spices] ... not found
+[231/322] Patanjali Haldi Chandan Soap (Patanjali) [Personal Care] ... OK
+[232/322] Patanjali Honey Lemon Green Tea (Patanjali) [Beverages] ... not found
+[233/322] Patanjali Mango Pickle (Patanjali) [Pickles] ... not found
+[234/322] Patanjali Mustard Oil (Patanjali) [Cooking Oil] ... not found
+[235/322] Patanjali Neem Kanti Soap (Patanjali) [Personal Care] ... OK
+[236/322] Patanjali Nutrela Badam (Patanjali) [Health Drink] ... not found
+[237/322] Patanjali Kesh Kanti Natural Shampoo (Patanjali) [Hair Care] ... OK
+[238/322] Pears Pure & Gentle Shower Gel (Pears) [Personal Care] ... OK
+[239/322] Pears Transparent Soap (Pears) [Personal Care] ... OK
+[240/322] Pepsi (Pepsi) [Soft Drink] ... OK
+[241/322] Pepsodent Germicheck (Pepsodent) [Oral Care] ... OK
+[242/322] Pepsodent Whitening Toothpaste (Pepsodent) [Oral Care] ... OK
+[243/322] Perk Chocolate (Perk) [Chocolate] ... not found
+[244/322] Pilgrim 20% Vitamin C Brightening Serum (Pilgrim) [Skincare] ... OK
+[245/322] Plum Green Tea Pore Cleansing Face Mask (Plum) [Skincare] ... OK
+[246/322] Plum E-Luminence Simply Supple Moisturizer (Plum) [Skincare] ... OK
+[247/322] Plum Chamomile & White Tea Lip Balm (Plum) [Personal Care] ... OK
+[248/322] Plum Green Tea Alcohol-Free Toner (Plum) [Skincare] ... OK
+[249/322] Plum 15% Vitamin C Face Serum (Plum) [Skincare] ... OK
+[250/322] Pond's Age Miracle Day Cream (Pond's) [Skincare] ... OK
+[251/322] Pond's Bright Beauty Spot-less Glow Serum (Pond's) [Skincare] ... OK
+[252/322] Pond's Bright Miracle Ultimate Pigment Control Face Wash (Pond's) [Personal Care] ... OK
+[253/322] Ponds Pure White Face Wash (Ponds) [Personal Care] ... OK
+[254/322] Pond's Super Light Gel Oil-Free Moisturiser SPF 30 (Pond's) [Skincare] ... OK
+[255/322] Pond's White Beauty SPF 15 Day Cream (HUL) [Skincare] ... OK
+[256/322] Pass Pass Pulse Raw Mango Candy (DS Group) [Confectionery] ... not found
+[257/322] Re'equil Ultra Matte Sunscreen SPF 50 (Re'equil) [Skincare] ... not found
+[258/322] Real Fruit Juice Apple (Real) [Beverages] ... not found
+[259/322] Real Fruit Juice Orange (Real) [Fruit Juice] ... OK
+[260/322] Revital H Multivitamin & Multimineral Capsules (Sun Pharma) [Health Supplement] ... not found
+[261/322] Rin Advanced Detergent (Rin) [Household] ... not found
+[262/322] Saffola Gold Oil (Saffola) [Cooking Oil] ... OK
+[263/322] Saffola Gold Refined Blend Oil (Saffola) [Cooking Oil] ... not found
+[264/322] Saffola Masala Oats Peppy Tomato (Marico) [Breakfast Cereal] ... not found
+[265/322] Saffola Tasty Oil (Saffola) [Cooking Oil] ... OK
+[266/322] Santoor Sandal & Turmeric Soap (Santoor) [Personal Care] ... OK
+[267/322] Patanjali Sattu (Patanjali) [Food] ... not found
+[268/322] Savlon Moisturizing Germ Protection Handwash (ITC) [Personal Care] ... OK
+[269/322] Simple Kind to Skin Moisturising Facial Wash (Simple) [Skincare] ... OK
+[270/322] Simple Kind to Skin Micellar Cleansing Water (Simple) [Skincare] ... OK
+[271/322] Simple Kind to Skin SPF 30 Light Moisturiser (Simple) [Skincare] ... OK
+[272/322] Sleepy Owl Granola Honey & Oat (Sleepy Owl) [Food] ... not found
+[273/322] Slice Mango Drink (PepsiCo) [Fruit Drink] ... OK
+[274/322] Snickers Chocolate Bar (Snickers) [Chocolate] ... OK
+[275/322] Sprite (Sprite) [Soft Drink] ... OK
+[276/322] Streax Professional Vitariche Gloss Hair Serum (Streax) [Hair Care] ... OK
+[277/322] Sugar Cosmetics Face Fwd Loose Powder (Sugar Cosmetics) [Cosmetics] ... OK
+[278/322] Sugar Cosmetics Tipsy Lips Moisturizing Balm (Sugar Cosmetics) [Cosmetics] ... OK
+[279/322] Sugar Cosmetics Nail Polish (Sugar Cosmetics) [Cosmetics] ... OK
+[280/322] Sunbites Whole Grain Multigrain Crackers (Sunbites) [Snacks] ... not found
+[281/322] Sunfeast Bounce Chocolate Crème (Sunfeast) [Biscuits] ... not found
+[282/322] Sunfeast Dream Cream Vanilla Biscuits (Sunfeast) [Biscuits] ... not found
+[283/322] Sunfeast Mom's Magic Rich Butter Cookies (Sunfeast) [Biscuits] ... not found
+[284/322] Sunfeast YiPPee! Power Up Atta Noodles (Sunfeast) [Instant Noodles] ... not found
+[285/322] Sunsilk Lusciously Thick & Long Shampoo (Sunsilk) [Hair Care] ... OK
+[286/322] Sunsilk Smooth & Manageable Shampoo (Sunsilk) [Hair Care] ... OK
+[287/322] Surf Excel Easy Wash Detergent Powder (Surf Excel) [Household] ... OK
+[288/322] Surf Excel Matic Detergent (Surf Excel) [Household] ... OK
+[289/322] Tata Salt Iodised (Tata Consumer Products) [Food] ... OK
+[290/322] Tata Sampann Thick Poha (Tata) [Food] ... not found
+[291/322] Tetley Long Leaf Green Tea (Tetley) [Beverages] ... not found
+[292/322] The Derma Co 1% Hyaluronic Sunscreen SPF 50 (The Derma Co) [Skincare] ... OK
+[293/322] Thums Up Charged (Coca-Cola India) [Soft Drink] ... not found
+[294/322] Tide Plus Detergent (Tide) [Household] ... OK
+[295/322] Tiger Kreams Chocolate Biscuits (Britannia) [Biscuits] ... not found
+[296/322] Toblerone Milk Chocolate with Honey & Almond (Mondelez) [Chocolate] ... not found
+[297/322] Too Yumm Veggie Stix (Too Yumm) [Snacks] ... not found
+[298/322] Too Yumm Multigrain Chilli Chips (Too Yumm) [Snacks] ... not found
+[299/322] Top Ramen Curry Noodles (Top Ramen) [Instant Noodles] ... OK
+[300/322] Tropicana 100% Orange Juice (Tropicana) [Fruit Juice] ... not found
+[301/322] True Elements Roasted Pumpkin Seeds (True Elements) [Food] ... not found
+[302/322] Organic India Tulsi Green Tea (Organic India) [Beverages] ... not found
+[303/322] Vahdam Himalayan Green Tea (Vahdam) [Beverages] ... OK
+[304/322] Vaseline Aloe Soothe Body Lotion (Vaseline) [Personal Care] ... OK
+[305/322] Vaseline Healthy White Complete 10 Body Lotion (Vaseline) [Personal Care] ... OK
+[306/322] Vaseline Lip Therapy Rosy Lips (Vaseline) [Personal Care] ... OK
+[307/322] Vestige Noni Juice (Vestige) [Health Supplement] ... not found
+[308/322] Vicks VapoRub (Procter & Gamble) [Personal Care] ... not found
+[309/322] Vim Dishwash Bar (Vim) [Household] ... OK
+[310/322] Vim Dishwash Liquid Lemon (Vim) [Household] ... OK
+[311/322] Wheel Active Detergent (Wheel) [Household] ... OK
+[312/322] MuscleBlaze Whey Protein (MuscleBlaze) [Nutrition] ... OK
+[313/322] Wild Stone Classic Marble Deo (Wild Stone) [Personal Care] ... OK
+[314/322] Wow Skin Science Aloe Vera Gel (Wow Skin Science) [Skincare] ... OK
+[315/322] Wow Skin Science Apple Cider Vinegar Body Wash (Wow Skin Science) [Personal Care] ... OK
+[316/322] Wow Skin Science Castor Oil (Wow Skin Science) [Hair Care] ... OK
+[317/322] Wow Skin Science Revitalizing Hair Mask (Wow Skin Science) [Hair Care] ... OK
+[318/322] Wow Skin Science Onion & Black Seed Oil Conditioner (Wow Skin Science) [Hair Care] ... OK
+[319/322] Wow Skin Science Vitamin C Serum (Wow Skin Science) [Skincare] ... OK
+[320/322] WOW Skin Science Brightening Vitamin C Face Wash (Wow Skin Science) [Skincare] ... OK
+[321/322] Yoga Bar Protein Bar Chocolate Fudge (Yoga Bar) [Nutrition] ... not found
+[322/322] Zandu Balm (Emami) [Personal Care] ... OK
+
+Done. 372/464 images total. Fixed/filled 198 products.
