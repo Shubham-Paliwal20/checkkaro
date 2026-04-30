@@ -18,13 +18,16 @@ export default function PhotoUploadModal({ productId, productName, currentCount,
   const remaining = Math.max(0, 5 - currentCount)
 
   const addFiles = (selected) => {
-    const arr = Array.from(selected).filter(f => f.type.startsWith('image/')).slice(0, remaining)
-    if (!arr.length) return
-    const oversized = arr.filter(f => f.size > MAX_SIZE_MB * 1024 * 1024)
+    const newArr = Array.from(selected).filter(f => f.type.startsWith('image/'))
+    if (!newArr.length) return
+    const oversized = newArr.filter(f => f.size > MAX_SIZE_MB * 1024 * 1024)
     if (oversized.length) { setError(`Each image must be under ${MAX_SIZE_MB}MB`); return }
     setError(null)
-    setFiles(arr)
-    setPreviews(arr.map(f => URL.createObjectURL(f)))
+    // Append to existing, cap at remaining slots
+    setFiles(prev => [...prev, ...newArr].slice(0, remaining))
+    setPreviews(prev => [...prev, ...newArr.map(f => URL.createObjectURL(f))].slice(0, remaining))
+    // Reset input so the same file can be picked again
+    if (inputRef.current) inputRef.current.value = ''
   }
 
   const removeFile = (i) => {
