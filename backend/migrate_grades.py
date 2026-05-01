@@ -65,7 +65,10 @@ def migrate():
     offset = 0
     total_updated = 0
 
+    print("Starting grade migration...")
+
     while True:
+        print(f"  Fetching batch starting at offset {offset}...")
         resp = supabase.from_('ai_extracted_products') \
             .select('id, name, ingredients') \
             .range(offset, offset + BATCH - 1) \
@@ -73,6 +76,7 @@ def migrate():
 
         rows = resp.data or []
         if not rows:
+            print("  No more rows to process.")
             break
 
         for row in rows:
