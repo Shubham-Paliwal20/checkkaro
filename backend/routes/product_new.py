@@ -9,6 +9,129 @@ from db.supabase_client import supabase
 
 router = APIRouter()
 
+# ── Ingredient classification (for DB products stored as plain strings) ───────
+
+_BANNED = [
+    'triclosan','formaldehyde','hydroquinone','mercury','lead',
+    'e128','e216','e217','e240','sudan red','para red',
+    'methylparaben','propylparaben','butylparaben','ethylparaben',
+    'sodium nitrite','sodium nitrate','potassium bromate',
+    'azodicarbonamide','brominated vegetable oil','olestra',
+    'asbestos','benzene','vinyl chloride','aflatoxin',
+]
+_QUESTIONED = [
+    'sodium lauryl sulfate','sls','sodium laureth sulfate','sles',
+    'phthalate','artificial color','artificial colour','tartrazine',
+    'sunset yellow','carmoisine','allura red','brilliant blue',
+    'e102','e110','e122','e124','e133',
+    'monosodium glutamate','msg','disodium guanylate','disodium inosinate',
+    'sodium benzoate','potassium sorbate','tetrasodium edta',
+    'propylene glycol','polyethylene glycol','titanium dioxide',
+    'sucralose','acesulfame','aspartame',
+]
+_WORTH = [
+    'palm oil','palmolein','vegetable oil','edible vegetable fat',
+    'sugar','glucose syrup','high fructose corn syrup',
+    'artificial flavor','artificial flavour','natural flavor','nature identical',
+    'citric acid','emulsifier','stabilizer','stabiliser','thickener','preservative',
+    'caramel color','caramel colour','lecithin',
+    'e322','e471','e407','e466','e412','e410','e476','e162','e160',
+]
+
+def _classify(name: str) -> str:
+    n = name.lower()
+    for b in _BANNED:
+        if b in n: return 'banned'
+    for q in _QUESTIONED:
+        if q in n: return 'commonly_questioned'
+    for w in _WORTH:
+        if w in n: return 'worth_knowing'
+    return 'generally_recognised'
+
+def _note(name: str, cls: str) -> str:
+    n = name.lower()
+    if cls == 'banned': return 'Banned or restricted ingredient'
+    if cls == 'commonly_questioned':
+        if 'sucralose' in n: return 'Artificial sweetener; long-term effects debated'
+        if 'e110' in n: return 'Sunset Yellow – artificial colour, restricted in EU'
+        if 'e122' in n: return 'Carmoisine – artificial colour, restricted in EU'
+        if 'msg' in n or 'monosodium' in n: return 'Flavour enhancer; generally safe in normal amounts'
+        if 'sodium benzoate' in n: return 'Preservative; may form benzene with ascorbic acid'
+        return 'Commonly questioned ingredient'
+    if cls == 'worth_knowing':
+        if 'sugar' in n: return 'Sweetener; excess consumption linked to health concerns'
+        if 'emulsifier' in n or 'e471' in n: return 'Emulsifier; generally recognised as safe'
+        if 'stabilizer' in n or 'stabiliser' in n or 'e407' in n or 'e466' in n or 'e412' in n or 'e410' in n:
+            return 'Texture stabilizer; generally recognised as safe'
+        if 'e322' in n: return 'Lecithin emulsifier; generally safe'
+        if 'vegetable' in n: return 'Processed vegetable fat; quality varies by source'
+        if 'palm oil' in n: return 'Common edible oil; environmental concerns'
+        if 'nature identical' in n or 'natural flavour' in n or 'artificial flavour' in n:
+            return 'Synthetic flavour compound'
+        return 'Permitted additive; safe in regulated amounts'
+    # generally_recognised
+    if 'milk solid' in n: return 'Dairy base; source of protein and calcium'
+    if 'cocoa' in n: return 'Natural cocoa; source of antioxidants'
+    if 'saffron' in n: return 'Natural spice with antioxidant properties'
+    if 'honey' in n: return 'Natural sweetener'
+    if 'almond' in n or 'cashew' in n or 'pista' in n or 'pistachio' in n: return 'Natural nut; healthy fats and protein'
+    if 'mango' in n or 'strawberry' in n or 'litchi' in n or 'fruit' in n: return 'Natural fruit preparation'
+    if 'whey protein' in n: return 'Dairy protein concentrate'
+    if 'turmeric' in n: return 'Natural spice with anti-inflammatory properties'
+    if 'ashwagandha' in n: return 'Adaptogenic herb used in Ayurveda'
+    if 'isabgol' in n or 'psyllium' in n: return 'Natural dietary fibre'
+    if 'wheat flour' in n: return 'Contains gluten; avoid if gluten-intolerant'
+    if 'cardamom' in n or 'pepper' in n or 'fennel' in n: return 'Natural spice'
+    return 'Generally recognised as safe'
+
+def _reg_note(cls: str) -> str:
+    if cls == 'banned': return 'Banned or restricted in EU and multiple countries'
+    if cls == 'commonly_questioned': return 'Subject to regulatory scrutiny; permitted by FSSAI'
+    if cls == 'worth_knowing': return 'Permitted additive under FSSAI regulations'
+    return 'Approved under FSSAI/CODEX standards'
+
+def _parse_raw(raw: str) -> list:
+    """Split ingredients_raw text into individual ingredient strings."""
+    raw = raw.strip().rstrip('.')
+    depth, current, items = 0, [], []
+    for ch in raw:
+        if ch in '([': depth += 1
+        elif ch in ')]': depth -= 1
+        if ch == ',' and depth == 0:
+            items.append(''.join(current).strip())
+            current = []
+        else:
+            current.append(ch)
+    if current:
+        items.append(''.join(current).strip())
+    # Strip section prefixes like "Ice Cream:", "Cone:", "Coating:"
+    cleaned = []
+    for item in items:
+        item = re.sub(r'^[A-Za-z\s]+:\s*', '', item).strip()
+        if len(item) > 1:
+            cleaned.append(item)
+    return cleaned
+
+def _build_ingredient_item(ing) -> IngredientItem:
+    """Accept either a plain string or a dict (legacy or new format)."""
+    if isinstance(ing, str):
+        cls = _classify(ing)
+        return IngredientItem(
+            name=ing,
+            aliases='',
+            classification=cls,
+            one_line_note=_note(ing, cls),
+            regulatory_note=_reg_note(cls),
+        )
+    # dict format
+    return IngredientItem(
+        name=ing.get('name', ''),
+        aliases=ing.get('aliases', ''),
+        classification=ing.get('classification', 'generally_recognised'),
+        one_line_note=ing.get('one_line_note', ''),
+        regulatory_note=ing.get('regulatory_note', ''),
+    )
+
 # Convert ALL_PRODUCTS to the format we need
 SAMPLE_PRODUCTS = {}
 for key, (name, brand, category, score, verdict, recommendation) in ALL_PRODUCTS.items():
@@ -106,17 +229,17 @@ async def search_product(name: str = Query(..., description="Product name to sea
         if db_result.data:
             p = db_result.data[0]
             raw_ingredients = p.get("ingredients") or []
-            ingredients = [
-                IngredientItem(
-                    name=ing.get("name", ""),
-                    aliases=ing.get("aliases", ""),
-                    classification=ing.get("classification", "generally_recognised"),
-                    one_line_note=ing.get("one_line_note", ""),
-                    regulatory_note=ing.get("regulatory_note", ""),
-                )
-                for ing in raw_ingredients
-            ]
-            print(f"[SUPABASE] Found AI-extracted product: {p['name']}")
+
+            # If ingredients are plain strings (old format) or empty, re-parse from raw text
+            # Plain strings are badly split (parentheses ignored), raw text is more accurate
+            is_plain_strings = raw_ingredients and isinstance(raw_ingredients[0], str)
+            if (not raw_ingredients or is_plain_strings) and p.get("ingredients_raw"):
+                raw_ingredients = _parse_raw(p["ingredients_raw"])
+            elif not raw_ingredients:
+                raw_ingredients = []
+
+            ingredients = [_build_ingredient_item(ing) for ing in raw_ingredients if ing]
+            print(f"[SUPABASE] Found AI-extracted product: {p['name']} | {len(ingredients)} ingredients")
             raw_images = p.get("images") or []
             if not raw_images and p.get("image_url"):
                 raw_images = [p["image_url"]]
