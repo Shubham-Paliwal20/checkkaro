@@ -136,66 +136,58 @@ function About() {
           <h2 className="font-poppins font-bold text-2xl text-navy mb-4">Understanding the Ingredient Grade</h2>
 
           <p className="text-gray-700 mb-6">
-            We assign an Ingredient Grade (A/B/C/D) based on the <strong>percentage of clean ingredients</strong> in the product. This gives you a fair comparison between products regardless of how many total ingredients they contain.
+            We assign an Ingredient Grade (A/B/C/D) based on simple, strict rules — not weighted averages. The grade tells you at a glance how clean a product's ingredient list is.
           </p>
 
           <div className="mb-6">
-            <h3 className="font-poppins font-semibold text-lg text-navy mb-3">Grade Thresholds:</h3>
+            <h3 className="font-poppins font-semibold text-lg text-navy mb-3">Grade Rules:</h3>
             <div className="space-y-3">
               <div className="p-3 bg-green-50 rounded-lg border-l-4 border-green-500">
-                <p className="font-semibold text-green-700">Grade A (≥85% clean)</p>
-                <p className="text-sm text-gray-700">Excellent. Minimal concern ingredients, largely clean label.</p>
+                <p className="font-semibold text-green-700">Grade A — All ingredients are Generally Recognised</p>
+                <p className="text-sm text-gray-700">Every ingredient is widely accepted with no notable regulatory flags anywhere in the world.</p>
               </div>
               <div className="p-3 bg-blue-50 rounded-lg border-l-4 border-blue-500">
-                <p className="font-semibold text-blue-700">Grade B (70-84% clean)</p>
-                <p className="text-sm text-gray-700">Good. Mostly safe with some commonly noted additives.</p>
+                <p className="font-semibold text-blue-700">Grade B — No questioned ingredients, up to 30% Worth Knowing</p>
+                <p className="text-sm text-gray-700">Mostly clean. A few permitted additives that are worth being aware of, but nothing flagged or banned.</p>
               </div>
               <div className="p-3 bg-amber-50 rounded-lg border-l-4 border-amber-500">
-                <p className="font-semibold text-amber-700">Grade C (50-69% clean)</p>
-                <p className="text-sm text-gray-700">Average. Mixed formulation with several commonly questioned ingredients.</p>
+                <p className="font-semibold text-amber-700">Grade C — No questioned ingredients, more than 30% Worth Knowing</p>
+                <p className="text-sm text-gray-700">A significant portion of the ingredient list has some concerns. Still no banned or restricted ingredients.</p>
               </div>
               <div className="p-3 bg-red-50 rounded-lg border-l-4 border-red-500">
-                <p className="font-semibold text-red-700">Grade D (below 50% clean)</p>
-                <p className="text-sm text-gray-700">Poor. High proportion of questioned or banned ingredients.</p>
+                <p className="font-semibold text-red-700">Grade D — Contains any Commonly Questioned or Banned ingredient</p>
+                <p className="text-sm text-gray-700">At least one ingredient is banned in one or more countries, or has documented health concerns from regulatory bodies. Even one such ingredient gives Grade D.</p>
               </div>
             </div>
           </div>
 
           <div className="mb-6">
-            <h3 className="font-poppins font-semibold text-lg text-navy mb-3">How Clean% is Calculated:</h3>
-            <p className="text-gray-700 mb-3">
-              Different ingredient categories are weighted based on their regulatory status:
-            </p>
-            <ul className="space-y-2 text-gray-700 mb-4">
-              <li className="flex items-start gap-2">
-                <span className="text-green-600 font-bold">●</span>
-                <span><strong>Generally Recognised</strong> = 1.0 (100% clean)</span>
+            <h3 className="font-poppins font-semibold text-lg text-navy mb-3">The Three Ingredient Categories:</h3>
+            <ul className="space-y-3 text-gray-700">
+              <li className="flex items-start gap-3">
+                <span className="mt-1 w-3 h-3 rounded-full bg-green-500 flex-shrink-0"></span>
+                <div>
+                  <strong>Generally Recognised</strong> — No notable regulatory flags in any major jurisdiction. Widely accepted globally.
+                </div>
               </li>
-              <li className="flex items-start gap-2">
-                <span className="text-green-600 font-bold">●</span>
-                <span><strong>Worth Knowing</strong> = 1.0 (100% clean)</span>
+              <li className="flex items-start gap-3">
+                <span className="mt-1 w-3 h-3 rounded-full bg-amber-400 flex-shrink-0"></span>
+                <div>
+                  <strong>Worth Knowing</strong> — Permitted but with some discussion in research, dietary concerns, or usage limits. Fine for most people in regulated amounts.
+                </div>
               </li>
-              <li className="flex items-start gap-2">
-                <span className="text-amber-600 font-bold">●</span>
-                <span><strong>Commonly Questioned (mild)</strong> = 0.5 (50% clean)</span>
-              </li>
-              <li className="flex items-start gap-2">
-                <span className="text-red-600 font-bold">●</span>
-                <span><strong>Commonly Questioned (heavy)</strong> = 0.0 (0% clean)</span>
-              </li>
-              <li className="flex items-start gap-2">
-                <span className="text-red-700 font-bold">✖</span>
-                <span><strong>Banned</strong> = Automatic Grade D</span>
+              <li className="flex items-start gap-3">
+                <span className="mt-1 w-3 h-3 rounded-full bg-red-600 flex-shrink-0"></span>
+                <div>
+                  <strong>Commonly Questioned</strong> — Restricted or banned in one or more countries, or associated with significant health evidence. Any product containing these gets Grade D.
+                </div>
               </li>
             </ul>
-            <p className="text-sm text-gray-600 mb-4">
-              <em>Heavy CQ includes EU-banned synthetic dyes (E102, E110, E129, etc.), phthalates, titanium dioxide, and potassium bromate. Mild CQ includes SLS, MSG, sodium benzoate, and similar debated ingredients.</em>
-            </p>
           </div>
 
           <div className="p-4 bg-blue-50 rounded-lg">
             <p className="text-sm text-gray-700">
-              <strong>Important:</strong> The Ingredient Grade reflects the proportion of clean vs. commonly questioned ingredients based on international regulatory data. It is not a safety rating or health claim, and individual responses to ingredients vary.
+              <strong>Important:</strong> The Ingredient Grade is based on published international regulatory data from FSSAI, WHO, EFSA and EU regulations. It is not a safety rating or health claim. Individual responses to ingredients vary. Always consult a qualified professional for personal health decisions.
             </p>
           </div>
         </section>

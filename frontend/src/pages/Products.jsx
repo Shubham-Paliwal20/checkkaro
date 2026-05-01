@@ -9,13 +9,18 @@ const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:8000
 
 const BRAND_BLUE = '#1B3F8A'
 
-function ScoreBadge({ score }) {
-  const cls =
-    score >= 75 ? 'bg-green-100 text-green-700' :
-    score >= 50 ? 'bg-yellow-100 text-yellow-700' :
-                  'bg-red-100 text-red-700'
+function GradePill({ grade }) {
+  const styles = {
+    A: 'bg-green-100 text-green-700 border border-green-300',
+    B: 'bg-blue-100 text-blue-700 border border-blue-300',
+    C: 'bg-amber-100 text-amber-700 border border-amber-300',
+    D: 'bg-red-100 text-red-700 border border-red-300',
+  }
+  const g = grade || 'C'
   return (
-    <span className={`text-xs font-bold px-2 py-0.5 rounded-full ${cls}`}>{score}</span>
+    <span className={`text-xs font-bold px-2 py-0.5 rounded-full ${styles[g] || styles.C}`}>
+      Grade {g}
+    </span>
   )
 }
 
@@ -61,7 +66,7 @@ function BrowseCard({ product }) {
           <span className="text-[10px] text-gray-400 bg-gray-100 px-2 py-0.5 rounded-full truncate max-w-[100px]">
             {product.category}
           </span>
-          <ScoreBadge score={product.awareness_score} />
+          <GradePill grade={product.grade} />
         </div>
       </div>
 
@@ -95,7 +100,7 @@ const CAT_ICON = {
 }
 
 const SORT_OPTIONS = [
-  { value: 'score', label: 'Best Score' },
+  { value: 'score', label: 'Best Grade' },
   { value: 'name',  label: 'Name A–Z' },
   { value: 'brand', label: 'Brand A–Z' },
 ]
@@ -196,7 +201,7 @@ export default function Products() {
     <>
       <SEO
         title="Product Directory — Browse 600+ Indian Products"
-        description="Browse and search 600+ Indian food and cosmetic products. Filter by category or brand, check ingredients, and see FSSAI awareness scores."
+        description="Browse and search 600+ Indian food and cosmetic products. Filter by category or brand, check ingredients, and see ingredient grades A/B/C/D."
         keywords="Indian food products list, cosmetic products India, browse product ingredients, FSSAI product database, food product directory India"
         canonical="/products"
       />

@@ -334,7 +334,7 @@ async def browse_products(
     # Add community-submitted products from Supabase
     try:
         community = supabase.from_("ai_extracted_products") \
-            .select("id, name, brand, category, image_url, awareness_score, verdict") \
+            .select("id, name, brand, category, image_url, awareness_score, grade, verdict") \
             .order("created_at", desc=True) \
             .limit(500) \
             .execute()
@@ -346,6 +346,7 @@ async def browse_products(
                 "category":        p.get("category") or "General",
                 "image_url":       p.get("image_url"),
                 "awareness_score": int(p.get("awareness_score") or 50),
+                "grade":           p.get("grade") or "C",
                 "verdict":         p.get("verdict") or "",
             })
     except Exception as e:
@@ -364,12 +365,13 @@ async def browse_products(
         ]
 
     # Sort
+    _grade_order = {'A': 0, 'B': 1, 'C': 2, 'D': 3}
     if sort == "name":
         items.sort(key=lambda p: p["name"].lower())
     elif sort == "brand":
         items.sort(key=lambda p: (p["brand"].lower(), p["name"].lower()))
     else:
-        items.sort(key=lambda p: p["awareness_score"], reverse=True)
+        items.sort(key=lambda p: _grade_order.get(p.get("grade", "C"), 2))
 
     total = len(items)
 
@@ -402,8 +404,9 @@ async def browse_products(
                 "brand":           p["brand"],
                 "category":        p["category"],
                 "image_url":       p["image_url"],
-                "awareness_score": p["awareness_score"],
-                "verdict":         p["verdict"],
+                "awareness_score": p.get("awareness_score", 50),
+                "grade":           p.get("grade", "C"),
+                "verdict":         p.get("verdict", ""),
             }
             for p in page_items
         ],
