@@ -25,9 +25,8 @@ _QUESTIONED = [
     'sodium lauryl sulfate','sls','sodium laureth sulfate','sles',
     'ammonium laureth sulfate','cocamidopropyl betaine',
     # Synthetic dyes (EU banned/restricted)
-    'artificial color','artificial colour','tartrazine','sunset yellow',
-    'carmoisine','allura red','brilliant blue','ponceau','erythrosine',
-    'quinoline yellow','brown ht','patent blue','azorubine',
+    'tartrazine','sunset yellow','carmoisine','allura red','brilliant blue',
+    'ponceau','erythrosine','quinoline yellow','brown ht','patent blue','azorubine',
     'e102','e110','e122','e124','e129','e131','e132','e133','e104','e127','e155',
     # Flavor enhancers
     'monosodium glutamate','msg','disodium guanylate','disodium inosinate',
@@ -53,16 +52,36 @@ _QUESTIONED = [
     'caramel colour','caramel color','e150',
     # Phosphoric acid
     'phosphoric acid','e338',
+    # Trans fats (banned USA/EU/Canada)
+    'partially hydrogenated','trans fat',
+    # Emulsifiers with trans fat/glycidol risk
+    'mono and diglycerides',
+    # Preservatives with infant/reproductive toxicity
+    'phenoxyethanol','benzyl alcohol',
+    # Cyclic silicones (EU banned wash-off, endocrine disruption)
+    'cyclomethicone','cyclopentasiloxane','cyclohexasiloxane',
+    # Petroleum-derived (PAH/MOAH contamination risk)
+    'mineral oil','petrolatum','paraffinum liquidum','paraffin wax',
+    # Retinoids (teratogenic, sunlight tumour risk)
+    'retinol','retinyl palmitate','tretinoin','retinal','hydroxypinacolone retinoate',
+    # Beta carotene (lung cancer in smokers at high doses)
+    'beta carotene',
+    # Fragrance — hidden allergens, phthalates, endocrine disruptors
+    'fragrance','parfum','perfume',
+    # Artificial flavors — undisclosed synthetic chemicals
+    'artificial flavor','artificial flavour',
 ]
 _WORTH = [
     'palm oil','palmolein','vegetable oil','edible vegetable fat',
     'sugar','glucose syrup','high fructose corn syrup','invert sugar','maltodextrin',
-    'artificial flavor','artificial flavour','natural flavor','nature identical',
+    'natural flavor','nature identical',
     'citric acid','emulsifier','stabilizer','stabiliser','thickener',
     'lecithin','soy lecithin','potassium sorbate','e202',
-    'mono and diglycerides','polyglycerol','ammonium phosphatides',
+    'polyglycerol','ammonium phosphatides',
     'e322','e471','e466','e412','e410','e476','e162','e160',
     # Note: e407 (carrageenan) is in _QUESTIONED, not here
+    # Note: mono and diglycerides moved to _QUESTIONED (trans fat/glycidol risk)
+    # Note: artificial flavor/flavour moved to _QUESTIONED (undisclosed chemicals)
 ]
 
 def _classify(name: str) -> str:

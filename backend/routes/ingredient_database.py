@@ -425,6 +425,50 @@ def classify_ingredient(ingredient_name, category=None):
         'sodium laureth sulphate': ('Surfactant SLES', 'Strips natural skin oils; potential 1,4-dioxane contamination from ethoxylation; scalp and eye irritation'),
         'ammonium laureth sulfate': ('Surfactant ALES', 'Similar to SLES; potential 1,4-dioxane contamination; strips natural oils; scalp irritation'),
         'cocamidopropyl betaine': ('Amphoteric surfactant', 'Causes allergic contact dermatitis and skin sensitization; EU flagged as allergen; eye irritant; impurities (DMAPA, amidoamine) are known allergens'),
+
+        # Trans fats — banned in USA/EU/many countries
+        'partially hydrogenated': ('Trans fat source', 'Contains trans fatty acids — banned in USA (2018), EU, Canada, many countries; raises LDL cholesterol, lowers HDL; significantly increases heart disease and stroke risk'),
+
+        # Emulsifiers with trans fat and glycidol concerns
+        'mono and diglycerides': ('Emulsifier E471', 'May contain trans fats from hydrogenated oil sources; can contain glycidol fatty acid esters (IARC Group 2A carcinogen); EFSA raised safety concerns in 2018 review'),
+
+        # Preservatives with reproductive and infant toxicity
+        'phenoxyethanol': ('Preservative', 'EU restricts to max 1% in all cosmetics; FDA issued warning it can depress CNS and cause vomiting in nursing infants; reproductive and developmental toxicity concerns at higher concentrations'),
+        'benzyl alcohol': ('Preservative/solvent', 'Toxic to neonates — can cause fatal gasping syndrome; metabolizes to benzaldehyde and benzoic acid; banned in products for infants; contact dermatitis in sensitive individuals'),
+
+        # Cyclic silicones — EU banned/restricted, endocrine disruption, environmental persistence
+        'cyclomethicone': ('Cyclic silicone blend (D4/D5/D6)', 'EU restricted >0.1% in rinse-off cosmetics; persistent environmental pollutant; bioaccumulates in aquatic organisms; endocrine disruption concerns'),
+        'cyclopentasiloxane': ('Cyclic silicone D5', 'EU banned in rinse-off cosmetics at >0.1% since 2020; classified as Substance of Very High Concern; persistent organic pollutant; endocrine disruptor'),
+        'cyclohexasiloxane': ('Cyclic silicone D6', 'EU restricted in wash-off cosmetics; environmental persistence and bioaccumulation; similar endocrine disruption concerns as D4/D5'),
+
+        # Petroleum-derived — PAH/MOAH contamination and EU bans
+        'mineral oil': ('Petroleum-derived oil', 'EU restricts in food unless PAH safety established; MOAH (mineral oil aromatic hydrocarbons) are IARC Group 1 carcinogens; contamination risk from refining'),
+        'petrolatum': ('Petroleum jelly (petroleum-derived)', 'EU bans unless full refining history is established — PAH contamination risk; MOAH are IARC Group 1 carcinogens; restricted in EU cosmetics regulation'),
+        'paraffinum liquidum': ('Liquid paraffin (petroleum-derived)', 'EU requires PAH safety data before approval; MOAH (IARC Group 1 carcinogens) contamination risk from petrochemical refining'),
+        'paraffin wax': ('Paraffin wax (petroleum-derived)', 'Petroleum-derived; potential PAH/MOAH contamination (IARC Group 1 carcinogens); EU restricts in food applications (E905)'),
+
+        # Retinoids — teratogenic in pregnancy, sunlight-activated tumour risk
+        'retinol': ('Vitamin A retinoid', 'Teratogenic — contraindicated in pregnancy (causes severe birth defects); increases UV sensitivity; NTP study linked retinyl palmitate metabolite to accelerated skin tumour growth in sunlight'),
+        'retinyl palmitate': ('Vitamin A ester retinoid', 'NTP study showed accelerated photocarcinogenesis (skin tumour growth) when applied to skin exposed to sunlight; teratogenic at high doses; avoid daytime use'),
+        'tretinoin': ('Prescription retinoid (retinoic acid)', 'Prescription-only in India and most countries; Pregnancy Category X — highly teratogenic, causes craniofacial and CNS birth defects; requires medical supervision'),
+        'retinal': ('Retinaldehyde (Vitamin A form)', 'More potent than retinol; teratogenic — contraindicated in pregnancy; significantly increases UV/sun sensitivity and photocarcinogenesis risk'),
+        'hydroxypinacolone retinoate': ('Ester of retinoic acid', 'Retinoid compound — contraindicated in pregnancy; photosensitizing; limited long-term safety data despite milder irritation profile than retinol'),
+
+        # Beta carotene — lung cancer risk at high supplement doses
+        'beta carotene': ('Provitamin A colorant E160a', 'High-dose supplements (20mg+/day) increased lung cancer risk by 18–28% in smokers in ATBC and CARET clinical trials; safe at normal food exposure levels'),
+
+        # Saccharin — bladder cancer in animal studies
+        'saccharin': ('Artificial sweetener E954', 'Caused bladder tumours in male rats at high doses; banned in Canada 1977–2014; FDA temporarily removed GRAS status; precautionary concern remains despite reversal'),
+        'e954': ('Saccharin (E954)', 'Bladder cancer in rats at high doses; historical bans in multiple countries; FDA warning label required until 2000; precautionary concerns remain'),
+
+        # Fragrance — hidden allergens, phthalates, undisclosed endocrine disruptors
+        'fragrance': ('Proprietary fragrance mixture', 'A single "fragrance" label entry may hide dozens of undisclosed chemicals including known allergens, phthalates and synthetic musks; EU requires 26 specific allergens declared separately; contact dermatitis and respiratory sensitization risk'),
+        'perfume': ('Proprietary fragrance/parfum blend', 'Proprietary blend of chemicals — may contain undisclosed allergens, phthalates, endocrine disruptors and sensitizers; contact dermatitis and respiratory sensitization risk'),
+        'parfum': ('Proprietary fragrance (EU INCI term)', 'EU requires 26 specific allergens listed if found in parfum; may contain undisclosed phthalates, synthetic nitromusks (several banned in EU) and other sensitizers'),
+
+        # Artificial flavors — undisclosed synthetic chemicals
+        'artificial flavor': ('Synthetic flavoring agent', 'Synthetic chemical blend used to mimic natural flavour; individual compounds not disclosed on labels; may include diacetyl (linked to lung disease), benzaldehyde, propylene glycol derivatives and other synthetic chemicals'),
+        'artificial flavour': ('Synthetic flavoring agent', 'Synthetic flavouring not derived from natural sources; compounds undisclosed; may include diacetyl (lung disease risk), propylene glycol derivatives and other synthetic chemicals with varying safety profiles'),
     }
 
     # WORTH KNOWING INGREDIENTS (YELLOW) - Generally safe but with considerations
@@ -440,20 +484,11 @@ def classify_ingredient(ingredient_name, category=None):
         # Artificial sweeteners (moderate evidence)
         'sucralose': ('Artificial sweetener E955', 'Alters gut microbiome composition; may impair insulin response; some studies link to increased appetite and glucose intolerance'),
         'e955': ('Sucralose (E955)', 'Alters gut microbiome; may impair insulin response; glucose intolerance in some studies'),
-        'saccharin': ('Artificial sweetener E954', 'Bladder cancer in rats at high doses; FDA required warning label until 2000; now considered safe for most at normal levels'),
-        'e954': ('Saccharin (E954)', 'Historical bladder cancer concerns in animals; FDA now considers safe at normal intake levels'),
-
-        # Fragrance — hides complex chemical mixtures
-        'fragrance': ('Undisclosed fragrance mixture', 'May contain phthalates, allergens, or sensitizers; EU requires declaration of 26 specific fragrance allergens'),
-        'perfume': ('Undisclosed fragrance mixture', 'May contain hormone disruptors and allergens; EU requires declaration of 26 fragrance allergens'),
-        'parfum': ('Undisclosed fragrance mixture', 'May contain phthalates and allergens; EU requires 26 specific allergen disclosures on labels'),
-        'artificial flavor': ('Synthetic flavoring', 'May contain allergens; no ingredient-level disclosure required; source may vary widely'),
-        'artificial flavour': ('Synthetic flavoring', 'May contain allergens; no ingredient-level disclosure required; source may vary widely'),
 
         # MSG — flavor enhancer (FDA GRAS, some sensitivity)
-        'monosodium glutamate': ('Flavor enhancer MSG (E621)', 'FDA-approved GRAS; double-blind studies mostly found no link to "Chinese Restaurant Syndrome"; some individuals report sensitivity'),
+        'monosodium glutamate': ('Flavor enhancer MSG (E621)', 'FDA-approved GRAS; some individuals report sensitivity; generally safe at normal dietary levels'),
         'msg': ('Monosodium glutamate (MSG / E621)', 'FDA-approved GRAS; some people report sensitivity; generally safe for most at normal dietary levels'),
-        'e621': ('MSG / Monosodium glutamate (E621)', 'FDA-approved GRAS; some people report sensitivity; generally safe for most at normal dietary levels'),
+        'e621': ('MSG / Monosodium glutamate (E621)', 'FDA-approved GRAS; some people report sensitivity; generally safe at normal dietary levels'),
 
         # Fiber additives
         'inulin': ('Prebiotic fiber', 'Causes gas, bloating and abdominal discomfort in doses above 5g; ferments rapidly in colon — problematic for IBS sufferers'),
@@ -463,28 +498,23 @@ def classify_ingredient(ingredient_name, category=None):
         'palm oil': ('Vegetable oil', 'High saturated fat (50%), raises LDL cholesterol, heart disease risk'),
         'palmolein': ('Refined palm oil', 'High saturated fat, may increase cardiovascular disease risk'),
         'hydrogenated': ('Modified fat', 'May contain trans fats, increases heart disease risk, raises bad cholesterol'),
-        'partially hydrogenated': ('Modified fat', 'Contains trans fats - avoid! Banned in many countries, heart disease'),
-        
+        # partially hydrogenated → moved to commonly_questioned (trans fats, banned in USA/EU/Canada)
+
         # Emulsifiers and stabilizers
         'soy lecithin': ('Emulsifier E322', 'Generally safe but soy allergen, may cause digestive issues in sensitive people'),
-        'mono and diglycerides': ('Emulsifier E471', 'May contain trans fats, digestive issues, source often unclear'),
+        # mono and diglycerides → moved to commonly_questioned (trans fat risk, glycidol concern)
         'polyglycerol polyricinoleate': ('Emulsifier E476', 'Synthetic, may cause digestive upset, liver enlargement in animal studies'),
         'ammonium phosphatides': ('Emulsifier E442', 'Synthetic, limited safety data, may affect mineral absorption'),
-        # carrageenan moved to commonly_questioned (EU infant formula ban)
+        # carrageenan → moved to commonly_questioned (EU infant formula ban)
+        # phenoxyethanol → moved to commonly_questioned (reproductive toxicity, infant danger)
+        # benzyl alcohol → moved to commonly_questioned (toxic to neonates)
 
         # Preservatives (milder concerns)
-        'phenoxyethanol': ('Preservative', 'EU restricts to 1% in cosmetics; skin and eye irritant; reproductive toxicity concerns at higher concentrations'),
-        'benzyl alcohol': ('Preservative/solvent', 'Contact dermatitis in some individuals; toxic to neonates in large doses; restricted in baby products'),
         'potassium sorbate': ('Preservative E202', 'Generally safe; may cause skin irritation and allergic reactions; migraines reported'),
         'e202': ('Potassium sorbate (E202)', 'Generally safe preservative; may cause contact allergies in sensitive individuals'),
         'e955': ('Sucralose (E955)', 'Alters gut microbiome; may impair insulin response; glucose intolerance in some studies'),
-        'e954': ('Saccharin (E954)', 'Bladder cancer in rats at high doses; now considered safe for most at normal intake'),
-
-        # Petroleum-derived ingredients
-        'mineral oil': ('Mineral oil (petroleum-derived)', 'Petroleum-derived; may contain PAH contaminants if not highly refined; can trap bacteria; EU restricts in food'),
-        'petrolatum': ('Petroleum jelly', 'Petroleum-derived; EU restricts unless PAH safety established; may contain carcinogenic impurities'),
-        'paraffinum liquidum': ('Liquid paraffin (mineral oil)', 'Petroleum-derived; EU requires safety data due to PAH risk; cheap emollient'),
-        'paraffin wax': ('Paraffin wax', 'Petroleum-derived; may contain trace PAH impurities; limited skin benefit'),
+        # e954 / saccharin → moved to commonly_questioned (bladder cancer in rats, historical bans)
+        # mineral oil, petrolatum, paraffinum liquidum, paraffin wax → moved to commonly_questioned (PAH/MOAH contamination)
 
         # Denatured alcohols
         'alcohol denat': ('Denatured alcohol', 'Drying to skin; disrupts protective skin barrier with repeated use; may cause sensitivity'),
@@ -495,21 +525,14 @@ def classify_ingredient(ingredient_name, category=None):
         'lanolin': ('Wool-derived emollient', 'Natural but common allergen (~1.7% population); may contain pesticide residues from sheep wool'),
         'wool wax': ('Lanolin derivative', 'Wool-derived; contact allergy risk in lanolin-sensitive individuals'),
 
-        # Silicones (cyclic — environmental concern)
-        'cyclomethicone': ('Cyclic silicone', 'EU restricts in wash-off cosmetics; environmental persistence; accumulates in aquatic organisms'),
-        'cyclopentasiloxane': ('Cyclic silicone D5', 'EU banned in wash-off cosmetics >0.1%; endocrine disruption concerns; persistent environmental pollutant'),
-        'cyclohexasiloxane': ('Cyclic silicone D6', 'EU restricted; environmental persistence; similar concerns to D5'),
+        # Silicones (cyclic) → moved to commonly_questioned (EU bans, endocrine disruption)
+        # cyclomethicone, cyclopentasiloxane, cyclohexasiloxane → see commonly_questioned_patterns
         'amodimethicone': ('Modified silicone', 'Builds up on hair; environmental persistence; hard to biodegrade'),
 
         # Sweeteners
-        'saccharin': ('Artificial sweetener E954', 'Bladder cancer in rats at high doses; now considered safe at normal intake; FDA removed warning label in 2000'),
+        # saccharin / e954 → moved to commonly_questioned (bladder cancer in rats, historical bans)
 
-        # Retinoids (topical)
-        'retinol': ('Vitamin A derivative', 'Avoid during pregnancy (teratogenic); increases sun sensitivity — use SPF; causes purging and irritation initially'),
-        'retinyl palmitate': ('Vitamin A ester', 'Milder retinoid; may accelerate skin tumour growth in presence of sunlight — avoid daytime use'),
-        'tretinoin': ('Prescription retinoid', 'Strong retinoid — contraindicated in pregnancy; requires medical supervision'),
-        'hydroxypinacolone retinoate': ('Ester of retinoic acid', 'Gentler retinoid ester; still avoid in pregnancy; less irritating than retinol'),
-        'retinal': ('Aldehyde form of Vitamin A', 'More potent than retinol; increases sun sensitivity; avoid in pregnancy'),
+        # Retinoids → moved to commonly_questioned (teratogenic, sunlight tumour risk)
         
         # Silicones
         'dimethiconol': ('Silicone', 'Builds up on hair/skin, clogs pores, environmental persistence, hard to remove'),
@@ -526,9 +549,9 @@ def classify_ingredient(ingredient_name, category=None):
         
         # Mild acids
         'citric acid': ('Preservative/acidulant E330', 'Tooth enamel erosion with frequent exposure, stomach upset in large amounts'),
-        
+
         # Colorants (natural/mineral)
-        'beta carotene': ('Orange color E160a', 'Safe but high doses linked to lung cancer risk in smokers'),
+        # beta carotene → moved to commonly_questioned (lung cancer in smokers at high supplement doses)
         'caramel': ('Brown color', 'Natural but may contain trace amounts of carcinogenic compounds'),
         
         # Thickeners
@@ -536,7 +559,7 @@ def classify_ingredient(ingredient_name, category=None):
         'xanthan gum': ('Thickener E415', 'Digestive issues in large amounts, bloating, may cause allergic reactions'),
         
         # Humectants
-        'propylene glycol': ('Humectant', 'Skin irritation, allergic reactions, neurotoxicity at high doses'),
+        # propylene glycol → moved to commonly_questioned (neurotoxicity, penetration enhancer)
         'glycerin': ('Humectant', 'Generally safe but may cause headaches, thirst, nausea in large amounts'),
         'sorbitol': ('Humectant/sweetener', 'Laxative effect, bloating, diarrhea, abdominal pain in moderate amounts'),
         
