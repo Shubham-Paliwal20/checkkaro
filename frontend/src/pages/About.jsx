@@ -155,7 +155,7 @@ function About() {
                 <p className="text-sm text-gray-700">Average. Mixed formulation with several commonly questioned ingredients.</p>
               </div>
               <div className="p-3 bg-red-50 rounded-lg border-l-4 border-red-500">
-                <p className="font-semibold text-red-700">Grade D (<50% clean)</p>
+                <p className="font-semibold text-red-700">Grade D (below 50% clean)</p>
                 <p className="text-sm text-gray-700">Poor. High proportion of questioned or banned ingredients.</p>
               </div>
             </div>
