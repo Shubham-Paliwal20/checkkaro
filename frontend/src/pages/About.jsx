@@ -64,9 +64,9 @@ function About() {
             </div>
             
             <div>
-              <h3 className="font-poppins font-semibold text-lg text-primary mb-2">4. Composition Score</h3>
+              <h3 className="font-poppins font-semibold text-lg text-primary mb-2">4. Ingredient Grade</h3>
               <p className="text-gray-700">
-                We calculate an Composition Score (0-100) that reflects how commonly ingredients are discussed by researchers and flagged by regulators.
+                We assign an Ingredient Grade (A/B/C/D) based on the percentage of clean ingredients, weighing different ingredient categories.
               </p>
             </div>
           </div>
@@ -131,33 +131,71 @@ function About() {
           </div>
         </section>
 
-        {/* Composition Score */}
+        {/* Ingredient Grade */}
         <section className="card p-8 mb-8">
-          <h2 className="font-poppins font-bold text-2xl text-navy mb-4">Understanding the Composition Score</h2>
-          <p className="text-gray-700 mb-4">
-            The Composition Score (0-100) is calculated based on ingredient classifications:
+          <h2 className="font-poppins font-bold text-2xl text-navy mb-4">Understanding the Ingredient Grade</h2>
+
+          <p className="text-gray-700 mb-6">
+            We assign an Ingredient Grade (A/B/C/D) based on the <strong>percentage of clean ingredients</strong> in the product. This gives you a fair comparison between products regardless of how many total ingredients they contain.
           </p>
-          <ul className="space-y-2 text-gray-700 mb-4">
-            <li className="flex items-start gap-2">
-              <span className="text-primary">•</span>
-              <span>Start at 100</span>
-            </li>
-            <li className="flex items-start gap-2">
-              <span className="text-primary">•</span>
-              <span>Subtract 3 points for each "worth knowing" ingredient</span>
-            </li>
-            <li className="flex items-start gap-2">
-              <span className="text-primary">•</span>
-              <span>Subtract 12 points for each "commonly questioned" ingredient</span>
-            </li>
-            <li className="flex items-start gap-2">
-              <span className="text-primary">•</span>
-              <span>Minimum score is 5</span>
-            </li>
-          </ul>
+
+          <div className="mb-6">
+            <h3 className="font-poppins font-semibold text-lg text-navy mb-3">Grade Thresholds:</h3>
+            <div className="space-y-3">
+              <div className="p-3 bg-green-50 rounded-lg border-l-4 border-green-500">
+                <p className="font-semibold text-green-700">Grade A (≥85% clean)</p>
+                <p className="text-sm text-gray-700">Excellent. Minimal concern ingredients, largely clean label.</p>
+              </div>
+              <div className="p-3 bg-blue-50 rounded-lg border-l-4 border-blue-500">
+                <p className="font-semibold text-blue-700">Grade B (70-84% clean)</p>
+                <p className="text-sm text-gray-700">Good. Mostly safe with some commonly noted additives.</p>
+              </div>
+              <div className="p-3 bg-amber-50 rounded-lg border-l-4 border-amber-500">
+                <p className="font-semibold text-amber-700">Grade C (50-69% clean)</p>
+                <p className="text-sm text-gray-700">Average. Mixed formulation with several commonly questioned ingredients.</p>
+              </div>
+              <div className="p-3 bg-red-50 rounded-lg border-l-4 border-red-500">
+                <p className="font-semibold text-red-700">Grade D (<50% clean)</p>
+                <p className="text-sm text-gray-700">Poor. High proportion of questioned or banned ingredients.</p>
+              </div>
+            </div>
+          </div>
+
+          <div className="mb-6">
+            <h3 className="font-poppins font-semibold text-lg text-navy mb-3">How Clean% is Calculated:</h3>
+            <p className="text-gray-700 mb-3">
+              Different ingredient categories are weighted based on their regulatory status:
+            </p>
+            <ul className="space-y-2 text-gray-700 mb-4">
+              <li className="flex items-start gap-2">
+                <span className="text-green-600 font-bold">●</span>
+                <span><strong>Generally Recognised</strong> = 1.0 (100% clean)</span>
+              </li>
+              <li className="flex items-start gap-2">
+                <span className="text-green-600 font-bold">●</span>
+                <span><strong>Worth Knowing</strong> = 1.0 (100% clean)</span>
+              </li>
+              <li className="flex items-start gap-2">
+                <span className="text-amber-600 font-bold">●</span>
+                <span><strong>Commonly Questioned (mild)</strong> = 0.5 (50% clean)</span>
+              </li>
+              <li className="flex items-start gap-2">
+                <span className="text-red-600 font-bold">●</span>
+                <span><strong>Commonly Questioned (heavy)</strong> = 0.0 (0% clean)</span>
+              </li>
+              <li className="flex items-start gap-2">
+                <span className="text-red-700 font-bold">✖</span>
+                <span><strong>Banned</strong> = Automatic Grade D</span>
+              </li>
+            </ul>
+            <p className="text-sm text-gray-600 mb-4">
+              <em>Heavy CQ includes EU-banned synthetic dyes (E102, E110, E129, etc.), phthalates, titanium dioxide, and potassium bromate. Mild CQ includes SLS, MSG, sodium benzoate, and similar debated ingredients.</em>
+            </p>
+          </div>
+
           <div className="p-4 bg-blue-50 rounded-lg">
             <p className="text-sm text-gray-700">
-              <strong>Important:</strong> The Composition Score reflects regulatory discussion frequency, not product quality or health impact. It is not a safety rating or health claim.
+              <strong>Important:</strong> The Ingredient Grade reflects the proportion of clean vs. commonly questioned ingredients based on international regulatory data. It is not a safety rating or health claim, and individual responses to ingredients vary.
             </p>
           </div>
         </section>
@@ -174,7 +212,7 @@ function About() {
                 <strong>This is not medical advice.</strong> CheckKaro does not certify any product as safe or unsafe. We do not make health claims. Individual responses to ingredients vary.
               </p>
               <p>
-                The Composition Score is not a safety rating, health claim, or medical assessment. It reflects how commonly ingredients are discussed by researchers and flagged by international regulatory bodies.
+                The Ingredient Grade is not a safety rating, health claim, or medical assessment. It reflects the proportion of clean vs. commonly questioned ingredients based on international regulatory data and research discussion.
               </p>
               <p>
                 Always read the actual product label and consult a qualified healthcare professional for personal health decisions.

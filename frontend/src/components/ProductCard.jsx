@@ -1,8 +1,9 @@
 import { useNavigate } from 'react-router-dom'
-import ScoreCircle from './ScoreCircle'
+import GradeBadge from './GradeBadge'
 
 function ProductCard({ product }) {
   const navigate = useNavigate()
+  const grade = product.grade || 'C'
 
   return (
     <div className="card p-3 sm:p-4 hover:shadow-md transition-shadow cursor-pointer" onClick={() => navigate(`/result/${encodeURIComponent(product.name)}`)}>
@@ -27,7 +28,7 @@ function ProductCard({ product }) {
         </span>
       )}
       <div className="flex items-center justify-between mt-3">
-        <ScoreCircle score={product.awareness_score} size="small" showLabel={false} />
+        <GradeBadge grade={grade} size="small" showLabel={false} />
         <button className="btn-outline text-xs sm:text-sm px-3 sm:px-4 py-1 min-h-[32px]">
           Check
         </button>

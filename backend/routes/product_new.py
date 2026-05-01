@@ -6,6 +6,7 @@ from routes.product_all_data import ALL_PRODUCTS
 from routes.product_ingredients_full import get_ingredients
 from routes.product_images import PRODUCT_IMAGES
 from db.supabase_client import supabase
+from grading import calculate_grade, grade_to_legacy_score
 
 router = APIRouter()
 
@@ -199,13 +200,15 @@ async def search_product(name: str = Query(..., description="Product name to sea
                     regulatory_note=ing["regulatory_note"]
                 ))
             
+            grade = calculate_grade([i.dict() for i in ingredients])
             return ProductResponse(
                 id=product_data["id"],
                 name=product_data["name"],
                 brand=product_data["brand"],
                 category=product_data["category"],
                 image_url=product_data["image_url"],
-                awareness_score=product_data["awareness_score"],
+                grade=grade,
+                awareness_score=grade_to_legacy_score(grade),
                 summary=product_data["summary"],
                 fssai_note=product_data["fssai_note"],
                 verdict=product_data["verdict"],
@@ -243,6 +246,7 @@ async def search_product(name: str = Query(..., description="Product name to sea
             raw_images = p.get("images") or []
             if not raw_images and p.get("image_url"):
                 raw_images = [p["image_url"]]
+            grade = p.get("grade") or calculate_grade([i.dict() for i in ingredients])
             return ProductResponse(
                 id=str(p.get("id", "")),
                 name=p["name"],
@@ -250,7 +254,8 @@ async def search_product(name: str = Query(..., description="Product name to sea
                 category=p.get("category") or "General",
                 image_url=p.get("image_url"),
                 images=raw_images if raw_images else None,
-                awareness_score=int(p.get("awareness_score") or 50),
+                grade=grade,
+                awareness_score=grade_to_legacy_score(grade),
                 summary=p.get("summary") or "",
                 fssai_note=p.get("fssai_note") or "",
                 verdict=p.get("verdict") or "",

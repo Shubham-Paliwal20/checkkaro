@@ -5,7 +5,7 @@ import axios from 'axios'
 import { supabase } from '../lib/supabaseClient'
 import { useAuth } from '../context/AuthContext'
 import PhotoUploadModal from '../components/PhotoUploadModal'
-import ScoreCircle from '../components/ScoreCircle'
+import GradeBadge from '../components/GradeBadge'
 import DisclaimerBox from '../components/DisclaimerBox'
 import ProductReviews from '../components/ProductReviews'
 import ProductNotFound from '../components/ProductNotFound'
@@ -234,7 +234,8 @@ function Result() {
           category: p.category || 'General',
           image_url: p.image_url || null,
           images: rawImages.length > 0 ? rawImages : null,
-          awareness_score: parseInt(p.awareness_score) || 50,
+          grade: p.grade || 'C',
+          awareness_score: parseInt(p.awareness_score) || 60,
           summary: p.summary || '',
           fssai_note: p.fssai_note || '',
           verdict: p.verdict || '',
@@ -337,24 +338,11 @@ function Result() {
   const worth_knowing = allIngredients.filter(i => i.classification === 'worth_knowing')
   const commonly_questioned = allIngredients.filter(i => i.classification === 'commonly_questioned')
 
-  // Get score color
-  const getScoreColor = (score) => {
-    if (score >= 80) return 'text-green-600'
-    if (score >= 60) return 'text-yellow-600'
-    if (score >= 40) return 'text-orange-600'
-    return 'text-red-600'
-  }
-
-  const getScoreBg = (score) => {
-    if (score >= 80) return 'bg-green-50 border-green-200'
-    if (score >= 60) return 'bg-yellow-50 border-yellow-200'
-    if (score >= 40) return 'bg-orange-50 border-orange-200'
-    return 'bg-red-50 border-red-200'
-  }
+  const grade = product?.grade || 'C'
 
   const productSEO = product ? {
-    title: `${product.name} Ingredients & Awareness Score`,
-    description: `Check ingredients in ${product.name} by ${product.brand || 'Indian brand'}. Awareness score: ${product.awareness_score}/100. ${product.verdict || ''} See full ingredient breakdown with FSSAI data.`,
+    title: `${product.name} Ingredients — Grade ${grade}`,
+    description: `Check ingredients in ${product.name} by ${product.brand || 'Indian brand'}. Ingredient Grade: ${grade}. ${product.verdict || ''} Full ingredient breakdown with FSSAI data.`,
     keywords: `${product.name} ingredients, ${product.brand || ''} product review, ${product.name} food additives, is ${product.name} safe`,
     canonical: `/result/${encodeURIComponent(productName)}`,
     ogImage: product.image_url || undefined,
@@ -433,9 +421,9 @@ function Result() {
               </div>
             </div>
 
-            {/* Composition Score */}
+            {/* Ingredient Grade */}
             <div className="flex justify-center md:justify-end">
-              <ScoreCircle score={product.awareness_score} size="large" showLabel={true} />
+              <GradeBadge grade={grade} size="large" showLabel={true} />
             </div>
           </div>
         </div>
@@ -444,28 +432,8 @@ function Result() {
         {(() => {
           let insight, insightBg, insightBorder, insightTextColor, insightIcon
 
-          if (commonly_questioned.length >= 2 || product.awareness_score < 50) {
-            insight = "Users may want to review the ingredient details closely before making a choice."
-            insightBg = "bg-red-50"
-            insightBorder = "border-red-300"
-            insightTextColor = "text-red-700"
-            insightIcon = (
-              <svg className="w-5 h-5 text-red-500 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
-                <path fillRule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clipRule="evenodd"/>
-              </svg>
-            )
-          } else if (product.awareness_score < 70) {
-            insight = "This formulation includes a range of components that may require a closer look."
-            insightBg = "bg-amber-50"
-            insightBorder = "border-amber-300"
-            insightTextColor = "text-amber-700"
-            insightIcon = (
-              <svg className="w-5 h-5 text-amber-500 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
-                <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clipRule="evenodd"/>
-              </svg>
-            )
-          } else if (commonly_questioned.length === 0 && worth_knowing.length === 0) {
-            insight = "The composition suggests a balanced formulation that many users may find suitable."
+          if (grade === 'A') {
+            insight = "The composition suggests a balanced, largely clean formulation that most users may find suitable."
             insightBg = "bg-green-50"
             insightBorder = "border-green-300"
             insightTextColor = "text-green-700"
@@ -474,14 +442,34 @@ function Result() {
                 <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd"/>
               </svg>
             )
-          } else {
-            insight = "This formulation includes a range of components that may require a closer look."
+          } else if (grade === 'B') {
+            insight = "Mostly clean formulation with some commonly noted additives. Suitable for most people."
+            insightBg = "bg-blue-50"
+            insightBorder = "border-blue-300"
+            insightTextColor = "text-blue-700"
+            insightIcon = (
+              <svg className="w-5 h-5 text-blue-500 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
+                <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clipRule="evenodd"/>
+              </svg>
+            )
+          } else if (grade === 'C') {
+            insight = "This formulation includes several commonly questioned ingredients. Worth reviewing before regular use."
             insightBg = "bg-amber-50"
             insightBorder = "border-amber-300"
             insightTextColor = "text-amber-700"
             insightIcon = (
               <svg className="w-5 h-5 text-amber-500 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
-                <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clipRule="evenodd"/>
+                <path fillRule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clipRule="evenodd"/>
+              </svg>
+            )
+          } else {
+            insight = "High proportion of questioned or banned ingredients. Review the ingredient details closely before choosing this product."
+            insightBg = "bg-red-50"
+            insightBorder = "border-red-300"
+            insightTextColor = "text-red-700"
+            insightIcon = (
+              <svg className="w-5 h-5 text-red-500 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
+                <path fillRule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clipRule="evenodd"/>
               </svg>
             )
           }
@@ -746,7 +734,7 @@ function Result() {
         {/* Disclaimer */}
         <div className="mb-6">
           <DisclaimerBox variant="info">
-            This Composition Score reflects how commonly ingredients in this product are discussed by health researchers and flagged by international regulatory bodies. It is not a safety rating, health claim, or medical assessment. CheckKaro does not certify any product as safe or unsafe. Always read the actual product label and consult a qualified professional for personal health decisions.
+            The Ingredient Grade reflects the proportion of clean vs. commonly questioned ingredients, weighted by severity, based on publicly available regulatory data. It is not a safety rating, health claim, or medical assessment. CheckKaro does not certify any product as safe or unsafe. Always read the actual product label and consult a qualified professional for personal health decisions.
           </DisclaimerBox>
         </div>
       </div>

@@ -19,16 +19,17 @@ class ProductResponse(BaseModel):
     category: Optional[str] = None
     image_url: Optional[str] = None
     images: Optional[List[str]] = None
-    awareness_score: int = 50
+    awareness_score: int = 60       # kept for legacy; derived from grade
+    grade: str = 'C'                # A | B | C | D
     summary: Optional[str] = None
     fssai_note: Optional[str] = None
-    verdict: Optional[str] = None  # New field for final verdict
-    recommendation: Optional[str] = None  # New field for usage recommendation
+    verdict: Optional[str] = None
+    recommendation: Optional[str] = None
     ingredients: List[IngredientItem] = []
     search_count: int = 1
-    data_source: Optional[str] = None  # Where data came from
-    confidence: Optional[str] = None  # high | medium | low
-    is_complete: bool = False  # Whether ingredient list is complete
+    data_source: Optional[str] = None
+    confidence: Optional[str] = None
+    is_complete: bool = False
 
 
 class IngredientRuleResponse(BaseModel):

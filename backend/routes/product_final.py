@@ -4,6 +4,7 @@ from models.schemas import ProductResponse, IngredientItem
 import re
 import os
 from supabase import create_client, Client
+from grading import calculate_grade, grade_to_legacy_score
 
 router = APIRouter()
 
@@ -86,51 +87,24 @@ def classify_ingredient_strict(ingredient_name: str) -> str:
     return "generally_recognised"
 
 
-def calculate_strict_score(ingredients: List[Dict]) -> int:
-    """Calculate awareness score with your strict rules"""
-    score = 100
-    has_banned = False
-    
-    for ing in ingredients:
-        ingredient_name = ing.get("name", "")
-        classification = classify_ingredient_strict(ingredient_name)
-        
-        if classification == "banned":
-            has_banned = True
-            score -= 50  # Heavy penalty for banned ingredients
-        elif classification == "commonly_questioned":
-            score -= 15  # Increased penalty
-        elif classification == "worth_knowing":
-            score -= 5   # Reduced penalty for moderate ingredients
-        # generally_recognised: no penalty
-    
-    # Apply your rule: Any banned ingredient = score < 60
-    if has_banned and score >= 60:
-        score = 55  # Force below 60
-    
-    return max(0, score)
+def calculate_strict_score(ingredients: List[Dict]) -> tuple:
+    """Return (grade, legacy_score, has_banned) using Clean%+Severity grading."""
+    has_banned = any(
+        classify_ingredient_strict(i.get("name", "")) == "banned" for i in ingredients
+    )
+    grade = calculate_grade(ingredients)
+    return grade, grade_to_legacy_score(grade), has_banned
 
 
-def get_verdict_and_recommendation_strict(score: int, has_banned: bool) -> tuple:
-    """Get verdict based on your strict requirements"""
-    if has_banned or score < 60:
-        verdict = "Not safe to use"
-        recommendation = "Contains banned/restricted ingredients. Avoid this product."
-        color = "red"
-    elif score >= 80:
-        verdict = "Safe for human body and skin"
-        recommendation = "Contains only safe ingredients. Good choice."
-        color = "green"
-    elif score >= 60:
-        verdict = "Use with caution"
-        recommendation = "Contains some questionable ingredients. Consider alternatives."
-        color = "yellow"
-    else:
-        verdict = "Not recommended"
-        recommendation = "Multiple concerning ingredients. Choose safer alternatives."
-        color = "red"
-    
-    return verdict, recommendation, color
+def get_verdict_and_recommendation_strict(grade: str, has_banned: bool) -> tuple:
+    """Map grade → verdict, recommendation, color."""
+    if grade == 'A':
+        return "Clean formulation", "Largely clean label. Good choice.", "green"
+    if grade == 'B':
+        return "Mostly good", "Contains some commonly noted additives. Suitable for most.", "blue"
+    if grade == 'C':
+        return "Use with caution", "Several commonly questioned ingredients. Consider alternatives.", "yellow"
+    return "High concern", "High proportion of questioned or banned ingredients. Avoid if possible.", "red"
 
 
 def get_ingredient_note(ingredient_name: str, classification: str) -> str:
@@ -230,10 +204,10 @@ async def search_product_in_database(product_name: str) -> Optional[Dict]:
                     "regulatory_note": get_regulatory_note(ingredient_name, classification)
                 })
             
-            # Calculate strict score
-            awareness_score = calculate_strict_score(classified_ingredients)
-            verdict, recommendation, color = get_verdict_and_recommendation_strict(awareness_score, has_banned)
-            
+            # Calculate grade
+            grade, awareness_score, has_banned = calculate_strict_score(classified_ingredients)
+            verdict, recommendation, color = get_verdict_and_recommendation_strict(grade, has_banned)
+
             # Update search count
             try:
                 supabase.table("products_catalog").update({
@@ -241,13 +215,14 @@ async def search_product_in_database(product_name: str) -> Optional[Dict]:
                 }).eq("id", product["id"]).execute()
             except:
                 pass
-            
+
             return {
                 "id": product["id"],
                 "name": product["name"],
                 "brand": product["brand"],
                 "category": product["category"],
                 "image_url": product.get("image_url"),
+                "grade": grade,
                 "awareness_score": awareness_score,
                 "summary": f"{product['name']} contains {len(classified_ingredients)} ingredients. {verdict}. This information is for general awareness based on publicly available regulatory data. It is not a health assessment or medical advice.",
                 "fssai_note": product.get("fssai_note", "Product subject to FSSAI regulations."),
@@ -326,16 +301,17 @@ def search_in_sample_data(product_name: str) -> Optional[Dict]:
                     "regulatory_note": get_regulatory_note(ingredient_name, classification)
                 })
             
-            # Calculate strict score
-            awareness_score = calculate_strict_score(classified_ingredients)
-            verdict, recommendation, color = get_verdict_and_recommendation_strict(awareness_score, has_banned)
-            
+            # Calculate grade
+            grade, awareness_score, has_banned = calculate_strict_score(classified_ingredients)
+            verdict, recommendation, color = get_verdict_and_recommendation_strict(grade, has_banned)
+
             return {
                 "id": f"sample-{key}",
                 "name": product_data["name"],
                 "brand": product_data["brand"],
                 "category": product_data["category"],
                 "image_url": None,
+                "grade": grade,
                 "awareness_score": awareness_score,
                 "summary": f"{product_data['name']} contains {len(classified_ingredients)} ingredients. {verdict}. This information is for general awareness based on publicly available regulatory data. It is not a health assessment or medical advice.",
                 "fssai_note": "Product subject to FSSAI regulations.",
