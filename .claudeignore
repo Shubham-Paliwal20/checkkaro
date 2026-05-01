@@ -1,0 +1,31 @@
+# Python virtualenv — 235MB of packages, never relevant
+backend/venv/
+backend/.venv/
+
+# Compiled Python cache
+**/__pycache__/
+**/*.pyc
+**/*.pyo
+
+# Node packages
+frontend/node_modules/
+
+# Runtime logs
+*.log
+backend/*.log
+
+# Legacy static data files (replaced by Supabase database)
+backend/routes/product_ingredients_full.py
+backend/routes/product_all_data.py
+
+# One-off data insertion scripts (already run, data is in Supabase)
+backend/insert_*.py
+
+# Old/unused route files (main.py doesn't import these)
+backend/routes/product_final.py
+backend/routes/product_images.py
+backend/routes/product.py
+
+# Build artifacts
+frontend/dist/
+frontend/.next/
