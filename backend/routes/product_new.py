@@ -21,22 +21,48 @@ _BANNED = [
     'asbestos','benzene','vinyl chloride','aflatoxin',
 ]
 _QUESTIONED = [
+    # Harsh surfactants
     'sodium lauryl sulfate','sls','sodium laureth sulfate','sles',
-    'phthalate','artificial color','artificial colour','tartrazine',
-    'sunset yellow','carmoisine','allura red','brilliant blue',
-    'e102','e110','e122','e124','e133',
+    'ammonium laureth sulfate','cocamidopropyl betaine',
+    # Synthetic dyes (EU banned/restricted)
+    'artificial color','artificial colour','tartrazine','sunset yellow',
+    'carmoisine','allura red','brilliant blue','ponceau','erythrosine',
+    'quinoline yellow','brown ht','patent blue','azorubine',
+    'e102','e110','e122','e124','e129','e131','e132','e133','e104','e127','e155',
+    # Flavor enhancers
     'monosodium glutamate','msg','disodium guanylate','disodium inosinate',
-    'sodium benzoate','potassium sorbate','tetrasodium edta',
-    'propylene glycol','polyethylene glycol','titanium dioxide',
-    'sucralose','acesulfame','aspartame',
+    'e621','e627','e631',
+    # Preservatives with serious concerns
+    'sodium benzoate','sodium metabisulphite','sulfur dioxide','sodium nitrite','sodium nitrate',
+    'e211','e220','e223','e250','e251',
+    'bha','bht','tbhq','butylated hydroxyanisole','butylated hydroxytoluene','tert-butylhydroquinone',
+    'methylchloroisothiazolinone','methylisothiazolinone','dmdm hydantoin',
+    'imidazolidinyl urea','diazolidinyl urea','quaternium-15',
+    # Sweeteners
+    'aspartame','acesulfame','sucralose','saccharin','e951','e950','e955','e954',
+    # Penetration enhancers / chelating agents
+    'tetrasodium edta','disodium edta','tetrasodium etidronate',
+    'propylene glycol','polyethylene glycol','peg-',
+    # EU-banned white pigment
+    'titanium dioxide','e171',
+    # Gut-inflammation thickener
+    'carrageenan','e407',
+    # Phthalates / hormone disruptors
+    'phthalate','diethyl phthalate','dibutyl phthalate',
+    # Caramel class III/IV (4-MEI)
+    'caramel colour','caramel color','e150',
+    # Phosphoric acid
+    'phosphoric acid','e338',
 ]
 _WORTH = [
     'palm oil','palmolein','vegetable oil','edible vegetable fat',
-    'sugar','glucose syrup','high fructose corn syrup',
+    'sugar','glucose syrup','high fructose corn syrup','invert sugar','maltodextrin',
     'artificial flavor','artificial flavour','natural flavor','nature identical',
-    'citric acid','emulsifier','stabilizer','stabiliser','thickener','preservative',
-    'caramel color','caramel colour','lecithin',
-    'e322','e471','e407','e466','e412','e410','e476','e162','e160',
+    'citric acid','emulsifier','stabilizer','stabiliser','thickener',
+    'lecithin','soy lecithin','potassium sorbate','e202',
+    'mono and diglycerides','polyglycerol','ammonium phosphatides',
+    'e322','e471','e466','e412','e410','e476','e162','e160',
+    # Note: e407 (carrageenan) is in _QUESTIONED, not here
 ]
 
 def _classify(name: str) -> str:
@@ -114,23 +140,19 @@ def _parse_raw(raw: str) -> list:
     return cleaned
 
 def _build_ingredient_item(ing) -> IngredientItem:
-    """Accept either a plain string or a dict (legacy or new format)."""
-    if isinstance(ing, str):
-        cls = _classify(ing)
-        return IngredientItem(
-            name=ing,
-            aliases='',
-            classification=cls,
-            one_line_note=_note(ing, cls),
-            regulatory_note=_reg_note(cls),
-        )
-    # dict format
+    """Accept either a plain string or a dict (legacy or new format).
+    Always re-classifies using _classify() — never trusts stored DB values,
+    which may have been set by AI extraction with different rules.
+    """
+    name = ing if isinstance(ing, str) else ing.get('name', '')
+    aliases = '' if isinstance(ing, str) else ing.get('aliases', '')
+    cls = _classify(name)
     return IngredientItem(
-        name=ing.get('name', ''),
-        aliases=ing.get('aliases', ''),
-        classification=ing.get('classification', 'generally_recognised'),
-        one_line_note=ing.get('one_line_note', ''),
-        regulatory_note=ing.get('regulatory_note', ''),
+        name=name,
+        aliases=aliases,
+        classification=cls,
+        one_line_note=_note(name, cls),
+        regulatory_note=_reg_note(cls),
     )
 
 # Convert ALL_PRODUCTS to the format we need

@@ -399,6 +399,32 @@ def classify_ingredient(ingredient_name, category=None):
         'ci 15985': ('Sunset Yellow (E110)', 'Banned in Norway and Finland; EU warning label required; linked to hyperactivity in children'),
         'ci 16035': ('Allura Red (E129)', 'EU warning label required; banned in Denmark, Belgium, France, Switzerland, Sweden, Austria, Norway'),
         'ci 42090': ('Brilliant Blue FCF (E133)', 'Banned in Belgium, France, Germany, Greece, Italy, Spain, Switzerland; chromosomal damage in animal studies'),
+
+        # Titanium Dioxide — EU banned as food additive 2022
+        'titanium dioxide': ('White pigment (E171)', 'Banned as food additive in EU since 2022 — genotoxicity concerns; EFSA ruled cannot be considered safe; nanoparticles may penetrate skin; inhalation causes lung inflammation'),
+        'e171': ('Titanium dioxide (E171)', 'EU banned as food additive since 2022 — EFSA found cannot exclude genotoxicity; nanoparticles implicated in lung and DNA damage'),
+
+        # Carrageenan — banned in EU infant formula, gut inflammation
+        'carrageenan': ('Thickener E407', 'Banned in EU infant formula; IARC linked to gut inflammation and colitis in animal studies; possible promoter of colon cancer in research'),
+        'e407': ('Carrageenan (E407)', 'Banned in EU infant formula; gut inflammation studies; possible colon cancer promoter in animal research'),
+
+        # PEG compounds — carcinogen contamination risk
+        'peg-': ('PEG compound (polyethylene glycol)', 'May be contaminated with 1,4-dioxane (IARC Group 2B carcinogen); acts as penetration enhancer, increasing absorption of other potentially toxic ingredients'),
+        'polyethylene glycol': ('PEG polymer', 'Possible 1,4-dioxane contamination (carcinogen); increases skin permeability to other chemicals'),
+
+        # Chelating agents — mineral stripping and toxin penetration
+        'tetrasodium edta': ('Chelating agent EDTA', 'Strips essential minerals (calcium, zinc, iron) from body; enhances skin penetration of other ingredients including toxins; environmental persistence'),
+        'disodium edta': ('Chelating agent EDTA', 'Strips minerals; penetration enhancer for other chemicals; environmental toxin; restricted in some jurisdictions'),
+        'tetrasodium etidronate': ('Chelating agent', 'Binds calcium and other essential minerals; may affect bone health with prolonged use'),
+
+        # Propylene Glycol — neurotoxic at high doses
+        'propylene glycol': ('Humectant/solvent', 'Neurotoxicity at high doses (documented in medical literature); skin and eye irritant; penetration enhancer; may cause kidney and liver damage in large systemic exposure'),
+
+        # SLES / ALES — consistent with SLS policy; contamination risk
+        'sodium laureth sulfate': ('Surfactant SLES', 'Strips natural skin oils; may be contaminated with 1,4-dioxane (carcinogen) from ethoxylation process; scalp, skin and eye irritant'),
+        'sodium laureth sulphate': ('Surfactant SLES', 'Strips natural skin oils; potential 1,4-dioxane contamination from ethoxylation; scalp and eye irritation'),
+        'ammonium laureth sulfate': ('Surfactant ALES', 'Similar to SLES; potential 1,4-dioxane contamination; strips natural oils; scalp irritation'),
+        'cocamidopropyl betaine': ('Amphoteric surfactant', 'Causes allergic contact dermatitis and skin sensitization; EU flagged as allergen; eye irritant; impurities (DMAPA, amidoamine) are known allergens'),
     }
 
     # WORTH KNOWING INGREDIENTS (YELLOW) - Generally safe but with considerations
@@ -444,20 +470,13 @@ def classify_ingredient(ingredient_name, category=None):
         'mono and diglycerides': ('Emulsifier E471', 'May contain trans fats, digestive issues, source often unclear'),
         'polyglycerol polyricinoleate': ('Emulsifier E476', 'Synthetic, may cause digestive upset, liver enlargement in animal studies'),
         'ammonium phosphatides': ('Emulsifier E442', 'Synthetic, limited safety data, may affect mineral absorption'),
-        'carrageenan': ('Thickener E407', 'Digestive inflammation, may trigger IBS, linked to colon issues in studies'),
-        
-        # Surfactants in personal care (SLS moved to commonly_questioned)
-        'sodium laureth sulfate': ('Surfactant SLES', 'Milder than SLS but strips natural oils; scalp and eye irritation; dryness'),
-        'sodium laureth sulphate': ('Surfactant SLES', 'Milder than SLS but strips natural oils; scalp and eye irritation; dryness'),
-        'ammonium laureth sulfate': ('Surfactant ALES', 'Similar to SLES; strips natural oils; scalp irritation possible'),
-        'cocamidopropyl betaine': ('Amphoteric surfactant', 'Can cause allergic contact dermatitis; sensitization; eye irritation'),
+        # carrageenan moved to commonly_questioned (EU infant formula ban)
 
         # Preservatives (milder concerns)
         'phenoxyethanol': ('Preservative', 'EU restricts to 1% in cosmetics; skin and eye irritant; reproductive toxicity concerns at higher concentrations'),
         'benzyl alcohol': ('Preservative/solvent', 'Contact dermatitis in some individuals; toxic to neonates in large doses; restricted in baby products'),
         'potassium sorbate': ('Preservative E202', 'Generally safe; may cause skin irritation and allergic reactions; migraines reported'),
         'e202': ('Potassium sorbate (E202)', 'Generally safe preservative; may cause contact allergies in sensitive individuals'),
-        'e407': ('Carrageenan (E407)', 'Digestive inflammation; may trigger IBS symptoms; linked to colon issues in studies'),
         'e955': ('Sucralose (E955)', 'Alters gut microbiome; may impair insulin response; glucose intolerance in some studies'),
         'e954': ('Saccharin (E954)', 'Bladder cancer in rats at high doses; now considered safe for most at normal intake'),
 
@@ -466,10 +485,6 @@ def classify_ingredient(ingredient_name, category=None):
         'petrolatum': ('Petroleum jelly', 'Petroleum-derived; EU restricts unless PAH safety established; may contain carcinogenic impurities'),
         'paraffinum liquidum': ('Liquid paraffin (mineral oil)', 'Petroleum-derived; EU requires safety data due to PAH risk; cheap emollient'),
         'paraffin wax': ('Paraffin wax', 'Petroleum-derived; may contain trace PAH impurities; limited skin benefit'),
-
-        # PEG compounds
-        'peg-': ('PEG compound', 'May be contaminated with 1,4-dioxane (carcinogen); increases skin penetration of other chemicals'),
-        'polyethylene glycol': ('PEG emollient/thickener', 'May contain 1,4-dioxane contamination; increases skin permeability'),
 
         # Denatured alcohols
         'alcohol denat': ('Denatured alcohol', 'Drying to skin; disrupts protective skin barrier with repeated use; may cause sensitivity'),
@@ -507,13 +522,7 @@ def classify_ingredient(ingredient_name, category=None):
         'ci 15510': ('Cosmetic colorant Orange 4 (Acid Orange 7)', 'Synthetic azo dye; permitted in most countries; may cause contact dermatitis'),
         'ci 45410': ('Cosmetic colorant Red 27 (Acid Red 92)', 'Synthetic dye permitted in EU; some data suggesting skin sensitization'),
 
-        # Titanium Dioxide
-        'titanium dioxide': ('White pigment (E171)', 'Banned as food additive in EU since 2022 (genotoxicity concerns); nanoparticles may penetrate skin; inhalation risk'),
-        
-        # Chelating agents
-        'tetrasodium edta': ('Chelating agent', 'Binds essential minerals, environmental persistence, may enhance absorption of toxins'),
-        'disodium edta': ('Chelating agent', 'Removes beneficial minerals, environmental pollutant, penetration enhancer'),
-        'tetrasodium etidronate': ('Chelating agent', 'Binds minerals like calcium, may affect bone health with long-term use'),
+        # Chelating agents (moved to commonly_questioned — see below)
         
         # Mild acids
         'citric acid': ('Preservative/acidulant E330', 'Tooth enamel erosion with frequent exposure, stomach upset in large amounts'),
