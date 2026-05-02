@@ -245,24 +245,44 @@ async def search_product(name: str = Query(..., description="Product name to sea
     
     # Search in sample products
     for key, product_data in SAMPLE_PRODUCTS.items():
-        if (normalized_search in normalize_name(key) or 
+        if (normalized_search in normalize_name(key) or
             normalized_search in normalize_name(product_data["name"]) or
             normalized_search in normalize_name(product_data["brand"])):
-            
+
             print(f"[DATABASE ONLY] Found: {product_data['name']}")
-            
-            # Build ingredients list - GET FULL INGREDIENTS FROM DATABASE
-            full_ingredients = get_ingredients(key, category=product_data["category"])
-            ingredients = []
-            for ing in full_ingredients:
-                ingredients.append(IngredientItem(
-                    name=ing["name"],
-                    aliases="",
-                    classification=ing["classification"],
-                    one_line_note=ing["one_line_note"],
-                    regulatory_note=ing["regulatory_note"]
-                ))
-            
+
+            # Check Supabase for an admin-approved ingredient correction first
+            approved_ingredients = None
+            approved_raw = None
+            try:
+                override = supabase.from_("ai_extracted_products") \
+                    .select("ingredients_raw") \
+                    .ilike("name", product_data["name"]) \
+                    .limit(1) \
+                    .execute()
+                if override.data and override.data[0].get("ingredients_raw"):
+                    approved_raw = override.data[0]["ingredients_raw"]
+                    raw_names = _parse_raw(approved_raw)
+                    approved_ingredients = [_build_ingredient_item(n) for n in raw_names if n]
+                    print(f"[SUPABASE OVERRIDE] Using approved ingredients for {product_data['name']}")
+            except Exception as e:
+                print(f"[SUPABASE OVERRIDE ERROR] {e}")
+
+            if approved_ingredients is not None:
+                ingredients = approved_ingredients
+            else:
+                # Fall back to static detailed ingredient list
+                full_ingredients = get_ingredients(key, category=product_data["category"])
+                ingredients = []
+                for ing in full_ingredients:
+                    ingredients.append(IngredientItem(
+                        name=ing["name"],
+                        aliases="",
+                        classification=ing["classification"],
+                        one_line_note=ing["one_line_note"],
+                        regulatory_note=ing["regulatory_note"]
+                    ))
+
             grade = calculate_grade([i.dict() for i in ingredients])
             return ProductResponse(
                 id=product_data["id"],
@@ -277,6 +297,7 @@ async def search_product(name: str = Query(..., description="Product name to sea
                 verdict=product_data["verdict"],
                 recommendation=product_data["recommendation"],
                 ingredients=ingredients,
+                ingredients_raw=approved_raw,
                 search_count=1,
                 data_source="database_verified",
                 confidence="high",
