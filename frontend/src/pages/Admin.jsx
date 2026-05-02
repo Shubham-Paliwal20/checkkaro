@@ -502,13 +502,43 @@ export default function Admin() {
   }
 
   const handleApproveReport = async (report) => {
-    const { error: productErr } = await supabase
-      .from('ai_extracted_products')
-      .update({ ingredients_raw: report.reported_ingredients, ingredients: [] })
-      .eq('id', report.product_id)
+    const isUUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(report.product_id)
+    const updatePayload = { ingredients_raw: report.reported_ingredients, ingredients: [] }
+
+    let productErr = null
+    if (isUUID) {
+      // DB product — update by UUID
+      const res = await supabase
+        .from('ai_extracted_products')
+        .update(updatePayload)
+        .eq('id', report.product_id)
+      productErr = res.error
+    } else {
+      // Static/slug product — check if it exists in DB by name first
+      const { data: existing } = await supabase
+        .from('ai_extracted_products')
+        .select('id')
+        .ilike('name', report.product_name)
+        .limit(1)
+
+      if (existing && existing.length > 0) {
+        // Exists in DB — update it
+        const res = await supabase
+          .from('ai_extracted_products')
+          .update(updatePayload)
+          .eq('id', existing[0].id)
+        productErr = res.error
+      } else {
+        // Not in DB — insert it so approved ingredients are stored
+        const res = await supabase
+          .from('ai_extracted_products')
+          .insert({ name: report.product_name, ...updatePayload })
+        productErr = res.error
+      }
+    }
 
     if (productErr) {
-      alert(`Approval failed: ${productErr.message}\n\nIf this is an RLS error, run the SQL policy fix in Supabase dashboard.`)
+      alert(`Approval failed: ${productErr.message}`)
       return
     }
 
