@@ -503,36 +503,53 @@ export default function Admin() {
 
   const handleApproveReport = async (report) => {
     const isUUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(report.product_id)
-    const updatePayload = { ingredients_raw: report.reported_ingredients, ingredients: [] }
+
+    // Helper: merge existing ingredients_raw with new reported ones (no duplicates)
+    const mergeRaw = (existing, incoming) => {
+      if (!existing) return incoming
+      const existingParts = existing.split(',').map(s => s.trim().toLowerCase())
+      const newParts = incoming.split(',').map(s => s.trim()).filter(s => {
+        return s && !existingParts.includes(s.toLowerCase())
+      })
+      return newParts.length > 0 ? existing + ', ' + newParts.join(', ') : existing
+    }
 
     let productErr = null
+
     if (isUUID) {
-      // DB product — update by UUID
+      // Fetch current ingredients_raw, merge, then update
+      const { data: current } = await supabase
+        .from('ai_extracted_products')
+        .select('ingredients_raw')
+        .eq('id', report.product_id)
+        .limit(1)
+
+      const merged = mergeRaw(current?.[0]?.ingredients_raw, report.reported_ingredients)
       const res = await supabase
         .from('ai_extracted_products')
-        .update(updatePayload)
+        .update({ ingredients_raw: merged, ingredients: [] })
         .eq('id', report.product_id)
       productErr = res.error
     } else {
-      // Static/slug product — check if it exists in DB by name first
+      // Static/slug product — find by name
       const { data: existing } = await supabase
         .from('ai_extracted_products')
-        .select('id')
+        .select('id, ingredients_raw')
         .ilike('name', report.product_name)
         .limit(1)
 
       if (existing && existing.length > 0) {
-        // Exists in DB — update it
+        const merged = mergeRaw(existing[0].ingredients_raw, report.reported_ingredients)
         const res = await supabase
           .from('ai_extracted_products')
-          .update(updatePayload)
+          .update({ ingredients_raw: merged, ingredients: [] })
           .eq('id', existing[0].id)
         productErr = res.error
       } else {
-        // Not in DB — insert it so approved ingredients are stored
+        // First approval for this static product — insert new record
         const res = await supabase
           .from('ai_extracted_products')
-          .insert({ name: report.product_name, ...updatePayload })
+          .insert({ name: report.product_name, ingredients_raw: report.reported_ingredients, ingredients: [] })
         productErr = res.error
       }
     }
