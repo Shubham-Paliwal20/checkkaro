@@ -4,22 +4,20 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
-# Get environment variables
 SUPABASE_URL = os.getenv("SUPABASE_URL")
 SUPABASE_ANON_KEY = os.getenv("SUPABASE_ANON_KEY")
+SUPABASE_SERVICE_ROLE_KEY = os.getenv("SUPABASE_SERVICE_ROLE_KEY")
 
-# Validate environment variables
 if not SUPABASE_URL:
-    raise ValueError(
-        "SUPABASE_URL environment variable is not set. "
-        "Please add it to your .env file."
-    )
-
+    raise ValueError("SUPABASE_URL environment variable is not set.")
 if not SUPABASE_ANON_KEY:
-    raise ValueError(
-        "SUPABASE_ANON_KEY environment variable is not set. "
-        "Please add it to your .env file."
-    )
+    raise ValueError("SUPABASE_ANON_KEY environment variable is not set.")
 
-# Create and export Supabase client
+# Public client — subject to RLS
 supabase: Client = create_client(SUPABASE_URL, SUPABASE_ANON_KEY)
+
+# Service client — bypasses RLS; used only for admin write operations
+supabase_admin: Client = create_client(
+    SUPABASE_URL,
+    SUPABASE_SERVICE_ROLE_KEY or SUPABASE_ANON_KEY  # falls back to anon if service key not set
+)

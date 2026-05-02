@@ -8,7 +8,7 @@ from starlette.middleware.base import BaseHTTPMiddleware
 from dotenv import load_dotenv
 
 # Import routers
-from routes import product_new, ingredient, history, admin_extract
+from routes import product_new, ingredient, history, admin_extract, reports
 
 load_dotenv()
 
@@ -85,7 +85,7 @@ app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],
     allow_credentials=False,
-    allow_methods=["GET", "POST", "OPTIONS"],
+    allow_methods=["GET", "POST", "PATCH", "OPTIONS"],
     allow_headers=["*"],
 )
 
@@ -94,6 +94,7 @@ app.include_router(product_new.router,    prefix="/api/product",    tags=["Produ
 app.include_router(ingredient.router,     prefix="/api/ingredient",  tags=["Ingredients"])
 app.include_router(history.router,        prefix="/api/history",     tags=["History"])
 app.include_router(admin_extract.router,  prefix="/api/admin",       tags=["Admin"])
+app.include_router(reports.router,        prefix="/api/admin",       tags=["Reports"])
 
 
 @app.get("/health")

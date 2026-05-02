@@ -4,6 +4,7 @@ import { useAuth } from '../context/AuthContext'
 import { supabase } from '../lib/supabaseClient'
 
 const ADMIN_EMAIL = 'shubhampaliwal5@gmail.com'
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:8000'
 const STATUS_TABS  = ['pending', 'approved', 'rejected', 'extracted', 'photos', 'reports']
 const STATUS_COLOR = { pending: '#f59e0b', approved: '#16a34a', rejected: '#dc2626', extracted: '#7c3aed', photos: '#0ea5e9', reports: '#3b82f6' }
 const STATUS_BG    = { pending: '#fef3c7', approved: '#f0fdf4', rejected: '#fef2f2', extracted: '#f5f3ff', photos: '#f0f9ff', reports: '#eff6ff' }
@@ -501,19 +502,47 @@ export default function Admin() {
   }
 
   const handleApproveReport = async (report) => {
-    await supabase.from('ai_extracted_products')
-      .update({ ingredients_raw: report.reported_ingredients, ingredients: [] })
-      .eq('id', report.product_id)
-    await supabase.from('ingredient_reports')
-      .update({ status: 'approved', reviewed_at: new Date().toISOString() })
-      .eq('id', report.id)
+    try {
+      const { data: { session } } = await supabase.auth.getSession()
+      const token = session?.access_token
+      const res = await fetch(`${API_BASE_URL}/api/admin/reports/approve`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', ...(token ? { Authorization: `Bearer ${token}` } : {}) },
+        body: JSON.stringify({
+          report_id: report.id,
+          product_id: report.product_id,
+          reported_ingredients: report.reported_ingredients,
+        }),
+      })
+      if (!res.ok) {
+        const err = await res.json().catch(() => ({}))
+        alert(`Approval failed: ${err.detail || res.status}`)
+        return
+      }
+    } catch (e) {
+      alert(`Approval error: ${e.message}`)
+      return
+    }
     fetchAll(); fetchReports()
   }
 
   const handleRejectReport = async (id) => {
-    await supabase.from('ingredient_reports')
-      .update({ status: 'rejected', reviewed_at: new Date().toISOString() })
-      .eq('id', id)
+    try {
+      const { data: { session } } = await supabase.auth.getSession()
+      const token = session?.access_token
+      const res = await fetch(`${API_BASE_URL}/api/admin/reports/reject?report_id=${encodeURIComponent(id)}`, {
+        method: 'POST',
+        headers: { ...(token ? { Authorization: `Bearer ${token}` } : {}) },
+      })
+      if (!res.ok) {
+        const err = await res.json().catch(() => ({}))
+        alert(`Reject failed: ${err.detail || res.status}`)
+        return
+      }
+    } catch (e) {
+      alert(`Reject error: ${e.message}`)
+      return
+    }
     fetchAll(); fetchReports()
   }
 
