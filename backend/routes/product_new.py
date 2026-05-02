@@ -136,6 +136,21 @@ def _reg_note(cls: str) -> str:
     if cls == 'worth_knowing': return 'Permitted additive under FSSAI regulations'
     return 'Approved under FSSAI/CODEX standards'
 
+def _grade_from_raw(raw: str, ingredients: list) -> str:
+    """Calculate grade live — always preferred over any stored DB value."""
+    if raw:
+        names = _parse_raw(raw)
+    else:
+        names = []
+        for ing in ingredients:
+            if isinstance(ing, dict):
+                names.append(ing.get('name', ''))
+            else:
+                names.append(str(ing))
+        names = [n for n in names if n]
+    classified = [{'name': n, 'classification': _classify(n)} for n in names]
+    return calculate_grade(classified)
+
 def _parse_raw(raw: str) -> list:
     """Split ingredients_raw text into individual ingredient strings."""
     raw = raw.strip().rstrip('.')
@@ -174,6 +189,12 @@ def _build_ingredient_item(ing) -> IngredientItem:
         regulatory_note=_reg_note(cls),
     )
 
+def _score_to_grade(score: int) -> str:
+    if score >= 85: return 'A'
+    if score >= 70: return 'B'
+    if score >= 50: return 'C'
+    return 'D'
+
 # Convert ALL_PRODUCTS to the format we need
 SAMPLE_PRODUCTS = {}
 for key, (name, brand, category, score, verdict, recommendation) in ALL_PRODUCTS.items():
@@ -184,6 +205,7 @@ for key, (name, brand, category, score, verdict, recommendation) in ALL_PRODUCTS
         "category": category,
         "image_url": PRODUCT_IMAGES.get(key),
         "awareness_score": score,
+        "grade": _score_to_grade(score),
         "summary": f"{name} - {verdict}. This information is for general awareness based on publicly available regulatory data. It is not a health assessment or medical advice.",
         "fssai_note": "FSSAI approved product with standard ingredients.",
         "verdict": verdict,
@@ -332,22 +354,23 @@ async def browse_products(
     items = list(SAMPLE_PRODUCTS.values())
 
     # Add community-submitted products from Supabase
+    # Always calculate grade live from ingredients — never trust stored grade
     try:
         community = supabase.from_("ai_extracted_products") \
-            .select("id, name, brand, category, image_url, awareness_score, grade, verdict") \
+            .select("id, name, brand, category, image_url, verdict, ingredients, ingredients_raw") \
             .order("created_at", desc=True) \
             .limit(500) \
             .execute()
         for p in (community.data or []):
+            grade = _grade_from_raw(p.get("ingredients_raw") or "", p.get("ingredients") or [])
             items.append({
-                "id":              str(p.get("id", "")),
-                "name":            p.get("name", ""),
-                "brand":           p.get("brand") or "Unknown",
-                "category":        p.get("category") or "General",
-                "image_url":       p.get("image_url"),
-                "awareness_score": int(p.get("awareness_score") or 50),
-                "grade":           p.get("grade") or "C",
-                "verdict":         p.get("verdict") or "",
+                "id":        str(p.get("id", "")),
+                "name":      p.get("name", ""),
+                "brand":     p.get("brand") or "Unknown",
+                "category":  p.get("category") or "General",
+                "image_url": p.get("image_url"),
+                "grade":     grade,
+                "verdict":   p.get("verdict") or "",
             })
     except Exception as e:
         print(f"[BROWSE SUPABASE ERROR] {e}")
@@ -399,14 +422,13 @@ async def browse_products(
     return {
         "products": [
             {
-                "id":              p["id"],
-                "name":            p["name"],
-                "brand":           p["brand"],
-                "category":        p["category"],
-                "image_url":       p["image_url"],
-                "awareness_score": p.get("awareness_score", 50),
-                "grade":           p.get("grade", "C"),
-                "verdict":         p.get("verdict", ""),
+                "id":        p["id"],
+                "name":      p["name"],
+                "brand":     p["brand"],
+                "category":  p["category"],
+                "image_url": p["image_url"],
+                "grade":     p.get("grade", "C"),
+                "verdict":   p.get("verdict", ""),
             }
             for p in page_items
         ],
