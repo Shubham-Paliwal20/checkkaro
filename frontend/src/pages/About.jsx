@@ -204,7 +204,7 @@ function About() {
                 <strong>This is not medical advice.</strong> CheckKaro does not certify any product as safe or unsafe. We do not make health claims. Individual responses to ingredients vary.
               </p>
               <p>
-                The Ingredient Grade is not a safety rating, health claim, or medical assessment. It reflects the proportion of clean vs. commonly questioned ingredients based on international regulatory data and research discussion.
+                The Ingredient Grade is not a safety rating, health claim, or medical assessment. Grade D means one or more commonly questioned or banned ingredients are present. Grade A means all ingredients are generally recognised as safe. Grades B and C reflect the proportion of worth-knowing additives among otherwise clean ingredients.
               </p>
               <p>
                 Always read the actual product label and consult a qualified healthcare professional for personal health decisions.

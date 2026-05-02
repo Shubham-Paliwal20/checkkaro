@@ -287,7 +287,7 @@ async def search_product(name: str = Query(..., description="Product name to sea
             raw_images = p.get("images") or []
             if not raw_images and p.get("image_url"):
                 raw_images = [p["image_url"]]
-            grade = p.get("grade") or calculate_grade([i.dict() for i in ingredients])
+            grade = calculate_grade([i.dict() for i in ingredients])
             return ProductResponse(
                 id=str(p.get("id", "")),
                 name=p["name"],
