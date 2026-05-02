@@ -4,9 +4,9 @@ import { useAuth } from '../context/AuthContext'
 import { supabase } from '../lib/supabaseClient'
 
 const ADMIN_EMAIL = 'shubhampaliwal5@gmail.com'
-const STATUS_TABS  = ['pending', 'approved', 'rejected', 'extracted', 'photos']
-const STATUS_COLOR = { pending: '#f59e0b', approved: '#16a34a', rejected: '#dc2626', extracted: '#7c3aed', photos: '#0ea5e9' }
-const STATUS_BG    = { pending: '#fef3c7', approved: '#f0fdf4', rejected: '#fef2f2', extracted: '#f5f3ff', photos: '#f0f9ff' }
+const STATUS_TABS  = ['pending', 'approved', 'rejected', 'extracted', 'photos', 'reports']
+const STATUS_COLOR = { pending: '#f59e0b', approved: '#16a34a', rejected: '#dc2626', extracted: '#7c3aed', photos: '#0ea5e9', reports: '#3b82f6' }
+const STATUS_BG    = { pending: '#fef3c7', approved: '#f0fdf4', rejected: '#fef2f2', extracted: '#f5f3ff', photos: '#f0f9ff', reports: '#eff6ff' }
 
 const CATEGORIES = ['Personal Care', 'Skincare', 'Haircare', 'Food & Beverages', 'Supplements', 'Baby Care', 'Other']
 
@@ -423,7 +423,8 @@ export default function Admin() {
   const isMobile = useIsMobile()
   const [tab,        setTab]        = useState('pending')
   const [subs,       setSubs]       = useState([])
-  const [counts,     setCounts]     = useState({ pending: 0, approved: 0, rejected: 0, extracted: 0, photos: 0 })
+  const [counts,     setCounts]     = useState({ pending: 0, approved: 0, rejected: 0, extracted: 0, photos: 0, reports: 0 })
+  const [ingredientReports, setIngredientReports] = useState([])
   const [fetching,   setFetching]   = useState(false)
   const [saving,     setSaving]     = useState(null)
   const [cardMsgs,   setCardMsgs]   = useState({})
@@ -443,6 +444,7 @@ export default function Admin() {
     if (isAdmin) {
       fetchAll()
       if (tab === 'photos') fetchPhotoSubs(photoTab)
+      else if (tab === 'reports') fetchReports()
       else fetchSubs(tab)
     }
   }, [isAdmin, tab])
@@ -470,20 +472,49 @@ export default function Admin() {
 
   const fetchAll = async () => {
     try {
-      const [{ data }, { data: allPhotoData }] = await Promise.all([
+      const [{ data }, { data: allPhotoData }, { data: repData }] = await Promise.all([
         supabase.from('product_submissions').select('status'),
         supabase.from('product_photo_submissions').select('status'),
+        supabase.from('ingredient_reports').select('status'),
       ])
-      const c = { pending: 0, approved: 0, rejected: 0, extracted: 0, photos: 0 }
+      const c = { pending: 0, approved: 0, rejected: 0, extracted: 0, photos: 0, reports: 0 }
       if (data) data.forEach(r => { if (c[r.status] !== undefined) c[r.status]++ })
       const pc = { pending: 0, approved: 0, rejected: 0 }
       if (allPhotoData) allPhotoData.forEach(r => { if (pc[r.status] !== undefined) pc[r.status]++ })
       c.photos = pc.pending
+      if (repData) {
+        c.reports = repData.filter(r => r.status === 'pending').length
+      }
       setCounts(c)
       setPhotoCounts(pc)
     } catch (e) {
       setFetchError(`Count exception: ${e.message}`)
     }
+  }
+
+  const fetchReports = async () => {
+    const { data } = await supabase
+      .from('ingredient_reports')
+      .select('*')
+      .order('created_at', { ascending: false })
+    setIngredientReports(data || [])
+  }
+
+  const handleApproveReport = async (report) => {
+    await supabase.from('ai_extracted_products')
+      .update({ ingredients_raw: report.reported_ingredients, ingredients: [] })
+      .eq('id', report.product_id)
+    await supabase.from('ingredient_reports')
+      .update({ status: 'approved', reviewed_at: new Date().toISOString() })
+      .eq('id', report.id)
+    fetchAll(); fetchReports()
+  }
+
+  const handleRejectReport = async (id) => {
+    await supabase.from('ingredient_reports')
+      .update({ status: 'rejected', reviewed_at: new Date().toISOString() })
+      .eq('id', id)
+    fetchAll(); fetchReports()
   }
 
   const fetchPhotoSubs = async (status = 'pending') => {
@@ -600,7 +631,7 @@ export default function Admin() {
 
   if (!isAdmin) return null
 
-  const adminPage = tab === 'photos' ? 'photos' : 'products'
+  const adminPage = tab === 'photos' ? 'photos' : tab === 'reports' ? 'reports' : 'products'
 
   return (
     <div style={{ maxWidth: 1100, margin: '0 auto', padding: isMobile ? '20px 14px 48px' : '32px 20px 60px' }}>
@@ -647,6 +678,19 @@ export default function Admin() {
           <div style={{ fontSize: isMobile ? 22 : 26 }}>📸</div>
           <div style={{ fontSize: isMobile ? 12 : 14, fontWeight: 700, marginTop: 4 }}>Photo Approvals</div>
           <div style={{ fontSize: 11, marginTop: 2, opacity: 0.8 }}>{counts.photos} pending</div>
+        </button>
+        <button
+          onClick={() => setTab('reports')}
+          style={{
+            flex: 1, padding: isMobile ? '14px 8px' : '16px 12px', borderRadius: 14, border: 'none', cursor: 'pointer', fontFamily: 'inherit', textAlign: 'center',
+            background: adminPage === 'reports' ? '#3b82f6' : '#f1f5f9',
+            color: adminPage === 'reports' ? '#fff' : '#475569',
+            boxShadow: adminPage === 'reports' ? '0 4px 14px rgba(59,130,246,0.25)' : 'none',
+            transition: 'all 0.15s',
+          }}>
+          <div style={{ fontSize: isMobile ? 22 : 26 }}>🚩</div>
+          <div style={{ fontSize: isMobile ? 12 : 14, fontWeight: 700, marginTop: 4 }}>Ingredient Reports</div>
+          <div style={{ fontSize: 11, marginTop: 2, opacity: 0.8 }}>{counts.reports} pending</div>
         </button>
       </div>
 
@@ -758,12 +802,76 @@ export default function Admin() {
         </>
       )}
 
+      {/* ── INGREDIENT REPORTS PAGE ── */}
+      {adminPage === 'reports' && (
+        <>
+          <h2 style={{ fontFamily: 'Poppins,sans-serif', fontSize: 16, fontWeight: 700, color: '#111827', marginBottom: 14 }}>
+            🚩 Ingredient Reports
+          </h2>
+          {ingredientReports.length === 0 ? (
+            <div style={{ textAlign: 'center', padding: '48px 0' }}>
+              <div style={{ fontSize: 48, marginBottom: 12 }}>🚩</div>
+              <p style={{ color: '#9ca3af', fontSize: 15 }}>No ingredient reports yet</p>
+            </div>
+          ) : (
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 14 }}>
+              {ingredientReports.map(report => (
+                <div key={report.id} style={{ background: '#fff', border: '1px solid #e5e7eb', borderRadius: 12, padding: '14px 16px', boxShadow: '0 2px 8px rgba(0,0,0,0.05)' }}>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', gap: 8, marginBottom: 8 }}>
+                    <div>
+                      <p style={{ margin: 0, fontWeight: 700, fontSize: 14, color: '#111827' }}>{report.product_name}</p>
+                      <p style={{ margin: '3px 0 0', fontSize: 11, color: '#9ca3af' }}>{formatDate(report.created_at)}</p>
+                    </div>
+                    <span style={{
+                      flexShrink: 0,
+                      background: report.status === 'pending' ? '#fef3c7' : report.status === 'approved' ? '#f0fdf4' : '#fef2f2',
+                      color: report.status === 'pending' ? '#d97706' : report.status === 'approved' ? '#16a34a' : '#dc2626',
+                      fontSize: 11, fontWeight: 700, padding: '4px 10px', borderRadius: 99, textTransform: 'uppercase', letterSpacing: '0.04em',
+                    }}>
+                      {report.status}
+                    </span>
+                  </div>
+                  {report.user_email && (
+                    <p style={{ margin: '0 0 8px', fontSize: 12, color: '#6b7280' }}>{report.user_email}</p>
+                  )}
+                  <div style={{ marginBottom: 8 }}>
+                    <p style={{ margin: '0 0 4px', fontSize: 12, fontWeight: 600, color: '#374151' }}>Reported ingredients:</p>
+                    <div style={{ background: '#f3f4f6', borderRadius: 7, padding: '8px 12px', fontSize: 12, color: '#374151', fontFamily: 'monospace', whiteSpace: 'pre-wrap', wordBreak: 'break-word', border: '1px solid #e5e7eb' }}>
+                      {report.reported_ingredients}
+                    </div>
+                  </div>
+                  {report.reason && (
+                    <p style={{ margin: '0 0 10px', fontSize: 12, color: '#6b7280' }}>
+                      <strong>Reason:</strong> {report.reason}
+                    </p>
+                  )}
+                  {report.status === 'pending' && (
+                    <div style={{ display: 'flex', gap: 8, marginTop: 10 }}>
+                      <button
+                        onClick={() => handleApproveReport(report)}
+                        style={{ flex: 1, background: '#16a34a', color: '#fff', border: 'none', borderRadius: 8, padding: '9px 0', fontSize: 13, fontWeight: 700, cursor: 'pointer', fontFamily: 'inherit' }}>
+                        ✓ Approve
+                      </button>
+                      <button
+                        onClick={() => handleRejectReport(report.id)}
+                        style={{ flex: 1, background: '#fff', color: '#dc2626', border: '1.5px solid #dc2626', borderRadius: 8, padding: '9px 0', fontSize: 13, fontWeight: 700, cursor: 'pointer', fontFamily: 'inherit' }}>
+                        ✕ Reject
+                      </button>
+                    </div>
+                  )}
+                </div>
+              ))}
+            </div>
+          )}
+        </>
+      )}
+
       {/* ── PRODUCT SUBMISSIONS PAGE ── */}
       {adminPage === 'products' && (
         <>
           {/* Stats bar */}
           <div style={{ display: 'flex', gap: 8, marginBottom: 16, overflowX: 'auto' }}>
-            {STATUS_TABS.filter(s => s !== 'photos').map(s => (
+            {STATUS_TABS.filter(s => s !== 'photos' && s !== 'reports').map(s => (
               <button key={s} onClick={() => setTab(s)}
                 style={{ flexShrink: 0, flex: 1, minWidth: 64, background: tab === s ? STATUS_BG[s] : '#f9fafb', border: `1.5px solid ${tab === s ? STATUS_COLOR[s] + '66' : '#e5e7eb'}`, borderRadius: 10, padding: isMobile ? '8px 4px' : '10px 6px', cursor: 'pointer', fontFamily: 'inherit', textAlign: 'center' }}>
                 <div style={{ fontSize: isMobile ? 17 : 20, fontWeight: 800, color: STATUS_COLOR[s] }}>{counts[s]}</div>
@@ -774,7 +882,7 @@ export default function Admin() {
 
           {/* Tab strip */}
           <div style={{ display: 'flex', borderBottom: '1.5px solid #e5e7eb', marginBottom: 20, overflowX: 'auto' }}>
-            {STATUS_TABS.filter(s => s !== 'photos').map(s => (
+            {STATUS_TABS.filter(s => s !== 'photos' && s !== 'reports').map(s => (
               <button key={s} onClick={() => setTab(s)}
                 style={{ flexShrink: 0, background: 'none', border: 'none', borderBottom: tab === s ? `2.5px solid ${STATUS_COLOR[s]}` : '2.5px solid transparent', color: tab === s ? STATUS_COLOR[s] : '#6b7280', fontWeight: tab === s ? 700 : 500, fontSize: isMobile ? 13 : 14, padding: isMobile ? '8px 14px' : '8px 20px', cursor: 'pointer', textTransform: 'capitalize', fontFamily: 'inherit', marginBottom: -1.5, whiteSpace: 'nowrap' }}>
                 {s}

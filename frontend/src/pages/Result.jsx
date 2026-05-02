@@ -156,6 +156,11 @@ function Result() {
   const [correctionText, setCorrectionText] = useState('')
   const [submitting, setSubmitting] = useState(false)
   const [dbPhotos, setDbPhotos] = useState([])
+  const [showReportForm, setShowReportForm] = useState(false)
+  const [reportText, setReportText] = useState('')
+  const [reportReason, setReportReason] = useState('')
+  const [reportSubmitting, setReportSubmitting] = useState(false)
+  const [reportSuccess, setReportSuccess] = useState(false)
   const [showPhotoModal, setShowPhotoModal] = useState(false)
   const [photoToast, setPhotoToast] = useState(null)
 
@@ -519,6 +524,111 @@ function Result() {
               ))}
             </p>
           </div>
+        </div>
+
+        {/* Ingredient Report Section */}
+        <div className="mb-6">
+          {!showReportForm && !reportSuccess && (
+            <div className="text-center">
+              <button
+                onClick={() => {
+                  if (!user) {
+                    setShowReportForm('login')
+                  } else {
+                    setShowReportForm(true)
+                  }
+                }}
+                style={{ background: 'none', border: 'none', cursor: 'pointer', color: '#92400e', fontSize: 13, textDecoration: 'underline', fontFamily: 'inherit', padding: '4px 0' }}
+              >
+                Ingredients wrong or incomplete?
+              </button>
+            </div>
+          )}
+
+          {showReportForm === 'login' && (
+            <div className="flex items-center justify-center gap-3 py-2">
+              <span style={{ fontSize: 13, color: '#92400e' }}>Login to report incorrect ingredients</span>
+              <button
+                onClick={() => openAuthModal()}
+                style={{ background: '#d97706', color: '#fff', border: 'none', borderRadius: 7, padding: '5px 14px', fontSize: 13, fontWeight: 700, cursor: 'pointer', fontFamily: 'inherit' }}
+              >
+                Login
+              </button>
+            </div>
+          )}
+
+          {showReportForm === true && !reportSuccess && (
+            <div style={{ background: '#fffbeb', border: '1.5px solid #fcd34d', borderRadius: 12, padding: '16px 18px' }}>
+              <h3 style={{ margin: '0 0 12px', fontFamily: 'Poppins, sans-serif', fontWeight: 700, fontSize: 15, color: '#92400e' }}>
+                Report Incorrect Ingredients
+              </h3>
+              <div style={{ marginBottom: 10 }}>
+                <label style={{ display: 'block', fontSize: 13, fontWeight: 600, color: '#78350f', marginBottom: 5 }}>
+                  Paste the correct ingredients list from the product label:
+                </label>
+                <textarea
+                  value={reportText}
+                  onChange={e => setReportText(e.target.value)}
+                  placeholder="e.g. Water, Sugar, Palm Oil, Citric Acid (E330), Preservative (E211)..."
+                  rows={4}
+                  style={{ width: '100%', boxSizing: 'border-box', border: '1.5px solid #fcd34d', borderRadius: 8, padding: '9px 12px', fontSize: 13, fontFamily: 'inherit', outline: 'none', resize: 'vertical', background: '#fff', color: '#111827' }}
+                />
+              </div>
+              <div style={{ marginBottom: 14 }}>
+                <label style={{ display: 'block', fontSize: 13, fontWeight: 600, color: '#78350f', marginBottom: 5 }}>
+                  Reason (optional)
+                </label>
+                <input
+                  type="text"
+                  value={reportReason}
+                  onChange={e => setReportReason(e.target.value)}
+                  placeholder="e.g. Missing 3 ingredients, wrong order"
+                  style={{ width: '100%', boxSizing: 'border-box', border: '1.5px solid #fcd34d', borderRadius: 8, padding: '9px 12px', fontSize: 13, fontFamily: 'inherit', outline: 'none', background: '#fff', color: '#111827' }}
+                />
+              </div>
+              <div style={{ display: 'flex', gap: 10 }}>
+                <button
+                  disabled={reportSubmitting || !reportText.trim()}
+                  onClick={async () => {
+                    if (!reportText.trim()) return
+                    setReportSubmitting(true)
+                    try {
+                      await supabase.from('ingredient_reports').insert({
+                        product_id: product.id,
+                        product_name: product.name,
+                        user_id: user.id,
+                        user_email: user.email,
+                        reported_ingredients: reportText.trim(),
+                        reason: reportReason.trim() || null,
+                        status: 'pending',
+                      })
+                      setReportSuccess(true)
+                      setShowReportForm(false)
+                    } catch {
+                      /* silent */
+                    } finally {
+                      setReportSubmitting(false)
+                    }
+                  }}
+                  style={{ background: reportSubmitting || !reportText.trim() ? '#d1d5db' : '#d97706', color: '#fff', border: 'none', borderRadius: 8, padding: '10px 20px', fontSize: 13, fontWeight: 700, cursor: reportSubmitting || !reportText.trim() ? 'not-allowed' : 'pointer', fontFamily: 'inherit' }}
+                >
+                  {reportSubmitting ? 'Submitting...' : 'Submit Report'}
+                </button>
+                <button
+                  onClick={() => { setShowReportForm(false); setReportText(''); setReportReason('') }}
+                  style={{ background: '#fff', color: '#6b7280', border: '1.5px solid #d1d5db', borderRadius: 8, padding: '10px 20px', fontSize: 13, fontWeight: 600, cursor: 'pointer', fontFamily: 'inherit' }}
+                >
+                  Cancel
+                </button>
+              </div>
+            </div>
+          )}
+
+          {reportSuccess && (
+            <div style={{ background: '#fffbeb', border: '1.5px solid #fcd34d', borderRadius: 10, padding: '12px 16px', fontSize: 13, color: '#92400e', fontWeight: 600, textAlign: 'center' }}>
+              Thank you! Your report has been submitted for admin review.
+            </div>
+          )}
         </div>
 
         {/* Worth Knowing Ingredients */}
