@@ -235,7 +235,7 @@ function Home() {
               <p className="text-gray-600 text-sm sm:text-base">Ingredients classified in our database</p>
             </div>
             <div>
-              <div className="text-3xl sm:text-4xl font-poppins font-bold text-navy mb-2">360+</div>
+              <div className="text-3xl sm:text-4xl font-poppins font-bold text-navy mb-2">1000+</div>
               <p className="text-gray-600 text-sm sm:text-base">Indian products analysed across categories</p>
             </div>
             <div>

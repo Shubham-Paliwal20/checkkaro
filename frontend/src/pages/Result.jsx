@@ -562,13 +562,37 @@ function Result() {
                         if (!adminIngText.trim()) return
                         setAdminSaving(true)
                         try {
-                          await supabase.from('ai_extracted_products')
-                            .update({ ingredients_raw: adminIngText.trim(), ingredients: [] })
-                            .eq('id', product.id)
+                          const isUUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(product.id)
+                          const payload = { ingredients_raw: adminIngText.trim(), ingredients: [] }
+                          let saveErr = null
+
+                          if (isUUID) {
+                            const { error } = await supabase.from('ai_extracted_products')
+                              .update(payload).eq('id', product.id)
+                            saveErr = error
+                          } else {
+                            // Static product — find or create DB record by name
+                            const { data: existing } = await supabase.from('ai_extracted_products')
+                              .select('id').ilike('name', product.name).limit(1)
+                            if (existing && existing.length > 0) {
+                              const { error } = await supabase.from('ai_extracted_products')
+                                .update(payload).eq('id', existing[0].id)
+                              saveErr = error
+                            } else {
+                              const { error } = await supabase.from('ai_extracted_products')
+                                .insert({ name: product.name, ...payload })
+                              saveErr = error
+                            }
+                          }
+
+                          if (saveErr) {
+                            alert(`Save failed: ${saveErr.message}`)
+                            return
+                          }
                           setAdminEditMode(false)
                           setAdminIngText('')
                           await fetchProduct()
-                        } catch { /* silent */ } finally {
+                        } finally {
                           setAdminSaving(false)
                         }
                       }}
@@ -684,7 +708,7 @@ function Result() {
 
             {reportSuccess && (
               <div className="bg-green-50 border border-green-200 rounded-lg px-4 py-3 text-sm text-green-700 font-semibold text-center">
-                Thank you! Your report has been submitted for admin review.
+                Thank you! Our team will review your submission and approve it shortly.
               </div>
             )}
           </div>
