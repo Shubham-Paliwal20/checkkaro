@@ -268,20 +268,35 @@ async def search_product(name: str = Query(..., description="Product name to sea
             except Exception as e:
                 print(f"[SUPABASE OVERRIDE ERROR] {e}")
 
+            # Always get static ingredients (skip placeholder "Standard Ingredients")
+            full_ingredients = get_ingredients(key, category=product_data["category"])
+            static_items = []
+            for ing in full_ingredients:
+                if ing["name"].lower() == "standard ingredients":
+                    continue
+                static_items.append(IngredientItem(
+                    name=ing["name"],
+                    aliases="",
+                    classification=ing["classification"],
+                    one_line_note=ing["one_line_note"],
+                    regulatory_note=ing["regulatory_note"]
+                ))
+
             if approved_ingredients is not None:
-                ingredients = approved_ingredients
+                # Merge: static first, then add approved ones not already present
+                static_names_lower = {i.name.lower() for i in static_items}
+                extra = [i for i in approved_ingredients if i.name.lower() not in static_names_lower]
+                ingredients = static_items + extra
+                if not ingredients:
+                    ingredients = approved_ingredients
             else:
-                # Fall back to static detailed ingredient list
-                full_ingredients = get_ingredients(key, category=product_data["category"])
-                ingredients = []
-                for ing in full_ingredients:
-                    ingredients.append(IngredientItem(
-                        name=ing["name"],
-                        aliases="",
-                        classification=ing["classification"],
-                        one_line_note=ing["one_line_note"],
-                        regulatory_note=ing["regulatory_note"]
-                    ))
+                ingredients = static_items if static_items else [IngredientItem(
+                    name="Standard Ingredients",
+                    aliases="",
+                    classification="generally_recognised",
+                    one_line_note="Full ingredient list available in database",
+                    regulatory_note=""
+                )]
 
             grade = calculate_grade([i.dict() for i in ingredients])
             return ProductResponse(
