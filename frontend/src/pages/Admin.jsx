@@ -502,47 +502,35 @@ export default function Admin() {
   }
 
   const handleApproveReport = async (report) => {
-    try {
-      const { data: { session } } = await supabase.auth.getSession()
-      const token = session?.access_token
-      const res = await fetch(`${API_BASE_URL}/api/admin/reports/approve`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json', ...(token ? { Authorization: `Bearer ${token}` } : {}) },
-        body: JSON.stringify({
-          report_id: report.id,
-          product_id: report.product_id,
-          reported_ingredients: report.reported_ingredients,
-        }),
-      })
-      if (!res.ok) {
-        const err = await res.json().catch(() => ({}))
-        alert(`Approval failed: ${err.detail || res.status}`)
-        return
-      }
-    } catch (e) {
-      alert(`Approval error: ${e.message}`)
+    const { error: productErr } = await supabase
+      .from('ai_extracted_products')
+      .update({ ingredients_raw: report.reported_ingredients, ingredients: [] })
+      .eq('id', report.product_id)
+
+    if (productErr) {
+      alert(`Approval failed: ${productErr.message}\n\nIf this is an RLS error, run the SQL policy fix in Supabase dashboard.`)
       return
     }
+
+    await supabase
+      .from('ingredient_reports')
+      .update({ status: 'approved', reviewed_at: new Date().toISOString() })
+      .eq('id', report.id)
+
     fetchAll(); fetchReports()
   }
 
   const handleRejectReport = async (id) => {
-    try {
-      const { data: { session } } = await supabase.auth.getSession()
-      const token = session?.access_token
-      const res = await fetch(`${API_BASE_URL}/api/admin/reports/reject?report_id=${encodeURIComponent(id)}`, {
-        method: 'POST',
-        headers: { ...(token ? { Authorization: `Bearer ${token}` } : {}) },
-      })
-      if (!res.ok) {
-        const err = await res.json().catch(() => ({}))
-        alert(`Reject failed: ${err.detail || res.status}`)
-        return
-      }
-    } catch (e) {
-      alert(`Reject error: ${e.message}`)
+    const { error } = await supabase
+      .from('ingredient_reports')
+      .update({ status: 'rejected', reviewed_at: new Date().toISOString() })
+      .eq('id', id)
+
+    if (error) {
+      alert(`Reject failed: ${error.message}`)
       return
     }
+
     fetchAll(); fetchReports()
   }
 
