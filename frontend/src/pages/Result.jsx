@@ -11,7 +11,7 @@ import ProductReviews from '../components/ProductReviews'
 import ProductNotFound from '../components/ProductNotFound'
 import SEO from '../components/SEO'
 
-const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:8000'
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'https://checkkaro.onrender.com'
 
 const ADMIN_EMAIL = 'shubhampaliwal5@gmail.com'
 

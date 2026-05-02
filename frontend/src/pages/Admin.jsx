@@ -4,7 +4,7 @@ import { useAuth } from '../context/AuthContext'
 import { supabase } from '../lib/supabaseClient'
 
 const ADMIN_EMAIL = 'shubhampaliwal5@gmail.com'
-const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:8000'
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'https://checkkaro.onrender.com'
 const STATUS_TABS  = ['pending', 'approved', 'rejected', 'extracted', 'photos', 'reports']
 const STATUS_COLOR = { pending: '#f59e0b', approved: '#16a34a', rejected: '#dc2626', extracted: '#7c3aed', photos: '#0ea5e9', reports: '#3b82f6' }
 const STATUS_BG    = { pending: '#fef3c7', approved: '#f0fdf4', rejected: '#fef2f2', extracted: '#f5f3ff', photos: '#f0f9ff', reports: '#eff6ff' }
