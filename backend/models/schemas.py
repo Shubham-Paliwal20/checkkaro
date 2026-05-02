@@ -26,6 +26,7 @@ class ProductResponse(BaseModel):
     verdict: Optional[str] = None
     recommendation: Optional[str] = None
     ingredients: List[IngredientItem] = []
+    ingredients_raw: Optional[str] = None
     search_count: int = 1
     data_source: Optional[str] = None
     confidence: Optional[str] = None

@@ -161,6 +161,9 @@ function Result() {
   const [reportReason, setReportReason] = useState('')
   const [reportSubmitting, setReportSubmitting] = useState(false)
   const [reportSuccess, setReportSuccess] = useState(false)
+  const [adminEditMode, setAdminEditMode] = useState(false)
+  const [adminIngText, setAdminIngText] = useState('')
+  const [adminSaving, setAdminSaving] = useState(false)
   const [showPhotoModal, setShowPhotoModal] = useState(false)
   const [photoToast, setPhotoToast] = useState(null)
 
@@ -524,12 +527,70 @@ function Result() {
               ))}
             </p>
           </div>
-        </div>
 
-        {/* Ingredient Report Section */}
-        <div className="mb-6">
-          {!showReportForm && !reportSuccess && (
-            <div className="text-center">
+          {/* Admin direct-edit ingredients */}
+          {isAdmin && (
+            <div className="mt-4 pt-4 border-t border-gray-200">
+              {!adminEditMode ? (
+                <button
+                  onClick={() => {
+                    const current = product.ingredients_raw ||
+                      (product.ingredients || []).map(i => typeof i === 'string' ? i : i.name).filter(Boolean).join(', ')
+                    setAdminIngText(current)
+                    setAdminEditMode(true)
+                  }}
+                  className="text-sm font-semibold text-indigo-600 hover:text-indigo-800 underline cursor-pointer bg-transparent border-none p-0"
+                >
+                  Admin: Edit ingredients directly
+                </button>
+              ) : (
+                <div>
+                  <label className="block text-sm font-semibold text-gray-700 mb-2">
+                    Edit ingredients list (will update database immediately):
+                  </label>
+                  <textarea
+                    value={adminIngText}
+                    onChange={e => setAdminIngText(e.target.value)}
+                    rows={5}
+                    className="w-full border border-indigo-300 rounded-lg p-3 text-sm font-mono resize-vertical focus:outline-none focus:ring-2 focus:ring-indigo-400"
+                    placeholder="Water, Sugar, Salt, ..."
+                  />
+                  <div className="flex gap-2 mt-2">
+                    <button
+                      disabled={adminSaving || !adminIngText.trim()}
+                      onClick={async () => {
+                        if (!adminIngText.trim()) return
+                        setAdminSaving(true)
+                        try {
+                          await supabase.from('ai_extracted_products')
+                            .update({ ingredients_raw: adminIngText.trim(), ingredients: [] })
+                            .eq('id', product.id)
+                          setAdminEditMode(false)
+                          setAdminIngText('')
+                          await fetchProduct()
+                        } catch { /* silent */ } finally {
+                          setAdminSaving(false)
+                        }
+                      }}
+                      className="bg-indigo-600 hover:bg-indigo-700 disabled:bg-gray-300 text-white text-sm font-bold rounded-lg px-4 py-2 cursor-pointer disabled:cursor-not-allowed"
+                    >
+                      {adminSaving ? 'Saving...' : 'Save Changes'}
+                    </button>
+                    <button
+                      onClick={() => { setAdminEditMode(false); setAdminIngText('') }}
+                      className="bg-white text-gray-600 border border-gray-300 hover:border-gray-400 text-sm font-semibold rounded-lg px-4 py-2 cursor-pointer"
+                    >
+                      Cancel
+                    </button>
+                  </div>
+                </div>
+              )}
+            </div>
+          )}
+
+          {/* User ingredient report — inside the card */}
+          <div className="mt-4 pt-4 border-t border-gray-200">
+            {!showReportForm && !reportSuccess && (
               <button
                 onClick={() => {
                   if (!user) {
@@ -538,97 +599,95 @@ function Result() {
                     setShowReportForm(true)
                   }
                 }}
-                style={{ background: 'none', border: 'none', cursor: 'pointer', color: '#92400e', fontSize: 13, textDecoration: 'underline', fontFamily: 'inherit', padding: '4px 0' }}
+                className="w-full bg-red-600 hover:bg-red-700 active:bg-red-800 text-white font-semibold rounded-lg px-4 py-2.5 text-sm transition-colors cursor-pointer border-none"
               >
-                Ingredients wrong or incomplete?
+                Ingredients wrong or incomplete? Report it
               </button>
-            </div>
-          )}
+            )}
 
-          {showReportForm === 'login' && (
-            <div className="flex items-center justify-center gap-3 py-2">
-              <span style={{ fontSize: 13, color: '#92400e' }}>Login to report incorrect ingredients</span>
-              <button
-                onClick={() => openAuthModal()}
-                style={{ background: '#d97706', color: '#fff', border: 'none', borderRadius: 7, padding: '5px 14px', fontSize: 13, fontWeight: 700, cursor: 'pointer', fontFamily: 'inherit' }}
-              >
-                Login
-              </button>
-            </div>
-          )}
-
-          {showReportForm === true && !reportSuccess && (
-            <div style={{ background: '#fffbeb', border: '1.5px solid #fcd34d', borderRadius: 12, padding: '16px 18px' }}>
-              <h3 style={{ margin: '0 0 12px', fontFamily: 'Poppins, sans-serif', fontWeight: 700, fontSize: 15, color: '#92400e' }}>
-                Report Incorrect Ingredients
-              </h3>
-              <div style={{ marginBottom: 10 }}>
-                <label style={{ display: 'block', fontSize: 13, fontWeight: 600, color: '#78350f', marginBottom: 5 }}>
-                  Paste the correct ingredients list from the product label:
-                </label>
-                <textarea
-                  value={reportText}
-                  onChange={e => setReportText(e.target.value)}
-                  placeholder="e.g. Water, Sugar, Palm Oil, Citric Acid (E330), Preservative (E211)..."
-                  rows={4}
-                  style={{ width: '100%', boxSizing: 'border-box', border: '1.5px solid #fcd34d', borderRadius: 8, padding: '9px 12px', fontSize: 13, fontFamily: 'inherit', outline: 'none', resize: 'vertical', background: '#fff', color: '#111827' }}
-                />
-              </div>
-              <div style={{ marginBottom: 14 }}>
-                <label style={{ display: 'block', fontSize: 13, fontWeight: 600, color: '#78350f', marginBottom: 5 }}>
-                  Reason (optional)
-                </label>
-                <input
-                  type="text"
-                  value={reportReason}
-                  onChange={e => setReportReason(e.target.value)}
-                  placeholder="e.g. Missing 3 ingredients, wrong order"
-                  style={{ width: '100%', boxSizing: 'border-box', border: '1.5px solid #fcd34d', borderRadius: 8, padding: '9px 12px', fontSize: 13, fontFamily: 'inherit', outline: 'none', background: '#fff', color: '#111827' }}
-                />
-              </div>
-              <div style={{ display: 'flex', gap: 10 }}>
+            {showReportForm === 'login' && (
+              <div className="flex items-center justify-between gap-3 bg-red-50 border border-red-200 rounded-lg px-4 py-3">
+                <span className="text-sm text-red-700 font-medium">Login to report incorrect ingredients</span>
                 <button
-                  disabled={reportSubmitting || !reportText.trim()}
-                  onClick={async () => {
-                    if (!reportText.trim()) return
-                    setReportSubmitting(true)
-                    try {
-                      await supabase.from('ingredient_reports').insert({
-                        product_id: product.id,
-                        product_name: product.name,
-                        user_id: user.id,
-                        user_email: user.email,
-                        reported_ingredients: reportText.trim(),
-                        reason: reportReason.trim() || null,
-                        status: 'pending',
-                      })
-                      setReportSuccess(true)
-                      setShowReportForm(false)
-                    } catch {
-                      /* silent */
-                    } finally {
-                      setReportSubmitting(false)
-                    }
-                  }}
-                  style={{ background: reportSubmitting || !reportText.trim() ? '#d1d5db' : '#d97706', color: '#fff', border: 'none', borderRadius: 8, padding: '10px 20px', fontSize: 13, fontWeight: 700, cursor: reportSubmitting || !reportText.trim() ? 'not-allowed' : 'pointer', fontFamily: 'inherit' }}
+                  onClick={() => openAuthModal()}
+                  className="bg-red-600 hover:bg-red-700 text-white text-sm font-bold rounded-lg px-4 py-2 cursor-pointer border-none"
                 >
-                  {reportSubmitting ? 'Submitting...' : 'Submit Report'}
-                </button>
-                <button
-                  onClick={() => { setShowReportForm(false); setReportText(''); setReportReason('') }}
-                  style={{ background: '#fff', color: '#6b7280', border: '1.5px solid #d1d5db', borderRadius: 8, padding: '10px 20px', fontSize: 13, fontWeight: 600, cursor: 'pointer', fontFamily: 'inherit' }}
-                >
-                  Cancel
+                  Login
                 </button>
               </div>
-            </div>
-          )}
+            )}
 
-          {reportSuccess && (
-            <div style={{ background: '#fffbeb', border: '1.5px solid #fcd34d', borderRadius: 10, padding: '12px 16px', fontSize: 13, color: '#92400e', fontWeight: 600, textAlign: 'center' }}>
-              Thank you! Your report has been submitted for admin review.
-            </div>
-          )}
+            {showReportForm === true && !reportSuccess && (
+              <div className="bg-red-50 border border-red-200 rounded-xl p-4">
+                <h3 className="font-poppins font-bold text-base text-red-700 mb-3">
+                  Report Incorrect Ingredients
+                </h3>
+                <div className="mb-3">
+                  <label className="block text-sm font-semibold text-red-800 mb-1.5">
+                    Paste the correct ingredients list from the product label:
+                  </label>
+                  <textarea
+                    value={reportText}
+                    onChange={e => setReportText(e.target.value)}
+                    placeholder="e.g. Water, Sugar, Palm Oil, Citric Acid (E330), Preservative (E211)..."
+                    rows={4}
+                    className="w-full border border-red-300 rounded-lg p-3 text-sm resize-vertical focus:outline-none focus:ring-2 focus:ring-red-400 bg-white text-gray-900"
+                  />
+                </div>
+                <div className="mb-4">
+                  <label className="block text-sm font-semibold text-red-800 mb-1.5">
+                    Reason (optional)
+                  </label>
+                  <input
+                    type="text"
+                    value={reportReason}
+                    onChange={e => setReportReason(e.target.value)}
+                    placeholder="e.g. Missing 3 ingredients, wrong order"
+                    className="w-full border border-red-300 rounded-lg p-3 text-sm focus:outline-none focus:ring-2 focus:ring-red-400 bg-white text-gray-900"
+                  />
+                </div>
+                <div className="flex gap-2">
+                  <button
+                    disabled={reportSubmitting || !reportText.trim()}
+                    onClick={async () => {
+                      if (!reportText.trim()) return
+                      setReportSubmitting(true)
+                      try {
+                        await supabase.from('ingredient_reports').insert({
+                          product_id: product.id,
+                          product_name: product.name,
+                          user_id: user.id,
+                          user_email: user.email,
+                          reported_ingredients: reportText.trim(),
+                          reason: reportReason.trim() || null,
+                          status: 'pending',
+                        })
+                        setReportSuccess(true)
+                        setShowReportForm(false)
+                      } catch { /* silent */ } finally {
+                        setReportSubmitting(false)
+                      }
+                    }}
+                    className="bg-red-600 hover:bg-red-700 disabled:bg-gray-300 text-white text-sm font-bold rounded-lg px-5 py-2.5 cursor-pointer disabled:cursor-not-allowed border-none"
+                  >
+                    {reportSubmitting ? 'Submitting...' : 'Submit Report'}
+                  </button>
+                  <button
+                    onClick={() => { setShowReportForm(false); setReportText(''); setReportReason('') }}
+                    className="bg-white text-gray-600 border border-gray-300 hover:border-gray-400 text-sm font-semibold rounded-lg px-5 py-2.5 cursor-pointer"
+                  >
+                    Cancel
+                  </button>
+                </div>
+              </div>
+            )}
+
+            {reportSuccess && (
+              <div className="bg-green-50 border border-green-200 rounded-lg px-4 py-3 text-sm text-green-700 font-semibold text-center">
+                Thank you! Your report has been submitted for admin review.
+              </div>
+            )}
+          </div>
         </div>
 
         {/* Worth Knowing Ingredients */}

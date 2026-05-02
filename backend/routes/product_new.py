@@ -324,6 +324,7 @@ async def search_product(name: str = Query(..., description="Product name to sea
                 verdict=p.get("verdict") or "",
                 recommendation=p.get("recommendation") or "",
                 ingredients=ingredients,
+                ingredients_raw=p.get("ingredients_raw") or None,
                 search_count=1,
                 data_source="community_verified",
                 confidence="medium",
