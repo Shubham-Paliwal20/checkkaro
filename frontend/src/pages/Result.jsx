@@ -226,38 +226,60 @@ function Result() {
     return [...new Set([...backendImgs, ...dbPhotos.map(p => p.image_url)])].length
   }, [product, dbPhotos])
 
+  // Multi-strategy Supabase search — mirrors backend _search_query() logic
+  const _supabaseSearch = async (name) => {
+    const norm = (s) => s.replace(/[^a-z0-9]/g, '')
+    const wordPat = (s) => '%' + s.trim().split(/\s+/).join('%') + '%'
+    const strategies = [
+      // 1. Exact name
+      () => supabase.from('ai_extracted_products').select('*').ilike('name', name).order('static_key', { nullsFirst: false }).limit(1),
+      // 2. Prefix
+      () => supabase.from('ai_extracted_products').select('*').ilike('name', `${name}%`).order('static_key', { nullsFirst: false }).limit(1),
+      // 3. Word-by-word pattern
+      () => supabase.from('ai_extracted_products').select('*').ilike('name', wordPat(name)).order('static_key', { nullsFirst: false }).limit(1),
+      // 4. Substring
+      () => supabase.from('ai_extracted_products').select('*').ilike('name', `%${name}%`).order('static_key', { nullsFirst: false }).limit(1),
+      // 5. Word-by-word on alphanumeric-only terms
+      () => {
+        const words = name.toLowerCase().replace(/[^a-z0-9 ]/g, ' ').split(/\s+/).filter(w => w.length > 1)
+        if (!words.length) return Promise.resolve({ data: [] })
+        return supabase.from('ai_extracted_products').select('*').ilike('name', '%' + words.join('%') + '%').order('static_key', { nullsFirst: false }).limit(1)
+      },
+    ]
+    for (const fn of strategies) {
+      try {
+        const { data } = await fn()
+        if (data && data.length > 0) return data[0]
+      } catch { /* try next */ }
+    }
+    return null
+  }
+
   const fetchProduct = async () => {
     try {
       setLoading(true)
       setError(null)
 
-      // Try backend first (has static products + Supabase)
+      // Try backend first — short timeout so cold Render starts fail fast to fallback
       try {
         const response = await axios.get(`${API_BASE_URL}/api/product/search`, {
           params: { name: productName },
-          timeout: 25000,
+          timeout: 10000,
         })
         setProduct(response.data)
         return
       } catch (backendErr) {
-        // If it's a definitive 404 from backend (not a timeout/connection error),
-        // still fall through to Supabase direct before giving up
+        // Definitive non-404/500 errors are real failures
         if (backendErr.response?.status && backendErr.response.status !== 404 && backendErr.response.status !== 500) {
           throw backendErr
         }
+        // On timeout / 404 / 500 → fall through to Supabase direct
       }
 
-      // Backend unavailable or returned 404 — query Supabase directly
-      // Prefer static products (non-null static_key) over community entries
-      const { data: rows } = await supabase
-        .from('ai_extracted_products')
-        .select('*')
-        .ilike('name', `%${productName}%`)
-        .order('static_key', { nullsFirst: false })
-        .limit(1)
+      // Supabase direct fallback with multi-strategy search
+      const p = await _supabaseSearch(productName)
 
-      if (rows && rows.length > 0) {
-        const p = rows[0]
+      if (p) {
         const rawImages = p.images || (p.image_url ? [p.image_url] : [])
         // Use stored grade; ingredients list parsed from raw if available
         const ingredients = p.ingredients_raw

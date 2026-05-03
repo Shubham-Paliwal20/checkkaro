@@ -308,18 +308,27 @@ async def browse_products(
     _grade_order = {'A': 0, 'B': 1, 'C': 2, 'D': 3}
 
     try:
-        query = supabase.from_("ai_extracted_products") \
-            .select("id, name, brand, category, image_url, verdict, grade, static_key") \
-            .limit(2000)
+        def _base_query():
+            q_ = supabase.from_("ai_extracted_products") \
+                .select("id, name, brand, category, image_url, verdict, grade, static_key")
+            if category and category != "All":
+                q_ = q_.eq("category", category)
+            if brand and brand != "All":
+                q_ = q_.eq("brand", brand)
+            if q:
+                q_ = q_.ilike("name", f"%{q}%")
+            return q_
 
-        if category and category != "All":
-            query = query.eq("category", category)
-        if brand and brand != "All":
-            query = query.eq("brand", brand)
-        if q:
-            query = query.ilike("name", f"%{q}%")
-
-        result = query.execute()
+        # Batch-fetch all matching rows (Supabase caps at 1000 per request)
+        all_rows = []
+        offset = 0
+        while True:
+            batch = _base_query().range(offset, offset + 999).execute()
+            rows = batch.data or []
+            all_rows.extend(rows)
+            if len(rows) < 1000:
+                break
+            offset += 1000
     except Exception as e:
         print(f"[BROWSE ERROR] {e}")
         return {"products": [], "total": 0, "page": 1, "pages": 1, "categories": [], "brands": []}
@@ -327,7 +336,7 @@ async def browse_products(
     # Deduplicate by normalised name — static (has static_key) beats community
     _norm = lambda s: re.sub(r'[^a-z0-9]', '', (s or "").lower())
     seen: dict = {}
-    for p in (result.data or []):
+    for p in all_rows:
         nn = _norm(p.get("name") or "")
         if not nn:
             continue
@@ -358,11 +367,10 @@ async def browse_products(
     start = (page - 1) * limit
     page_items = items[start: start + limit]
 
-    all_data = result.data or []
-    all_cats = sorted({p["category"] for p in all_data if p.get("category")})
-    all_brands = sorted({p["brand"] for p in all_data if p.get("brand")})
+    all_cats = sorted({p["category"] for p in all_rows if p.get("category")})
+    all_brands = sorted({p["brand"] for p in all_rows if p.get("brand")})
     if category and category != "All":
-        all_brands = sorted({p["brand"] for p in all_data if p.get("brand") and p.get("category") == category})
+        all_brands = sorted({p["brand"] for p in all_rows if p.get("brand") and p.get("category") == category})
 
     return {
         "products": page_items,

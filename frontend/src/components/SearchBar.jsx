@@ -73,11 +73,15 @@ function SearchBar({ placeholder = 'Search any product...', onSearch }) {
     setLoading(true)
     timerRef.current = setTimeout(async () => {
       try {
-        // Run backend + direct Supabase in parallel — whichever wins fills the cache
-        // Direct Supabase is the fallback when Render is cold-starting (30-60s delay)
+        // Run backend + direct Supabase in parallel.
+        // Supabase is the reliable source; backend enriches when warm.
         const [backendRes, dbRes] = await Promise.allSettled([
-          axios.get(`${API_BASE_URL}/api/product/suggestions`, { params: { q: query }, timeout: 8000 }),
-          supabase.from('ai_extracted_products').select('name, brand, category').ilike('name', `%${query}%`).order('static_key', { nullsFirst: false }).limit(10),
+          axios.get(`${API_BASE_URL}/api/product/suggestions`, { params: { q: query }, timeout: 5000 }),
+          supabase.from('ai_extracted_products')
+            .select('name, brand, category, static_key')
+            .ilike('name', `%${query}%`)
+            .order('static_key', { nullsFirst: false })
+            .limit(12),
         ])
 
         const backendResults = backendRes.status === 'fulfilled'
@@ -88,15 +92,17 @@ function SearchBar({ placeholder = 'Search any product...', onSearch }) {
           ? (dbRes.value.data || []).map(p => ({ name: p.name, brand: p.brand || '', category: p.category || 'General' }))
           : []
 
-        // Prefer backend results; fill any gap with db results, deduplicate
+        // Prefer backend; fill gaps with db results; fallback to db-only if backend empty
         const seen = new Set(backendResults.map(s => s.name.toLowerCase()))
         const merged = [
           ...backendResults,
           ...dbResults.filter(s => !seen.has(s.name.toLowerCase())),
         ].slice(0, 8)
 
-        suggestionsCache.set(query, merged)
-        setSuggestions(merged)
+        const final = merged.length > 0 ? merged : dbResults.slice(0, 8)
+
+        suggestionsCache.set(query, final)
+        setSuggestions(final)
         setIsPopular(false)
         setShowSuggestions(true)
       } catch {
