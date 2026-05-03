@@ -15,6 +15,27 @@ const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'https://checkkaro.onr
 
 const ADMIN_EMAIL = 'shubhampaliwal5@gmail.com'
 
+// Parse comma-separated ingredient text respecting parentheses depth
+function parseRawIngredients(raw) {
+  const results = []
+  let current = ''
+  let depth = 0
+  for (const ch of raw) {
+    if (ch === '(') depth++
+    else if (ch === ')') depth--
+    else if (ch === ',' && depth === 0) {
+      const t = current.trim()
+      if (t) results.push(t)
+      current = ''
+      continue
+    }
+    current += ch
+  }
+  const t = current.trim()
+  if (t) results.push(t)
+  return results
+}
+
 function ProductImageGallery({ imageUrl, images, name, dbPhotos, onDeleteDbPhoto, isAdmin, user, onOpenUpload, onNeedLogin }) {
   const backendImgs = (images && images.length > 0) ? images : (imageUrl ? [imageUrl] : [])
   const dbImgUrls = (dbPhotos || []).map(p => p.image_url)
@@ -164,6 +185,7 @@ function Result() {
   const [adminEditMode, setAdminEditMode] = useState(false)
   const [adminIngText, setAdminIngText] = useState('')
   const [adminSaving, setAdminSaving] = useState(false)
+  const [adminDbId, setAdminDbId] = useState(null) // cached Supabase UUID for static products
   const [showPhotoModal, setShowPhotoModal] = useState(false)
   const [photoToast, setPhotoToast] = useState(null)
 
@@ -172,6 +194,7 @@ function Result() {
   useEffect(() => {
     setProductNotFound(false)
     setDbPhotos([])
+    setAdminDbId(null)
     fetchProduct()
   }, [productName])
 
@@ -561,37 +584,56 @@ function Result() {
                       onClick={async () => {
                         if (!adminIngText.trim()) return
                         setAdminSaving(true)
+                        const rawText = adminIngText.trim()
+                        const payload = { ingredients_raw: rawText, ingredients: [] }
+                        const isUUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(product.id)
+
                         try {
-                          const isUUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(product.id)
-                          const payload = { ingredients_raw: adminIngText.trim(), ingredients: [] }
                           let saveErr = null
+                          let resolvedId = adminDbId // use cached ID if we have it
 
                           if (isUUID) {
+                            resolvedId = product.id
+                          } else if (!resolvedId) {
+                            // First edit for a static product — look up DB record once
+                            const { data: found } = await supabase.from('ai_extracted_products')
+                              .select('id').ilike('name', product.name).limit(1)
+                            resolvedId = found?.[0]?.id || null
+                            if (resolvedId) setAdminDbId(resolvedId)
+                          }
+
+                          if (resolvedId) {
                             const { error } = await supabase.from('ai_extracted_products')
-                              .update(payload).eq('id', product.id)
+                              .update(payload).eq('id', resolvedId)
                             saveErr = error
                           } else {
-                            // Static product — find or create DB record by name
-                            const { data: existing } = await supabase.from('ai_extracted_products')
-                              .select('id').ilike('name', product.name).limit(1)
-                            if (existing && existing.length > 0) {
-                              const { error } = await supabase.from('ai_extracted_products')
-                                .update(payload).eq('id', existing[0].id)
-                              saveErr = error
-                            } else {
-                              const { error } = await supabase.from('ai_extracted_products')
-                                .insert({ name: product.name, ...payload })
-                              saveErr = error
-                            }
+                            // No DB record yet — insert and cache the new ID
+                            const { data: inserted, error } = await supabase.from('ai_extracted_products')
+                              .insert({ name: product.name, ...payload }).select('id')
+                            saveErr = error
+                            if (!error && inserted?.[0]?.id) setAdminDbId(inserted[0].id)
                           }
 
                           if (saveErr) {
                             alert(`Save failed: ${saveErr.message}`)
                             return
                           }
+
+                          // Optimistic update — show new ingredients immediately without waiting for backend
+                          const parsed = parseRawIngredients(rawText)
+                          setProduct(prev => ({
+                            ...prev,
+                            ingredients_raw: rawText,
+                            ingredients: parsed.map(name => ({
+                              name, aliases: '', classification: 'generally_recognised',
+                              one_line_note: '', regulatory_note: ''
+                            }))
+                          }))
                           setAdminEditMode(false)
                           setAdminIngText('')
-                          await fetchProduct()
+
+                          // Reload in background for proper classifications
+                          fetchProduct()
                         } finally {
                           setAdminSaving(false)
                         }
