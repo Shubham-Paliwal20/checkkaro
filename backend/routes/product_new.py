@@ -30,7 +30,9 @@ _QUESTIONED = [
     'e621','e627','e631',
     'sodium benzoate','sodium metabisulphite','sulfur dioxide','sodium nitrite','sodium nitrate',
     'e211','e220','e223','e250','e251',
-    'bha','bht','tbhq','butylated hydroxyanisole','butylated hydroxytoluene','tert-butylhydroquinone',
+    # Use full names only — short codes like 'bha'/'bht' cause false positives
+    # (e.g. 'bha' matches 'bhasma', an Ayurvedic gold preparation)
+    'butylated hydroxyanisole','butylated hydroxytoluene','tbhq','tert-butylhydroquinone',
     'methylchloroisothiazolinone','methylisothiazolinone','dmdm hydantoin',
     'imidazolidinyl urea','diazolidinyl urea','quaternium-15',
     'aspartame','acesulfame','sucralose','saccharin','e951','e950','e955','e954',
@@ -46,8 +48,6 @@ _QUESTIONED = [
     'benzyl alcohol',
     'cyclomethicone','cyclopentasiloxane','cyclohexasiloxane',
     'mineral oil','petrolatum','paraffinum liquidum','paraffin wax',
-    'retinol','retinyl palmitate','tretinoin','retinal','hydroxypinacolone retinoate',
-    'beta carotene',
     'fragrance','parfum','perfume',
     'artificial flavor','artificial flavour',
 ]
@@ -60,6 +60,10 @@ _WORTH = [
     'polyglycerol','ammonium phosphatides',
     'e322','e471','e466','e412','e410','e476','e162','e160',
     'phenoxyethanol',
+    # Vitamin A derivatives — FDA-approved skincare actives; worth knowing but not banned/questioned
+    'retinol','retinyl palmitate','tretinoin','retinal','hydroxypinacolone retinoate',
+    # beta-carotene is a natural provitamin A / pigment (carrots, fruits) — worth knowing at most
+    'beta carotene',
 ]
 
 def _classify(name: str) -> str:
@@ -105,6 +109,18 @@ def _note(name: str, cls: str) -> str:
     if 'isabgol' in n or 'psyllium' in n: return 'Natural dietary fibre'
     if 'wheat flour' in n: return 'Contains gluten; avoid if gluten-intolerant'
     if 'cardamom' in n or 'pepper' in n or 'fennel' in n: return 'Natural spice'
+    if 'gold bhasma' in n or 'swarna bhasma' in n or 'gold leaf' in n or 'pure gold' in n or '24 karat gold' in n or '24k gold' in n:
+        return 'Traditional Ayurvedic Swarna Bhasma; used in premium skincare for centuries; generally recognised as safe'
+    if 'bhasma' in n: return 'Traditional Ayurvedic calcined mineral preparation; generally recognised as safe'
+    if 'neem' in n: return 'Natural Ayurvedic herb with antibacterial properties'
+    if 'amla' in n or 'amalaki' in n: return 'Natural Indian gooseberry; rich in Vitamin C'
+    if 'brahmi' in n: return 'Adaptogenic Ayurvedic herb'
+    if 'rose water' in n or 'rose extract' in n: return 'Natural floral extract; soothing properties'
+    if 'aloe vera' in n or 'aloe barbadensis' in n: return 'Natural plant extract; soothing and moisturising'
+    if 'shea butter' in n: return 'Natural plant butter; moisturising'
+    if 'jojoba' in n: return 'Natural plant wax; skin-conditioning'
+    if 'argan oil' in n: return 'Natural plant oil; rich in fatty acids'
+    if 'rosehip' in n: return 'Natural plant oil; rich in Vitamin C and antioxidants'
     return 'Generally recognised as safe'
 
 def _reg_note(cls: str) -> str:
