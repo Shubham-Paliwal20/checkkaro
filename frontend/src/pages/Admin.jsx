@@ -735,15 +735,36 @@ function DeleteProductSection({ isMobile }) {
     setDeleting(product.id)
     setMsg(null)
     try {
-      const { error } = await supabase
-        .from('ai_extracted_products')
-        .delete()
-        .eq('id', product.id)
-      if (error) throw new Error(error.message)
+      const { data: { session } } = await supabase.auth.getSession()
+      if (!session) throw new Error('Not authenticated — please log out and log back in')
+
+      const url = `${API_BASE_URL}/api/admin/product/${product.id}`
+      console.log('[DELETE] calling', url)
+
+      let resp
+      try {
+        resp = await fetch(url, {
+          method: 'DELETE',
+          headers: { Authorization: `Bearer ${session.access_token}` },
+        })
+      } catch (networkErr) {
+        throw new Error(`Network error — backend may be sleeping (Render cold start). Wait 30s and retry. ${networkErr.message}`)
+      }
+
+      const body = await resp.text()
+      console.log('[DELETE] status', resp.status, 'body', body)
+
+      if (!resp.ok) {
+        let detail = body
+        try { detail = JSON.parse(body)?.detail || body } catch {}
+        throw new Error(`Server error ${resp.status}: ${detail}`)
+      }
+
       setResults(prev => prev.filter(p => p.id !== product.id))
       setConfirmId(null)
-      setMsg({ type: 'success', text: `"${product.name}" deleted successfully.` })
+      setMsg({ type: 'success', text: `"${product.name}" permanently deleted from database.` })
     } catch (e) {
+      console.error('[DELETE ERROR]', e)
       setMsg({ type: 'error', text: `Delete failed: ${e.message}` })
     } finally {
       setDeleting(null)

@@ -3,7 +3,7 @@ import uuid
 from fastapi import APIRouter, HTTPException, Header, BackgroundTasks
 from pydantic import BaseModel
 from typing import Optional
-from db.supabase_client import supabase
+from db.supabase_client import supabase, supabase_admin
 from services.gemini_service import extract_ingredients_from_image, analyze_ingredients_list as analyze_ingredients
 
 router = APIRouter()
@@ -150,3 +150,39 @@ async def get_task_status(
     if not task:
         raise HTTPException(status_code=404, detail="Task not found or expired")
     return task
+
+
+@router.delete("/product/{product_id}")
+async def delete_product(
+    product_id: str,
+    authorization: Optional[str] = Header(None),
+):
+    _verify_admin(authorization)
+
+    import os
+    service_key = os.getenv("SUPABASE_SERVICE_ROLE_KEY", "")
+    if not service_key:
+        raise HTTPException(status_code=500, detail="SUPABASE_SERVICE_ROLE_KEY not configured on server — cannot bypass RLS")
+
+    # Confirm the row exists first
+    check = supabase_admin.from_("ai_extracted_products").select("id, name").eq("id", product_id).execute()
+    if not check.data:
+        raise HTTPException(status_code=404, detail=f"Product {product_id} not found in database")
+
+    product_name = check.data[0].get("name", product_id)
+    print(f"[DELETE] Deleting product: {product_name} ({product_id})")
+
+    try:
+        supabase_admin.from_("ai_extracted_products").delete().eq("id", product_id).execute()
+    except Exception as e:
+        print(f"[DELETE ERROR] {e}")
+        raise HTTPException(status_code=500, detail=f"Delete failed: {str(e)}")
+
+    # Verify the row is actually gone
+    verify = supabase_admin.from_("ai_extracted_products").select("id").eq("id", product_id).execute()
+    if verify.data:
+        print(f"[DELETE FAIL] Row still exists after delete — RLS may be blocking even admin client")
+        raise HTTPException(status_code=500, detail="Delete command ran but row still exists. Check Supabase RLS policies.")
+
+    print(f"[DELETE OK] {product_name} ({product_id})")
+    return {"success": True, "deleted": product_id, "name": product_name}
