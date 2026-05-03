@@ -691,6 +691,177 @@ function AddProductForm({ isMobile }) {
   )
 }
 
+function DeleteProductSection({ isMobile }) {
+  const [query,       setQuery]       = useState('')
+  const [results,     setResults]     = useState([])
+  const [searching,   setSearching]   = useState(false)
+  const [confirmId,   setConfirmId]   = useState(null)
+  const [deleting,    setDeleting]    = useState(null)
+  const [msg,         setMsg]         = useState(null)
+  const debounceRef = useRef(null)
+
+  const GRADE_STYLE = {
+    A: { bg: '#f0fdf4', color: '#16a34a', border: '#bbf7d0' },
+    B: { bg: '#eff6ff', color: '#2563eb', border: '#bfdbfe' },
+    C: { bg: '#fffbeb', color: '#d97706', border: '#fde68a' },
+    D: { bg: '#fef2f2', color: '#dc2626', border: '#fecaca' },
+  }
+
+  const search = async (q) => {
+    if (!q.trim()) { setResults([]); return }
+    setSearching(true)
+    try {
+      const { data } = await supabase
+        .from('ai_extracted_products')
+        .select('id, name, brand, category, grade, static_key')
+        .or(`name.ilike.%${q}%,brand.ilike.%${q}%`)
+        .order('static_key', { nullsFirst: false })
+        .limit(15)
+      setResults(data || [])
+    } catch { setResults([]) }
+    finally { setSearching(false) }
+  }
+
+  const handleChange = (e) => {
+    const val = e.target.value
+    setQuery(val)
+    setConfirmId(null)
+    setMsg(null)
+    clearTimeout(debounceRef.current)
+    debounceRef.current = setTimeout(() => search(val), 300)
+  }
+
+  const handleDelete = async (product) => {
+    setDeleting(product.id)
+    setMsg(null)
+    try {
+      const { error } = await supabase
+        .from('ai_extracted_products')
+        .delete()
+        .eq('id', product.id)
+      if (error) throw new Error(error.message)
+      setResults(prev => prev.filter(p => p.id !== product.id))
+      setConfirmId(null)
+      setMsg({ type: 'success', text: `"${product.name}" deleted successfully.` })
+    } catch (e) {
+      setMsg({ type: 'error', text: `Delete failed: ${e.message}` })
+    } finally {
+      setDeleting(null)
+    }
+  }
+
+  return (
+    <div style={{ maxWidth: 640, margin: '0 auto' }}>
+      <div style={{ background: '#fff', border: '1px solid #e5e7eb', borderRadius: 16, padding: isMobile ? '20px 16px' : '28px 28px', boxShadow: '0 4px 20px rgba(0,0,0,0.06)' }}>
+        <h2 style={{ fontFamily: 'Poppins,sans-serif', fontSize: 18, fontWeight: 800, color: '#dc2626', margin: '0 0 6px' }}>
+          Delete Product
+        </h2>
+        <p style={{ margin: '0 0 18px', fontSize: 13, color: '#9ca3af' }}>
+          Search by name or brand — this permanently removes the product from the database.
+        </p>
+
+        {/* Search input */}
+        <div style={{ position: 'relative', marginBottom: 14 }}>
+          <svg style={{ position: 'absolute', left: 12, top: '50%', transform: 'translateY(-50%)', width: 16, height: 16, color: '#9ca3af' }} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+          </svg>
+          <input
+            value={query}
+            onChange={handleChange}
+            placeholder="Search product name or brand…"
+            style={{ width: '100%', boxSizing: 'border-box', paddingLeft: 38, paddingRight: query ? 36 : 14, paddingTop: 10, paddingBottom: 10, border: '1.5px solid #d1d5db', borderRadius: 10, fontSize: 14, fontFamily: 'inherit', outline: 'none', color: '#111827', background: '#fff' }}
+          />
+          {query && (
+            <button onClick={() => { setQuery(''); setResults([]); setMsg(null); setConfirmId(null) }}
+              style={{ position: 'absolute', right: 10, top: '50%', transform: 'translateY(-50%)', background: 'none', border: 'none', fontSize: 18, color: '#9ca3af', cursor: 'pointer', lineHeight: 1, padding: 0 }}>
+              ×
+            </button>
+          )}
+        </div>
+
+        {/* Status message */}
+        {msg && (
+          <div style={{ marginBottom: 14, padding: '10px 14px', borderRadius: 10, fontSize: 13, fontWeight: 600,
+            background: msg.type === 'success' ? '#f0fdf4' : '#fef2f2',
+            color: msg.type === 'success' ? '#16a34a' : '#dc2626',
+            border: `1.5px solid ${msg.type === 'success' ? '#bbf7d0' : '#fecaca'}` }}>
+            {msg.text}
+          </div>
+        )}
+
+        {/* Results */}
+        {searching && (
+          <div style={{ textAlign: 'center', padding: '24px 0', color: '#9ca3af', fontSize: 13 }}>Searching…</div>
+        )}
+
+        {!searching && query && results.length === 0 && (
+          <div style={{ textAlign: 'center', padding: '24px 0', color: '#9ca3af', fontSize: 13 }}>No products found for "{query}"</div>
+        )}
+
+        {!searching && results.length > 0 && (
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
+            {results.map(p => {
+              const g = p.grade || 'C'
+              const gs = GRADE_STYLE[g] || GRADE_STYLE.C
+              const isConfirm = confirmId === p.id
+              const isDeleting = deleting === p.id
+
+              return (
+                <div key={p.id} style={{ border: `1.5px solid ${isConfirm ? '#fca5a5' : '#e5e7eb'}`, borderRadius: 12, padding: '12px 14px', background: isConfirm ? '#fff5f5' : '#fff', transition: 'all 0.15s' }}>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: 10, flexWrap: 'wrap' }}>
+                    {/* Grade pill */}
+                    <span style={{ flexShrink: 0, fontSize: 12, fontWeight: 800, padding: '3px 10px', borderRadius: 99, background: gs.bg, color: gs.color, border: `1px solid ${gs.border}` }}>
+                      Grade {g}
+                    </span>
+
+                    {/* Info */}
+                    <div style={{ flex: 1, minWidth: 0 }}>
+                      <p style={{ margin: 0, fontWeight: 700, fontSize: 14, color: '#111827', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{p.name}</p>
+                      <p style={{ margin: '2px 0 0', fontSize: 12, color: '#9ca3af' }}>{[p.brand, p.category].filter(Boolean).join(' · ')}</p>
+                    </div>
+
+                    {/* Action */}
+                    {!isConfirm && (
+                      <button
+                        onClick={() => { setConfirmId(p.id); setMsg(null) }}
+                        style={{ flexShrink: 0, background: '#fff', color: '#dc2626', border: '1.5px solid #fca5a5', borderRadius: 8, padding: '6px 14px', fontSize: 12, fontWeight: 700, cursor: 'pointer', fontFamily: 'inherit' }}>
+                        Delete
+                      </button>
+                    )}
+                  </div>
+
+                  {/* Confirm row */}
+                  {isConfirm && (
+                    <div style={{ marginTop: 10, padding: '10px 12px', background: '#fef2f2', borderRadius: 8, border: '1px solid #fecaca' }}>
+                      <p style={{ margin: '0 0 10px', fontSize: 13, fontWeight: 600, color: '#dc2626' }}>
+                        Permanently delete "{p.name}"? This cannot be undone.
+                      </p>
+                      <div style={{ display: 'flex', gap: 8 }}>
+                        <button
+                          onClick={() => handleDelete(p)}
+                          disabled={isDeleting}
+                          style={{ flex: 1, background: '#dc2626', color: '#fff', border: 'none', borderRadius: 8, padding: '9px 0', fontSize: 13, fontWeight: 700, cursor: isDeleting ? 'not-allowed' : 'pointer', fontFamily: 'inherit', opacity: isDeleting ? 0.7 : 1 }}>
+                          {isDeleting ? 'Deleting…' : 'Yes, Delete'}
+                        </button>
+                        <button
+                          onClick={() => setConfirmId(null)}
+                          disabled={isDeleting}
+                          style={{ flex: 1, background: '#fff', color: '#374151', border: '1.5px solid #d1d5db', borderRadius: 8, padding: '9px 0', fontSize: 13, fontWeight: 700, cursor: 'pointer', fontFamily: 'inherit' }}>
+                          Cancel
+                        </button>
+                      </div>
+                    </div>
+                  )}
+                </div>
+              )
+            })}
+          </div>
+        )}
+      </div>
+    </div>
+  )
+}
+
 export default function Admin() {
   const { user, loading: authLoading } = useAuth()
   const navigate = useNavigate()
@@ -1038,9 +1209,9 @@ export default function Admin() {
             boxShadow: adminPage === 'add' ? '0 4px 14px rgba(22,163,74,0.25)' : 'none',
             transition: 'all 0.15s',
           }}>
-          <div style={{ fontSize: isMobile ? 22 : 26 }}>➕</div>
-          <div style={{ fontSize: isMobile ? 12 : 14, fontWeight: 700, marginTop: 4 }}>Add Product</div>
-          <div style={{ fontSize: 11, marginTop: 2, opacity: 0.8 }}>from scratch</div>
+          <div style={{ fontSize: isMobile ? 22 : 26 }}>🗂️</div>
+          <div style={{ fontSize: isMobile ? 12 : 14, fontWeight: 700, marginTop: 4 }}>Manage Products</div>
+          <div style={{ fontSize: 11, marginTop: 2, opacity: 0.8 }}>add · delete</div>
         </button>
       </div>
 
@@ -1216,13 +1387,16 @@ export default function Admin() {
         </>
       )}
 
-      {/* ── ADD PRODUCT PAGE ── */}
+      {/* ── MANAGE PRODUCTS PAGE ── */}
       {adminPage === 'add' && (
         <>
           <h2 style={{ fontFamily: 'Poppins,sans-serif', fontSize: 16, fontWeight: 700, color: '#111827', marginBottom: 20 }}>
-            ➕ Add Product from Scratch
+            Manage Products
           </h2>
           <AddProductForm isMobile={isMobile} />
+          <div style={{ marginTop: 32, borderTop: '2px dashed #fee2e2', paddingTop: 28 }}>
+            <DeleteProductSection isMobile={isMobile} />
+          </div>
         </>
       )}
 
