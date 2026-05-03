@@ -276,17 +276,20 @@ async def search_product(name: str = Query(..., description="Product name to sea
                 print(f"[SUPABASE OVERRIDE ERROR] {e}")
 
             # Always get static ingredients (skip placeholder "Standard Ingredients")
+            # Re-classify with _classify() — same function used by browse and SAMPLE_PRODUCTS.
+            # ingredient_database.classify_ingredient() diverges on msg, sucralose, acesulfame, etc.
             full_ingredients = get_ingredients(key, category=product_data["category"])
             static_items = []
             for ing in full_ingredients:
                 if ing["name"].lower() == "standard ingredients":
                     continue
+                cls = _classify(ing["name"])
                 static_items.append(IngredientItem(
                     name=ing["name"],
                     aliases="",
-                    classification=ing["classification"],
-                    one_line_note=ing["one_line_note"],
-                    regulatory_note=ing["regulatory_note"]
+                    classification=cls,
+                    one_line_note=_note(ing["name"], cls),
+                    regulatory_note=_reg_note(cls)
                 ))
 
             if approved_ingredients is not None:
