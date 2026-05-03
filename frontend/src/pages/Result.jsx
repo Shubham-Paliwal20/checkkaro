@@ -235,7 +235,7 @@ function Result() {
       try {
         const response = await axios.get(`${API_BASE_URL}/api/product/search`, {
           params: { name: productName },
-          timeout: 10000,
+          timeout: 25000,
         })
         setProduct(response.data)
         return
@@ -248,16 +248,21 @@ function Result() {
       }
 
       // Backend unavailable or returned 404 — query Supabase directly
+      // Prefer static products (non-null static_key) over community entries
       const { data: rows } = await supabase
         .from('ai_extracted_products')
         .select('*')
         .ilike('name', `%${productName}%`)
-        .order('created_at', { ascending: false })
+        .order('static_key', { nullsFirst: false })
         .limit(1)
 
       if (rows && rows.length > 0) {
         const p = rows[0]
         const rawImages = p.images || (p.image_url ? [p.image_url] : [])
+        // Use stored grade; ingredients list parsed from raw if available
+        const ingredients = p.ingredients_raw
+          ? parseRawIngredients(p.ingredients_raw).map(name => ({ name, classification: 'generally_recognised', one_line_note: '', regulatory_note: '' }))
+          : (p.ingredients || [])
         setProduct({
           id: String(p.id),
           name: p.name,
@@ -266,14 +271,15 @@ function Result() {
           image_url: p.image_url || null,
           images: rawImages.length > 0 ? rawImages : null,
           grade: p.grade || 'C',
-          awareness_score: parseInt(p.awareness_score) || 60,
+          awareness_score: p.grade === 'A' ? 90 : p.grade === 'B' ? 75 : p.grade === 'D' ? 30 : 55,
           summary: p.summary || '',
           fssai_note: p.fssai_note || '',
           verdict: p.verdict || '',
           recommendation: p.recommendation || '',
-          ingredients: p.ingredients || [],
-          data_source: 'community_verified',
-          confidence: 'medium',
+          ingredients,
+          ingredients_raw: p.ingredients_raw || null,
+          data_source: p.static_key ? 'database_verified' : 'community_verified',
+          confidence: p.static_key ? 'high' : 'medium',
           is_complete: true,
         })
         return

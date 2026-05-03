@@ -1,3 +1,4 @@
+import { useEffect } from 'react'
 import { BrowserRouter as Router, Routes, Route, useLocation } from 'react-router-dom'
 import { AnimatePresence } from 'framer-motion'
 import { AuthProvider, useAuth } from './context/AuthContext'
@@ -10,6 +11,16 @@ import CheckIngredient from './pages/CheckIngredient'
 import Products from './pages/Products'
 import About from './pages/About'
 import Admin from './pages/Admin'
+import axios from 'axios'
+
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'https://checkkaro.onrender.com'
+
+// Pre-warm Render on app load so cold-start delay doesn't hit the first search
+function usePrewarm() {
+  useEffect(() => {
+    axios.get(`${API_BASE_URL}/health`, { timeout: 60000 }).catch(() => {})
+  }, [])
+}
 
 function AnimatedRoutes() {
   const location = useLocation()
@@ -30,6 +41,7 @@ function AnimatedRoutes() {
 
 function AppShell() {
   const { showAuthModal, authModalStep, closeAuthModal } = useAuth()
+  usePrewarm()
 
   return (
     <div className="min-h-screen flex flex-col">

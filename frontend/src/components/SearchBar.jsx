@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef } from 'react'
 import { useNavigate } from 'react-router-dom'
 import axios from 'axios'
+import { supabase } from '../lib/supabaseClient'
 
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'https://checkkaro.onrender.com'
 
@@ -72,13 +73,30 @@ function SearchBar({ placeholder = 'Search any product...', onSearch }) {
     setLoading(true)
     timerRef.current = setTimeout(async () => {
       try {
-        const res = await axios.get(`${API_BASE_URL}/api/product/suggestions`, {
-          params: { q: query },
-          timeout: 5000,
-        })
-        const results = res.data.suggestions || []
-        suggestionsCache.set(query, results)
-        setSuggestions(results)
+        // Run backend + direct Supabase in parallel — whichever wins fills the cache
+        // Direct Supabase is the fallback when Render is cold-starting (30-60s delay)
+        const [backendRes, dbRes] = await Promise.allSettled([
+          axios.get(`${API_BASE_URL}/api/product/suggestions`, { params: { q: query }, timeout: 8000 }),
+          supabase.from('ai_extracted_products').select('name, brand, category').ilike('name', `%${query}%`).order('static_key', { nullsFirst: false }).limit(10),
+        ])
+
+        const backendResults = backendRes.status === 'fulfilled'
+          ? (backendRes.value.data.suggestions || [])
+          : []
+
+        const dbResults = dbRes.status === 'fulfilled'
+          ? (dbRes.value.data || []).map(p => ({ name: p.name, brand: p.brand || '', category: p.category || 'General' }))
+          : []
+
+        // Prefer backend results; fill any gap with db results, deduplicate
+        const seen = new Set(backendResults.map(s => s.name.toLowerCase()))
+        const merged = [
+          ...backendResults,
+          ...dbResults.filter(s => !seen.has(s.name.toLowerCase())),
+        ].slice(0, 8)
+
+        suggestionsCache.set(query, merged)
+        setSuggestions(merged)
         setIsPopular(false)
         setShowSuggestions(true)
       } catch {
