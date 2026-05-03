@@ -337,15 +337,12 @@ async def search_product(name: str = Query(..., description="Product name to sea
 
         if db_result.data:
             p = db_result.data[0]
-            raw_ingredients = p.get("ingredients") or []
-
-            # If ingredients are plain strings (old format) or empty, re-parse from raw text
-            # Plain strings are badly split (parentheses ignored), raw text is more accurate
-            is_plain_strings = raw_ingredients and isinstance(raw_ingredients[0], str)
-            if (not raw_ingredients or is_plain_strings) and p.get("ingredients_raw"):
+            # Always prefer ingredients_raw — identical logic to _grade_from_raw and browse
+            # Dict ingredients may be stale AI-extracted data; raw text is the authoritative source
+            if p.get("ingredients_raw"):
                 raw_ingredients = _parse_raw(p["ingredients_raw"])
-            elif not raw_ingredients:
-                raw_ingredients = []
+            else:
+                raw_ingredients = p.get("ingredients") or []
 
             ingredients = [_build_ingredient_item(ing) for ing in raw_ingredients if ing]
             print(f"[SUPABASE] Found AI-extracted product: {p['name']} | {len(ingredients)} ingredients")
