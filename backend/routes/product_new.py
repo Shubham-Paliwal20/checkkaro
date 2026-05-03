@@ -56,8 +56,8 @@ _QUESTIONED = [
     'partially hydrogenated','trans fat',
     # Emulsifiers with trans fat/glycidol risk
     'mono and diglycerides',
-    # Preservatives with infant/reproductive toxicity
-    'phenoxyethanol','benzyl alcohol',
+    # Preservatives with severe toxicity concerns
+    'benzyl alcohol',
     # Cyclic silicones (EU banned wash-off, endocrine disruption)
     'cyclomethicone','cyclopentasiloxane','cyclohexasiloxane',
     # Petroleum-derived (PAH/MOAH contamination risk)
@@ -79,9 +79,8 @@ _WORTH = [
     'lecithin','soy lecithin','potassium sorbate','e202',
     'polyglycerol','ammonium phosphatides',
     'e322','e471','e466','e412','e410','e476','e162','e160',
-    # Note: e407 (carrageenan) is in _QUESTIONED, not here
-    # Note: mono and diglycerides moved to _QUESTIONED (trans fat/glycidol risk)
-    # Note: artificial flavor/flavour moved to _QUESTIONED (undisclosed chemicals)
+    # Phenoxyethanol — mostly safe cosmetic preservative at permitted levels (EU max 1%)
+    'phenoxyethanol',
 ]
 
 def _classify(name: str) -> str:
@@ -196,8 +195,16 @@ def _score_to_grade(score: int) -> str:
     return 'D'
 
 # Convert ALL_PRODUCTS to the format we need
+# Calculate real grade from actual ingredients — not from legacy awareness score
 SAMPLE_PRODUCTS = {}
 for key, (name, brand, category, score, verdict, recommendation) in ALL_PRODUCTS.items():
+    _ings = get_ingredients(key, category=category)
+    _classified = [
+        {'name': i['name'], 'classification': _classify(i['name'])}
+        for i in _ings
+        if i.get('name') and i['name'].lower() != 'standard ingredients'
+    ]
+    _grade = calculate_grade(_classified) if _classified else _score_to_grade(score)
     SAMPLE_PRODUCTS[key] = {
         "id": key,
         "name": name,
@@ -205,7 +212,7 @@ for key, (name, brand, category, score, verdict, recommendation) in ALL_PRODUCTS
         "category": category,
         "image_url": PRODUCT_IMAGES.get(key),
         "awareness_score": score,
-        "grade": _score_to_grade(score),
+        "grade": _grade,
         "summary": f"{name} - {verdict}. This information is for general awareness based on publicly available regulatory data. It is not a health assessment or medical advice.",
         "fssai_note": "FSSAI approved product with standard ingredients.",
         "verdict": verdict,

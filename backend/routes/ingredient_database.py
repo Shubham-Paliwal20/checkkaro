@@ -432,8 +432,7 @@ def classify_ingredient(ingredient_name, category=None):
         # Emulsifiers with trans fat and glycidol concerns
         'mono and diglycerides': ('Emulsifier E471', 'May contain trans fats from hydrogenated oil sources; can contain glycidol fatty acid esters (IARC Group 2A carcinogen); EFSA raised safety concerns in 2018 review'),
 
-        # Preservatives with reproductive and infant toxicity
-        'phenoxyethanol': ('Preservative', 'EU restricts to max 1% in all cosmetics; FDA issued warning it can depress CNS and cause vomiting in nursing infants; reproductive and developmental toxicity concerns at higher concentrations'),
+        # Preservatives with severe toxicity
         'benzyl alcohol': ('Preservative/solvent', 'Toxic to neonates — can cause fatal gasping syndrome; metabolizes to benzaldehyde and benzoic acid; banned in products for infants; contact dermatitis in sensitive individuals'),
 
         # Cyclic silicones — EU banned/restricted, endocrine disruption, environmental persistence
@@ -506,8 +505,8 @@ def classify_ingredient(ingredient_name, category=None):
         'polyglycerol polyricinoleate': ('Emulsifier E476', 'Synthetic, may cause digestive upset, liver enlargement in animal studies'),
         'ammonium phosphatides': ('Emulsifier E442', 'Synthetic, limited safety data, may affect mineral absorption'),
         # carrageenan → moved to commonly_questioned (EU infant formula ban)
-        # phenoxyethanol → moved to commonly_questioned (reproductive toxicity, infant danger)
-        # benzyl alcohol → moved to commonly_questioned (toxic to neonates)
+        'phenoxyethanol': ('Preservative (EU max 1%)', 'Synthetic preservative permitted in cosmetics worldwide; EU restricts to max 1%; generally safe at permitted levels; FDA cautioned against use in nipple creams for nursing infants specifically'),
+        # benzyl alcohol → in commonly_questioned (toxic to neonates)
 
         # Preservatives (milder concerns)
         'potassium sorbate': ('Preservative E202', 'Generally safe; may cause skin irritation and allergic reactions; migraines reported'),
