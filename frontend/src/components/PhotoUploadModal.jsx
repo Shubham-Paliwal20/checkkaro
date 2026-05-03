@@ -31,6 +31,7 @@ export default function PhotoUploadModal({ productId, productName, currentCount,
   }
 
   const removeFile = (i) => {
+    URL.revokeObjectURL(previews[i])
     setFiles(f => f.filter((_, j) => j !== i))
     setPreviews(p => p.filter((_, j) => j !== i))
   }

@@ -46,7 +46,8 @@ function SearchBar({ placeholder = 'Search any product...', onSearch }) {
         suggestionsCache.set(char, r.data.suggestions || [])
       } catch {}
     }
-    PREWARM_CHARS.forEach((c, i) => setTimeout(() => warm(c), i * 50))
+    const ids = PREWARM_CHARS.map((c, i) => setTimeout(() => warm(c), i * 50))
+    return () => ids.forEach(id => clearTimeout(id))
   }, [])
 
   // ── Fetch suggestions with 80ms debounce ──
@@ -101,6 +102,10 @@ function SearchBar({ placeholder = 'Search any product...', onSearch }) {
 
         const final = merged.length > 0 ? merged : dbResults.slice(0, 8)
 
+        // Cap cache at 150 entries to prevent unbounded memory growth
+        if (suggestionsCache.size >= 150) {
+          suggestionsCache.delete(suggestionsCache.keys().next().value)
+        }
         suggestionsCache.set(query, final)
         setSuggestions(final)
         setIsPopular(false)

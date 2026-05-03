@@ -13,6 +13,15 @@ ADMIN_EMAIL = os.getenv("ADMIN_EMAIL", "")
 # In-memory task store — fine for single-instance Render free tier
 # { task_id: { "status": "processing"|"done"|"error", "result": {...}, "error": "..." } }
 _tasks: dict = {}
+_TASK_LIMIT = 200  # keep at most this many completed tasks in memory
+
+def _prune_tasks() -> None:
+    if len(_tasks) <= _TASK_LIMIT:
+        return
+    # Drop the oldest half — keys are insertion-ordered in Python 3.7+
+    keys = list(_tasks.keys())
+    for k in keys[:len(keys) // 2]:
+        del _tasks[k]
 
 
 def _verify_admin(authorization: Optional[str]) -> None:
@@ -113,10 +122,12 @@ async def _do_extract(task_id: str, sub: dict, manual_text: Optional[str]) -> No
                 "ingredients_count": len(analysis.get("ingredients") or []),
             },
         }
+        _prune_tasks()
 
     except Exception as e:
         print(f"[EXTRACT ERROR] task={task_id} | {e}")
         _tasks[task_id] = {"status": "error", "error": str(e)}
+        _prune_tasks()
 
 
 @router.post("/extract-product")

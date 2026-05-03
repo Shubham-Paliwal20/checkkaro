@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback, useRef } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { motion, AnimatePresence } from 'framer-motion'
 import axios from 'axios'
@@ -131,47 +131,59 @@ export default function Products() {
     return () => clearTimeout(debounceRef.current)
   }, [searchInput])
 
-  // Single fetch effect — runs when any filter/sort/page changes
-  const fetchProducts = useCallback(async () => {
-    setLoading(true)
-    try {
-      const params = { page, limit, sort }
-      if (category) params.category = category
-      if (brand)    params.brand    = brand
-      if (q)        params.q        = q
-      const res = await axios.get(`${API_BASE_URL}/api/product/browse`, { params })
-      const data = res.data
-      const pageProducts = data.products || []
+  // Single fetch effect — aborts the previous request when filters/page change
+  useEffect(() => {
+    const controller = new AbortController()
+    let active = true
 
-      // Batch-fetch uploaded photos for this page's products
-      if (pageProducts.length > 0) {
-        const ids = pageProducts.map(p => p.id)
-        const { data: photos } = await supabase
-          .from('product_photos')
-          .select('product_id, image_url')
-          .in('product_id', ids)
-          .order('created_at')
-        if (photos?.length) {
-          const photoMap = {}
-          photos.forEach(ph => { if (!photoMap[ph.product_id]) photoMap[ph.product_id] = ph.image_url })
-          pageProducts.forEach(p => { if (!p.image_url && photoMap[p.id]) p.image_url = photoMap[p.id] })
+    const run = async () => {
+      setLoading(true)
+      try {
+        const params = { page, limit, sort }
+        if (category) params.category = category
+        if (brand)    params.brand    = brand
+        if (q)        params.q        = q
+        const res = await axios.get(`${API_BASE_URL}/api/product/browse`, {
+          params,
+          signal: controller.signal,
+        })
+        if (!active) return
+        const data = res.data
+        const pageProducts = data.products || []
+
+        // Batch-fetch uploaded photos for this page's products
+        if (pageProducts.length > 0) {
+          const ids = pageProducts.map(p => p.id)
+          const { data: photos } = await supabase
+            .from('product_photos')
+            .select('product_id, image_url')
+            .in('product_id', ids)
+            .order('created_at')
+          if (active && photos?.length) {
+            const photoMap = {}
+            photos.forEach(ph => { if (!photoMap[ph.product_id]) photoMap[ph.product_id] = ph.image_url })
+            pageProducts.forEach(p => { if (!p.image_url && photoMap[p.id]) p.image_url = photoMap[p.id] })
+          }
         }
+
+        if (!active) return
+        setProducts(pageProducts)
+        setTotal(data.total || 0)
+        setPages(data.pages || 1)
+        if (data.categories?.length) setAllCats(data.categories)
+        if (data.brands?.length)     setBrands(data.brands)
+      } catch (err) {
+        if (axios.isCancel(err) || !active) return
+        console.error('Browse error:', err)
+        setProducts([])
+      } finally {
+        if (active) setLoading(false)
       }
-
-      setProducts(pageProducts)
-      setTotal(data.total || 0)
-      setPages(data.pages || 1)
-      if (data.categories?.length) setAllCats(data.categories)
-      if (data.brands?.length)     setBrands(data.brands)
-    } catch (err) {
-      console.error('Browse error:', err)
-      setProducts([])
-    } finally {
-      setLoading(false)
     }
-  }, [category, brand, q, page, sort])
 
-  useEffect(() => { fetchProducts() }, [fetchProducts])
+    run()
+    return () => { active = false; controller.abort() }
+  }, [category, brand, q, page, sort])
 
   // When category changes → reset brand + page
   function handleCategory(cat) {

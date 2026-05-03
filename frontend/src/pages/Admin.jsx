@@ -907,17 +907,89 @@ export default function Admin() {
   }, [user, authLoading, isAdmin, navigate])
 
   useEffect(() => {
-    if (isAdmin) {
-      fetchAll()
-      if (tab === 'photos') fetchPhotoSubs(photoTab)
-      else if (tab === 'reports') fetchReports()
-      else fetchSubs(tab)
-    }
-  }, [isAdmin, tab])
+    if (!isAdmin) return
+    let cancelled = false
 
-  useEffect(() => {
-    if (isAdmin && tab === 'photos') fetchPhotoSubs(photoTab)
-  }, [photoTab])
+    const run = async () => {
+      // Counts (always refresh)
+      try {
+        const [{ data }, { data: allPhotoData }, { data: repData }] = await Promise.all([
+          supabase.from('product_submissions').select('status'),
+          supabase.from('product_photo_submissions').select('status'),
+          supabase.from('ingredient_reports').select('status'),
+        ])
+        if (cancelled) return
+        const c = { pending: 0, approved: 0, rejected: 0, extracted: 0, photos: 0, reports: 0 }
+        if (data) data.forEach(r => { if (c[r.status] !== undefined) c[r.status]++ })
+        const pc = { pending: 0, approved: 0, rejected: 0 }
+        if (allPhotoData) allPhotoData.forEach(r => { if (pc[r.status] !== undefined) pc[r.status]++ })
+        c.photos = pc.pending
+        if (repData) c.reports = repData.filter(r => r.status === 'pending').length
+        setCounts(c)
+        setPhotoCounts(pc)
+      } catch (e) {
+        if (!cancelled) setFetchError(`Count exception: ${e.message}`)
+      }
+
+      if (cancelled) return
+
+      // Tab content
+      if (tab === 'photos') {
+        setPhotoFetching(true)
+        const { data, error } = await supabase
+          .from('product_photo_submissions').select('*')
+          .eq('status', photoTab).order('created_at', { ascending: false })
+        if (!cancelled) {
+          if (error) setFetchError(`Photo fetch error: ${error.message}`)
+          setPhotoSubs(data || [])
+          setPhotoFetching(false)
+        }
+      } else if (tab === 'reports') {
+        const { data } = await supabase
+          .from('ingredient_reports').select('*').order('created_at', { ascending: false })
+        if (!cancelled) setIngredientReports(data || [])
+      } else {
+        setFetching(true)
+        setFetchError(null)
+        try {
+          const { data, error } = await supabase
+            .from('product_submissions').select('*')
+            .eq('status', tab).order('created_at', { ascending: false })
+          if (!cancelled) {
+            if (error) setFetchError(`DB error: ${error.message} (${error.code})`)
+            setSubs(data || [])
+          }
+        } catch (e) {
+          if (!cancelled) { setFetchError(`Exception: ${e.message}`); setSubs([]) }
+        } finally {
+          if (!cancelled) setFetching(false)
+        }
+      }
+    }
+
+    run()
+    return () => { cancelled = true }
+  }, [isAdmin, tab, photoTab])
+
+  const fetchAll = async () => {
+    try {
+      const [{ data }, { data: allPhotoData }, { data: repData }] = await Promise.all([
+        supabase.from('product_submissions').select('status'),
+        supabase.from('product_photo_submissions').select('status'),
+        supabase.from('ingredient_reports').select('status'),
+      ])
+      const c = { pending: 0, approved: 0, rejected: 0, extracted: 0, photos: 0, reports: 0 }
+      if (data) data.forEach(r => { if (c[r.status] !== undefined) c[r.status]++ })
+      const pc = { pending: 0, approved: 0, rejected: 0 }
+      if (allPhotoData) allPhotoData.forEach(r => { if (pc[r.status] !== undefined) pc[r.status]++ })
+      c.photos = pc.pending
+      if (repData) c.reports = repData.filter(r => r.status === 'pending').length
+      setCounts(c)
+      setPhotoCounts(pc)
+    } catch (e) {
+      setFetchError(`Count exception: ${e.message}`)
+    }
+  }
 
   const fetchSubs = async (status) => {
     setFetching(true)
@@ -936,33 +1008,9 @@ export default function Admin() {
     }
   }
 
-  const fetchAll = async () => {
-    try {
-      const [{ data }, { data: allPhotoData }, { data: repData }] = await Promise.all([
-        supabase.from('product_submissions').select('status'),
-        supabase.from('product_photo_submissions').select('status'),
-        supabase.from('ingredient_reports').select('status'),
-      ])
-      const c = { pending: 0, approved: 0, rejected: 0, extracted: 0, photos: 0, reports: 0 }
-      if (data) data.forEach(r => { if (c[r.status] !== undefined) c[r.status]++ })
-      const pc = { pending: 0, approved: 0, rejected: 0 }
-      if (allPhotoData) allPhotoData.forEach(r => { if (pc[r.status] !== undefined) pc[r.status]++ })
-      c.photos = pc.pending
-      if (repData) {
-        c.reports = repData.filter(r => r.status === 'pending').length
-      }
-      setCounts(c)
-      setPhotoCounts(pc)
-    } catch (e) {
-      setFetchError(`Count exception: ${e.message}`)
-    }
-  }
-
   const fetchReports = async () => {
     const { data } = await supabase
-      .from('ingredient_reports')
-      .select('*')
-      .order('created_at', { ascending: false })
+      .from('ingredient_reports').select('*').order('created_at', { ascending: false })
     setIngredientReports(data || [])
   }
 

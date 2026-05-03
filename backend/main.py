@@ -29,6 +29,12 @@ def _is_rate_limited(ip: str, max_calls: int) -> bool:
     if len(timestamps) >= max_calls:
         return True
     _rate_store[ip].append(now)
+    # Evict IPs that have been idle for more than 2 windows to cap memory
+    if len(_rate_store) > 5000:
+        cutoff = now - RATE_WINDOW_SECONDS * 2
+        idle = [k for k, v in _rate_store.items() if not v or v[-1] < cutoff]
+        for k in idle:
+            del _rate_store[k]
     return False
 
 
