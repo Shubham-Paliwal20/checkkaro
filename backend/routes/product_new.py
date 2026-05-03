@@ -170,6 +170,67 @@ def _score_to_grade(score: int) -> str:
 def normalize_name(name: str) -> str:
     return re.sub(r'[^a-z0-9]', '', name.lower())
 
+def _word_pattern(term: str) -> str:
+    """'dove soap' → '%dove%soap%'  |  'parle g' → '%parle%g%'"""
+    words = [w for w in term.strip().split() if w]
+    return "%" + "%".join(words) + "%"
+
+def _search_query(term: str):
+    """Multi-strategy search — most specific first, broadest last."""
+    normalized = normalize_name(term)
+
+    def _run(col, op, val, prefer_static=True):
+        try:
+            q = supabase.from_("ai_extracted_products").select("*")
+            if op == "eq":
+                q = q.eq(col, val)
+            else:
+                q = q.ilike(col, val)
+            if prefer_static:
+                q = q.order("static_key", nullsfirst=False)
+            return (q.limit(1).execute().data or [None])[0]
+        except Exception:
+            return None
+
+    # 1a. Exact static_key — normalized (spaces stripped)
+    r = _run("static_key", "eq", normalized, prefer_static=False)
+    if r: return r
+
+    # 1b. static_key with spaces replaced by hyphens: "dove soap" → "dove-soap"
+    hyphenated = re.sub(r'\s+', '-', term.lower().strip())
+    hyphenated = re.sub(r'[^a-z0-9-]', '', hyphenated)
+    if hyphenated != normalized:
+        r = _run("static_key", "eq", hyphenated, prefer_static=False)
+        if r: return r
+
+    # 2. Exact name (ilike for case-insensitivity)
+    r = _run("name", "ilike", term)
+    if r: return r
+
+    # 3. Prefix: "Parle" → "Parle%"
+    r = _run("name", "ilike", f"{term}%")
+    if r: return r
+
+    # 4. Word-by-word: "parle g" → "%parle%g%"
+    #    Handles hyphens, spaces, punctuation differences between query and stored name
+    word_pat = _word_pattern(term)
+    r = _run("name", "ilike", word_pat)
+    if r: return r
+
+    # 5. Substring: "%term%"
+    r = _run("name", "ilike", f"%{term}%")
+    if r: return r
+
+    # 6. Word-by-word on cleaned term (strip non-alphanum)
+    clean_words = re.sub(r'[^a-z0-9 ]', ' ', term.lower()).split()
+    clean_words = [w for w in clean_words if len(w) > 1]
+    if clean_words:
+        clean_pat = "%" + "%".join(clean_words) + "%"
+        r = _run("name", "ilike", clean_pat)
+        if r: return r
+
+    return None
+
 
 # ── Search / Detail ───────────────────────────────────────────────────────────
 
@@ -177,21 +238,10 @@ def normalize_name(name: str) -> str:
 async def search_product(name: str = Query(..., description="Product name to search", min_length=1, max_length=120)):
     print(f"[SEARCH] Querying: {name}")
 
-    try:
-        result = supabase.from_("ai_extracted_products") \
-            .select("*") \
-            .ilike("name", f"%{name}%") \
-            .order("static_key", nullsfirst=False) \
-            .limit(1) \
-            .execute()
-    except Exception as e:
-        print(f"[SEARCH ERROR] {e}")
-        raise HTTPException(status_code=503, detail="Database unavailable, please try again.")
-
-    if not result.data:
+    p = _search_query(name)
+    if not p:
         raise HTTPException(status_code=404, detail=f"Product '{name}' not found.")
 
-    p = result.data[0]
     print(f"[SEARCH] Found: {p['name']} (static_key={p.get('static_key')})")
 
     raw = p.get("ingredients_raw") or ""
@@ -208,6 +258,14 @@ async def search_product(name: str = Query(..., description="Product name to sea
         )]
 
     grade = calculate_grade([i.dict() for i in ingredients])
+
+    # Persist grade back to DB if not stored yet (opportunistic)
+    if not p.get("grade"):
+        try:
+            supabase.from_("ai_extracted_products") \
+                .update({"grade": grade}).eq("id", p["id"]).execute()
+        except Exception:
+            pass
 
     raw_images = p.get("images") or []
     if not raw_images and p.get("image_url"):
@@ -246,9 +304,12 @@ async def browse_products(
     limit: int = Query(24, ge=1, le=100),
     sort: str = Query("score"),
 ):
+    # Use stored grade — no ingredients_raw fetch needed (fast)
+    _grade_order = {'A': 0, 'B': 1, 'C': 2, 'D': 3}
+
     try:
         query = supabase.from_("ai_extracted_products") \
-            .select("id, name, brand, category, image_url, verdict, ingredients_raw, static_key") \
+            .select("id, name, brand, category, image_url, verdict, grade, static_key") \
             .limit(2000)
 
         if category and category != "All":
@@ -263,7 +324,7 @@ async def browse_products(
         print(f"[BROWSE ERROR] {e}")
         return {"products": [], "total": 0, "page": 1, "pages": 1, "categories": [], "brands": []}
 
-    # Deduplicate by normalised name — static product (has static_key) beats community
+    # Deduplicate by normalised name — static (has static_key) beats community
     _norm = lambda s: re.sub(r'[^a-z0-9]', '', (s or "").lower())
     seen: dict = {}
     for p in (result.data or []):
@@ -271,26 +332,21 @@ async def browse_products(
         if not nn:
             continue
         existing = seen.get(nn)
-        # Prefer static (has static_key) over community (static_key is None)
         if existing is None or (p.get("static_key") and not existing.get("static_key")):
             seen[nn] = p
 
     items = []
     for p in seen.values():
-        raw = p.get("ingredients_raw") or ""
-        grade = _grade_from_raw(raw, []) if raw else "C"
         items.append({
             "id":        str(p.get("id", "")),
             "name":      p.get("name", ""),
             "brand":     p.get("brand") or "Unknown",
             "category":  p.get("category") or "General",
             "image_url": p.get("image_url"),
-            "grade":     grade,
+            "grade":     p.get("grade") or "C",
             "verdict":   p.get("verdict") or "",
         })
 
-    # Sort
-    _grade_order = {'A': 0, 'B': 1, 'C': 2, 'D': 3}
     if sort == "name":
         items.sort(key=lambda p: p["name"].lower())
     elif sort == "brand":
@@ -302,11 +358,9 @@ async def browse_products(
     start = (page - 1) * limit
     page_items = items[start: start + limit]
 
-    # Filter lists for UI dropdowns — derive from full result set
     all_data = result.data or []
     all_cats = sorted({p["category"] for p in all_data if p.get("category")})
     all_brands = sorted({p["brand"] for p in all_data if p.get("brand")})
-
     if category and category != "All":
         all_brands = sorted({p["brand"] for p in all_data if p.get("brand") and p.get("category") == category})
 

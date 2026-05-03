@@ -1,7 +1,6 @@
 import { useState, useEffect, useRef } from 'react'
 import { useNavigate } from 'react-router-dom'
 import axios from 'axios'
-import { supabase } from '../lib/supabaseClient'
 
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'https://checkkaro.onrender.com'
 
@@ -73,29 +72,13 @@ function SearchBar({ placeholder = 'Search any product...', onSearch }) {
     setLoading(true)
     timerRef.current = setTimeout(async () => {
       try {
-        // Run backend (static products) + Supabase community search in parallel
-        const [backendRes, communityRes] = await Promise.allSettled([
-          axios.get(`${API_BASE_URL}/api/product/suggestions`, { params: { q: query }, timeout: 5000 }),
-          supabase.from('ai_extracted_products').select('name, brand, category').ilike('name', `%${query}%`).limit(4),
-        ])
-
-        const staticResults = backendRes.status === 'fulfilled'
-          ? (backendRes.value.data.suggestions || [])
-          : []
-
-        const communityResults = communityRes.status === 'fulfilled'
-          ? (communityRes.value.data || []).map(p => ({ name: p.name, brand: p.brand || '', category: p.category || 'General' }))
-          : []
-
-        // Merge: community first, skip duplicates
-        const seen = new Set(staticResults.map(s => s.name.toLowerCase()))
-        const merged = [
-          ...communityResults.filter(s => !seen.has(s.name.toLowerCase())),
-          ...staticResults,
-        ].slice(0, 8)
-
-        suggestionsCache.set(query, merged)
-        setSuggestions(merged)
+        const res = await axios.get(`${API_BASE_URL}/api/product/suggestions`, {
+          params: { q: query },
+          timeout: 5000,
+        })
+        const results = res.data.suggestions || []
+        suggestionsCache.set(query, results)
+        setSuggestions(results)
         setIsPopular(false)
         setShowSuggestions(true)
       } catch {

@@ -9,13 +9,13 @@ function Home() {
 
   const quickSearchItems = [
     { label: '🍜 Maggi Masala', query: 'Maggi 2-Minute Masala Noodles', cat: 'Instant Noodles' },
-    { label: '🍪 Parle-G', query: 'Parle-G', cat: 'Biscuit' },
+    { label: '🍪 Parle-G', query: 'Parle-G Gold Biscuits', cat: 'Biscuits' },
     { label: '🥤 Thums Up', query: 'Thums Up', cat: 'Soft Drink' },
-    { label: '🧴 Dove Soap', query: 'Dove Soap', cat: 'Soap' },
-    { label: '🌿 Parachute Oil', query: 'Parachute Coconut Oil', cat: 'Hair Care' },
+    { label: '🧴 Dove Soap', query: 'Dove Beauty Bar', cat: 'Personal Care' },
+    { label: '🌿 Parachute Oil', query: 'Parachute Advanced Coconut Hair Oil', cat: 'Hair Care' },
     { label: '✨ Lakme Sunscreen', query: 'Lakme Sun Expert SPF 50', cat: 'Skincare' },
     { label: '🧈 Amul Butter', query: 'Amul Butter', cat: 'Dairy' },
-    { label: '🌶 Kurkure', query: 'Kurkure Masala Munch', cat: 'Snack' },
+    { label: '🌶 Kurkure', query: 'Kurkure Masala Munch', cat: 'Snacks' },
   ]
 
   const homeStructuredData = {
