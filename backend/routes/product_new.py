@@ -2,7 +2,7 @@ from fastapi import APIRouter, Query, HTTPException
 from typing import Optional, List, Dict
 from models.schemas import ProductResponse, IngredientItem
 import re
-from db.supabase_client import supabase
+from db.supabase_client import supabase, supabase_admin
 from grading import calculate_grade, grade_to_legacy_score
 
 router = APIRouter()
@@ -253,7 +253,7 @@ async def search_product(name: str = Query(..., description="Product name to sea
         # Sync stored grade if it differs (keeps browse consistent with detail)
         if grade != p.get("grade"):
             try:
-                supabase.from_("ai_extracted_products") \
+                supabase_admin.from_("ai_extracted_products") \
                     .update({"grade": grade}).eq("id", p["id"]).execute()
             except Exception:
                 pass
