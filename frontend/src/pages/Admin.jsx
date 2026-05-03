@@ -6,10 +6,19 @@ import { supabase } from '../lib/supabaseClient'
 const ADMIN_EMAIL = 'shubhampaliwal5@gmail.com'
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'https://checkkaro.onrender.com'
 const STATUS_TABS  = ['pending', 'approved', 'rejected', 'extracted', 'photos', 'reports']
+const BRAND_BLUE   = '#1B3F8A'
 const STATUS_COLOR = { pending: '#f59e0b', approved: '#16a34a', rejected: '#dc2626', extracted: '#7c3aed', photos: '#0ea5e9', reports: '#3b82f6' }
 const STATUS_BG    = { pending: '#fef3c7', approved: '#f0fdf4', rejected: '#fef2f2', extracted: '#f5f3ff', photos: '#f0f9ff', reports: '#eff6ff' }
 
 const CATEGORIES = ['Personal Care', 'Skincare', 'Haircare', 'Food & Beverages', 'Supplements', 'Baby Care', 'Other']
+
+const ALL_CATEGORIES = [
+  'Skincare', 'Hair Care', 'Personal Care', 'Cosmetics', 'Food', 'Snacks', 'Beverages',
+  'Soft Drink', 'Health Drink', 'Biscuits', 'Chocolate', 'Nutrition', 'Protein Supplement',
+  'Baby Care', 'Oral Care', 'Household', 'Dairy', 'Instant Noodles', 'Spices', 'Condiments',
+  'Cooking Oil', 'Breakfast Cereal', 'Energy Drink', 'Sports Drink', 'Health Supplement',
+  'Confectionery', 'Bakery', 'Ready to Eat', 'Pickles', 'Fruit Drink', 'Fruit Juice', 'Dessert', 'Other',
+]
 
 // ── Ingredient classification keyword lists ───────────────────────────────────
 const COMMONLY_QUESTIONED = [
@@ -418,6 +427,270 @@ function SubmissionCard({ sub, onApprove, onReject, onSave, saving, cardMsg }) {
   )
 }
 
+function AddProductForm({ isMobile }) {
+  const navigate = useNavigate()
+  const [name,        setName]        = useState('')
+  const [brand,       setBrand]       = useState('')
+  const [category,    setCategory]    = useState('Skincare')
+  const [ingredients, setIngredients] = useState('')
+  const [imageUrl,    setImageUrl]    = useState('')
+  const [imageFile,   setImageFile]   = useState(null)
+  const [imagePreview, setImagePreview] = useState(null)
+  const [saving,      setSaving]      = useState(false)
+  const [msg,         setMsg]         = useState(null)
+  const fileRef = useRef(null)
+
+  const parsed   = ingredients.trim() ? parseIngredients(ingredients) : []
+  const score    = parsed.length > 0 ? calculateScore(parsed) : null
+  const cq       = parsed.filter(i => i.classification === 'commonly_questioned').length
+  const wk       = parsed.filter(i => i.classification === 'worth_knowing').length
+  const gr       = parsed.filter(i => i.classification === 'generally_recognised').length
+
+  const gradeFromScore = s => s >= 80 ? 'A' : s >= 60 ? 'B' : s >= 40 ? 'C' : 'D'
+
+  const handleFileChange = (e) => {
+    const file = e.target.files?.[0]
+    if (!file) return
+    setImageFile(file)
+    setImageUrl('')
+    const reader = new FileReader()
+    reader.onload = ev => setImagePreview(ev.target.result)
+    reader.readAsDataURL(file)
+  }
+
+  const handleUrlChange = (e) => {
+    setImageUrl(e.target.value)
+    setImageFile(null)
+    setImagePreview(e.target.value || null)
+  }
+
+  const uploadImage = async (productId) => {
+    if (!imageFile) return imageUrl || null
+    try {
+      const ext  = imageFile.name.split('.').pop()
+      const path = `products/${productId}.${ext}`
+      const { error } = await supabase.storage.from('product-images').upload(path, imageFile, { upsert: true })
+      if (error) throw error
+      const { data: { publicUrl } } = supabase.storage.from('product-images').getPublicUrl(path)
+      return publicUrl
+    } catch (e) {
+      console.warn('Image upload failed:', e.message)
+      return null
+    }
+  }
+
+  const makeStaticKey = (n) => n.toLowerCase().trim().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '')
+
+  const handleSave = async () => {
+    if (!name.trim() || !ingredients.trim()) {
+      setMsg({ type: 'error', text: 'Product name and ingredients are required.' })
+      return
+    }
+    setSaving(true)
+    setMsg(null)
+    try {
+      const key   = makeStaticKey(name.trim())
+      const grade = gradeFromScore(score ?? 50)
+
+      // Insert first to get the UUID, then upload image with that UUID
+      const { data: inserted, error: insertErr } = await supabase
+        .from('ai_extracted_products')
+        .insert({
+          name:            name.trim(),
+          brand:           brand.trim() || null,
+          category,
+          ingredients_raw: ingredients.trim(),
+          ingredients:     [],
+          grade,
+          static_key:      key,
+          summary:         `${name.trim()} by ${brand.trim() || 'Unknown'}. Grade ${grade}.`,
+          fssai_note:      'Subject to FSSAI regulations.',
+          verdict:         verdictFromScore(score ?? 50),
+          recommendation:  recommendationFromScore(score ?? 50),
+          image_url:       imageUrl || null,
+        })
+        .select('id')
+        .single()
+
+      if (insertErr) throw new Error(insertErr.message)
+
+      // Now upload the image file if provided, and update the record
+      if (imageFile) {
+        const uploadedUrl = await uploadImage(inserted.id)
+        if (uploadedUrl) {
+          await supabase.from('ai_extracted_products')
+            .update({ image_url: uploadedUrl })
+            .eq('id', inserted.id)
+        }
+      }
+
+      setMsg({ type: 'success', text: `"${name.trim()}" saved successfully! Grade ${grade}. It will appear in search and browse immediately.` })
+      // Reset form
+      setName(''); setBrand(''); setIngredients(''); setImageUrl(''); setImageFile(null); setImagePreview(null)
+    } catch (e) {
+      setMsg({ type: 'error', text: `Save failed: ${e.message}` })
+    } finally {
+      setSaving(false)
+    }
+  }
+
+  const field = {
+    width: '100%', boxSizing: 'border-box', border: '1.5px solid #d1d5db',
+    borderRadius: 10, padding: '10px 14px', fontSize: 14, fontFamily: 'inherit',
+    outline: 'none', color: '#111827', background: '#fff',
+  }
+
+  return (
+    <div style={{ maxWidth: 640, margin: '0 auto' }}>
+      <div style={{ background: '#fff', border: '1px solid #e5e7eb', borderRadius: 16, padding: isMobile ? '20px 16px' : '28px 28px', boxShadow: '0 4px 20px rgba(0,0,0,0.06)' }}>
+        <h2 style={{ fontFamily: 'Poppins,sans-serif', fontSize: 18, fontWeight: 800, color: BRAND_BLUE, margin: '0 0 20px' }}>
+          Add New Product
+        </h2>
+
+        {/* Name + Brand row */}
+        <div style={{ display: 'flex', gap: 10, marginBottom: 12, flexDirection: isMobile ? 'column' : 'row' }}>
+          <div style={{ flex: 2 }}>
+            <label style={{ display: 'block', fontSize: 12, fontWeight: 700, color: '#374151', marginBottom: 5 }}>Product Name *</label>
+            <input
+              value={name}
+              onChange={e => setName(e.target.value)}
+              placeholder="e.g. Dove Beauty Bar Soap"
+              style={field}
+              disabled={saving}
+            />
+          </div>
+          <div style={{ flex: 1 }}>
+            <label style={{ display: 'block', fontSize: 12, fontWeight: 700, color: '#374151', marginBottom: 5 }}>Brand</label>
+            <input
+              value={brand}
+              onChange={e => setBrand(e.target.value)}
+              placeholder="e.g. Dove"
+              style={field}
+              disabled={saving}
+            />
+          </div>
+        </div>
+
+        {/* Category */}
+        <div style={{ marginBottom: 12 }}>
+          <label style={{ display: 'block', fontSize: 12, fontWeight: 700, color: '#374151', marginBottom: 5 }}>Category</label>
+          <select value={category} onChange={e => setCategory(e.target.value)} style={{ ...field, cursor: 'pointer' }} disabled={saving}>
+            {ALL_CATEGORIES.map(c => <option key={c}>{c}</option>)}
+          </select>
+        </div>
+
+        {/* Image */}
+        <div style={{ marginBottom: 14 }}>
+          <label style={{ display: 'block', fontSize: 12, fontWeight: 700, color: '#374151', marginBottom: 5 }}>Product Image (optional)</label>
+          <div style={{ display: 'flex', gap: 8, alignItems: 'flex-start', flexDirection: isMobile ? 'column' : 'row' }}>
+            <div style={{ flex: 1, display: 'flex', flexDirection: 'column', gap: 6 }}>
+              <input
+                value={imageUrl}
+                onChange={handleUrlChange}
+                placeholder="Paste image URL…"
+                style={{ ...field, fontSize: 13 }}
+                disabled={saving || !!imageFile}
+              />
+              <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+                <hr style={{ flex: 1, border: 'none', borderTop: '1px solid #e5e7eb' }} />
+                <span style={{ fontSize: 11, color: '#9ca3af', fontWeight: 600 }}>OR</span>
+                <hr style={{ flex: 1, border: 'none', borderTop: '1px solid #e5e7eb' }} />
+              </div>
+              <button
+                type="button"
+                onClick={() => fileRef.current?.click()}
+                disabled={saving || !!imageUrl}
+                style={{ padding: '9px 0', borderRadius: 8, border: '1.5px dashed #d1d5db', background: imageFile ? '#f0fdf4' : '#f9fafb', color: imageFile ? '#16a34a' : '#6b7280', fontSize: 13, fontWeight: 600, cursor: saving || !!imageUrl ? 'not-allowed' : 'pointer', fontFamily: 'inherit', opacity: imageUrl ? 0.5 : 1 }}>
+                {imageFile ? `✓ ${imageFile.name}` : '📁 Upload from device'}
+              </button>
+              <input ref={fileRef} type="file" accept="image/*" style={{ display: 'none' }} onChange={handleFileChange} />
+            </div>
+            {imagePreview && (
+              <div style={{ flexShrink: 0, width: 90, height: 90, border: '2px solid #e5e7eb', borderRadius: 10, overflow: 'hidden', background: '#f9fafb', display: 'flex', alignItems: 'center', justifyContent: 'center', position: 'relative' }}>
+                <img src={imagePreview} alt="Preview" style={{ width: '100%', height: '100%', objectFit: 'contain', padding: 4 }} onError={() => setImagePreview(null)} />
+                <button onClick={() => { setImageUrl(''); setImageFile(null); setImagePreview(null) }}
+                  style={{ position: 'absolute', top: 3, right: 3, width: 18, height: 18, borderRadius: '50%', background: '#dc2626', border: 'none', color: '#fff', fontSize: 11, cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', lineHeight: 1, padding: 0 }}>
+                  ×
+                </button>
+              </div>
+            )}
+          </div>
+        </div>
+
+        {/* Ingredients */}
+        <div style={{ marginBottom: 14 }}>
+          <label style={{ display: 'block', fontSize: 12, fontWeight: 700, color: '#374151', marginBottom: 5 }}>
+            Ingredients * <span style={{ fontWeight: 400, color: '#9ca3af' }}>(comma-separated, from product label)</span>
+          </label>
+          <textarea
+            value={ingredients}
+            onChange={e => setIngredients(e.target.value)}
+            placeholder="Water, Glycerin, Sodium Laureth Sulfate, Cocamidopropyl Betaine, Fragrance, Citric Acid..."
+            rows={5}
+            style={{ ...field, resize: 'vertical', lineHeight: 1.6 }}
+            disabled={saving}
+          />
+        </div>
+
+        {/* Live classification preview */}
+        {parsed.length > 0 && (
+          <div style={{ background: '#f8fafc', border: '1px solid #e2e8f0', borderRadius: 10, padding: '12px 14px', marginBottom: 16 }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 8 }}>
+              <span style={{ fontSize: 13, fontWeight: 700, color: '#374151' }}>{parsed.length} ingredients detected</span>
+              <div style={{ display: 'flex', align: 'center', gap: 8 }}>
+                <span style={{ fontSize: 12, color: '#6b7280' }}>Score {score}/100</span>
+                <span style={{
+                  fontSize: 14, fontWeight: 800, padding: '2px 10px', borderRadius: 8,
+                  background: score >= 80 ? '#f0fdf4' : score >= 60 ? '#eff6ff' : score >= 40 ? '#fffbeb' : '#fef2f2',
+                  color: score >= 80 ? '#16a34a' : score >= 60 ? '#2563eb' : score >= 40 ? '#d97706' : '#dc2626',
+                }}>
+                  Grade {gradeFromScore(score)}
+                </span>
+              </div>
+            </div>
+            <div style={{ display: 'flex', gap: 6, flexWrap: 'wrap' }}>
+              {gr > 0 && <span style={{ fontSize: 12, fontWeight: 600, background: '#f0fdf4', color: '#16a34a', border: '1px solid #bbf7d0', borderRadius: 99, padding: '3px 10px' }}>🟢 {gr} clean</span>}
+              {wk > 0 && <span style={{ fontSize: 12, fontWeight: 600, background: '#fefce8', color: '#ca8a04', border: '1px solid #fde68a', borderRadius: 99, padding: '3px 10px' }}>🟡 {wk} worth knowing</span>}
+              {cq > 0 && <span style={{ fontSize: 12, fontWeight: 600, background: '#fef2f2', color: '#dc2626', border: '1px solid #fecaca', borderRadius: 99, padding: '3px 10px' }}>🔴 {cq} questioned</span>}
+            </div>
+          </div>
+        )}
+
+        {/* Save button */}
+        <button
+          onClick={handleSave}
+          disabled={saving || !name.trim() || !ingredients.trim()}
+          style={{
+            width: '100%', padding: '14px 0', borderRadius: 12, border: 'none', fontFamily: 'inherit',
+            fontSize: 16, fontWeight: 800, cursor: saving || !name.trim() || !ingredients.trim() ? 'not-allowed' : 'pointer',
+            background: saving ? '#e0e7ff' : !name.trim() || !ingredients.trim() ? '#f3f4f6' : BRAND_BLUE,
+            color: saving ? BRAND_BLUE : !name.trim() || !ingredients.trim() ? '#9ca3af' : '#fff',
+            transition: 'all 0.2s',
+          }}>
+          {saving ? 'Saving product…' : 'Save Product to Database'}
+        </button>
+
+        {msg && (
+          <div style={{
+            marginTop: 14, padding: '12px 16px', borderRadius: 10, fontSize: 14, fontWeight: 600, lineHeight: 1.5,
+            background: msg.type === 'success' ? '#f0fdf4' : '#fef2f2',
+            color: msg.type === 'success' ? '#16a34a' : '#dc2626',
+            border: `1.5px solid ${msg.type === 'success' ? '#bbf7d0' : '#fecaca'}`,
+          }}>
+            {msg.text}
+            {msg.type === 'success' && name === '' && (
+              <button onClick={() => navigate(`/result/${encodeURIComponent(name)}`)}
+                style={{ display: 'block', marginTop: 8, background: BRAND_BLUE, color: '#fff', border: 'none', borderRadius: 8, padding: '7px 16px', fontSize: 13, fontWeight: 700, cursor: 'pointer', fontFamily: 'inherit' }}>
+                View Product Page
+              </button>
+            )}
+          </div>
+        )}
+      </div>
+    </div>
+  )
+}
+
 export default function Admin() {
   const { user, loading: authLoading } = useAuth()
   const navigate = useNavigate()
@@ -695,7 +968,7 @@ export default function Admin() {
 
   if (!isAdmin) return null
 
-  const adminPage = tab === 'photos' ? 'photos' : tab === 'reports' ? 'reports' : 'products'
+  const adminPage = tab === 'photos' ? 'photos' : tab === 'reports' ? 'reports' : tab === 'add' ? 'add' : 'products'
 
   return (
     <div style={{ maxWidth: 1100, margin: '0 auto', padding: isMobile ? '20px 14px 48px' : '32px 20px 60px' }}>
@@ -755,6 +1028,19 @@ export default function Admin() {
           <div style={{ fontSize: isMobile ? 22 : 26 }}>🚩</div>
           <div style={{ fontSize: isMobile ? 12 : 14, fontWeight: 700, marginTop: 4 }}>Ingredient Reports</div>
           <div style={{ fontSize: 11, marginTop: 2, opacity: 0.8 }}>{counts.reports} pending</div>
+        </button>
+        <button
+          onClick={() => setTab('add')}
+          style={{
+            flex: 1, padding: isMobile ? '14px 8px' : '16px 12px', borderRadius: 14, border: 'none', cursor: 'pointer', fontFamily: 'inherit', textAlign: 'center',
+            background: adminPage === 'add' ? '#16a34a' : '#f1f5f9',
+            color: adminPage === 'add' ? '#fff' : '#475569',
+            boxShadow: adminPage === 'add' ? '0 4px 14px rgba(22,163,74,0.25)' : 'none',
+            transition: 'all 0.15s',
+          }}>
+          <div style={{ fontSize: isMobile ? 22 : 26 }}>➕</div>
+          <div style={{ fontSize: isMobile ? 12 : 14, fontWeight: 700, marginTop: 4 }}>Add Product</div>
+          <div style={{ fontSize: 11, marginTop: 2, opacity: 0.8 }}>from scratch</div>
         </button>
       </div>
 
@@ -927,6 +1213,16 @@ export default function Admin() {
               ))}
             </div>
           )}
+        </>
+      )}
+
+      {/* ── ADD PRODUCT PAGE ── */}
+      {adminPage === 'add' && (
+        <>
+          <h2 style={{ fontFamily: 'Poppins,sans-serif', fontSize: 16, fontWeight: 700, color: '#111827', marginBottom: 20 }}>
+            ➕ Add Product from Scratch
+          </h2>
+          <AddProductForm isMobile={isMobile} />
         </>
       )}
 
