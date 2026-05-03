@@ -391,11 +391,14 @@ async def browse_products(
     sort: str = Query("score", description="sort: score | name | brand"),
 ):
     """Browse all products with category/brand filters and pagination."""
-    # Start with static products
-    items = list(SAMPLE_PRODUCTS.values())
+    # Build static items as a mutable dict keyed by normalised name so Supabase
+    # corrections can update the grade in-place without creating duplicates.
+    _norm = lambda s: re.sub(r'[^a-z0-9]', '', s.lower())
+    items_by_name: dict = {}
+    for p in SAMPLE_PRODUCTS.values():
+        items_by_name[_norm(p["name"])] = dict(p)
 
-    # Add community-submitted products from Supabase
-    # Always calculate grade live from ingredients — never trust stored grade
+    # Merge community products from Supabase
     try:
         community = supabase.from_("ai_extracted_products") \
             .select("id, name, brand, category, image_url, verdict, ingredients, ingredients_raw") \
@@ -403,18 +406,51 @@ async def browse_products(
             .limit(500) \
             .execute()
         for p in (community.data or []):
-            grade = _grade_from_raw(p.get("ingredients_raw") or "", p.get("ingredients") or [])
-            items.append({
-                "id":        str(p.get("id", "")),
-                "name":      p.get("name", ""),
-                "brand":     p.get("brand") or "Unknown",
-                "category":  p.get("category") or "General",
-                "image_url": p.get("image_url"),
-                "grade":     grade,
-                "verdict":   p.get("verdict") or "",
-            })
+            nn = _norm(p.get("name") or "")
+            raw = p.get("ingredients_raw") or ""
+            ings = p.get("ingredients") or []
+            has_content = bool(raw) or bool(ings)
+
+            if nn in items_by_name:
+                if raw:
+                    # Admin-approved correction exists — recompute grade with merged ingredients
+                    # (matches what the detail page returns: static base + approved additions)
+                    static_key = next(
+                        (k for k, sp in SAMPLE_PRODUCTS.items()
+                         if _norm(sp["name"]) == nn), None
+                    )
+                    if static_key:
+                        approved_names = _parse_raw(raw)
+                        full_ings = get_ingredients(static_key, category=items_by_name[nn].get("category", ""))
+                        static_classified = [
+                            {"name": i["name"], "classification": _classify(i["name"])}
+                            for i in full_ings
+                            if i.get("name") and i["name"].lower() != "standard ingredients"
+                        ]
+                        static_lower = {c["name"].lower() for c in static_classified}
+                        extra = [
+                            {"name": n, "classification": _classify(n)}
+                            for n in approved_names if n.lower() not in static_lower
+                        ]
+                        merged = calculate_grade(static_classified + extra)
+                        items_by_name[nn]["grade"] = merged
+                # If no content (empty duplicate) — keep static entry unchanged, skip
+            else:
+                # Genuinely new product not in static data
+                grade = _grade_from_raw(raw, ings)
+                items_by_name[nn] = {
+                    "id":        str(p.get("id", "")),
+                    "name":      p.get("name", ""),
+                    "brand":     p.get("brand") or "Unknown",
+                    "category":  p.get("category") or "General",
+                    "image_url": p.get("image_url"),
+                    "grade":     grade,
+                    "verdict":   p.get("verdict") or "",
+                }
     except Exception as e:
         print(f"[BROWSE SUPABASE ERROR] {e}")
+
+    items = list(items_by_name.values())
 
     # Filter
     if category and category != "All":
