@@ -248,6 +248,15 @@ async def search_product(name: str = Query(..., description="Product name to sea
     if raw:
         raw_names = _parse_raw(raw)
         ingredients = [_build_ingredient_item(n) for n in raw_names if n]
+        # Compute grade live from actual ingredients
+        grade = calculate_grade([i.dict() for i in ingredients])
+        # Sync stored grade if it differs (keeps browse consistent with detail)
+        if grade != p.get("grade"):
+            try:
+                supabase.from_("ai_extracted_products") \
+                    .update({"grade": grade}).eq("id", p["id"]).execute()
+            except Exception:
+                pass
     else:
         ingredients = [IngredientItem(
             name="Standard Ingredients",
@@ -256,16 +265,9 @@ async def search_product(name: str = Query(..., description="Product name to sea
             one_line_note="Full ingredient list not yet available",
             regulatory_note="FSSAI approved"
         )]
-
-    grade = calculate_grade([i.dict() for i in ingredients])
-
-    # Persist grade back to DB if not stored yet (opportunistic)
-    if not p.get("grade"):
-        try:
-            supabase.from_("ai_extracted_products") \
-                .update({"grade": grade}).eq("id", p["id"]).execute()
-        except Exception:
-            pass
+        # No ingredients to compute from — use whatever grade backfill stored.
+        # Defaulting to "C" matches browse page so both pages agree.
+        grade = p.get("grade") or "C"
 
     raw_images = p.get("images") or []
     if not raw_images and p.get("image_url"):
