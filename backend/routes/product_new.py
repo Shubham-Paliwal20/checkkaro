@@ -409,7 +409,6 @@ async def browse_products(
             nn = _norm(p.get("name") or "")
             raw = p.get("ingredients_raw") or ""
             ings = p.get("ingredients") or []
-            has_content = bool(raw) or bool(ings)
 
             if nn in items_by_name:
                 if raw:
