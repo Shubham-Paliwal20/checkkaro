@@ -316,7 +316,9 @@ async def browse_products(
             if brand and brand != "All":
                 q_ = q_.eq("brand", brand)
             if q:
-                q_ = q_.ilike("name", f"%{q}%")
+                # Search across name, brand, and category so "soap" finds
+                # products in the Soap category, "amul" finds all Amul products, etc.
+                q_ = q_.or_(f"name.ilike.%{q}%,brand.ilike.%{q}%,category.ilike.%{q}%")
             return q_
 
         # Batch-fetch all matching rows (Supabase caps at 1000 per request)
