@@ -72,17 +72,19 @@ function SearchBar({ placeholder = 'Search any product...', onSearch }) {
 
     // Cache miss → show spinner, wait 80ms before hitting the server
     setLoading(true)
+    const abortController = new AbortController()
     timerRef.current = setTimeout(async () => {
       try {
         // Run backend + direct Supabase in parallel.
         // Supabase is the reliable source; backend enriches when warm.
         const [backendRes, dbRes] = await Promise.allSettled([
-          axios.get(`${API_BASE_URL}/api/product/suggestions`, { params: { q: query }, timeout: 5000 }),
+          axios.get(`${API_BASE_URL}/api/product/suggestions`, { params: { q: query }, timeout: 5000, signal: abortController.signal }),
           supabase.from('ai_extracted_products')
             .select('name, brand, category, static_key')
             .ilike('name', `%${query}%`)
             .order('static_key', { nullsFirst: false })
-            .limit(12),
+            .limit(12)
+            .abortSignal(abortController.signal),
         ])
 
         const backendResults = backendRes.status === 'fulfilled'
@@ -117,7 +119,7 @@ function SearchBar({ placeholder = 'Search any product...', onSearch }) {
       }
     }, 80)
 
-    return () => clearTimeout(timerRef.current)
+    return () => { clearTimeout(timerRef.current); abortController.abort() }
   }, [query])
 
   // ── Close on outside click ──

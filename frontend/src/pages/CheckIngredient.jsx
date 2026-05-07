@@ -7,6 +7,9 @@ import SEO from '../components/SEO'
 
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'https://checkkaro.onrender.com'
 
+// Module-level cache — survives re-mounts, never refetches during the session
+let _popularCache = null
+
 function CheckIngredient() {
   const [query, setQuery] = useState('')
   const [loading, setLoading] = useState(false)
@@ -67,24 +70,24 @@ function CheckIngredient() {
   }, [query])
 
   const fetchPopularIngredients = async () => {
+    if (_popularCache) { setPopularIngredients(_popularCache); return }
     try {
-      const response = await axios.get(`${API_BASE_URL}/api/ingredient/popular`, {
-        params: { limit: 16 }
-      })
-      setPopularIngredients(response.data || [])
-    } catch (error) {
-      console.error('Error fetching popular ingredients:', error)
-      // Fallback to hardcoded list
-      setPopularIngredients([
+      const response = await axios.get(`${API_BASE_URL}/api/ingredient/popular`, { params: { limit: 16 } })
+      _popularCache = response.data || []
+      setPopularIngredients(_popularCache)
+    } catch {
+      const fallback = [
         { name: 'TBHQ', classification: 'commonly_questioned' },
         { name: 'Tartrazine', classification: 'commonly_questioned' },
-        { name: 'MSG', classification: 'commonly_questioned' },
+        { name: 'MSG', classification: 'worth_knowing' },
         { name: 'Sodium Benzoate', classification: 'commonly_questioned' },
         { name: 'Sunset Yellow', classification: 'commonly_questioned' },
-        { name: 'Carrageenan', classification: 'worth_knowing' },
+        { name: 'Carrageenan', classification: 'commonly_questioned' },
         { name: 'Palm Oil', classification: 'worth_knowing' },
-        { name: 'Aspartame', classification: 'commonly_questioned' }
-      ])
+        { name: 'Aspartame', classification: 'commonly_questioned' },
+      ]
+      _popularCache = fallback
+      setPopularIngredients(fallback)
     }
   }
 

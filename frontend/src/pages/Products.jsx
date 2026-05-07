@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from 'react'
+import { useState, useEffect, useRef, memo } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { motion, AnimatePresence } from 'framer-motion'
 import axios from 'axios'
@@ -24,7 +24,7 @@ function GradePill({ grade }) {
   )
 }
 
-function BrowseCard({ product }) {
+const BrowseCard = memo(function BrowseCard({ product }) {
   const navigate = useNavigate()
 
   function handleClick() {
@@ -44,6 +44,8 @@ function BrowseCard({ product }) {
           <img
             src={product.image_url}
             alt={product.name}
+            loading="lazy"
+            decoding="async"
             className="w-full h-full object-contain p-2"
             onError={e => { e.currentTarget.style.display = 'none' }}
           />
@@ -83,7 +85,7 @@ function BrowseCard({ product }) {
       </div>
     </motion.div>
   )
-}
+})
 
 const CAT_ICON = {
   'Skincare': '✨', 'Hair Care': '💆', 'Personal Care': '🧴',

@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useMemo } from 'react'
 import { supabase } from '../lib/supabaseClient'
 import { useAuth } from '../context/AuthContext'
 
@@ -193,8 +193,13 @@ export default function ProductReviews({ productId, productName }) {
     }
   }, [myReview, user, editing])
 
-  const total = reviews.length
-  const avg   = total > 0 ? reviews.reduce((s, r) => s + r.rating, 0) / total : 0
+  const { total, avg, starCounts } = useMemo(() => {
+    const t = reviews.length
+    const a = t > 0 ? reviews.reduce((s, r) => s + r.rating, 0) / t : 0
+    const counts = { 1: 0, 2: 0, 3: 0, 4: 0, 5: 0 }
+    reviews.forEach(r => { if (counts[r.rating] !== undefined) counts[r.rating]++ })
+    return { total: t, avg: a, starCounts: counts }
+  }, [reviews])
 
   const handleSubmit = async () => {
     setFormError('')
@@ -258,7 +263,7 @@ export default function ProductReviews({ productId, productName }) {
               </div>
               <div style={{ flex: 1, minWidth: 140, display: 'flex', flexDirection: 'column', gap: 6, justifyContent: 'center' }}>
                 {[5,4,3,2,1].map(s => (
-                  <RatingBar key={s} star={s} count={reviews.filter(r => r.rating === s).length} total={total} />
+                  <RatingBar key={s} star={s} count={starCounts[s]} total={total} />
                 ))}
               </div>
             </div>

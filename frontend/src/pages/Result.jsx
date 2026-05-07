@@ -391,11 +391,16 @@ function Result() {
 
   if (!product) return null
 
-  // Categorize ingredients
-  const allIngredients = product.ingredients || []
-  const generally_recognised = allIngredients.filter(i => i.classification === 'generally_recognised')
-  const worth_knowing = allIngredients.filter(i => i.classification === 'worth_knowing')
-  const commonly_questioned = allIngredients.filter(i => i.classification === 'commonly_questioned')
+  // Categorize ingredients — memoised so filters don't re-run on every render
+  const { allIngredients, generally_recognised, worth_knowing, commonly_questioned } = useMemo(() => {
+    const all = product.ingredients || []
+    return {
+      allIngredients:       all,
+      generally_recognised: all.filter(i => i.classification === 'generally_recognised'),
+      worth_knowing:        all.filter(i => i.classification === 'worth_knowing'),
+      commonly_questioned:  all.filter(i => i.classification === 'commonly_questioned'),
+    }
+  }, [product.ingredients])
 
   const grade = product?.grade || 'C'
 
