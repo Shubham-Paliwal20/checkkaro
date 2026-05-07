@@ -357,6 +357,17 @@ function Result() {
     }
   }
 
+  // Categorize ingredients — must be before any early returns (Rules of Hooks)
+  const { allIngredients, generally_recognised, worth_knowing, commonly_questioned } = useMemo(() => {
+    const all = product?.ingredients || []
+    return {
+      allIngredients:       all,
+      generally_recognised: all.filter(i => i.classification === 'generally_recognised'),
+      worth_knowing:        all.filter(i => i.classification === 'worth_knowing'),
+      commonly_questioned:  all.filter(i => i.classification === 'commonly_questioned'),
+    }
+  }, [product?.ingredients])
+
   if (loading) {
     return (
       <div className="min-h-screen flex items-center justify-center">
@@ -390,17 +401,6 @@ function Result() {
   }
 
   if (!product) return null
-
-  // Categorize ingredients — memoised so filters don't re-run on every render
-  const { allIngredients, generally_recognised, worth_knowing, commonly_questioned } = useMemo(() => {
-    const all = product.ingredients || []
-    return {
-      allIngredients:       all,
-      generally_recognised: all.filter(i => i.classification === 'generally_recognised'),
-      worth_knowing:        all.filter(i => i.classification === 'worth_knowing'),
-      commonly_questioned:  all.filter(i => i.classification === 'commonly_questioned'),
-    }
-  }, [product.ingredients])
 
   const grade = product?.grade || 'C'
 
