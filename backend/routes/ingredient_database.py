@@ -294,6 +294,8 @@ def classify_ingredient(ingredient_name, category=None):
         .replace('  ', ' ')
         .strip()
     )
+    # Compact form strips spaces/hyphens so "Methyl Paraben" matches "methylparaben"
+    ingredient_compact = ingredient_lower.replace(' ', '').replace('-', '').replace('/', '')
     is_cosmetic = category in COSMETIC_CATEGORIES
     
     # COMMONLY QUESTIONED INGREDIENTS (RED) - Regulatory concerns, banned substances, health risks
@@ -749,8 +751,10 @@ def classify_ingredient(ingredient_name, category=None):
                 }
 
     # Check commonly questioned first (highest priority — serious concerns)
+    # Also check compact form so "Methyl Paraben" matches keyword "methylparaben"
     for pattern, (what_it_is, note) in commonly_questioned_patterns.items():
-        if pattern in ingredient_lower:
+        pattern_compact = pattern.replace(' ', '').replace('-', '').replace('/', '')
+        if pattern in ingredient_lower or pattern_compact in ingredient_compact:
             return {
                 'classification': 'commonly_questioned',
                 'what_it_is': what_it_is,
@@ -760,7 +764,8 @@ def classify_ingredient(ingredient_name, category=None):
 
     # Check worth knowing second (specific ingredient concerns take priority over generic natural labels)
     for pattern, (what_it_is, note) in worth_knowing_patterns.items():
-        if pattern in ingredient_lower:
+        pattern_compact = pattern.replace(' ', '').replace('-', '').replace('/', '')
+        if pattern in ingredient_lower or pattern_compact in ingredient_compact:
             return {
                 'classification': 'worth_knowing',
                 'what_it_is': what_it_is,

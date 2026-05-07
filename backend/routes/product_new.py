@@ -148,14 +148,38 @@ _WORTH = [
     'lanolin','wool wax',
 ]
 
-def _classify(name: str) -> str:
-    n = name.lower()
-    for b in _BANNED:
-        if b in n: return 'banned'
-    for q in _QUESTIONED:
-        if q in n: return 'commonly_questioned'
-    for w in _WORTH:
-        if w in n: return 'worth_knowing'
+# Pre-compute compact (no-space, no-hyphen) forms of every keyword so
+# "Methyl Paraben" → "methylparaben" matches correctly at classify-time.
+_BANNED_C     = [re.sub(r'[\s\-/]', '', k) for k in _BANNED]
+_QUESTIONED_C = [re.sub(r'[\s\-/]', '', k) for k in _QUESTIONED]
+_WORTH_C      = [re.sub(r'[\s\-/]', '', k) for k in _WORTH]
+
+# In cosmetic / topical products, salt and citric acid are safe pH/texture
+# agents with zero health concern — their food-context warnings don't apply.
+_COSMETIC_CATS = {'skincare', 'skin care', 'hair care', 'haircare',
+                  'personal care', 'cosmetics', 'baby care', 'oral care', 'household'}
+_COSMETIC_GR   = {'salt', 'sodium chloride', 'citric acid'}
+
+
+def _classify(name: str, category: str = '') -> str:
+    n   = name.lower()
+    n_c = re.sub(r'[\s\-/]', '', n)   # compact: "Methyl Paraben" → "methylparaben"
+
+    # Category-aware override: salt / citric acid are generally recognised
+    # in topical products (no dietary hypertension / enamel-erosion risk)
+    if category:
+        cat = category.lower()
+        if any(c in cat for c in _COSMETIC_CATS):
+            for safe in _COSMETIC_GR:
+                if safe in n or safe in n_c:
+                    return 'generally_recognised'
+
+    for kw, kw_c in zip(_BANNED, _BANNED_C):
+        if kw in n or kw_c in n_c: return 'banned'
+    for kw, kw_c in zip(_QUESTIONED, _QUESTIONED_C):
+        if kw in n or kw_c in n_c: return 'commonly_questioned'
+    for kw, kw_c in zip(_WORTH, _WORTH_C):
+        if kw in n or kw_c in n_c: return 'worth_knowing'
     return 'generally_recognised'
 
 def _note(name: str, cls: str) -> str:
@@ -232,10 +256,10 @@ def _parse_raw(raw: str) -> list:
             cleaned.append(item)
     return cleaned
 
-def _build_ingredient_item(ing) -> IngredientItem:
+def _build_ingredient_item(ing, category: str = '') -> IngredientItem:
     name = ing if isinstance(ing, str) else ing.get('name', '')
     aliases = '' if isinstance(ing, str) else ing.get('aliases', '')
-    cls = _classify(name)
+    cls = _classify(name, category)
     return IngredientItem(
         name=name,
         aliases=aliases,
@@ -244,7 +268,7 @@ def _build_ingredient_item(ing) -> IngredientItem:
         regulatory_note=_reg_note(cls),
     )
 
-def _grade_from_raw(raw: str, ingredients: list) -> str:
+def _grade_from_raw(raw: str, ingredients: list, category: str = '') -> str:
     """Compute grade from ingredients_raw text (preferred) or dict list (fallback)."""
     if raw:
         names = _parse_raw(raw)
@@ -256,7 +280,7 @@ def _grade_from_raw(raw: str, ingredients: list) -> str:
             else:
                 names.append(str(ing))
         names = [n for n in names if n]
-    classified = [{'name': n, 'classification': _classify(n)} for n in names]
+    classified = [{'name': n, 'classification': _classify(n, category)} for n in names]
     return calculate_grade(classified)
 
 def _score_to_grade(score: int) -> str:
@@ -343,9 +367,10 @@ async def search_product(name: str = Query(..., description="Product name to sea
     print(f"[SEARCH] Found: {p['name']} (static_key={p.get('static_key')})")
 
     raw = p.get("ingredients_raw") or ""
+    cat = p.get("category") or ""
     if raw:
         raw_names = _parse_raw(raw)
-        ingredients = [_build_ingredient_item(n) for n in raw_names if n]
+        ingredients = [_build_ingredient_item(n, cat) for n in raw_names if n]
         # Compute grade live from actual ingredients
         grade = calculate_grade([i.dict() for i in ingredients])
         # Sync stored grade if it differs (keeps browse consistent with detail)

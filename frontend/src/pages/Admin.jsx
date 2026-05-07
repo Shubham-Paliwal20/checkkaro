@@ -135,11 +135,15 @@ function classifyIngredient(name) {
     .replace(/\bno\.\s*/g, '')
     .replace(/\s+/g, ' ')
     .trim()
+  // Compact form: "Methyl Paraben" → "methylparaben" so it matches keyword "methylparaben"
+  const nc = n.replace(/[\s\-\/]/g, '')
   for (const kw of COMMONLY_QUESTIONED) {
-    if (n.includes(kw)) return 'commonly_questioned'
+    const kwc = kw.replace(/[\s\-\/]/g, '')
+    if (n.includes(kw) || nc.includes(kwc)) return 'commonly_questioned'
   }
   for (const kw of WORTH_KNOWING) {
-    if (n.includes(kw)) return 'worth_knowing'
+    const kwc = kw.replace(/[\s\-\/]/g, '')
+    if (n.includes(kw) || nc.includes(kwc)) return 'worth_knowing'
   }
   return 'generally_recognised'
 }
