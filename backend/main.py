@@ -3,6 +3,7 @@ import time
 from collections import defaultdict
 from fastapi import FastAPI, Request
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.middleware.gzip import GZipMiddleware
 from fastapi.responses import JSONResponse
 from starlette.middleware.base import BaseHTTPMiddleware
 from dotenv import load_dotenv
@@ -85,6 +86,7 @@ app = FastAPI(
 
 # CORS — open to all origins; auth is enforced via JWT bearer tokens, not cookies
 # allow_credentials must be False when allow_origins=["*"] (CORS spec requirement)
+app.add_middleware(GZipMiddleware, minimum_size=500)
 app.add_middleware(SecurityHeadersMiddleware)
 app.add_middleware(RateLimitMiddleware)
 app.add_middleware(

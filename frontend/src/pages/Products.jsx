@@ -153,27 +153,32 @@ export default function Products() {
         const data = res.data
         const pageProducts = data.products || []
 
-        // Batch-fetch uploaded photos for this page's products
-        if (pageProducts.length > 0) {
-          const ids = pageProducts.map(p => p.id)
-          const { data: photos } = await supabase
-            .from('product_photos')
-            .select('product_id, image_url')
-            .in('product_id', ids)
-            .order('created_at')
-          if (active && photos?.length) {
-            const photoMap = {}
-            photos.forEach(ph => { if (!photoMap[ph.product_id]) photoMap[ph.product_id] = ph.image_url })
-            pageProducts.forEach(p => { if (!p.image_url && photoMap[p.id]) p.image_url = photoMap[p.id] })
-          }
-        }
-
-        if (!active) return
+        // Show products immediately — don't wait for photos
         setProducts(pageProducts)
         setTotal(data.total || 0)
         setPages(data.pages || 1)
         if (data.categories?.length) setAllCats(data.categories)
         if (data.brands?.length)     setBrands(data.brands)
+        setLoading(false)
+
+        // Fetch uploaded photos in background and fill in missing image_urls
+        if (active && pageProducts.length > 0) {
+          const ids = pageProducts.map(p => p.id)
+          supabase
+            .from('product_photos')
+            .select('product_id, image_url')
+            .in('product_id', ids)
+            .order('created_at')
+            .then(({ data: photos }) => {
+              if (!active || !photos?.length) return
+              const photoMap = {}
+              photos.forEach(ph => { if (!photoMap[ph.product_id]) photoMap[ph.product_id] = ph.image_url })
+              setProducts(prev => prev.map(p =>
+                (!p.image_url && photoMap[p.id]) ? { ...p, image_url: photoMap[p.id] } : p
+              ))
+            })
+            .catch(() => {})
+        }
       } catch (err) {
         if (axios.isCancel(err) || !active) return
         console.error('Browse error:', err)

@@ -5,6 +5,8 @@ from typing import List, Dict
 
 router = APIRouter()
 
+_popular_cache = None  # computed once, never changes
+
 
 @router.get("/search", response_model=IngredientRuleResponse)
 async def search_ingredient(name: str = Query(..., description="Ingredient name to search", min_length=1, max_length=100)):
@@ -113,31 +115,26 @@ async def get_ingredient_suggestions(
 async def get_popular_ingredients(
     limit: int = Query(20, description="Maximum number of popular ingredients", ge=1, le=50)
 ) -> List[Dict]:
-    """
-    Get popular/commonly searched ingredients
-    """
-    try:
-        # Return commonly questioned ingredients (most interesting)
-        popular = [
+    global _popular_cache
+    if _popular_cache is None:
+        popular_names = [
             'TBHQ', 'Tartrazine', 'MSG', 'Sodium Benzoate',
             'Sunset Yellow', 'Allura Red', 'Phosphoric Acid',
             'Sodium Nitrite', 'Sulfur Dioxide', 'Methylparaben',
             'Propylparaben', 'Carrageenan', 'High Fructose Corn Syrup',
-            'Palm Oil', 'Sodium Lauryl Sulfate', 'Fragrance'
+            'Palm Oil', 'Sodium Lauryl Sulfate', 'Fragrance',
         ]
-        
-        result = []
-        for ingredient in popular[:limit]:
-            classification_data = classify_ingredient(ingredient)
-            result.append({
-                'id': ingredient.lower().replace(' ', '-'),
-                'name': ingredient,
-                'classification': classification_data['classification'],
-                'what_it_is': classification_data['what_it_is']
-            })
-        
-        return result
-        
-    except Exception as e:
-        print(f"Error getting popular ingredients: {str(e)}")
-        return []
+        try:
+            _popular_cache = [
+                {
+                    'id': n.lower().replace(' ', '-'),
+                    'name': n,
+                    'classification': classify_ingredient(n)['classification'],
+                    'what_it_is': classify_ingredient(n)['what_it_is'],
+                }
+                for n in popular_names
+            ]
+        except Exception as e:
+            print(f"Error building popular cache: {e}")
+            _popular_cache = []
+    return _popular_cache[:limit]

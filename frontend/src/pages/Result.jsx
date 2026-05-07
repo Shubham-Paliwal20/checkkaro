@@ -13,6 +13,9 @@ import SEO from '../components/SEO'
 
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'https://checkkaro.onrender.com'
 
+// Module-level cache — navigating back to a product is instant, no refetch
+const _productCache = new Map()  // productName.lower → product data
+
 const ADMIN_EMAIL = 'shubhampaliwal5@gmail.com'
 
 // Parse comma-separated ingredient text respecting parentheses depth
@@ -198,10 +201,6 @@ function Result() {
     fetchProduct()
   }, [productName])
 
-  useEffect(() => {
-    if (product?.id) fetchDbPhotos(product.id)
-  }, [product?.id])
-
   const fetchDbPhotos = async (productId) => {
     try {
       const { data } = await supabase.from('product_photos')
@@ -260,20 +259,29 @@ function Result() {
       setLoading(true)
       setError(null)
 
+      // ── Cache hit → instant render ───────────────────────────────────────
+      const cacheKey = productName.toLowerCase()
+      if (_productCache.has(cacheKey)) {
+        setProduct(_productCache.get(cacheKey))
+        setLoading(false)
+        return
+      }
+
       // Try backend first — short timeout so cold Render starts fail fast to fallback
       try {
         const response = await axios.get(`${API_BASE_URL}/api/product/search`, {
           params: { name: productName },
           timeout: 10000,
         })
+        _productCache.set(cacheKey, response.data)
         setProduct(response.data)
+        // Kick off photo fetch immediately without blocking product display
+        if (response.data?.id) fetchDbPhotos(response.data.id)
         return
       } catch (backendErr) {
-        // Definitive non-404/500 errors are real failures
         if (backendErr.response?.status && backendErr.response.status !== 404 && backendErr.response.status !== 500) {
           throw backendErr
         }
-        // On timeout / 404 / 500 → fall through to Supabase direct
       }
 
       // Supabase direct fallback with multi-strategy search
@@ -285,7 +293,7 @@ function Result() {
         const ingredients = p.ingredients_raw
           ? parseRawIngredients(p.ingredients_raw).map(name => ({ name, classification: 'generally_recognised', one_line_note: '', regulatory_note: '' }))
           : (p.ingredients || [])
-        setProduct({
+        const productData = {
           id: String(p.id),
           name: p.name,
           brand: p.brand || 'Unknown',
@@ -303,7 +311,10 @@ function Result() {
           data_source: p.static_key ? 'database_verified' : 'community_verified',
           confidence: p.static_key ? 'high' : 'medium',
           is_complete: true,
-        })
+        }
+        _productCache.set(cacheKey, productData)
+        setProduct(productData)
+        if (p.id) fetchDbPhotos(String(p.id))
         return
       }
 

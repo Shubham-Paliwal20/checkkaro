@@ -5,6 +5,7 @@ from pydantic import BaseModel
 from typing import Optional
 from db.supabase_client import supabase, supabase_admin
 from services.gemini_service import extract_ingredients_from_image, analyze_ingredients_list as analyze_ingredients
+from routes.product_new import invalidate_browse_cache
 
 router = APIRouter()
 
@@ -112,6 +113,7 @@ async def _do_extract(task_id: str, sub: dict, manual_text: Optional[str]) -> No
             return
 
         supabase.from_("product_submissions").update({"status": "extracted"}).eq("id", sub["id"]).execute()
+        invalidate_browse_cache()  # new product — flush stale browse results
 
         _tasks[task_id] = {
             "status": "done",
@@ -195,5 +197,6 @@ async def delete_product(
         print(f"[DELETE FAIL] Row still exists after delete — RLS may be blocking even admin client")
         raise HTTPException(status_code=500, detail="Delete command ran but row still exists. Check Supabase RLS policies.")
 
+    invalidate_browse_cache()  # deleted product — flush stale browse results
     print(f"[DELETE OK] {product_name} ({product_id})")
     return {"success": True, "deleted": product_id, "name": product_name}

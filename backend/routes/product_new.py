@@ -2,10 +2,47 @@ from fastapi import APIRouter, Query, HTTPException
 from typing import Optional, List, Dict
 from models.schemas import ProductResponse, IngredientItem
 import re
+import time
 from db.supabase_client import supabase, supabase_admin
 from grading import calculate_grade, grade_to_legacy_score
 
 router = APIRouter()
+
+# ── Browse cache ──────────────────────────────────────────────────────────────
+# Caches the full sorted+deduped product list per filter combo for 2 minutes.
+# Pagination is served from cache — zero DB calls on subsequent pages.
+_browse_cache: dict = {}
+_BROWSE_TTL = 120   # seconds
+_BROWSE_MAX = 80    # max distinct filter combos in memory
+
+def _browse_cache_key(category, brand, q, sort):
+    return f"{category or ''}|{brand or ''}|{q or ''}|{sort}"
+
+def _prune_browse():
+    if len(_browse_cache) <= _BROWSE_MAX:
+        return
+    now = time.monotonic()
+    dead = [k for k, (ts, _) in _browse_cache.items() if now - ts > _BROWSE_TTL]
+    for k in dead:
+        del _browse_cache[k]
+    if len(_browse_cache) > _BROWSE_MAX:
+        for k, _ in sorted(_browse_cache.items(), key=lambda x: x[1][0])[:_BROWSE_MAX // 2]:
+            del _browse_cache[k]
+
+def invalidate_browse_cache():
+    """Call after any product insert/delete so stale data isn't served."""
+    _browse_cache.clear()
+
+# ── Suggestions cache ─────────────────────────────────────────────────────────
+_suggest_cache: dict = {}
+_SUGGEST_TTL = 300  # 5 minutes
+_SUGGEST_MAX = 200
+
+def _prune_suggest():
+    if len(_suggest_cache) <= _SUGGEST_MAX:
+        return
+    for k, _ in sorted(_suggest_cache.items(), key=lambda x: x[1][0])[:_SUGGEST_MAX // 2]:
+        del _suggest_cache[k]
 
 # ── Ingredient classification ─────────────────────────────────────────────────
 # Single source of truth — used for every grade computation across browse,
@@ -367,9 +404,27 @@ async def browse_products(
     limit: int = Query(24, ge=1, le=100),
     sort: str = Query("score"),
 ):
-    # Use stored grade — no ingredients_raw fetch needed (fast)
     _grade_order = {'A': 0, 'B': 1, 'C': 2, 'D': 3}
 
+    # ── Cache check ───────────────────────────────────────────────────────────
+    cache_key = _browse_cache_key(category, brand, q, sort)
+    now = time.monotonic()
+    if cache_key in _browse_cache:
+        ts, cached = _browse_cache[cache_key]
+        if now - ts < _BROWSE_TTL:
+            items = cached["items"]
+            total = len(items)
+            start = (page - 1) * limit
+            return {
+                "products": items[start: start + limit],
+                "total":    total,
+                "page":     page,
+                "pages":    max(1, -(-total // limit)),
+                "categories": cached["categories"],
+                "brands":     cached["brands"],
+            }
+
+    # ── Fetch from Supabase ───────────────────────────────────────────────────
     try:
         def _base_query():
             q_ = supabase.from_("ai_extracted_products") \
@@ -379,12 +434,9 @@ async def browse_products(
             if brand and brand != "All":
                 q_ = q_.eq("brand", brand)
             if q:
-                # Search across name, brand, and category so "soap" finds
-                # products in the Soap category, "amul" finds all Amul products, etc.
                 q_ = q_.or_(f"name.ilike.%{q}%,brand.ilike.%{q}%,category.ilike.%{q}%")
             return q_
 
-        # Batch-fetch all matching rows (Supabase caps at 1000 per request)
         all_rows = []
         offset = 0
         while True:
@@ -398,7 +450,7 @@ async def browse_products(
         print(f"[BROWSE ERROR] {e}")
         return {"products": [], "total": 0, "page": 1, "pages": 1, "categories": [], "brands": []}
 
-    # Deduplicate by normalised name — static (has static_key) beats community
+    # ── Deduplicate by normalised name ────────────────────────────────────────
     _norm = lambda s: re.sub(r'[^a-z0-9]', '', (s or "").lower())
     seen: dict = {}
     for p in all_rows:
@@ -409,9 +461,8 @@ async def browse_products(
         if existing is None or (p.get("static_key") and not existing.get("static_key")):
             seen[nn] = p
 
-    items = []
-    for p in seen.values():
-        items.append({
+    items = [
+        {
             "id":        str(p.get("id", "")),
             "name":      p.get("name", ""),
             "brand":     p.get("brand") or "Unknown",
@@ -419,7 +470,9 @@ async def browse_products(
             "image_url": p.get("image_url"),
             "grade":     p.get("grade") or "C",
             "verdict":   p.get("verdict") or "",
-        })
+        }
+        for p in seen.values()
+    ]
 
     if sort == "name":
         items.sort(key=lambda p: p["name"].lower())
@@ -428,22 +481,22 @@ async def browse_products(
     else:
         items.sort(key=lambda p: _grade_order.get(p.get("grade", "C"), 2))
 
+    all_cats   = sorted({p["category"] for p in all_rows if p.get("category")})
+    all_brands = sorted({p["brand"]    for p in all_rows if p.get("brand")})
+
+    # ── Store in cache ────────────────────────────────────────────────────────
+    _browse_cache[cache_key] = (now, {"items": items, "categories": all_cats, "brands": all_brands})
+    _prune_browse()
+
     total = len(items)
     start = (page - 1) * limit
-    page_items = items[start: start + limit]
-
-    all_cats = sorted({p["category"] for p in all_rows if p.get("category")})
-    all_brands = sorted({p["brand"] for p in all_rows if p.get("brand")})
-    if category and category != "All":
-        all_brands = sorted({p["brand"] for p in all_rows if p.get("brand") and p.get("category") == category})
-
     return {
-        "products": page_items,
-        "total": total,
-        "page": page,
-        "pages": max(1, -(-total // limit)),
+        "products": items[start: start + limit],
+        "total":    total,
+        "page":     page,
+        "pages":    max(1, -(-total // limit)),
         "categories": all_cats,
-        "brands": all_brands,
+        "brands":     all_brands,
     }
 
 
@@ -451,6 +504,14 @@ async def browse_products(
 
 @router.get("/suggestions")
 async def get_search_suggestions(q: str = Query(..., min_length=1, max_length=80)):
+    # ── Cache check ───────────────────────────────────────────────────────────
+    ck = q.lower().strip()
+    now = time.monotonic()
+    if ck in _suggest_cache:
+        ts, cached = _suggest_cache[ck]
+        if now - ts < _SUGGEST_TTL:
+            return {"suggestions": cached}
+
     try:
         result = supabase.from_("ai_extracted_products") \
             .select("name, brand, category, static_key") \
@@ -479,4 +540,6 @@ async def get_search_suggestions(q: str = Query(..., min_length=1, max_length=80
         print(f"[SUGGESTIONS ERROR] {e}")
         suggestions = []
 
+    _suggest_cache[ck] = (now, suggestions)
+    _prune_suggest()
     return {"suggestions": suggestions}

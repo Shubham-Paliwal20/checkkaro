@@ -21,10 +21,14 @@ import axios from 'axios'
 
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'https://checkkaro.onrender.com'
 
-// Pre-warm Render on app load so cold-start delay doesn't hit the first search
+// Keep Render backend awake — ping once on load then every 4 min.
+// Render free tier sleeps after 15 min idle; 4-min interval stays well inside that.
 function usePrewarm() {
   useEffect(() => {
-    axios.get(`${API_BASE_URL}/health`, { timeout: 60000 }).catch(() => {})
+    const ping = () => axios.get(`${API_BASE_URL}/health`, { timeout: 30000 }).catch(() => {})
+    ping()
+    const id = setInterval(ping, 4 * 60 * 1000)
+    return () => clearInterval(id)
   }, [])
 }
 
