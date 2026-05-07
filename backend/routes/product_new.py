@@ -20,50 +20,95 @@ _BANNED = [
     'azodicarbonamide','brominated vegetable oil','olestra',
     'asbestos','benzene','vinyl chloride','aflatoxin',
 ]
+
+# ── Commonly Questioned ───────────────────────────────────────────────────────
+# Ingredients with regulatory bans, carcinogen links, or serious health concerns.
+# RULE: full names only — short codes ('bha','bht','sls') cause false positives
+# e.g. 'bha' matches 'bhasma', 'sls' could match 'soluble' — use full INCI names.
 _QUESTIONED = [
-    'sodium lauryl sulfate','sls','sodium laureth sulfate','sles',
-    'ammonium laureth sulfate','cocamidopropyl betaine',
+    # Surfactants — irritants / 1,4-dioxane carcinogen contamination risk
+    'sodium lauryl sulfate','sodium lauryl sulphate',
+    'sodium laureth sulfate','sodium laureth sulphate','ammonium laureth sulfate',
+    'cocamidopropyl betaine',
+    # Synthetic dyes — EU/FDA bans, hyperactivity, cancer links
     'tartrazine','sunset yellow','carmoisine','allura red','brilliant blue',
-    'ponceau','erythrosine','quinoline yellow','brown ht','patent blue','azorubine',
+    'ponceau','erythrosine','quinoline yellow','brown ht','patent blue','azorubine','red 40',
     'e102','e110','e122','e124','e129','e131','e132','e133','e104','e127','e155',
-    'monosodium glutamate','msg','disodium guanylate','disodium inosinate',
-    'e621','e627','e631',
-    'sodium benzoate','sodium metabisulphite','sulfur dioxide','sodium nitrite','sodium nitrate',
+    'ci 47000','ci 19140','ci 15985','ci 16035','ci 42090',
+    # Flavour enhancers — neurotoxicity, MSG-like side effects (not MSG itself — see _WORTH)
+    'disodium guanylate','disodium inosinate','e627','e631',
+    # Preservatives — benzene formation, sulfite allergies, nitrosamine risk
+    'sodium benzoate','sodium metabisulphite','sulfur dioxide',
     'e211','e220','e223','e250','e251',
-    # Use full names only — short codes like 'bha'/'bht' cause false positives
-    # (e.g. 'bha' matches 'bhasma', an Ayurvedic gold preparation)
+    # Antioxidant preservatives — IARC possible carcinogens, banned in Japan
     'butylated hydroxyanisole','butylated hydroxytoluene','tbhq','tert-butylhydroquinone',
+    # Formaldehyde releasers / strong skin sensitisers
     'methylchloroisothiazolinone','methylisothiazolinone','dmdm hydantoin',
     'imidazolidinyl urea','diazolidinyl urea','quaternium-15',
-    'aspartame','acesulfame','sucralose','saccharin','e951','e950','e955','e954',
+    # Sweeteners — IARC 2B carcinogen (aspartame), bladder cancer risk (saccharin)
+    'aspartame','acesulfame','saccharin','e951','e950','e954',
+    # Chelating agents — strip minerals, penetration enhancers
     'tetrasodium edta','disodium edta','tetrasodium etidronate',
-    'propylene glycol','polyethylene glycol','peg-',
+    # Humectant/solvent — neurotoxic at high systemic exposure
+    'propylene glycol',
+    # PEG compounds — 1,4-dioxane carcinogen contamination
+    'polyethylene glycol','peg-',
+    # EU-banned food additive (genotoxicity confirmed by EFSA 2021)
     'titanium dioxide','e171',
+    # Banned in EU infant formula; gut inflammation in studies
     'carrageenan','e407',
+    # Endocrine-disrupting phthalates
     'phthalate','diethyl phthalate','dibutyl phthalate',
+    # Caramel Class III/IV — 4-MEI probable carcinogen (California Prop 65)
     'caramel colour','caramel color','e150',
+    # Erodes tooth enamel, calcium depletion
     'phosphoric acid','e338',
-    'partially hydrogenated','trans fat',
-    'mono and diglycerides',
+    # Trans fats — banned USA/EU; cardiovascular risk
+    'partially hydrogenated','trans fat','mono and diglycerides',
+    # Toxic to neonates; fatal gasping syndrome
     'benzyl alcohol',
+    # Cyclic silicones — EU banned in rinse-off; endocrine disruption; environmental persistence
     'cyclomethicone','cyclopentasiloxane','cyclohexasiloxane',
+    # Petroleum-derived — PAH/MOAH carcinogens from refining contamination
     'mineral oil','petrolatum','paraffinum liquidum','paraffin wax',
-    'fragrance','parfum','perfume',
-    'artificial flavor','artificial flavour',
+    # Undisclosed chemical mixtures — may hide allergens, phthalates, synthetic musks
+    'fragrance','parfum','perfume','artificial flavor','artificial flavour',
+    # Retinoids — teratogenic (cause birth defects); photocarcinogenic in sunlight
+    'retinol','retinyl palmitate','tretinoin','retinal','hydroxypinacolone retinoate',
+    # Talc — asbestos contamination risk; IARC carcinogen (asbestos-contaminated form)
+    'talc','talcum',
 ]
+
+# ── Worth Knowing ─────────────────────────────────────────────────────────────
+# Permitted ingredients with mild concerns or worth being aware of.
 _WORTH = [
+    # Vegetable oils — high saturated fat, palm = environmental concern
     'palm oil','palmolein','vegetable oil','edible vegetable fat',
+    # Sugars and high-GI carbs
     'sugar','glucose syrup','high fructose corn syrup','invert sugar','maltodextrin',
-    'natural flavor','nature identical',
+    # Natural flavors (from natural sources) — generally safe; check for hidden allergens
+    'natural flavor','natural flavour','nature identical',
+    # Permitted food additives
     'citric acid','emulsifier','stabilizer','stabiliser','thickener',
     'lecithin','soy lecithin','potassium sorbate','e202',
     'polyglycerol','ammonium phosphatides',
-    'e322','e471','e466','e412','e410','e476','e162','e160',
+    'e322','e471','e466','e412','e410','e476',
+    # Cosmetic preservative — safe at EU-permitted levels (<1%)
     'phenoxyethanol',
-    # Vitamin A derivatives — FDA-approved skincare actives; worth knowing but not banned/questioned
-    'retinol','retinyl palmitate','tretinoin','retinal','hydroxypinacolone retinoate',
-    # beta-carotene is a natural provitamin A / pigment (carrots, fruits) — worth knowing at most
+    # Sweetener — alters gut microbiome; FDA GRAS; concern less severe than aspartame
+    'sucralose','e955',
+    # MSG — FDA GRAS; some individuals report sensitivity at high doses
+    'monosodium glutamate','msg','e621',
+    # Salt — excess linked to hypertension and cardiovascular disease
+    'salt','sodium chloride',
+    # Beta-carotene — natural pigment; safe at food levels; concern only at very high supplement doses in smokers
     'beta carotene',
+    # Non-cyclic silicones — buildup on hair/skin; not banned; no endocrine disruption
+    'dimethicone','dimethiconol','amodimethicone',
+    # Denatured alcohols — drying; disrupts skin barrier with repeated use
+    'alcohol denat','denatured alcohol','sd alcohol',
+    # Natural allergens
+    'lanolin','wool wax',
 ]
 
 def _classify(name: str) -> str:

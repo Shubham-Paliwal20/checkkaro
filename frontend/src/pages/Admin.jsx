@@ -21,94 +21,112 @@ const ALL_CATEGORIES = [
 ]
 
 // ── Ingredient classification keyword lists ───────────────────────────────────
+// Must stay in sync with backend/routes/product_new.py (_QUESTIONED / _WORTH lists)
 const COMMONLY_QUESTIONED = [
   // Parabens
   'methylparaben', 'ethylparaben', 'propylparaben', 'butylparaben', 'isobutylparaben',
-  // SLS (strong irritant)
-  'sodium lauryl sulfate',
+  // Surfactants — irritants / 1,4-dioxane carcinogen contamination risk
+  'sodium lauryl sulfate', 'sodium lauryl sulphate',
+  'sodium laureth sulfate', 'sodium laureth sulphate', 'ammonium laureth sulfate',
+  'cocamidopropyl betaine',
   // Formaldehyde releasers
-  'dmdm hydantoin', 'imidazolidinyl urea', 'diazolidinyl urea', 'quaternium-15', 'bronopol', '2-bromo-2-nitropropane', 'formaldehyde',
+  'dmdm hydantoin', 'imidazolidinyl urea', 'diazolidinyl urea', 'quaternium-15', 'bronopol', 'formaldehyde',
   // Phthalates
   'dibutyl phthalate', 'diethyl phthalate', 'dimethyl phthalate',
   // Antimicrobials
   'triclosan', 'triclocarban',
-  // Preservatives with serious concerns (forms benzene, EU carcinogen concern)
+  // Preservatives with serious concerns
   'sodium benzoate', 'e211',
   'sodium metabisulphite', 'e223',
   'sulfur dioxide', 'e220',
   // Preservatives in personal care (EU banned in leave-on products)
   'methylisothiazolinone', 'methylchloroisothiazolinone',
-  // Antioxidants (potential carcinogens)
-  'butylated hydroxyanisole', 'butylated hydroxytoluene', 'tbhq',
-  // EU-restricted food colours (with E-number aliases for label matching)
+  // Preservative toxic to neonates
+  'benzyl alcohol',
+  // Antioxidants (potential carcinogens — full names only; 'bha'/'bht' can match unrelated words)
+  'butylated hydroxyanisole', 'butylated hydroxytoluene', 'tbhq', 'tert-butylhydroquinone',
+  // EU-restricted food colours
   'allura red', 'red 40', 'e129',
-  'tartrazine', 'yellow 5', 'e102',
-  'sunset yellow', 'yellow 6', 'e110',
+  'tartrazine', 'e102',
+  'sunset yellow', 'e110',
   'carmoisine', 'azorubine', 'e122',
-  'ponceau 4r', 'e124',
-  'erythrosine', 'red 3', 'e127',
-  'patent blue v', 'e131',
+  'ponceau', 'e124',
+  'erythrosine', 'e127',
+  'patent blue', 'e131',
   'indigo carmine', 'e132',
   'brown ht', 'e155',
   'brilliant blue', 'e133',
   'quinoline yellow', 'e104',
-  // Flavor enhancers with MSG-like concerns
+  // Flavor enhancers with neurotoxicity concerns (not MSG itself — see WORTH_KNOWING)
   'disodium guanylate', 'e627',
   'disodium inosinate', 'e631',
   // Acids with bone/tooth concerns
   'phosphoric acid', 'e338',
-  // Caramel (Class III/IV — contains 4-MEI)
+  // Caramel (Class III/IV — contains 4-MEI carcinogen)
   'caramel colour', 'caramel color', 'e150',
-  // Sweeteners
+  // Sweeteners — IARC 2B carcinogen (aspartame), bladder cancer risk (saccharin)
   'aspartame', 'e951',
-  'acesulfame-k', 'acesulfame k', 'e950',
+  'acesulfame potassium', 'acesulfame-k', 'e950',
+  'saccharin', 'e954',
   // Meat preservatives
   'sodium nitrite', 'e250', 'sodium nitrate', 'e251',
-  // Others
+  // Banned dough conditioners
   'potassium bromate', 'azodicarbonamide', 'brominated vegetable oil',
-  // Antioxidant preservatives (by abbreviation — full names above)
-  'bha', 'bht',
-  // Talc (potential asbestos contamination; IARC Group 1 when asbestos-contaminated)
+  // Talc (asbestos contamination risk)
   'talc', 'talcum',
   // CI food/cosmetic colorants banned or restricted in multiple countries
-  'ci 47000',  // Quinoline Yellow E104 — banned USA, Canada, Japan, Australia
-  'ci 19140',  // Tartrazine E102 — EU warning label, banned several countries
-  'ci 15985',  // Sunset Yellow E110 — banned Norway, Finland; EU warning label
-  'ci 16035',  // Allura Red E129 — EU warning label; banned several European countries
-  'ci 42090',  // Brilliant Blue E133 — banned in 6 EU countries; neurotoxicity data
+  'ci 47000', 'ci 19140', 'ci 15985', 'ci 16035', 'ci 42090',
+  // EU-banned food additive (genotoxicity confirmed by EFSA 2021)
+  'titanium dioxide', 'e171',
+  // Banned in EU infant formula; gut inflammation
+  'carrageenan', 'e407',
+  // Trans fats — banned USA/EU
+  'partially hydrogenated', 'trans fat', 'mono and diglycerides',
+  // Cyclic silicones — EU banned in rinse-off; endocrine disruption
+  'cyclomethicone', 'cyclopentasiloxane', 'cyclohexasiloxane',
+  // Petroleum-derived — PAH/MOAH carcinogens from refining contamination
+  'mineral oil', 'petrolatum', 'paraffinum liquidum', 'paraffin wax',
+  // PEG compounds — 1,4-dioxane carcinogen contamination
+  'polyethylene glycol', 'peg-',
+  // Chelating agents
+  'tetrasodium edta', 'disodium edta', 'tetrasodium etidronate',
+  // Humectant/solvent — neurotoxic at high systemic exposure
+  'propylene glycol',
+  // Undisclosed chemical mixtures — hide allergens, phthalates, synthetic musks
+  'fragrance', 'parfum', 'perfume', 'artificial flavor', 'artificial flavour',
+  // Retinoids — teratogenic; photocarcinogenic in sunlight
+  'retinol', 'retinyl palmitate', 'tretinoin', 'retinal', 'hydroxypinacolone retinoate',
 ]
 
 const WORTH_KNOWING = [
-  // SLES (milder than SLS but can be irritant)
-  'sodium laureth sulfate', 'ammonium laureth sulfate',
-  // Preservatives
-  'phenoxyethanol', 'potassium sorbate', 'e202', 'benzyl alcohol',
-  // Fragrance (hides unknowns)
-  'fragrance', 'parfum', 'artificial flavor', 'artificial flavour',
-  // Sensitizers
-  'cocamidopropyl betaine',
-  // Silicones
-  'dimethicone', 'cyclomethicone', 'cyclopentasiloxane', 'cyclohexasiloxane', 'dimethiconol', 'amodimethicone',
-  // PEGs
-  'peg-', 'polyethylene glycol',
-  // Petroleum-derived
-  'mineral oil', 'petrolatum', 'paraffinum liquidum', 'paraffin wax',
-  // Alcohol
+  // Vegetable oils — high saturated fat
+  'palm oil', 'palmolein', 'vegetable oil',
+  // Sugars and high-GI carbs
+  'sugar', 'glucose syrup', 'high fructose corn syrup', 'invert sugar', 'maltodextrin',
+  // Natural flavors — generally safe; check for hidden allergens
+  'natural flavor', 'natural flavour', 'nature identical',
+  // Sweetener — alters gut microbiome; FDA GRAS
+  'sucralose', 'e955',
+  // MSG — FDA GRAS; some individuals report sensitivity
+  'monosodium glutamate', 'msg', 'e621',
+  // Salt — excess linked to hypertension
+  'salt', 'sodium chloride',
+  // Beta-carotene — safe at food levels
+  'beta carotene',
+  // Permitted food additives
+  'citric acid', 'lecithin', 'soy lecithin', 'potassium sorbate', 'e202',
+  'polyglycerol', 'ammonium phosphatides',
+  // Cosmetic preservative — safe at EU-permitted levels
+  'phenoxyethanol',
+  // Non-cyclic silicones — buildup; not banned
+  'dimethicone', 'dimethiconol', 'amodimethicone',
+  // Denatured alcohols — drying; disrupts skin barrier with repeated use
   'alcohol denat', 'denatured alcohol', 'sd alcohol',
-  // Allergens
+  // Natural allergens
   'lanolin', 'wool wax',
-  // Sweeteners (moderate evidence)
-  'sucralose', 'e955', 'saccharin', 'e954',
-  // Food additives
-  'high fructose corn syrup', 'monosodium glutamate', 'e621',
-  'carrageenan', 'e407',
-  'hydrogenated', 'partially hydrogenated',
-  // Titanium Dioxide (EU banned as food additive E171; nanoparticle concerns)
-  'titanium dioxide',
   // CI cosmetic colorants (permitted, limited long-term safety data)
   'ci 26100', 'ci 61565', 'ci 17200', 'ci 15510', 'ci 45410',
-  // Iron oxides (ci 77491/77492/77499) are safe mineral pigments — not listed here,
-  // they fall through to generally_recognised
+  // Iron oxides (ci 77491/77492/77499) are safe mineral pigments — fall through to generally_recognised
 ]
 
 function classifyIngredient(name) {

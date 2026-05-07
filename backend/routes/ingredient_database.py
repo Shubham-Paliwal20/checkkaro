@@ -378,9 +378,7 @@ def classify_ingredient(ingredient_name, category=None):
 
         # Antioxidant preservatives
         'butylated hydroxyanisole': ('Antioxidant preservative (BHA)', 'IARC Group 2B possible carcinogen; banned in Japan; EU-restricted in some foods; California Prop 65 listed'),
-        'bha': ('Antioxidant preservative (BHA)', 'IARC Group 2B possible carcinogen; banned in Japan; EU-restricted in some foods; California Prop 65 listed'),
         'butylated hydroxytoluene': ('Antioxidant preservative (BHT)', 'Liver and thyroid effects in animal studies; hormonal disruption; restricted in several countries'),
-        'bht': ('Antioxidant preservative (BHT)', 'Liver and thyroid effects in animal studies; hormonal disruption; restricted in several countries'),
         'tert-butylhydroquinone': ('Antioxidant preservative (TBHQ)', 'Banned in Japan; EU-restricted; high doses linked to DNA damage; stomach tumour promotion in animal studies'),
         'tbhq': ('Antioxidant preservative (TBHQ)', 'Banned in Japan; EU-restricted; high doses linked to DNA damage; stomach tumour promotion in animal studies'),
 
@@ -452,9 +450,6 @@ def classify_ingredient(ingredient_name, category=None):
         'tretinoin': ('Prescription retinoid (retinoic acid)', 'Prescription-only in India and most countries; Pregnancy Category X — highly teratogenic, causes craniofacial and CNS birth defects; requires medical supervision'),
         'retinal': ('Retinaldehyde (Vitamin A form)', 'More potent than retinol; teratogenic — contraindicated in pregnancy; significantly increases UV/sun sensitivity and photocarcinogenesis risk'),
         'hydroxypinacolone retinoate': ('Ester of retinoic acid', 'Retinoid compound — contraindicated in pregnancy; photosensitizing; limited long-term safety data despite milder irritation profile than retinol'),
-
-        # Beta carotene — lung cancer risk at high supplement doses
-        'beta carotene': ('Provitamin A colorant E160a', 'High-dose supplements (20mg+/day) increased lung cancer risk by 18–28% in smokers in ATBC and CARET clinical trials; safe at normal food exposure levels'),
 
         # Saccharin — bladder cancer in animal studies
         'saccharin': ('Artificial sweetener E954', 'Caused bladder tumours in male rats at high doses; banned in Canada 1977–2014; FDA temporarily removed GRAS status; precautionary concern remains despite reversal'),
@@ -550,7 +545,7 @@ def classify_ingredient(ingredient_name, category=None):
         'citric acid': ('Preservative/acidulant E330', 'Tooth enamel erosion with frequent exposure, stomach upset in large amounts'),
 
         # Colorants (natural/mineral)
-        # beta carotene → moved to commonly_questioned (lung cancer in smokers at high supplement doses)
+        'beta carotene': ('Provitamin A colorant E160a', 'Safe at normal food exposure levels; concern only at very high supplement doses (20mg+/day) in active smokers'),
         'caramel': ('Brown color', 'Natural but may contain trace amounts of carcinogenic compounds'),
         
         # Thickeners
