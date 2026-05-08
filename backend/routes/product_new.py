@@ -110,6 +110,8 @@ _QUESTIONED = [
     'cyclomethicone','cyclopentasiloxane','cyclohexasiloxane',
     # Petroleum-derived — PAH/MOAH carcinogens from refining contamination
     'mineral oil','petrolatum','paraffinum liquidum','paraffin wax',
+    # Undisclosed colorants behind Q.S — exact dye identity hidden by brand
+    'colour q.s','color q.s','colour q.s.','color q.s.',
     # Undisclosed chemical mixtures — may hide allergens, phthalates, synthetic musks
     'fragrance','parfum','perfume','artificial flavor','artificial flavour',
     # Retinoids — teratogenic (cause birth defects); photocarcinogenic in sunlight

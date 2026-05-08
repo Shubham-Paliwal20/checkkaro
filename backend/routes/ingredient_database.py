@@ -457,6 +457,12 @@ def classify_ingredient(ingredient_name, category=None):
         'saccharin': ('Artificial sweetener E954', 'Caused bladder tumours in male rats at high doses; banned in Canada 1977–2014; FDA temporarily removed GRAS status; precautionary concern remains despite reversal'),
         'e954': ('Saccharin (E954)', 'Bladder cancer in rats at high doses; historical bans in multiple countries; FDA warning label required until 2000; precautionary concerns remain'),
 
+        # Undisclosed colorants — exact dye identity hidden behind Q.S notation
+        'colour q.s': ('Undisclosed colorant (Q.S)', 'Brand is hiding the exact dye or pigment used — coloring agents include synthetic azo dyes, heavy-metal-based pigments and sensitizers; without disclosure there is no way to assess safety'),
+        'color q.s': ('Undisclosed colorant (Q.S)', 'Brand is hiding the exact dye or pigment used — coloring agents include synthetic azo dyes, heavy-metal-based pigments and sensitizers; without disclosure there is no way to assess safety'),
+        'colour q.s.': ('Undisclosed colorant (Q.S.)', 'Brand hiding exact colorant identity; may include restricted or banned dyes'),
+        'color q.s.': ('Undisclosed colorant (Q.S.)', 'Brand hiding exact colorant identity; may include restricted or banned dyes'),
+
         # Fragrance — hidden allergens, phthalates, undisclosed endocrine disruptors
         'fragrance': ('Proprietary fragrance mixture', 'A single "fragrance" label entry may hide dozens of undisclosed chemicals including known allergens, phthalates and synthetic musks; EU requires 26 specific allergens declared separately; contact dermatitis and respiratory sensitization risk'),
         'perfume': ('Proprietary fragrance/parfum blend', 'Proprietary blend of chemicals — may contain undisclosed allergens, phthalates, endocrine disruptors and sensitizers; contact dermatitis and respiratory sensitization risk'),

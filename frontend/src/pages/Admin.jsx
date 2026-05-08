@@ -92,6 +92,8 @@ const COMMONLY_QUESTIONED = [
   'tetrasodium edta', 'disodium edta', 'tetrasodium etidronate',
   // Humectant/solvent — neurotoxic at high systemic exposure
   'propylene glycol',
+  // Undisclosed colorants behind Q.S — exact dye identity hidden by brand
+  'colour q.s', 'color q.s', 'colour q.s.', 'color q.s.',
   // Undisclosed chemical mixtures — hide allergens, phthalates, synthetic musks
   'fragrance', 'parfum', 'perfume', 'artificial flavor', 'artificial flavour',
   // Retinoids — teratogenic; photocarcinogenic in sunlight
