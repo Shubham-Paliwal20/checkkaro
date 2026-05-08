@@ -133,6 +133,8 @@ const WORTH_KNOWING = [
   // Iron oxides (ci 77491/77492/77499) are safe mineral pigments — fall through to generally_recognised
 ]
 
+const QS_SAFE = ['purified water', 'distilled water', 'aqua', 'water', 'multani mitti', "fuller's earth", 'fullers earth']
+
 function classifyIngredient(name) {
   // Normalize: "CI No. 47000" → "ci 47000", collapse spaces
   const n = name.toLowerCase()
@@ -141,6 +143,10 @@ function classifyIngredient(name) {
     .trim()
   // Compact form: "Methyl Paraben" → "methylparaben" so it matches keyword "methylparaben"
   const nc = n.replace(/[\s\-\/]/g, '')
+  // Safe Q.S override — known-safe ingredients stay generally_recognised even with Q.S appended
+  if (n.includes('q.s')) {
+    if (QS_SAFE.some(safe => n.includes(safe))) return 'generally_recognised'
+  }
   for (const kw of COMMONLY_QUESTIONED) {
     const kwc = kw.replace(/[\s\-\/]/g, '')
     if (n.includes(kw) || nc.includes(kwc)) return 'commonly_questioned'

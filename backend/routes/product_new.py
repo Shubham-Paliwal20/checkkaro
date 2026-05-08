@@ -167,9 +167,23 @@ _COSMETIC_CATS = {'skincare', 'skin care', 'hair care', 'haircare',
 _COSMETIC_GR   = {'salt', 'sodium chloride', 'citric acid'}
 
 
+# Known-safe ingredients that remain generally_recognised even when Q.S is appended.
+# Checked before colour/perfume Q.S patterns so "Purified Water Q.S" isn't flagged.
+_QS_SAFE = [
+    'purified water', 'distilled water', 'aqua', 'water',
+    'multani mitti', "fuller's earth", 'fullers earth',
+]
+
+
 def _classify(name: str, category: str = '') -> str:
     n   = name.lower()
     n_c = re.sub(r'[\s\-/]', '', n)   # compact: "Methyl Paraben" → "methylparaben"
+
+    # Safe Q.S override: "Purified Water Q.S" → generally_recognised despite 'q.s' in _WORTH
+    if 'q.s' in n:
+        for safe in _QS_SAFE:
+            if safe in n:
+                return 'generally_recognised'
 
     # Category-aware override: salt / citric acid are generally recognised
     # in topical products (no dietary hypertension / enamel-erosion risk)
