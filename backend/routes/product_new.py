@@ -205,6 +205,8 @@ def _note(name: str, cls: str) -> str:
     n = name.lower()
     if cls == 'banned': return 'Banned or restricted ingredient'
     if cls == 'commonly_questioned':
+        if 'colour q.s' in n or 'color q.s' in n: return 'Brand is hiding the exact colorant — undisclosed dye or pigment; may include restricted synthetic azo dyes or heavy-metal-based pigments'
+        if 'q.s' in n: return 'Brand has not disclosed the full ingredient — "quantum sufficit" means added in unspecified quantity; exact composition unknown'
         if 'sucralose' in n: return 'Artificial sweetener; long-term effects debated'
         if 'e110' in n: return 'Sunset Yellow – artificial colour, restricted in EU'
         if 'e122' in n: return 'Carmoisine – artificial colour, restricted in EU'
@@ -212,6 +214,7 @@ def _note(name: str, cls: str) -> str:
         if 'sodium benzoate' in n: return 'Preservative; may form benzene with ascorbic acid'
         return 'Commonly questioned ingredient'
     if cls == 'worth_knowing':
+        if 'q.s' in n: return 'Brand has not disclosed the full ingredient — "quantum sufficit" means added in unspecified quantity; exact composition unknown'
         if 'sugar' in n: return 'Sweetener; excess consumption linked to health concerns'
         if 'emulsifier' in n or 'e471' in n: return 'Emulsifier; generally recognised as safe'
         if 'stabilizer' in n or 'stabiliser' in n or 'e466' in n or 'e412' in n or 'e410' in n:
