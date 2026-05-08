@@ -289,10 +289,12 @@ function Result() {
 
       if (p) {
         const rawImages = p.images || (p.image_url ? [p.image_url] : [])
-        // Use stored grade; ingredients list parsed from raw if available
-        const ingredients = p.ingredients_raw
-          ? parseRawIngredients(p.ingredients_raw).map(name => ({ name, classification: 'generally_recognised', one_line_note: '', regulatory_note: '' }))
-          : (p.ingredients || [])
+        // Prefer stored classified ingredients; only parse raw as last resort
+        const ingredients = (p.ingredients && p.ingredients.length > 0)
+          ? p.ingredients
+          : p.ingredients_raw
+            ? parseRawIngredients(p.ingredients_raw).map(name => ({ name, classification: 'generally_recognised', one_line_note: '', regulatory_note: '' }))
+            : []
         const productData = {
           id: String(p.id),
           name: p.name,

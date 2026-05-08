@@ -51,8 +51,7 @@ def _prune_suggest():
 
 _BANNED = [
     'triclosan','formaldehyde','hydroquinone','mercury','lead',
-    'e128','e216','e217','e240','sudan red','para red',
-    'methylparaben','propylparaben','butylparaben','ethylparaben',
+    'e128','e240','sudan red','para red',
     'sodium nitrite','sodium nitrate','potassium bromate',
     'azodicarbonamide','brominated vegetable oil','olestra',
     'asbestos','benzene','vinyl chloride','aflatoxin',
@@ -74,6 +73,9 @@ _QUESTIONED = [
     'ci 47000','ci 19140','ci 15985','ci 16035','ci 42090',
     # Flavour enhancers — neurotoxicity, MSG-like side effects (not MSG itself — see _WORTH)
     'disodium guanylate','disodium inosinate','e627','e631',
+    # Parabens — endocrine disruption at high doses; EU restricted concentrations
+    'methylparaben','ethylparaben','propylparaben','butylparaben','isobutylparaben',
+    'e214','e215','e216','e217','e218','e219',
     # Preservatives — benzene formation, sulfite allergies, nitrosamine risk
     'sodium benzoate','sodium metabisulphite','sulfur dioxide',
     'e211','e220','e223','e250','e251',
