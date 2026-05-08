@@ -170,7 +170,6 @@ _COSMETIC_GR   = {'salt', 'sodium chloride', 'citric acid'}
 # Known-safe ingredients that remain generally_recognised even when Q.S is appended.
 # Checked before colour/perfume Q.S patterns so "Purified Water Q.S" isn't flagged.
 _QS_SAFE = [
-    'purified water', 'distilled water', 'aqua', 'water',
     'multani mitti', "fuller's earth", 'fullers earth',
 ]
 

@@ -764,9 +764,6 @@ def classify_ingredient(ingredient_name, category=None):
     # Safe Q.S override — known-safe ingredients stay generally_recognised even with Q.S appended
     # Must run before commonly_questioned/worth_knowing loops (colour/q.s patterns would catch them)
     _QS_SAFE_PATTERNS = {
-        'purified water': ('Purified water', 'Pharmaceutical-grade purified water used as a safe solvent base'),
-        'distilled water': ('Distilled water', 'Water purified by distillation; safe inert solvent'),
-        'aqua': ('Water (INCI: Aqua)', 'Purified water; safe universal solvent in cosmetics and pharmaceuticals'),
         'multani mitti': ('Fuller\'s Earth (Multani Mitti)', 'Natural clay mineral with absorbent properties; safe for topical use'),
         "fuller's earth": ('Fuller\'s Earth', 'Natural absorbent clay mineral; safe for topical use'),
         'fullers earth': ('Fuller\'s Earth', 'Natural absorbent clay mineral; safe for topical use'),

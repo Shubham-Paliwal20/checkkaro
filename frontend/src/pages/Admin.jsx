@@ -133,7 +133,7 @@ const WORTH_KNOWING = [
   // Iron oxides (ci 77491/77492/77499) are safe mineral pigments — fall through to generally_recognised
 ]
 
-const QS_SAFE = ['purified water', 'distilled water', 'aqua', 'water', 'multani mitti', "fuller's earth", 'fullers earth']
+const QS_SAFE = ['multani mitti', "fuller's earth", 'fullers earth']
 
 function classifyIngredient(name) {
   // Normalize: "CI No. 47000" → "ci 47000", collapse spaces
