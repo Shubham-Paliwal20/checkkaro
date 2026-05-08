@@ -121,6 +121,8 @@ _QUESTIONED = [
 # ── Worth Knowing ─────────────────────────────────────────────────────────────
 # Permitted ingredients with mild concerns or worth being aware of.
 _WORTH = [
+    # Vague / undisclosed ingredient descriptors — brand not fully disclosing composition
+    'q.s','q.s.','quantum sufficit',
     # Vegetable oils — high saturated fat, palm = environmental concern
     'palm oil','palmolein','vegetable oil','edible vegetable fat',
     # Sugars and high-GI carbs

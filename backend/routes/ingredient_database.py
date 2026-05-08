@@ -607,6 +607,11 @@ def classify_ingredient(ingredient_name, category=None):
         'paprika': ('Natural red color', 'Generally safe but may cause allergic reactions in sensitive individuals'),
         'beetroot': ('Natural red color', 'Generally safe but may cause red urine/stools (harmless but alarming)'),
         
+        # Vague / undisclosed descriptors — brand hiding full composition
+        'q.s': ('Undisclosed filler (Q.S)', 'Brand has not disclosed the full ingredient — "quantum sufficit" means added in unspecified quantity; exact composition unknown'),
+        'q.s.': ('Undisclosed filler (Q.S.)', 'Brand has not disclosed the full ingredient — added in unspecified quantity; exact composition unknown'),
+        'quantum sufficit': ('Undisclosed filler', 'Latin for "as much as needed" — brand intentionally hiding exact ingredient or quantity'),
+
         # Waxes and glazing agents
         'shellac': ('Glazing agent E904', 'Natural resin from insects, rare allergic reactions, digestive issues'),
         'beeswax': ('Glazing agent E901', 'Generally safe but rare allergic reactions, may cause digestive upset'),

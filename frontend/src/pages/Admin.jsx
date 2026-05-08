@@ -99,6 +99,8 @@ const COMMONLY_QUESTIONED = [
 ]
 
 const WORTH_KNOWING = [
+  // Vague / undisclosed ingredient descriptors
+  'q.s', 'q.s.', 'quantum sufficit',
   // Vegetable oils — high saturated fat
   'palm oil', 'palmolein', 'vegetable oil',
   // Sugars and high-GI carbs
