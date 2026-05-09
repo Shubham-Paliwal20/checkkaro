@@ -564,6 +564,12 @@ function Result() {
                   <p className="text-sm text-gray-700">{product.recommendation}</p>
                 </div>
               )}
+              {allIngredients.some(i => /\b(fragrance|parfum|perfume|cologne)\b/i.test(i.name)) && (
+                <div className="mt-3 bg-amber-50 rounded-lg p-3 sm:p-4 border border-amber-200">
+                  <p className="text-sm font-semibold text-amber-800 mb-1">Fragrance Disclosure:</p>
+                  <p className="text-sm text-amber-900">If you have sensitive, reactive, or acne-prone skin, it is best to avoid products that only list "fragrance" or "parfum" and look for brands that voluntarily disclose their full ingredient lists.</p>
+                </div>
+              )}
             </div>
           )
         })()}
