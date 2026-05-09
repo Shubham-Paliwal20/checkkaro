@@ -189,6 +189,9 @@ function Result() {
   const [adminIngText, setAdminIngText] = useState('')
   const [adminSaving, setAdminSaving] = useState(false)
   const [adminDbId, setAdminDbId] = useState(null) // cached Supabase UUID for static products
+  const [adminNameEdit, setAdminNameEdit] = useState(false)
+  const [adminNameText, setAdminNameText] = useState('')
+  const [adminNameSaving, setAdminNameSaving] = useState(false)
   const [showPhotoModal, setShowPhotoModal] = useState(false)
   const [photoToast, setPhotoToast] = useState(null)
 
@@ -484,7 +487,62 @@ function Result() {
               {product.brand && (
                 <p className="text-sm text-primary uppercase font-semibold mb-1">{product.brand}</p>
               )}
-              <h1 className="font-poppins font-bold text-xl sm:text-2xl md:text-3xl text-navy mb-3">{product.name}</h1>
+              {isAdmin && adminNameEdit ? (
+                <div className="flex items-center gap-2 mb-3">
+                  <input
+                    value={adminNameText}
+                    onChange={e => setAdminNameText(e.target.value)}
+                    className="font-poppins font-bold text-xl sm:text-2xl text-navy border border-indigo-300 rounded-lg px-3 py-1 flex-1 focus:outline-none focus:ring-2 focus:ring-indigo-400"
+                    autoFocus
+                  />
+                  <button
+                    disabled={adminNameSaving || !adminNameText.trim()}
+                    onClick={async () => {
+                      if (!adminNameText.trim()) return
+                      setAdminNameSaving(true)
+                      try {
+                        const isUUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(product.id)
+                        if (isUUID) {
+                          await supabase.auth.getSession()
+                          const { error } = await supabase.from('ai_extracted_products').update({ name: adminNameText.trim() }).eq('id', product.id)
+                          if (error) throw error
+                        }
+                        _productCache.delete(productName.toLowerCase())
+                        setProduct(prev => ({ ...prev, name: adminNameText.trim() }))
+                        setAdminNameEdit(false)
+                      } catch (e) {
+                        alert(`Save failed: ${e.message}`)
+                      } finally {
+                        setAdminNameSaving(false)
+                      }
+                    }}
+                    className="bg-indigo-600 hover:bg-indigo-700 disabled:bg-gray-300 text-white text-xs font-bold rounded-lg px-3 py-1.5 cursor-pointer disabled:cursor-not-allowed whitespace-nowrap"
+                  >
+                    {adminNameSaving ? 'Saving…' : 'Save'}
+                  </button>
+                  <button
+                    onClick={() => { setAdminNameEdit(false); setAdminNameText('') }}
+                    className="text-gray-400 hover:text-gray-600 text-xs font-semibold px-2 py-1.5"
+                  >
+                    Cancel
+                  </button>
+                </div>
+              ) : (
+                <div className="flex items-center gap-2 mb-3 justify-center md:justify-start">
+                  <h1 className="font-poppins font-bold text-xl sm:text-2xl md:text-3xl text-navy">{product.name}</h1>
+                  {isAdmin && (
+                    <button
+                      onClick={() => { setAdminNameText(product.name); setAdminNameEdit(true) }}
+                      title="Edit name"
+                      className="text-indigo-400 hover:text-indigo-600 flex-shrink-0"
+                    >
+                      <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15.232 5.232l3.536 3.536M9 13l6.586-6.586a2 2 0 112.828 2.828L11.828 15.828a2 2 0 01-1.414.586H9v-2a2 2 0 01.586-1.414z"/>
+                      </svg>
+                    </button>
+                  )}
+                </div>
+              )}
               
               <div className="flex flex-wrap gap-2 mb-4 justify-center md:justify-start">
                 {product.category && (
