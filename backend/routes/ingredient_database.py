@@ -785,6 +785,16 @@ def classify_ingredient(ingredient_name, category=None):
                     'regulatory_note': 'Approved in cosmetics within regulatory limits; benzene formation risk applies to food/beverages, not topical use'
                 }
 
+    # IFRA certified / allergen-free fragrance → worth_knowing
+    if any(w in ingredient_lower for w in ('fragrance', 'parfum', 'perfume')) and \
+            ('ifra' in ingredient_lower or 'allergen free' in ingredient_lower or 'allergen-free' in ingredient_lower):
+        return {
+            'classification': 'worth_knowing',
+            'what_it_is': 'IFRA Certified Fragrance',
+            'one_line_note': 'IFRA certified fragrance — independently tested for allergen safety; lower sensitisation risk than undisclosed fragrance blends; individual compounds still not disclosed on label',
+            'regulatory_note': 'IFRA (International Fragrance Association) certified; meets global fragrance safety standards'
+        }
+
     # Certified organic fragrance override — must run before 'fragrance' → commonly_questioned
     if any(w in ingredient_lower for w in ('fragrance', 'parfum', 'perfume')) and 'certified organic' in ingredient_lower:
         return {

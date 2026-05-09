@@ -619,7 +619,8 @@ function Result() {
               {(() => {
                 const hasFragrance = allIngredients.some(i =>
                   /\b(fragrance|parfum|perfume|cologne)\b/i.test(i.name) &&
-                  !/certified organic/i.test(i.name)
+                  !/certified organic/i.test(i.name) &&
+                  !/ifra|allergen.?free/i.test(i.name)
                 )
                 const cqCount = commonly_questioned.length
                 const fragranceNote = 'If you have sensitive, reactive, or acne-prone skin, it is best to avoid products that only list "fragrance" or "parfum" and look for brands that voluntarily disclose their full ingredient lists.'

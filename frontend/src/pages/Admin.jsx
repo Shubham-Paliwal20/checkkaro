@@ -147,6 +147,11 @@ function classifyIngredient(name) {
   if (['fragrance', 'parfum', 'perfume'].some(w => n.includes(w)) && n.includes('certified organic')) {
     return 'generally_recognised'
   }
+  // IFRA certified / allergen-free fragrance — independently tested; lower risk
+  if (['fragrance', 'parfum', 'perfume'].some(w => n.includes(w)) &&
+      (n.includes('ifra') || n.includes('allergen free') || n.includes('allergen-free'))) {
+    return 'worth_knowing'
+  }
   // Safe Q.S override — known-safe ingredients stay generally_recognised even with Q.S appended
   if (n.includes('q.s')) {
     if (QS_SAFE.some(safe => n.includes(safe))) return 'generally_recognised'

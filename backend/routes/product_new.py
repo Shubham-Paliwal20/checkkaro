@@ -185,6 +185,11 @@ def _classify(name: str, category: str = '') -> str:
     if any(w in n for w in ('fragrance', 'parfum', 'perfume')) and 'certified organic' in n:
         return 'generally_recognised'
 
+    # IFRA certified / allergen-free fragrance — independently tested; lower sensitisation risk
+    if any(w in n for w in ('fragrance', 'parfum', 'perfume')) and \
+            ('ifra' in n or 'allergen free' in n or 'allergen-free' in n):
+        return 'worth_knowing'
+
     # Safe Q.S override: "Purified Water Q.S" → generally_recognised despite 'q.s' in _WORTH
     if 'q.s' in n:
         for safe in _QS_SAFE:
@@ -224,6 +229,8 @@ def _note(name: str, cls: str) -> str:
         if 'sodium benzoate' in n: return 'Preservative; may form benzene with ascorbic acid in acidic beverages; hyperactivity link in children'
         return 'Commonly questioned ingredient'
     if cls == 'worth_knowing':
+        if any(w in n for w in ('fragrance', 'parfum', 'perfume')) and ('ifra' in n or 'allergen free' in n or 'allergen-free' in n):
+            return 'IFRA certified fragrance — independently tested for allergen safety; lower sensitisation risk than undisclosed fragrance blends'
         if 'sodium benzoate' in n: return 'Preservative (E211); generally safe in cosmetics at permitted levels (≤0.5%); benzene formation risk is food-specific, not topical; may cause irritation at higher concentrations'
         if 'q.s' in n: return 'Brand has not disclosed the full ingredient — "quantum sufficit" means added in unspecified quantity; exact composition unknown'
         if 'sugar' in n: return 'Sweetener; excess consumption linked to health concerns'
