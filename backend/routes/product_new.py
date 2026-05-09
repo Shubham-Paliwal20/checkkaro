@@ -400,13 +400,25 @@ async def search_product(name: str = Query(..., description="Product name to sea
         ingredients = [_build_ingredient_item(n, cat) for n in raw_names if n]
         # Compute grade live from actual ingredients
         grade = calculate_grade([i.dict() for i in ingredients])
-        # Sync stored grade if it differs — also purge browse cache so the
-        # listing page immediately shows the corrected grade, not the stale one.
-        if grade != p.get("grade"):
+
+        # Persist classified ingredients + grade so the Supabase fallback path
+        # (used when this server is cold/slow) always shows correct classifications
+        # instead of mapping everything to 'generally_recognised'.
+        stored_ings = p.get("ingredients") or []
+        grade_changed = grade != p.get("grade")
+        ings_missing  = not stored_ings or len(stored_ings) == 0
+
+        if grade_changed or ings_missing:
             try:
+                update_payload: dict = {}
+                if grade_changed:
+                    update_payload["grade"] = grade
+                if ings_missing:
+                    update_payload["ingredients"] = [i.dict() for i in ingredients]
                 supabase_admin.from_("ai_extracted_products") \
-                    .update({"grade": grade}).eq("id", p["id"]).execute()
-                invalidate_browse_cache()
+                    .update(update_payload).eq("id", p["id"]).execute()
+                if grade_changed:
+                    invalidate_browse_cache()
             except Exception:
                 pass
     else:

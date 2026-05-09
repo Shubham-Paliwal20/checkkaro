@@ -13,22 +13,28 @@ from db.supabase_client import supabase_admin
 from routes.product_new import _classify, _parse_raw
 from grading import calculate_grade
 
-def compute_grade(row: dict) -> str:
+def compute_row(row: dict) -> dict:
+    """Return dict with 'grade' and optionally 'ingredients' (classified list)."""
     cat = row.get("category") or ""
     raw = row.get("ingredients_raw") or ""
     if raw:
         names = _parse_raw(raw)
-        classified = [{"name": n, "classification": _classify(n, cat)} for n in names if n]
-        return calculate_grade(classified) if classified else "C"
+        classified = [
+            {"name": n, "classification": _classify(n, cat), "aliases": "", "one_line_note": "", "regulatory_note": ""}
+            for n in names if n
+        ]
+        grade = calculate_grade(classified) if classified else "C"
+        return {"grade": grade, "ingredients": classified}
     ings = row.get("ingredients") or []
     if ings:
         classified = []
         for ing in ings:
             name = ing.get("name", "") if isinstance(ing, dict) else str(ing)
             if name:
-                classified.append({"name": name, "classification": _classify(name, cat)})
-        return calculate_grade(classified) if classified else "C"
-    return "C"
+                classified.append({"name": name, "classification": _classify(name, cat), "aliases": "", "one_line_note": "", "regulatory_note": ""})
+        grade = calculate_grade(classified) if classified else "C"
+        return {"grade": grade, "ingredients": classified}
+    return {"grade": "C", "ingredients": []}
 
 BATCH = 200
 
@@ -45,16 +51,23 @@ def run_backfill(log=print):
             .range(offset, offset + BATCH - 1) \
             .execute()
 
+
         rows = result.data or []
         if not rows:
             break
 
         for r in rows:
-            new_grade = compute_grade(r)
+            result = compute_row(r)
             total_updated += 1
-            if new_grade != r.get("grade"):
+            stored_ings = r.get("ingredients") or []
+            grade_changed = result["grade"] != r.get("grade")
+            ings_missing  = not stored_ings or len(stored_ings) == 0
+            if grade_changed or ings_missing:
+                payload = {"grade": result["grade"]}
+                if ings_missing and result["ingredients"]:
+                    payload["ingredients"] = result["ingredients"]
                 supabase_admin.from_("ai_extracted_products") \
-                    .update({"grade": new_grade}) \
+                    .update(payload) \
                     .eq("id", r["id"]) \
                     .execute()
                 changed += 1
