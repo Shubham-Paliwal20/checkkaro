@@ -178,6 +178,11 @@ def _classify(name: str, category: str = '') -> str:
     n   = name.lower()
     n_c = re.sub(r'[\s\-/]', '', n)   # compact: "Methyl Paraben" → "methylparaben"
 
+    # Certified organic fragrance override — must run before 'fragrance' → commonly_questioned
+    # e.g. "Fragrance *CO Certified Organic" is disclosed and certified; no undisclosed-mix concern
+    if any(w in n for w in ('fragrance', 'parfum', 'perfume')) and 'certified organic' in n:
+        return 'generally_recognised'
+
     # Safe Q.S override: "Purified Water Q.S" → generally_recognised despite 'q.s' in _WORTH
     if 'q.s' in n:
         for safe in _QS_SAFE:

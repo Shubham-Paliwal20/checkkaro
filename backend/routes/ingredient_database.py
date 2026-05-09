@@ -761,6 +761,15 @@ def classify_ingredient(ingredient_name, category=None):
                     'regulatory_note': 'Standard cosmetic ingredient, no topical safety concerns'
                 }
 
+    # Certified organic fragrance override — must run before 'fragrance' → commonly_questioned
+    if any(w in ingredient_lower for w in ('fragrance', 'parfum', 'perfume')) and 'certified organic' in ingredient_lower:
+        return {
+            'classification': 'generally_recognised',
+            'what_it_is': 'Certified Organic Fragrance',
+            'one_line_note': 'Certified organic fragrance — sourced from organically grown botanicals with full certification; no undisclosed synthetic chemical concern',
+            'regulatory_note': 'Certified organic; generally recognised as safe'
+        }
+
     # Safe Q.S override — known-safe ingredients stay generally_recognised even with Q.S appended
     # Must run before commonly_questioned/worth_knowing loops (colour/q.s patterns would catch them)
     _QS_SAFE_PATTERNS = {

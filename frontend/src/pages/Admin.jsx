@@ -143,6 +143,10 @@ function classifyIngredient(name) {
     .trim()
   // Compact form: "Methyl Paraben" → "methylparaben" so it matches keyword "methylparaben"
   const nc = n.replace(/[\s\-\/]/g, '')
+  // Certified organic fragrance — disclosed + certified; not an undisclosed chemical mix
+  if (['fragrance', 'parfum', 'perfume'].some(w => n.includes(w)) && n.includes('certified organic')) {
+    return 'generally_recognised'
+  }
   // Safe Q.S override — known-safe ingredients stay generally_recognised even with Q.S appended
   if (n.includes('q.s')) {
     if (QS_SAFE.some(safe => n.includes(safe))) return 'generally_recognised'
