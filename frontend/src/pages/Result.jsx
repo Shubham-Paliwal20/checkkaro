@@ -558,18 +558,31 @@ function Result() {
                 {insightIcon}
                 <p className={`text-sm sm:text-base font-medium ${insightTextColor}`}>{insight}</p>
               </div>
-              {product.recommendation && (
-                <div className="mt-3 bg-white rounded-lg p-3 sm:p-4 border border-gray-200">
-                  <p className="text-sm font-semibold text-navy mb-1">Recommendation:</p>
-                  <p className="text-sm text-gray-700">{product.recommendation}</p>
-                </div>
-              )}
-              {allIngredients.some(i => /\b(fragrance|parfum|perfume|cologne)\b/i.test(i.name)) && (
-                <div className="mt-3 bg-amber-50 rounded-lg p-3 sm:p-4 border border-amber-200">
-                  <p className="text-sm font-semibold text-amber-800 mb-1">Fragrance Disclosure:</p>
-                  <p className="text-sm text-amber-900">If you have sensitive, reactive, or acne-prone skin, it is best to avoid products that only list "fragrance" or "parfum" and look for brands that voluntarily disclose their full ingredient lists.</p>
-                </div>
-              )}
+              {(() => {
+                const hasFragrance = allIngredients.some(i => /\b(fragrance|parfum|perfume|cologne)\b/i.test(i.name))
+                const cqCount = commonly_questioned.length
+                const fragranceNote = 'If you have sensitive, reactive, or acne-prone skin, it is best to avoid products that only list "fragrance" or "parfum" and look for brands that voluntarily disclose their full ingredient lists.'
+
+                let rec = ''
+                if (grade === 'A') {
+                  rec = 'This product has a clean ingredient profile and is suitable for most people. Always check for personal allergens before use.'
+                } else if (grade === 'B') {
+                  rec = 'This product is generally suitable for regular use. It has a few worth-noting ingredients but nothing of serious concern for most people.'
+                } else if (grade === 'C') {
+                  rec = `This product contains ${cqCount} commonly questioned ingredient${cqCount !== 1 ? 's' : ''}. Review the ingredient details below before regular use, especially if you have skin sensitivities or dietary restrictions.`
+                } else {
+                  rec = `This product has a high number of questioned ingredients. We strongly recommend reviewing the ingredient breakdown below before purchasing, and considering alternatives with cleaner formulations.`
+                }
+
+                if (hasFragrance) rec += ' ' + fragranceNote
+
+                return (
+                  <div className="mt-3 bg-white rounded-lg p-3 sm:p-4 border border-gray-200">
+                    <p className="text-sm font-semibold text-navy mb-1">Recommendation:</p>
+                    <p className="text-sm text-gray-700">{rec}</p>
+                  </div>
+                )
+              })()}
             </div>
           )
         })()}
