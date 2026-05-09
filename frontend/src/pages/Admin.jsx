@@ -931,6 +931,7 @@ export default function Admin() {
   const [photoFetching, setPhotoFetching] = useState(false)
   const [photoTab, setPhotoTab] = useState('pending')
   const [photoCounts, setPhotoCounts] = useState({ pending: 0, approved: 0, rejected: 0 })
+  const [regradeState, setRegradeState] = useState({ running: false, done: false, processed: 0, updated: 0, error: '' })
 
   const isAdmin = user?.email === ADMIN_EMAIL
 
@@ -1240,6 +1241,33 @@ export default function Admin() {
 
   if (!isAdmin) return null
 
+  const handleRegrade = async () => {
+    if (regradeState.running) return
+    setRegradeState({ running: true, done: false, processed: 0, updated: 0, error: '' })
+    try {
+      const { data: { session } } = await supabase.auth.getSession()
+      if (!session) throw new Error('Not authenticated')
+      const resp = await fetch(`${API_BASE_URL}/api/admin/regrade-all`, {
+        method: 'POST',
+        headers: { Authorization: `Bearer ${session.access_token}` },
+      })
+      if (!resp.ok) throw new Error(await resp.text())
+      // Poll status every 3 seconds until done
+      const poll = setInterval(async () => {
+        try {
+          const sr = await fetch(`${API_BASE_URL}/api/admin/regrade-status`, {
+            headers: { Authorization: `Bearer ${session.access_token}` },
+          })
+          const s = await sr.json()
+          setRegradeState(s)
+          if (s.done || !s.running) clearInterval(poll)
+        } catch { clearInterval(poll) }
+      }, 3000)
+    } catch (e) {
+      setRegradeState(prev => ({ ...prev, running: false, done: true, error: e.message }))
+    }
+  }
+
   const adminPage = tab === 'photos' ? 'photos' : tab === 'reports' ? 'reports' : tab === 'add' ? 'add' : 'products'
 
   return (
@@ -1258,6 +1286,32 @@ export default function Admin() {
             ⚠️ {fetchError}
           </div>
         )}
+
+        {/* Fix All Grades — recomputes every product grade with current classification rules */}
+        <div style={{ marginTop: 12, display: 'flex', alignItems: 'center', gap: 12, flexWrap: 'wrap' }}>
+          <button
+            onClick={handleRegrade}
+            disabled={regradeState.running}
+            style={{ padding: '8px 18px', borderRadius: 8, border: 'none', cursor: regradeState.running ? 'not-allowed' : 'pointer', fontFamily: 'inherit', fontSize: 13, fontWeight: 700, background: regradeState.running ? '#e5e7eb' : '#f59e0b', color: regradeState.running ? '#9ca3af' : '#fff' }}
+          >
+            {regradeState.running ? '⏳ Regrading…' : '🔄 Fix All Grades'}
+          </button>
+          {regradeState.running && (
+            <span style={{ fontSize: 12, color: '#6b7280' }}>
+              {regradeState.processed} processed…
+            </span>
+          )}
+          {regradeState.done && !regradeState.error && (
+            <span style={{ fontSize: 12, color: '#16a34a', fontWeight: 600 }}>
+              ✓ Done — {regradeState.updated} grades fixed out of {regradeState.processed}
+            </span>
+          )}
+          {regradeState.error && (
+            <span style={{ fontSize: 12, color: '#dc2626', fontWeight: 600 }}>
+              ✗ {regradeState.error}
+            </span>
+          )}
+        </div>
       </div>
 
       {/* Top-level page switcher */}

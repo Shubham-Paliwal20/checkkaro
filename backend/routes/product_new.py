@@ -395,11 +395,13 @@ async def search_product(name: str = Query(..., description="Product name to sea
         ingredients = [_build_ingredient_item(n, cat) for n in raw_names if n]
         # Compute grade live from actual ingredients
         grade = calculate_grade([i.dict() for i in ingredients])
-        # Sync stored grade if it differs (keeps browse consistent with detail)
+        # Sync stored grade if it differs — also purge browse cache so the
+        # listing page immediately shows the corrected grade, not the stale one.
         if grade != p.get("grade"):
             try:
                 supabase_admin.from_("ai_extracted_products") \
                     .update({"grade": grade}).eq("id", p["id"]).execute()
+                invalidate_browse_cache()
             except Exception:
                 pass
     else:

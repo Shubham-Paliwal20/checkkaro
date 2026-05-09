@@ -1,5 +1,6 @@
 import os
 import uuid
+import threading
 from fastapi import APIRouter, HTTPException, Header, BackgroundTasks
 from pydantic import BaseModel
 from typing import Optional
@@ -200,3 +201,33 @@ async def delete_product(
     invalidate_browse_cache()  # deleted product — flush stale browse results
     print(f"[DELETE OK] {product_name} ({product_id})")
     return {"success": True, "deleted": product_id, "name": product_name}
+
+
+# ── Regrade all products ───────────────────────────────────────────────────────
+_regrade_status: dict = {"running": False, "processed": 0, "updated": 0, "done": False, "error": ""}
+
+@router.post("/regrade-all")
+async def regrade_all(authorization: Optional[str] = Header(None)):
+    """Recompute grades for every product using current classification rules."""
+    _verify_admin(authorization)
+
+    if _regrade_status["running"]:
+        return {"status": "already_running", **_regrade_status}
+
+    def _run():
+        from backfill_grades import run_backfill
+        _regrade_status.update({"running": True, "processed": 0, "updated": 0, "done": False, "error": ""})
+        try:
+            result = run_backfill(log=lambda msg: print(f"[REGRADE] {msg}"))
+            _regrade_status.update({"running": False, "done": True, **result})
+            invalidate_browse_cache()
+        except Exception as e:
+            _regrade_status.update({"running": False, "done": True, "error": str(e)})
+
+    threading.Thread(target=_run, daemon=True).start()
+    return {"status": "started"}
+
+@router.get("/regrade-status")
+async def regrade_status(authorization: Optional[str] = Header(None)):
+    _verify_admin(authorization)
+    return _regrade_status
