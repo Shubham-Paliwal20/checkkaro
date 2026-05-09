@@ -13,7 +13,7 @@ INGREDIENT_DESCRIPTIONS = {
     # --- Preservatives ---
     'triclosan': 'An antimicrobial agent first used in hospitals in the 1960s, later added to soaps, toothpastes and body washes. It was one of the most widely used antibacterial additives in consumer products for over 40 years.',
     'triclocarban': 'An antimicrobial compound (TCC) used in bar soaps and personal care products to kill bacteria and fungi. Structurally similar to triclosan, it was a common ingredient in antibacterial bar soaps.',
-    'sodium benzoate': 'The sodium salt of benzoic acid (E211), used as a preservative in acidic foods and beverages since the 1900s. It occurs naturally in small amounts in cranberries, prunes and cinnamon.',
+    'sodium benzoate': 'The sodium salt of benzoic acid (E211), used as a preservative in acidic foods, beverages and cosmetics. It occurs naturally in small amounts in cranberries, prunes and cinnamon. If combined with Vitamin C (ascorbic acid) or citric acid, it can potentially produce benzene, a known carcinogen, although this is more common in beverages than in topical products. While generally safe within approved limits (0.5% in cosmetics), higher concentrations are more likely to cause irritant reactions.',
     'e211': 'E211 is the EU code for sodium benzoate, a widely used preservative in soft drinks, pickles, condiments and fruit juices that prevents the growth of bacteria, yeast and mould.',
     'sodium metabisulphite': 'A sulfite-based preservative and antioxidant (E223) used to prevent discolouration and bacterial growth in foods, beverages and medicines. Also widely used in winemaking and brewing.',
     'e223': 'E223 is the EU code for sodium metabisulphite, a sulfite preservative used to preserve colour and freshness in dried fruits, wine, fruit juices and processed foods.',
@@ -265,6 +265,18 @@ INGREDIENT_DESCRIPTIONS = {
     'ci 77492': 'CI 77492 is the Colour Index number for Iron Oxide Yellow, a naturally occurring mineral pigment used in cosmetics and some food colourants as a safe yellow or buff colourant.',
     'ci 77499': 'CI 77499 is the Colour Index number for Iron Oxide Black, a naturally occurring mineral pigment used in cosmetics like mascara, eyeliner and nail products as a stable black colourant.',
     'iron oxide': 'Iron oxide is a naturally occurring mineral pigment (rust) that comes in red, yellow and black forms. Approved by FDA and EU as a safe colourant in cosmetics and some food applications.',
+}
+
+# Ingredients that are commonly_questioned in food but only worth_knowing in topical/cosmetic products
+COSMETIC_WORTH_OVERRIDES = {
+    'sodium benzoate': (
+        'Preservative E211',
+        'If combined with Vitamin C (ascorbic acid) or citric acid, it can potentially produce benzene, a known carcinogen, although this is more common in beverages than in topical products. While generally safe within approved limits (0.5% in cosmetics), higher concentrations are more likely to cause irritant reactions.'
+    ),
+    'e211': (
+        'Sodium benzoate (E211)',
+        'Benzene formation risk is specific to acidic beverages with Vitamin C — not a topical concern. Approved in cosmetics at ≤0.5%; may cause skin irritation at higher concentrations.'
+    ),
 }
 
 # Ingredients that are standard/safe in cosmetics but have dietary concerns in food
@@ -759,6 +771,18 @@ def classify_ingredient(ingredient_name, category=None):
                     'what_it_is': what_it_is,
                     'one_line_note': note,
                     'regulatory_note': 'Standard cosmetic ingredient, no topical safety concerns'
+                }
+
+    # Cosmetic worth overrides — ingredients that are commonly_questioned in food
+    # but only worth_knowing when used topically (e.g. sodium benzoate)
+    if is_cosmetic:
+        for pat, (what_it_is, note) in COSMETIC_WORTH_OVERRIDES.items():
+            if pat in ingredient_lower:
+                return {
+                    'classification': 'worth_knowing',
+                    'what_it_is': what_it_is,
+                    'one_line_note': note,
+                    'regulatory_note': 'Approved in cosmetics within regulatory limits; benzene formation risk applies to food/beverages, not topical use'
                 }
 
     # Certified organic fragrance override — must run before 'fragrance' → commonly_questioned

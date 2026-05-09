@@ -165,6 +165,8 @@ _WORTH_C      = [re.sub(r'[\s\-/]', '', k) for k in _WORTH]
 _COSMETIC_CATS = {'skincare', 'skin care', 'hair care', 'haircare',
                   'personal care', 'cosmetics', 'baby care', 'oral care', 'household'}
 _COSMETIC_GR   = {'salt', 'sodium chloride', 'citric acid'}
+# Ingredients that are commonly_questioned in food but only worth_knowing in topical products
+_COSMETIC_WORTH = {'sodium benzoate'}
 
 
 # Known-safe ingredients that remain generally_recognised even when Q.S is appended.
@@ -197,6 +199,9 @@ def _classify(name: str, category: str = '') -> str:
             for safe in _COSMETIC_GR:
                 if safe in n or safe in n_c:
                     return 'generally_recognised'
+            for worth in _COSMETIC_WORTH:
+                if worth in n or worth in n_c:
+                    return 'worth_knowing'
 
     for kw, kw_c in zip(_BANNED, _BANNED_C):
         if kw in n or kw_c in n_c: return 'banned'
@@ -216,9 +221,10 @@ def _note(name: str, cls: str) -> str:
         if 'e110' in n: return 'Sunset Yellow – artificial colour, restricted in EU'
         if 'e122' in n: return 'Carmoisine – artificial colour, restricted in EU'
         if 'msg' in n or 'monosodium' in n: return 'Flavour enhancer; generally safe in normal amounts'
-        if 'sodium benzoate' in n: return 'Preservative; may form benzene with ascorbic acid'
+        if 'sodium benzoate' in n: return 'Preservative; may form benzene with ascorbic acid in acidic beverages; hyperactivity link in children'
         return 'Commonly questioned ingredient'
     if cls == 'worth_knowing':
+        if 'sodium benzoate' in n: return 'Preservative (E211); generally safe in cosmetics at permitted levels (≤0.5%); benzene formation risk is food-specific, not topical; may cause irritation at higher concentrations'
         if 'q.s' in n: return 'Brand has not disclosed the full ingredient — "quantum sufficit" means added in unspecified quantity; exact composition unknown'
         if 'sugar' in n: return 'Sweetener; excess consumption linked to health concerns'
         if 'emulsifier' in n or 'e471' in n: return 'Emulsifier; generally recognised as safe'
