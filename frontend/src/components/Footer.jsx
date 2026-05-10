@@ -27,8 +27,8 @@ function Footer() {
                 <line x1="36" y1="36" x2="48" y2="48" stroke="#FF9933" strokeWidth="5.5" strokeLinecap="round"/>
               </svg>
               <div className="flex flex-col leading-tight">
-                <div className="font-poppins font-bold text-xl">
-                  <span className="text-orange">Check</span><span className="text-white">Karo</span>
+                <div className="font-poppins font-bold text-xl text-white">
+                  Parkho
                 </div>
                 <span className="text-xs text-gray-400" style={{ marginTop: '-1px' }}>Know what's inside</span>
               </div>

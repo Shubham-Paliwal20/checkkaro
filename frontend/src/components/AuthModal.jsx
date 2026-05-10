@@ -256,7 +256,10 @@ export default function AuthModal({ onClose, initialStep }) {
             <rect x="30.5" y="19" width="6.5" height="2.5" rx="1" fill="#4A87B8"/>
             <line x1="36" y1="36" x2="48" y2="48" stroke={ORANGE} strokeWidth="5.5" strokeLinecap="round"/>
           </svg>
-          <span style={{ fontWeight: 800, fontSize: 17, color: BLUE }}>Parkho</span>
+          <div style={{ display: 'flex', flexDirection: 'column', lineHeight: 1.2 }}>
+            <span style={{ fontWeight: 800, fontSize: 20, color: BLUE, fontFamily: 'Poppins, sans-serif' }}>Parkho</span>
+            <span style={{ fontSize: 11, color: '#9ca3af' }}>Know what's inside</span>
+          </div>
         </div>
 
         <div style={{ padding: '14px 24px 28px' }}>
