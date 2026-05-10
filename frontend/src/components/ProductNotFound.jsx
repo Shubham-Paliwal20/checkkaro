@@ -147,7 +147,7 @@ export default function ProductNotFound({ productName }) {
             Submission Received!
           </h2>
           <p style={{ color: '#6b7280', fontSize: 14, lineHeight: 1.6, margin: '0 0 24px' }}>
-            Thank you! Our team will review your submission and add it to CheckKaro.
+            Thank you! Our team will review your submission and add it to Parkho.
             Once approved, <strong>₹1 per Product will be sent to your UPI / mobile number</strong>.
           </p>
           <button onClick={() => window.history.back()}

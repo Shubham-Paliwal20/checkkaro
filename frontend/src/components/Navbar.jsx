@@ -50,7 +50,7 @@ function Navbar() {
             </svg>
             <div className="flex flex-col leading-tight">
               <div className="font-poppins font-bold text-lg md:text-xl">
-                <span style={{ color: '#1B3F8A' }}>Check</span><span style={{ color: '#1B3F8A' }}>Karo</span>
+                <span style={{ color: '#FF9933' }}>Par</span><span style={{ color: '#1B3F8A' }}>kho</span>
               </div>
               <span className="text-xs text-gray-400" style={{ marginTop: '-1px' }}>Know what's inside</span>
             </div>

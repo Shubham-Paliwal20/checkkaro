@@ -6,9 +6,9 @@ function About() {
   return (
     <>
       <SEO
-        title="About CheckKaro — Empowering Indian Consumers"
-        description="CheckKaro helps Indian consumers understand food and cosmetic product ingredients with FSSAI regulatory data — explained simply, no jargon, no confusion."
-        keywords="about CheckKaro, ingredient awareness India, FSSAI information, food transparency India, consumer awareness app India"
+        title="About Parkho — Empowering Indian Consumers"
+        description="Parkho helps Indian consumers understand food and cosmetic product ingredients with FSSAI regulatory data — explained simply, no jargon, no confusion."
+        keywords="about Parkho, ingredient awareness India, FSSAI information, food transparency India, consumer awareness app India"
         canonical="/about"
       />
     <motion.div
@@ -20,7 +20,7 @@ function About() {
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Header */}
         <div className="text-center mb-12">
-          <h1 className="section-heading mb-4">About CheckKaro</h1>
+          <h1 className="section-heading mb-4">About Parkho</h1>
           <p className="text-lg text-gray-600">
             Empowering Indian consumers with ingredient awareness
           </p>
@@ -30,7 +30,7 @@ function About() {
         <section className="card p-8 mb-8">
           <h2 className="font-poppins font-bold text-2xl text-navy mb-4">Our Mission</h2>
           <p className="text-gray-700 leading-relaxed mb-4">
-            CheckKaro is an Indian consumer awareness platform designed to help you understand the ingredients in food and cosmetic products sold in India. We believe that every consumer has the right to know what's in the products they use daily.
+            Parkho is an Indian consumer awareness platform designed to help you understand the ingredients in food and cosmetic products sold in India. We believe that every consumer has the right to know what's in the products they use daily.
           </p>
           <p className="text-gray-700 leading-relaxed">
             Our goal is to provide clear, factual, and neutral information about product ingredients based on publicly available regulatory data from FSSAI, WHO, EFSA, EU regulations, and peer-reviewed research — without jargon, without bias, and without making health claims.
@@ -39,7 +39,7 @@ function About() {
 
         {/* How It Works */}
         <section className="card p-8 mb-8">
-          <h2 className="font-poppins font-bold text-2xl text-navy mb-4">How CheckKaro Works</h2>
+          <h2 className="font-poppins font-bold text-2xl text-navy mb-4">How Parkho Works</h2>
           
           <div className="space-y-6">
             <div>
@@ -198,10 +198,10 @@ function About() {
             <h3 className="font-poppins font-bold text-lg mb-3">Legal Disclaimer</h3>
             <div className="space-y-3 text-sm">
               <p>
-                CheckKaro provides ingredient information for general awareness only. Our classifications are based on publicly available international regulatory data from FSSAI, WHO, EFSA, EU regulations, and peer-reviewed research.
+                Parkho provides ingredient information for general awareness only. Our classifications are based on publicly available international regulatory data from FSSAI, WHO, EFSA, EU regulations, and peer-reviewed research.
               </p>
               <p>
-                <strong>This is not medical advice.</strong> CheckKaro does not certify any product as safe or unsafe. We do not make health claims. Individual responses to ingredients vary.
+                <strong>This is not medical advice.</strong> Parkho does not certify any product as safe or unsafe. We do not make health claims. Individual responses to ingredients vary.
               </p>
               <p>
                 The Ingredient Grade is not a safety rating, health claim, or medical assessment. Grade D means one or more commonly questioned or banned ingredients are present. Grade A means all ingredients are generally recognised as safe. Grades B and C reflect the proportion of worth-knowing additives among otherwise clean ingredients.
@@ -210,7 +210,7 @@ function About() {
                 Always read the actual product label and consult a qualified healthcare professional for personal health decisions.
               </p>
               <p>
-                CheckKaro is an educational tool and should not be used as the sole basis for product selection or health decisions.
+                Parkho is an educational tool and should not be used as the sole basis for product selection or health decisions.
               </p>
             </div>
           </DisclaimerBox>
@@ -220,7 +220,7 @@ function About() {
         <section className="card p-8 text-center">
           <h2 className="font-poppins font-bold text-2xl text-navy mb-4">Questions or Feedback?</h2>
           <p className="text-gray-700 mb-6">
-            CheckKaro is continuously improving. If you have suggestions or find any issues, we'd love to hear from you.
+            Parkho is continuously improving. If you have suggestions or find any issues, we'd love to hear from you.
           </p>
           <p className="text-sm text-gray-500">
             This is an open-source educational project built to empower Indian consumers.

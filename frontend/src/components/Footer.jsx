@@ -66,7 +66,7 @@ function Footer() {
 
         {/* Bottom Bar */}
         <div className="border-t border-navy-light mt-8 pt-6 text-center text-sm text-gray-400">
-          <p>&copy; {new Date().getFullYear()} CheckKaro. For informational purposes only. Not medical advice.</p>
+          <p>&copy; {new Date().getFullYear()} Parkho. For informational purposes only. Not medical advice.</p>
         </div>
       </div>
     </footer>

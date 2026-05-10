@@ -27,23 +27,23 @@ function Home() {
         name: 'How do I check ingredients in Indian food products?',
         acceptedAnswer: {
           '@type': 'Answer',
-          text: 'Use CheckKaro to search any Indian product by name. Our database covers 600+ food and cosmetic products with ingredient-by-ingredient breakdowns and FSSAI regulatory context.',
+          text: 'Use Parkho to search any Indian product by name. Our database covers 600+ food and cosmetic products with ingredient-by-ingredient breakdowns and FSSAI regulatory context.',
         },
       },
       {
         '@type': 'Question',
-        name: 'Is CheckKaro free to use?',
+        name: 'Is Parkho free to use?',
         acceptedAnswer: {
           '@type': 'Answer',
-          text: 'Yes, CheckKaro is completely free. Search any Indian food or cosmetic product to understand its ingredients instantly.',
+          text: 'Yes, Parkho is completely free. Search any Indian food or cosmetic product to understand its ingredients instantly.',
         },
       },
       {
         '@type': 'Question',
-        name: 'What products can I check on CheckKaro?',
+        name: 'What products can I check on Parkho?',
         acceptedAnswer: {
           '@type': 'Answer',
-          text: 'CheckKaro covers Indian food products (biscuits, noodles, beverages, snacks, dairy) and cosmetic products (soaps, shampoos, skincare, hair care) — 600+ products in total.',
+          text: 'Parkho covers Indian food products (biscuits, noodles, beverages, snacks, dairy) and cosmetic products (soaps, shampoos, skincare, hair care) — 600+ products in total.',
         },
       },
     ],
@@ -54,7 +54,7 @@ function Home() {
       <SEO
         title="Know Your Food & Cosmetic Products"
         description="Search any Indian food or cosmetic product and understand every ingredient — explained simply, no jargon, no confusion. Free ingredient checker with FSSAI data."
-        keywords="ingredient checker India, food product ingredients, cosmetic ingredients India, FSSAI product search, check food additives, E numbers India, what is in my food, CheckKaro"
+        keywords="ingredient checker India, food product ingredients, cosmetic ingredients India, FSSAI product search, check food additives, E numbers India, what is in my food, Parkho"
         canonical="/"
         structuredData={homeStructuredData}
       />
@@ -136,7 +136,7 @@ function Home() {
       <section className="py-16 sm:py-24 bg-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-8 sm:mb-12">
-            <p className="text-sm text-orange font-semibold uppercase tracking-wide mb-2">What CheckKaro Does</p>
+            <p className="text-sm text-orange font-semibold uppercase tracking-wide mb-2">What Parkho Does</p>
             <h2 className="section-heading text-2xl sm:text-3xl">Everything you need to know</h2>
           </div>
 
@@ -150,7 +150,7 @@ function Home() {
               </div>
               <h3 className="font-poppins font-semibold text-lg sm:text-xl text-orange mb-3">Food Analysis</h3>
               <p className="text-gray-600 text-sm mb-4 leading-relaxed">
-                CheckKaro breaks down every ingredient in your favourite Indian packaged foods — from Maggi to biscuits. Understand what each ingredient is and how it is viewed by regulators worldwide.
+                Parkho breaks down every ingredient in your favourite Indian packaged foods — from Maggi to biscuits. Understand what each ingredient is and how it is viewed by regulators worldwide.
               </p>
               <a href="/products" className="text-orange text-sm font-medium hover:underline">
                 Search a food product →
@@ -166,7 +166,7 @@ function Home() {
               </div>
               <h3 className="font-poppins font-semibold text-lg sm:text-xl text-primary mb-3">Cosmetic Analysis</h3>
               <p className="text-gray-600 text-sm mb-4 leading-relaxed">
-                From fairness creams to shampoos, CheckKaro analyses ingredients in Indian personal care and cosmetic products and highlights chemicals commonly avoided in other countries.
+                From fairness creams to shampoos, Parkho analyses ingredients in Indian personal care and cosmetic products and highlights chemicals commonly avoided in other countries.
               </p>
               <a href="/products" className="text-primary text-sm font-medium hover:underline">
                 Search a cosmetic →

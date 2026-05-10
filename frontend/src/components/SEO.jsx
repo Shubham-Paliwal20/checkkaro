@@ -1,9 +1,9 @@
 import { Helmet } from 'react-helmet-async'
 
-const SITE_NAME = 'CheckKaro'
+const SITE_NAME = 'Parkho'
 const SITE_URL = 'https://checkkaro.vercel.app'
 const DEFAULT_OG_IMAGE = `${SITE_URL}/og-image.png`
-const DEFAULT_TITLE = 'CheckKaro — Know Your Food & Cosmetic Products'
+const DEFAULT_TITLE = 'Parkho — Know Your Food & Cosmetic Products'
 const DEFAULT_DESC = 'Search any Indian product to understand its ingredients — explained simply, no jargon, no confusion. Check food additives, cosmetic chemicals, FSSAI data and more.'
 
 export default function SEO({

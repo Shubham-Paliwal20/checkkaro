@@ -1096,7 +1096,7 @@ function Result() {
         {/* Disclaimer */}
         <div className="mb-6">
           <DisclaimerBox variant="info">
-            The Ingredient Grade (A/B/C/D) is based on published international regulatory data. Grade D means one or more commonly questioned or banned ingredients are present. Grade A means all ingredients are generally recognised as safe. It is not a safety rating, health claim, or medical assessment. CheckKaro does not certify any product as safe or unsafe. Always read the actual product label and consult a qualified professional for personal health decisions.
+            The Ingredient Grade (A/B/C/D) is based on published international regulatory data. Grade D means one or more commonly questioned or banned ingredients are present. Grade A means all ingredients are generally recognised as safe. It is not a safety rating, health claim, or medical assessment. Parkho does not certify any product as safe or unsafe. Always read the actual product label and consult a qualified professional for personal health decisions.
           </DisclaimerBox>
         </div>
       </div>

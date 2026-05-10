@@ -310,7 +310,7 @@ export default function AuthModal({ onClose, initialStep }) {
               )}
 
               <p style={{ textAlign: 'center', fontSize: 11, color: '#9ca3af', marginTop: 14, marginBottom: 0 }}>
-                You can browse CheckKaro without logging in.
+                You can browse Parkho without logging in.
               </p>
             </>
           )}
@@ -470,7 +470,7 @@ export default function AuthModal({ onClose, initialStep }) {
                 </svg>
               </div>
               <h2 style={{ fontSize: 20, fontWeight: 700, color: '#111827', margin: '0 0 6px' }}>You're in!</h2>
-              <p style={{ fontSize: 14, color: '#6b7280' }}>Welcome to CheckKaro. Know what's inside.</p>
+              <p style={{ fontSize: 14, color: '#6b7280' }}>Welcome to Parkho. Know what's inside.</p>
             </div>
           )}
 

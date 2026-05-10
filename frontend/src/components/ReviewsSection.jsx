@@ -131,7 +131,7 @@ function ReviewFormModal({ onClose, onSubmitted, existingReview, isMobile }) {
           <div style={{ marginBottom: 16 }}><InteractiveStars rating={rating} onRate={setRating} /></div>
 
           <label style={{ fontSize: 12, fontWeight: 700, color: '#374151', display: 'block', marginBottom: 6, textTransform: 'uppercase', letterSpacing: '0.05em' }}>Your Review</label>
-          <textarea placeholder="What do you love about CheckKaro?" value={text} onChange={e => { setText(e.target.value); setError('') }} rows={4}
+          <textarea placeholder="What do you love about Parkho?" value={text} onChange={e => { setText(e.target.value); setError('') }} rows={4}
             style={{ width: '100%', border: '1.5px solid #e5e7eb', borderRadius: 10, padding: '11px 14px', fontSize: 15, outline: 'none', resize: 'vertical', boxSizing: 'border-box', fontFamily: 'inherit' }} />
 
           {error && (
@@ -257,7 +257,7 @@ export default function ReviewsSection() {
         <div style={{ textAlign: 'center', marginTop: 44 }}>
           {!user ? (
             <>
-              <p style={{ fontSize: 14, color: '#6b7280', margin: '0 0 16px' }}>Login to share your experience with CheckKaro.</p>
+              <p style={{ fontSize: 14, color: '#6b7280', margin: '0 0 16px' }}>Login to share your experience with Parkho.</p>
               <button onClick={openAuthModal}
                 style={{ background: 'linear-gradient(135deg, #FF9933 0%, #e8880a 100%)', color: '#fff', border: 'none', borderRadius: 999, padding: '14px 36px', fontSize: 15, fontWeight: 700, cursor: 'pointer', boxShadow: '0 4px 18px rgba(255,153,51,0.4)', fontFamily: 'inherit' }}>
                 ✍&nbsp; Write a Review
@@ -279,7 +279,7 @@ export default function ReviewsSection() {
           ) : (
             // User logged in but no review yet
             <>
-              <p style={{ fontSize: 14, color: '#6b7280', margin: '0 0 16px' }}>Enjoying CheckKaro? Let others know!</p>
+              <p style={{ fontSize: 14, color: '#6b7280', margin: '0 0 16px' }}>Enjoying Parkho? Let others know!</p>
               <button onClick={() => setShowForm(true)}
                 style={{ background: 'linear-gradient(135deg, #FF9933 0%, #e8880a 100%)', color: '#fff', border: 'none', borderRadius: 999, padding: '14px 36px', fontSize: 15, fontWeight: 700, cursor: 'pointer', boxShadow: '0 4px 18px rgba(255,153,51,0.4)', fontFamily: 'inherit' }}>
                 ✍&nbsp; Write a Review
