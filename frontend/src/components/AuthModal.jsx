@@ -243,12 +243,20 @@ export default function AuthModal({ onClose, initialStep }) {
 
         {/* Logo */}
         <div style={{ display: 'flex', alignItems: 'center', gap: 8, padding: '20px 24px 0' }}>
-          <svg width="26" height="26" fill={ORANGE} viewBox="0 0 24 24">
-            <path d="M12 2L2 7v10c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V7l-10-5zm0 18c-3.31 0-6-2.69-6-6s2.69-6 6-6 6 2.69 6 6-2.69 6-6 6zm-1-10v5l4.25 2.52.77-1.28-3.52-2.09V10H11z"/>
+          <svg width="32" height="32" viewBox="0 0 52 52" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <circle cx="22" cy="22" r="17.5" fill="white" fillOpacity="0.08" stroke={ORANGE} strokeWidth="4"/>
+            <rect x="9" y="14" width="11" height="14" rx="2" fill="#4A87B8"/>
+            <ellipse cx="14.5" cy="20" rx="3" ry="4" fill="white" opacity="0.85"/>
+            <line x1="14.5" y1="15.5" x2="14.5" y2="24.5" stroke="#4A87B8" strokeWidth="1.2"/>
+            <rect x="10" y="12" width="9" height="3" rx="1" fill="#4A87B8"/>
+            <rect x="21" y="12" width="8" height="16" rx="2.5" fill="#4A87B8"/>
+            <rect x="22.5" y="9" width="5" height="4" rx="1.5" fill="#4A87B8"/>
+            <rect x="24" y="6.5" width="2" height="3.5" rx="1" fill="#4A87B8"/>
+            <rect x="30" y="21" width="7.5" height="7" rx="2" fill="#4A87B8"/>
+            <rect x="30.5" y="19" width="6.5" height="2.5" rx="1" fill="#4A87B8"/>
+            <line x1="36" y1="36" x2="48" y2="48" stroke={ORANGE} strokeWidth="5.5" strokeLinecap="round"/>
           </svg>
-          <span style={{ fontWeight: 800, fontSize: 17 }}>
-            <span style={{ color: ORANGE }}>Check</span><span style={{ color: GREEN }}>Karo</span>
-          </span>
+          <span style={{ fontWeight: 800, fontSize: 17, color: BLUE }}>Parkho</span>
         </div>
 
         <div style={{ padding: '14px 24px 28px' }}>
