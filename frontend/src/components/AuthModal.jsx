@@ -95,9 +95,13 @@ export default function AuthModal({ onClose, initialStep }) {
   const [showPass,    setShowPass]    = useState(false)
   const [resetEmail,  setResetEmail]  = useState('')
 
-  const [loading,     setLoading]     = useState(false)
-  const [error,       setError]       = useState('')
-  const [quizAnswers, setQuizAnswers] = useState({})
+  const [loading,      setLoading]      = useState(false)
+  const [error,        setError]        = useState('')
+  const [quizAnswers,  setQuizAnswers]  = useState({})
+  const [newPassword,  setNewPassword]  = useState('')
+  const [confirmPass,  setConfirmPass]  = useState('')
+  const [showNewPass,  setShowNewPass]  = useState(false)
+  const [showConfPass, setShowConfPass] = useState(false)
 
   const clearError = () => setError('')
 
@@ -185,6 +189,18 @@ export default function AuthModal({ onClose, initialStep }) {
     } else {
       setStep('check_email')
     }
+  }
+
+  // ── Set new password (after clicking email reset link) ──
+  const handleSetNewPassword = async () => {
+    if (newPassword.length < 6) { setError('Password must be at least 6 characters.'); return }
+    if (newPassword !== confirmPass) { setError('Passwords do not match.'); return }
+    setLoading(true); clearError()
+    const { error: e } = await supabase.auth.updateUser({ password: newPassword })
+    setLoading(false)
+    if (e) { setError(e.message); return }
+    setStep('reset_done')
+    setTimeout(onClose, 2200)
   }
 
   // ── Forgot password ──
@@ -404,6 +420,45 @@ export default function AuthModal({ onClose, initialStep }) {
                 </button>
               </div>
             </>
+          )}
+
+          {/* ══════════════ SET NEW PASSWORD ══════════════ */}
+          {step === 'reset_password' && (
+            <>
+              <h2 style={{ fontSize: 20, fontWeight: 700, color: '#111827', margin: '0 0 4px' }}>Set New Password</h2>
+              <p style={{ fontSize: 13, color: '#6b7280', margin: '0 0 18px' }}>Choose a strong password for your account.</p>
+              <Input
+                type={showNewPass ? 'text' : 'password'}
+                value={newPassword}
+                onChange={e => { setNewPassword(e.target.value); clearError() }}
+                placeholder="New password (min 6 characters)"
+                suffix={{ icon: <EyeIcon show={showNewPass} />, onClick: () => setShowNewPass(p => !p) }}
+              />
+              <Input
+                type={showConfPass ? 'text' : 'password'}
+                value={confirmPass}
+                onChange={e => { setConfirmPass(e.target.value); clearError() }}
+                placeholder="Confirm new password"
+                suffix={{ icon: <EyeIcon show={showConfPass} />, onClick: () => setShowConfPass(p => !p) }}
+              />
+              {error && <p style={{ color: '#ef4444', fontSize: 12, margin: '-6px 0 8px' }}>{error}</p>}
+              <PrimaryBtn onClick={handleSetNewPassword} loading={loading}>
+                {loading ? 'Saving…' : 'Set New Password →'}
+              </PrimaryBtn>
+            </>
+          )}
+
+          {/* ══════════════ RESET DONE ══════════════ */}
+          {step === 'reset_done' && (
+            <div style={{ textAlign: 'center', padding: '12px 0 16px' }}>
+              <div style={{ width: 64, height: 64, borderRadius: '50%', background: '#dcfce7', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 16px' }}>
+                <svg width="30" height="30" fill="none" stroke="#16a34a" strokeWidth="2.5" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7"/>
+                </svg>
+              </div>
+              <h2 style={{ fontSize: 20, fontWeight: 700, color: '#111827', margin: '0 0 6px' }}>Password Updated!</h2>
+              <p style={{ fontSize: 14, color: '#6b7280' }}>Your new password has been saved. You're now logged in.</p>
+            </div>
           )}
 
           {/* ══════════════ DONE ══════════════ */}

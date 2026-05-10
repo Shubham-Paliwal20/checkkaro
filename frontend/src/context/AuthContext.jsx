@@ -24,6 +24,14 @@ export function AuthProvider({ children }) {
     })
 
     const { data: { subscription } } = supabase.auth.onAuthStateChange(async (event, session) => {
+      // Password recovery link clicked — show set-new-password form, don't silently log in
+      if (event === 'PASSWORD_RECOVERY') {
+        window.history.replaceState(null, '', window.location.pathname)
+        setAuthModalStep('reset_password')
+        setShowAuthModal(true)
+        return
+      }
+
       setUser(session?.user ?? null)
       setLoading(false)   // auth state is now known — stop spinning regardless of source
 
