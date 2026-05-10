@@ -125,6 +125,8 @@ _QUESTIONED = [
 _WORTH = [
     # Vague / undisclosed ingredient descriptors — brand not fully disclosing composition
     'q.s','q.s.','quantum sufficit',
+    # Generic colour labels — exact dye(s) not named by brand
+    'colours','colors','colour','color',
     # Vegetable oils — high saturated fat, palm = environmental concern
     'palm oil','palmolein','vegetable oil','edible vegetable fat',
     # Sugars and high-GI carbs
@@ -231,6 +233,9 @@ def _note(name: str, cls: str) -> str:
     if cls == 'worth_knowing':
         if any(w in n for w in ('fragrance', 'parfum', 'perfume')) and ('ifra' in n or 'allergen free' in n or 'allergen-free' in n):
             return 'IFRA certified fragrance — independently tested for allergen safety; lower sensitisation risk than undisclosed fragrance blends'
+        if n.strip() in ('colours', 'colors', 'colour', 'color') or \
+                (any(n.startswith(c) for c in ('colour', 'color', 'colours', 'colors')) and len(n) < 20):
+            return 'Generic colour label — brand has not named the specific dye(s) used; individual colorants may include synthetic azo dyes or natural pigments'
         if 'sodium benzoate' in n: return 'Preservative (E211); generally safe in cosmetics at permitted levels (≤0.5%); benzene formation risk is food-specific, not topical; may cause irritation at higher concentrations'
         if 'q.s' in n: return 'Brand has not disclosed the full ingredient — "quantum sufficit" means added in unspecified quantity; exact composition unknown'
         if 'sugar' in n: return 'Sweetener; excess consumption linked to health concerns'

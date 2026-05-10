@@ -552,6 +552,12 @@ def classify_ingredient(ingredient_name, category=None):
         'dimethiconol': ('Silicone', 'Builds up on hair/skin, clogs pores, environmental persistence, hard to remove'),
         'dimethicone': ('Silicone', 'Can trap dirt/bacteria, may cause breakouts, environmental concerns'),
 
+        # Generic colour labels — brand has not named the specific dye(s)
+        'colours': ('Undisclosed colorant(s)', 'Generic label — brand has not named the specific dye(s) used; individual colorants may include synthetic azo dyes, coal tar dyes or natural pigments; safety cannot be assessed without disclosure'),
+        'colors': ('Undisclosed colorant(s)', 'Generic label — brand has not named the specific dye(s) used; individual colorants may include synthetic azo dyes, coal tar dyes or natural pigments; safety cannot be assessed without disclosure'),
+        'colour': ('Undisclosed colorant', 'Generic label — exact colorant not disclosed; may include synthetic azo dyes or natural pigments'),
+        'color': ('Undisclosed colorant', 'Generic label — exact colorant not disclosed; may include synthetic azo dyes or natural pigments'),
+
         # CI cosmetic colorants — permitted but limited long-term safety data
         'ci 26100': ('Cosmetic colorant Red 17 (Solvent Red 23)', 'Synthetic azo dye permitted in cosmetics; limited long-term human data; restricted in some countries'),
         'ci 61565': ('Cosmetic colorant Vat Green 1', 'Synthetic vat dye permitted in EU cosmetics; limited toxicology data; patch test advised for sensitive skin'),
