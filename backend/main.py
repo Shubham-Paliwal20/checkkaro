@@ -75,26 +75,38 @@ class RateLimitMiddleware(BaseHTTPMiddleware):
 
 
 # ── App setup ─────────────────────────────────────────────────────────────────
+ALLOWED_ORIGINS = [
+    "https://www.parkho.in",
+    "https://parkho.in",
+    "https://checkkaro-lemon.vercel.app",
+]
+
+# Allow Vercel preview deployments (testing branch, PR previews)
+def _is_allowed_origin(origin: str) -> bool:
+    if origin in ALLOWED_ORIGINS:
+        return True
+    if origin.endswith(".vercel.app"):
+        return True
+    return False
+
 app = FastAPI(
-    title="CheckKaro API",
-    description="Indian product ingredient awareness platform",
+    title="Parkho API",
+    description="Parkho — Know what's inside your products",
     version="1.0.0",
-    # Disable automatic OpenAPI docs in production
     docs_url="/docs" if os.getenv("ENV", "development") != "production" else None,
     redoc_url="/redoc" if os.getenv("ENV", "development") != "production" else None,
 )
 
-# CORS — open to all origins; auth is enforced via JWT bearer tokens, not cookies
-# allow_credentials must be False when allow_origins=["*"] (CORS spec requirement)
 app.add_middleware(GZipMiddleware, minimum_size=500)
 app.add_middleware(SecurityHeadersMiddleware)
 app.add_middleware(RateLimitMiddleware)
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],
+    allow_origins=ALLOWED_ORIGINS,
+    allow_origin_regex=r"https://.*\.vercel\.app",
     allow_credentials=False,
     allow_methods=["GET", "POST", "PATCH", "DELETE", "OPTIONS"],
-    allow_headers=["*"],
+    allow_headers=["Authorization", "Content-Type", "X-Requested-With"],
 )
 
 # ── Routers ───────────────────────────────────────────────────────────────────
@@ -107,12 +119,12 @@ app.include_router(reports.router,        prefix="/api/admin",       tags=["Repo
 
 @app.get("/health")
 async def health_check():
-    return {"status": "ok", "service": "CheckKaro API"}
+    return {"status": "ok", "service": "Parkho API"}
 
 
 @app.get("/")
 async def root():
-    return {"message": "Welcome to CheckKaro API"}
+    return {"message": "Welcome to Parkho API"}
 
 
 if __name__ == "__main__":
