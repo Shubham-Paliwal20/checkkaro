@@ -1009,7 +1009,7 @@ function Result() {
         {product.summary && (
           <div className="card p-6 mb-6">
             <h3 className="font-poppins font-semibold text-navy mb-3">Summary</h3>
-            <p className="text-sm text-gray-600 leading-relaxed">{product.summary}</p>
+            <p className="text-sm text-gray-600 leading-relaxed">{product.summary.replace(/\.?\s*(Awareness\s+)?[Ss]core:\s*\d+\/100\.?/g, '').replace(/\s{2,}/g, ' ').trim()}</p>
           </div>
         )}
 
