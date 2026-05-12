@@ -96,12 +96,12 @@ export default function BlogPost() {
     <div className="min-h-screen bg-gray-50">
 
       {/* ── HERO / COVER ── */}
-      <div className="relative w-full overflow-hidden" style={{ height: 'clamp(220px, 38vw, 420px)' }}>
+      <div className="relative w-full overflow-hidden" style={{ height: 'clamp(220px, 38vw, 420px)', background: '#111827' }}>
         <img
           src={blog.cover_image || 'https://images.unsplash.com/photo-1512621776951-a57141f2eefd?w=1200&q=80'}
           alt={blog.title}
           className="absolute inset-0 w-full h-full"
-          style={{ objectFit: 'cover', objectPosition: 'center top' }}
+          style={{ objectFit: 'contain', objectPosition: 'center' }}
           onError={e => { e.target.onerror = null; e.target.src = 'https://images.unsplash.com/photo-1512621776951-a57141f2eefd?w=1200&q=80' }}
         />
         <div className="absolute inset-0" style={{ background: 'linear-gradient(to bottom, rgba(0,0,0,0.25) 0%, rgba(0,0,0,0.0) 40%, rgba(0,0,0,0.72) 100%)' }} />
