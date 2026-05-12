@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react'
 import { useParams, useNavigate, Link } from 'react-router-dom'
 import { supabase } from '../lib/supabaseClient'
+import { STATIC_BLOGS } from './Blog'
 
 const CAT_COLORS = {
   'Food':           'bg-orange-100 text-orange-700',
@@ -23,22 +24,22 @@ export default function BlogPost() {
 
   async function fetchBlog() {
     setLoading(true)
+    // Check static blogs first
+    const staticMatch = STATIC_BLOGS.find(b => b.slug === slug)
+    if (staticMatch) {
+      setBlog(staticMatch)
+      setRelated(STATIC_BLOGS.filter(b => b.slug !== slug && b.category === staticMatch.category).slice(0, 3))
+      setLoading(false)
+      return
+    }
     const { data } = await supabase
-      .from('blogs')
-      .select('*')
-      .eq('slug', slug)
-      .eq('status', 'approved')
-      .maybeSingle()
+      .from('blogs').select('*').eq('slug', slug).eq('status', 'approved').maybeSingle()
     setBlog(data)
     if (data?.category) {
       const { data: rel } = await supabase
-        .from('blogs')
-        .select('id, title, slug, author_name, created_at, cover_image')
-        .eq('status', 'approved')
-        .eq('category', data.category)
-        .neq('slug', slug)
-        .limit(3)
-      setRelated(rel || [])
+        .from('blogs').select('id,title,slug,author_name,created_at,cover_image')
+        .eq('status', 'approved').eq('category', data.category).neq('slug', slug).limit(3)
+      setRelated([...(rel || []), ...STATIC_BLOGS.filter(b => b.category === data.category && b.slug !== slug)].slice(0, 3))
     }
     setLoading(false)
   }
