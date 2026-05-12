@@ -345,14 +345,13 @@ export default function Blog() {
     <div className="min-h-screen bg-gray-50">
 
       {/* ── HERO BANNER ── */}
-      <div className="relative overflow-hidden" style={{ minHeight: 320 }}>
-        {/* Background image */}
-        <img
-          src="https://images.unsplash.com/photo-1490818387583-1baba5e638af?w=1600&q=80"
-          alt="blog hero"
-          className="absolute inset-0 w-full h-full object-cover"
-          onError={e => { e.target.onerror=null; e.target.style.display='none' }}
-        />
+      <div className="relative overflow-hidden" style={{
+        minHeight: 320,
+        backgroundImage: 'url(https://images.unsplash.com/photo-1490818387583-1baba5e638af?w=2000&q=80)',
+        backgroundSize: 'cover',
+        backgroundPosition: 'center center',
+        backgroundRepeat: 'no-repeat',
+      }}>
         {/* Dark overlay */}
         <div className="absolute inset-0" style={{ background: 'linear-gradient(to bottom, rgba(0,0,0,0.55) 0%, rgba(0,0,0,0.7) 100%)' }} />
 
