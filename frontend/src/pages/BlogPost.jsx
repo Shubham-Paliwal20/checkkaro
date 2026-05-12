@@ -96,15 +96,15 @@ export default function BlogPost() {
     <div className="min-h-screen bg-gray-50">
 
       {/* ── HERO / COVER ── */}
-      <div className="relative w-full overflow-hidden">
+      <div className="relative w-full overflow-hidden" style={{ minHeight: 320 }}>
         <img
           src={blog.cover_image || 'https://images.unsplash.com/photo-1512621776951-a57141f2eefd?w=1200&q=80'}
           alt={blog.title}
-          className="w-full object-contain"
-          style={{ maxHeight: 500, width: '100%', objectFit: 'cover', objectPosition: 'center' }}
+          style={{ display: 'block', width: '100%', height: 'auto', maxHeight: 480, objectFit: 'cover', objectPosition: 'center top' }}
+          onError={e => { e.target.onerror = null; e.target.src = 'https://images.unsplash.com/photo-1512621776951-a57141f2eefd?w=1200&q=80' }}
         />
-        <div className="absolute inset-0" style={{ background: 'linear-gradient(to bottom, rgba(0,0,0,0.1) 0%, rgba(0,0,0,0.0) 40%, rgba(0,0,0,0.7) 100%)' }} />
-        <div className="absolute inset-0 flex flex-col justify-between">
+        <div className="absolute inset-0" style={{ background: 'linear-gradient(to bottom, rgba(0,0,0,0.15) 0%, rgba(0,0,0,0.0) 40%, rgba(0,0,0,0.75) 100%)' }} />
+        <div className="absolute inset-0 flex flex-col justify-between" style={{ minHeight: 320 }}>
           {/* Back button top */}
           <div className="max-w-6xl mx-auto px-4 pt-6 w-full">
             <button onClick={() => navigate('/blog')}
@@ -137,7 +137,7 @@ export default function BlogPost() {
           <div className="flex items-center gap-3">
             <div className="w-10 h-10 rounded-full overflow-hidden border-2 border-orange-200 flex-shrink-0">
               {authorInfo?.avatar
-                ? <img src={authorInfo.avatar} alt={blog.author_name} className="w-full h-full object-cover" />
+                ? <img src={authorInfo.avatar} alt={blog.author_name} className="w-full h-full object-cover" onError={e => { e.target.style.display='none'; e.target.nextSibling && (e.target.nextSibling.style.display='flex') }} />
                 : <div className="w-full h-full flex items-center justify-center text-white font-bold text-sm" style={{ background: '#1B3F8A' }}>{(blog.author_name || 'A')[0].toUpperCase()}</div>
               }
             </div>
@@ -204,7 +204,8 @@ export default function BlogPost() {
                 <div className="relative">
                   <div className="w-36 h-36 rounded-full overflow-hidden border-4 border-white shadow-lg" style={{ outline: '2px solid #e5e7eb' }}>
                     {(blog.author_avatar || authorInfo?.avatar)
-                      ? <img src={blog.author_avatar || authorInfo.avatar} alt={blog.author_name} className="w-full h-full object-cover" />
+                      ? <img src={blog.author_avatar || authorInfo.avatar} alt={blog.author_name} className="w-full h-full object-cover"
+                          onError={e => { e.target.style.display='none'; e.target.parentNode.innerHTML = `<div style="width:100%;height:100%;display:flex;align-items:center;justify-content:center;background:linear-gradient(135deg,#1B3F8A,#2563eb);color:white;font-size:3rem;font-weight:900">${(blog.author_name||'A')[0].toUpperCase()}</div>` }} />
                       : <div className="w-full h-full flex items-center justify-center text-white font-black text-5xl" style={{ background: 'linear-gradient(135deg, #1B3F8A, #2563eb)' }}>
                           {(blog.author_name || 'A')[0].toUpperCase()}
                         </div>
@@ -246,7 +247,8 @@ export default function BlogPost() {
                     <Link key={r.id} to={`/blog/${r.slug}`} className="flex gap-3 group">
                       <div className="w-16 h-16 rounded-xl overflow-hidden flex-shrink-0">
                         <img src={r.cover_image || 'https://images.unsplash.com/photo-1512621776951-a57141f2eefd?w=200&q=80'}
-                          alt={r.title} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300" />
+                          alt={r.title} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300"
+                          onError={e => { e.target.onerror=null; e.target.src='https://images.unsplash.com/photo-1512621776951-a57141f2eefd?w=200&q=80' }} />
                       </div>
                       <div className="flex-1">
                         <p className="text-xs font-bold leading-snug group-hover:text-orange-500 transition-colors line-clamp-2"

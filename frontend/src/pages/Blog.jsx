@@ -351,6 +351,7 @@ export default function Blog() {
           src="https://images.unsplash.com/photo-1490818387583-1baba5e638af?w=1600&q=80"
           alt="blog hero"
           className="absolute inset-0 w-full h-full object-cover"
+          onError={e => { e.target.onerror=null; e.target.style.display='none' }}
         />
         {/* Dark overlay */}
         <div className="absolute inset-0" style={{ background: 'linear-gradient(to bottom, rgba(0,0,0,0.55) 0%, rgba(0,0,0,0.7) 100%)' }} />
@@ -427,6 +428,7 @@ export default function Blog() {
                     src={featured.cover_image || 'https://images.unsplash.com/photo-1512621776951-a57141f2eefd?w=800&q=80'}
                     alt={featured.title}
                     className="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                    onError={e => { e.target.onerror=null; e.target.src='https://images.unsplash.com/photo-1512621776951-a57141f2eefd?w=800&q=80' }}
                   />
                   <div className="absolute inset-0" style={{ background: 'linear-gradient(to top, rgba(0,0,0,0.85) 0%, rgba(0,0,0,0.3) 50%, rgba(0,0,0,0.05) 100%)' }} />
                   <div className="absolute inset-0 flex flex-col justify-end p-6 sm:p-8">
@@ -460,6 +462,7 @@ export default function Blog() {
                           alt={blog.title}
                           className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
                           style={{ minHeight: 110 }}
+                          onError={e => { e.target.onerror=null; e.target.src='https://images.unsplash.com/photo-1512621776951-a57141f2eefd?w=400&q=80' }}
                         />
                       </div>
                       <div className="p-3 sm:p-4 flex flex-col justify-between flex-1">
@@ -497,6 +500,7 @@ export default function Blog() {
                           src={blog.cover_image || 'https://images.unsplash.com/photo-1512621776951-a57141f2eefd?w=600&q=80'}
                           alt={blog.title}
                           className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                          onError={e => { e.target.onerror=null; e.target.src='https://images.unsplash.com/photo-1512621776951-a57141f2eefd?w=600&q=80' }}
                         />
                         <div className="absolute top-3 left-3">
                           <CatBadge cat={blog.category} />
@@ -530,7 +534,8 @@ export default function Blog() {
             {/* Left image strip */}
             <div className="w-full sm:w-48 h-32 sm:h-auto flex-shrink-0 overflow-hidden">
               <img src="https://images.unsplash.com/photo-1455390582262-044cdead277a?w=400&q=80"
-                alt="write" className="w-full h-full object-cover" style={{ minHeight: 140 }} />
+                alt="write" className="w-full h-full object-cover" style={{ minHeight: 140 }}
+                onError={e => { e.target.onerror=null; e.target.style.display='none' }} />
             </div>
             {/* Content */}
             <div className="flex-1 flex flex-col sm:flex-row items-center justify-between gap-6 p-7 sm:p-8">
