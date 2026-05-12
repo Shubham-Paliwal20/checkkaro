@@ -345,35 +345,43 @@ export default function Blog() {
     <div className="min-h-screen bg-gray-50">
 
       {/* ── HERO BANNER ── */}
-      <div className="relative overflow-hidden" style={{ background: 'linear-gradient(135deg, #0f1f5c 0%, #1B3F8A 60%, #2563eb 100%)', minHeight: 260 }}>
-        <div className="absolute inset-0 opacity-10"
-          style={{ backgroundImage: 'radial-gradient(circle at 20% 50%, #FF9933 0%, transparent 50%), radial-gradient(circle at 80% 20%, #fff 0%, transparent 40%)' }} />
-        <div className="relative max-w-6xl mx-auto px-4 py-12 text-center">
-          <div className="inline-flex items-center gap-2 bg-white/15 backdrop-blur rounded-full px-4 py-1.5 text-white/80 text-xs font-semibold mb-5 tracking-widest uppercase">
+      <div className="relative overflow-hidden" style={{ minHeight: 320 }}>
+        {/* Background image */}
+        <img
+          src="https://images.unsplash.com/photo-1490818387583-1baba5e638af?w=1600&q=80"
+          alt="blog hero"
+          className="absolute inset-0 w-full h-full object-cover"
+        />
+        {/* Dark overlay */}
+        <div className="absolute inset-0" style={{ background: 'linear-gradient(to bottom, rgba(0,0,0,0.55) 0%, rgba(0,0,0,0.7) 100%)' }} />
+
+        <div className="relative max-w-6xl mx-auto px-4 py-16 text-center">
+          <div className="inline-flex items-center gap-2 bg-white/20 backdrop-blur-sm border border-white/30 rounded-full px-4 py-1.5 text-white text-xs font-semibold mb-5 tracking-widest uppercase">
             <span style={{ color: '#FF9933' }}>●</span> Community Knowledge Hub
           </div>
-          <h1 className="font-poppins font-black text-white mb-2" style={{ fontSize: 'clamp(28px, 5vw, 52px)', letterSpacing: '-0.5px' }}>
+          <h1 className="font-poppins font-black text-white mb-2" style={{ fontSize: 'clamp(32px, 6vw, 58px)', letterSpacing: '-1px', textShadow: '0 2px 20px rgba(0,0,0,0.4)' }}>
             Parkho <span style={{ color: '#FF9933' }}>Blog</span>
           </h1>
-          <p className="text-blue-200 text-sm sm:text-base mb-1 font-medium tracking-widest uppercase">Food · Cosmetics · Health · Lifestyle</p>
-          <p className="text-blue-300 text-sm max-w-xl mx-auto mt-3">
+          <p className="text-white/70 text-sm sm:text-base mb-1 font-semibold tracking-widest uppercase">Food · Cosmetics · Health · Lifestyle</p>
+          <p className="text-white/60 text-sm max-w-lg mx-auto mt-3 leading-relaxed">
             Real insights from real people. Know what's in your products, understand ingredients, and make better choices.
           </p>
           <button
             onClick={() => user ? navigate('/blog/write') : openAuthModal()}
-            className="mt-6 inline-flex items-center gap-2 text-white font-bold px-7 py-3 rounded-xl text-sm hover:opacity-90 transition-all shadow-lg"
-            style={{ background: '#FF9933' }}>
+            className="mt-7 inline-flex items-center gap-2 text-white font-bold px-8 py-3.5 rounded-xl text-sm hover:opacity-90 transition-all shadow-xl"
+            style={{ background: '#FF9933', boxShadow: '0 4px 20px rgba(255,153,51,0.4)' }}>
             <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" />
             </svg>
             Write a Blog
           </button>
+          {!user && <p className="text-white/40 text-xs mt-2">Login required to write</p>}
         </div>
 
         {/* Wave */}
         <div className="absolute bottom-0 left-0 right-0">
-          <svg viewBox="0 0 1440 40" fill="none" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none" style={{ display: 'block', width: '100%', height: 40 }}>
-            <path d="M0 40L480 10L960 30L1440 0V40H0Z" fill="#f9fafb"/>
+          <svg viewBox="0 0 1440 50" fill="none" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none" style={{ display: 'block', width: '100%', height: 50 }}>
+            <path d="M0 50L360 20L720 40L1080 15L1440 30V50H0Z" fill="#f9fafb"/>
           </svg>
         </div>
       </div>
@@ -522,19 +530,29 @@ export default function Blog() {
         )}
 
         {/* ── WRITE CTA BANNER ── */}
-        <div className="mt-14 rounded-2xl overflow-hidden relative" style={{ background: 'linear-gradient(135deg, #1B3F8A, #2563eb)' }}>
-          <div className="absolute inset-0 opacity-10"
-            style={{ backgroundImage: 'radial-gradient(circle at 80% 50%, #FF9933, transparent 60%)' }} />
-          <div className="relative flex flex-col sm:flex-row items-center justify-between gap-6 p-8 sm:p-10">
-            <div>
-              <h3 className="font-poppins font-black text-white text-2xl mb-1">Have something to share?</h3>
-              <p className="text-blue-200 text-sm">Write about ingredients, products, or your health journey. Help others make better choices.</p>
+        <div className="mt-14 rounded-2xl overflow-hidden border border-gray-100 shadow-sm bg-white">
+          <div className="flex flex-col sm:flex-row items-center gap-0">
+            {/* Left image strip */}
+            <div className="w-full sm:w-48 h-32 sm:h-auto flex-shrink-0 overflow-hidden">
+              <img src="https://images.unsplash.com/photo-1455390582262-044cdead277a?w=400&q=80"
+                alt="write" className="w-full h-full object-cover" style={{ minHeight: 140 }} />
             </div>
-            <button onClick={() => user ? navigate('/blog/write') : openAuthModal()}
-              style={{ background: '#FF9933', whiteSpace: 'nowrap' }}
-              className="text-white font-bold px-8 py-3.5 rounded-xl hover:opacity-90 transition-opacity shadow-lg text-sm flex-shrink-0">
-              ✍️ Write a Blog
-            </button>
+            {/* Content */}
+            <div className="flex-1 flex flex-col sm:flex-row items-center justify-between gap-6 p-7 sm:p-8">
+              <div>
+                <div className="flex items-center gap-2 mb-2">
+                  <div className="w-7 h-0.5 rounded" style={{ background: '#FF9933' }} />
+                  <span className="text-xs font-bold tracking-widest uppercase" style={{ color: '#FF9933' }}>Share Your Knowledge</span>
+                </div>
+                <h3 className="font-poppins font-black text-2xl mb-1" style={{ color: '#1B3F8A' }}>Have something to share?</h3>
+                <p className="text-gray-500 text-sm">Write about ingredients, products, or your health journey. Help others make better choices.</p>
+              </div>
+              <button onClick={() => user ? navigate('/blog/write') : openAuthModal()}
+                style={{ background: '#1B3F8A', whiteSpace: 'nowrap' }}
+                className="text-white font-bold px-8 py-3.5 rounded-xl hover:opacity-90 transition-opacity shadow-md text-sm flex-shrink-0">
+                ✍️ Write a Blog
+              </button>
+            </div>
           </div>
         </div>
 
