@@ -883,54 +883,6 @@ function Result() {
           </div>
         </div>
 
-        {/* Worth Knowing Ingredients */}
-        {worth_knowing.length > 0 && (
-          <div className="card p-4 sm:p-6 mb-6 border-l-4 border-red-400">
-            <h2 className="font-poppins font-bold text-lg sm:text-xl text-red-600 mb-1 flex items-center gap-2">
-              <span className="w-3 h-3 bg-red-400 rounded-full"></span>
-              Worth Knowing ({worth_knowing.length} ingredients)
-            </h2>
-            <p className="text-xs text-gray-500 mb-4 leading-relaxed">
-              Ingredients with some concerns or restrictions. May cause issues in sensitive individuals or at high doses. Mixed scientific findings — fine for most people in small amounts.
-            </p>
-            <div className="space-y-4">
-              {worth_knowing.map((ing, idx) => (
-                <div key={idx} className="bg-red-50 rounded-lg p-3 sm:p-4 border border-red-200">
-                  <div className="flex items-start justify-between mb-2">
-                    <h3 className="font-semibold text-sm sm:text-base flex items-center gap-1.5 flex-wrap">
-                      <span
-                        className="text-red-600 hover:text-red-800 hover:underline cursor-pointer flex items-center gap-1"
-                        onClick={() => navigate(`/check-ingredient?q=${encodeURIComponent(ing.name)}`)}
-                        title="Learn more about this ingredient"
-                      >
-                        {ing.name}
-                        <svg className="w-3 h-3 flex-shrink-0 opacity-60" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
-                        </svg>
-                      </span>
-                      {ing.aliases && <span className="text-xs sm:text-sm text-gray-500 font-normal">({ing.aliases})</span>}
-                    </h3>
-                  </div>
-                  {ing.one_line_note && (
-                    <p className="text-sm text-gray-600 mb-2">{ing.one_line_note}</p>
-                  )}
-                  {ing.detailed_effects && (
-                    <div className="mt-3 pt-3 border-t border-red-200">
-                      <p className="text-sm font-semibold text-navy mb-1">Detailed Information:</p>
-                      <p className="text-sm text-gray-700 leading-relaxed">{ing.detailed_effects}</p>
-                    </div>
-                  )}
-                  {ing.regulatory_note && (
-                    <div className="mt-2 text-xs text-gray-600 italic">
-                      Regulatory: {ing.regulatory_note}
-                    </div>
-                  )}
-                </div>
-              ))}
-            </div>
-          </div>
-        )}
-
         {/* Commonly Questioned Ingredients */}
         {commonly_questioned.length > 0 && (
           <div className="card p-4 sm:p-6 mb-6 border-l-4 border-red-600">
@@ -964,6 +916,54 @@ function Result() {
                   )}
                   {ing.detailed_effects && (
                     <div className="mt-3 pt-3 border-t border-red-300">
+                      <p className="text-sm font-semibold text-navy mb-1">Detailed Information:</p>
+                      <p className="text-sm text-gray-700 leading-relaxed">{ing.detailed_effects}</p>
+                    </div>
+                  )}
+                  {ing.regulatory_note && (
+                    <div className="mt-2 text-xs text-gray-600 italic">
+                      Regulatory: {ing.regulatory_note}
+                    </div>
+                  )}
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+
+        {/* Worth Knowing Ingredients */}
+        {worth_knowing.length > 0 && (
+          <div className="card p-4 sm:p-6 mb-6 border-l-4 border-red-400">
+            <h2 className="font-poppins font-bold text-lg sm:text-xl text-red-600 mb-1 flex items-center gap-2">
+              <span className="w-3 h-3 bg-red-400 rounded-full"></span>
+              Worth Knowing ({worth_knowing.length} ingredients)
+            </h2>
+            <p className="text-xs text-gray-500 mb-4 leading-relaxed">
+              Ingredients with some concerns or restrictions. May cause issues in sensitive individuals or at high doses. Mixed scientific findings — fine for most people in small amounts.
+            </p>
+            <div className="space-y-4">
+              {worth_knowing.map((ing, idx) => (
+                <div key={idx} className="bg-red-50 rounded-lg p-3 sm:p-4 border border-red-200">
+                  <div className="flex items-start justify-between mb-2">
+                    <h3 className="font-semibold text-sm sm:text-base flex items-center gap-1.5 flex-wrap">
+                      <span
+                        className="text-red-600 hover:text-red-800 hover:underline cursor-pointer flex items-center gap-1"
+                        onClick={() => navigate(`/check-ingredient?q=${encodeURIComponent(ing.name)}`)}
+                        title="Learn more about this ingredient"
+                      >
+                        {ing.name}
+                        <svg className="w-3 h-3 flex-shrink-0 opacity-60" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+                        </svg>
+                      </span>
+                      {ing.aliases && <span className="text-xs sm:text-sm text-gray-500 font-normal">({ing.aliases})</span>}
+                    </h3>
+                  </div>
+                  {ing.one_line_note && (
+                    <p className="text-sm text-gray-600 mb-2">{ing.one_line_note}</p>
+                  )}
+                  {ing.detailed_effects && (
+                    <div className="mt-3 pt-3 border-t border-red-200">
                       <p className="text-sm font-semibold text-navy mb-1">Detailed Information:</p>
                       <p className="text-sm text-gray-700 leading-relaxed">{ing.detailed_effects}</p>
                     </div>
