@@ -96,19 +96,18 @@ export default function BlogPost() {
     <div className="min-h-screen bg-gray-50">
 
       {/* ── HERO / COVER ── */}
-      <div className="relative w-full">
-        {/* Image at natural full size — no cropping */}
+      <div className="relative w-full overflow-hidden" style={{ height: 'clamp(220px, 38vw, 420px)' }}>
         <img
           src={blog.cover_image || 'https://images.unsplash.com/photo-1512621776951-a57141f2eefd?w=1200&q=80'}
           alt={blog.title}
-          style={{ display: 'block', width: '100%', height: 'auto' }}
+          className="absolute inset-0 w-full h-full"
+          style={{ objectFit: 'cover', objectPosition: 'center top' }}
           onError={e => { e.target.onerror = null; e.target.src = 'https://images.unsplash.com/photo-1512621776951-a57141f2eefd?w=1200&q=80' }}
         />
-        {/* Dark gradient over image */}
-        <div className="absolute inset-0 pointer-events-none" style={{ background: 'linear-gradient(to bottom, rgba(0,0,0,0.35) 0%, rgba(0,0,0,0.0) 35%, rgba(0,0,0,0.65) 100%)' }} />
-        {/* Back button — top left */}
-        <div className="absolute top-0 left-0 right-0">
-          <div className="max-w-6xl mx-auto px-4 pt-6">
+        <div className="absolute inset-0" style={{ background: 'linear-gradient(to bottom, rgba(0,0,0,0.25) 0%, rgba(0,0,0,0.0) 40%, rgba(0,0,0,0.72) 100%)' }} />
+        <div className="absolute inset-0 flex flex-col justify-between">
+          {/* Back button top */}
+          <div className="max-w-6xl mx-auto px-4 pt-6 w-full">
             <button onClick={() => navigate('/blog')}
               className="flex items-center gap-2 text-white/80 hover:text-white text-sm transition-colors bg-black/20 backdrop-blur-sm px-3 py-1.5 rounded-lg w-fit">
               <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -117,10 +116,8 @@ export default function BlogPost() {
               All Blogs
             </button>
           </div>
-        </div>
-        {/* Category + title — bottom */}
-        <div className="absolute bottom-0 left-0 right-0">
-          <div className="max-w-6xl mx-auto px-4 pb-8">
+          {/* Title bottom */}
+          <div className="max-w-6xl mx-auto px-4 pb-8 w-full">
             {blog.category && (
               <span style={{ background: catColor.bg, color: catColor.text }}
                 className="inline-block text-xs font-bold px-3 py-1 rounded-full mb-3">
