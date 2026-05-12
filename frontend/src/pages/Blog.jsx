@@ -323,16 +323,16 @@ function CatBadge({ cat }) {
 
 export default function Blog() {
   const [dbBlogs, setDbBlogs]   = useState([])
-  const [loading, setLoading]   = useState(true)
   const [category, setCategory] = useState('All')
   const { user, openAuthModal } = useAuth()
   const navigate = useNavigate()
 
   useEffect(() => {
+    // Load DB blogs in background — static blogs show immediately
     supabase.from('blogs').select('id,title,slug,excerpt,category,author_name,cover_image,created_at')
       .eq('status', 'approved').order('created_at', { ascending: false })
-      .then(({ data }) => { setDbBlogs(data || []); setLoading(false) })
-      .catch(() => setLoading(false))
+      .then(({ data }) => { if (data && data.length > 0) setDbBlogs(data) })
+      .catch(() => {})
   }, [])
 
   const allBlogs = [...dbBlogs, ...STATIC_BLOGS]
@@ -375,7 +375,6 @@ export default function Blog() {
             </svg>
             Write a Blog
           </button>
-          {!user && <p className="text-white/40 text-xs mt-2">Login required to write</p>}
         </div>
 
         {/* Wave */}
@@ -404,11 +403,7 @@ export default function Blog() {
       {/* ── MAIN CONTENT ── */}
       <div className="max-w-6xl mx-auto px-4 py-8">
 
-        {loading ? (
-          <div className="flex items-center justify-center py-20">
-            <div className="animate-spin w-8 h-8 border-4 border-orange-400 border-t-transparent rounded-full" />
-          </div>
-        ) : filtered.length === 0 ? (
+        {filtered.length === 0 ? (
           <div className="text-center py-20">
             <div className="text-5xl mb-4">📝</div>
             <h3 className="font-poppins font-bold text-navy text-xl mb-2">No blogs in this category yet</h3>

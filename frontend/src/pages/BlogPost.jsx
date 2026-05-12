@@ -188,30 +188,42 @@ export default function BlogPost() {
 
             {/* About the Author */}
             <div className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
-              <div className="h-24 relative" style={{ background: 'linear-gradient(135deg, #1B3F8A, #2563eb)' }}>
-                <div className="absolute -bottom-8 left-1/2 -translate-x-1/2">
-                  <div className="w-16 h-16 rounded-full border-4 border-white overflow-hidden shadow-md">
-                    {authorInfo?.avatar
-                      ? <img src={authorInfo.avatar} alt={blog.author_name} className="w-full h-full object-cover" />
-                      : <div className="w-full h-full flex items-center justify-center text-white font-black text-2xl" style={{ background: '#FF9933' }}>{(blog.author_name || 'A')[0].toUpperCase()}</div>
+              {/* Decorative heading */}
+              <div className="px-6 pt-6 pb-2 flex items-center gap-2">
+                <span style={{ fontFamily: 'Georgia, serif', fontSize: 26, color: '#9ca3af', fontStyle: 'italic', lineHeight: 1 }}>about</span>
+                <span className="font-poppins font-black text-white text-sm px-3 py-1 rounded" style={{ background: '#FF9933', letterSpacing: 2 }}>ME</span>
+              </div>
+
+              {/* Large circular photo */}
+              <div className="flex justify-center pt-2 pb-4">
+                <div className="relative">
+                  <div className="w-36 h-36 rounded-full overflow-hidden border-4 border-white shadow-lg" style={{ outline: '2px solid #e5e7eb' }}>
+                    {(blog.author_avatar || authorInfo?.avatar)
+                      ? <img src={blog.author_avatar || authorInfo.avatar} alt={blog.author_name} className="w-full h-full object-cover" />
+                      : <div className="w-full h-full flex items-center justify-center text-white font-black text-5xl" style={{ background: 'linear-gradient(135deg, #1B3F8A, #2563eb)' }}>
+                          {(blog.author_name || 'A')[0].toUpperCase()}
+                        </div>
                     }
                   </div>
+                  {/* Decorative ring */}
+                  <div className="absolute inset-0 rounded-full" style={{ border: '1.5px dashed #d1d5db', transform: 'scale(1.08)' }} />
                 </div>
               </div>
-              <div className="pt-10 px-5 pb-5 text-center">
-                <div className="flex items-center justify-center gap-1.5 mb-1">
-                  <span className="text-xs font-bold tracking-widest uppercase text-gray-400">About</span>
-                  <span className="font-poppins font-black text-sm px-2 py-0.5 rounded text-white" style={{ background: '#FF9933' }}>Author</span>
-                </div>
-                <h4 className="font-poppins font-bold text-base mt-2 mb-1" style={{ color: '#1B3F8A' }}>{blog.author_name || 'Anonymous'}</h4>
-                <p className="text-gray-500 text-xs leading-relaxed">
-                  {authorInfo?.bio || `Writing about ${blog.category} and consumer awareness on Parkho. Helping Indians make informed choices.`}
+
+              <div className="px-6 pb-6 text-center">
+                <h4 className="font-poppins font-bold text-base mb-2" style={{ color: '#111827' }}>
+                  Hey there! I am <span style={{ color: '#1B3F8A' }}>{blog.author_name || 'Anonymous'}.</span>
+                </h4>
+                <p className="text-gray-500 text-sm leading-relaxed">
+                  {blog.author_bio || authorInfo?.bio || `Passionate about consumer awareness and ingredient transparency in India. Writing to help people make informed choices about food and cosmetics.`}
                 </p>
                 <div className="mt-4 pt-4 border-t border-gray-100">
+                  <p className="text-xs text-gray-400 mb-2 font-semibold">My mission?</p>
+                  <p className="text-xs text-gray-500 leading-relaxed mb-3">To help every Indian understand what they're eating and applying on their skin.</p>
                   <Link to="/blog/write"
-                    className="text-xs font-bold hover:opacity-80 transition-opacity"
-                    style={{ color: '#FF9933' }}>
-                    ✍️ Write your own blog →
+                    className="inline-block text-xs font-bold py-2 px-5 rounded-xl text-white hover:opacity-90 transition-opacity"
+                    style={{ background: '#FF9933' }}>
+                    ✍️ Write your own blog
                   </Link>
                 </div>
               </div>
