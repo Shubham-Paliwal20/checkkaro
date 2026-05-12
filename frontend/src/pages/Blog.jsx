@@ -345,15 +345,28 @@ export default function Blog() {
     <div className="min-h-screen bg-gray-50">
 
       {/* ── HERO BANNER ── */}
-      <div className="relative overflow-hidden" style={{
-        minHeight: 320,
-        backgroundImage: 'url(https://images.unsplash.com/photo-1490818387583-1baba5e638af?w=2000&q=80)',
-        backgroundSize: 'cover',
-        backgroundPosition: 'center center',
-        backgroundRepeat: 'no-repeat',
-      }}>
-        {/* Dark overlay */}
-        <div className="absolute inset-0" style={{ background: 'linear-gradient(to bottom, rgba(0,0,0,0.55) 0%, rgba(0,0,0,0.7) 100%)' }} />
+      <div className="relative overflow-hidden" style={{ minHeight: 320, background: '#0e1a2e' }}>
+
+        {/* Left panel — food image */}
+        <div className="absolute inset-y-0 left-0 overflow-hidden" style={{ width: '42%' }}>
+          <img
+            src="https://images.unsplash.com/photo-1490818387583-1baba5e638af?w=900&q=80"
+            alt="" className="w-full h-full object-cover" style={{ opacity: 0.85 }}
+          />
+          <div className="absolute inset-0" style={{ background: 'linear-gradient(to right, rgba(14,26,46,0.1) 0%, rgba(14,26,46,0.98) 100%)' }} />
+        </div>
+
+        {/* Right panel — cosmetics image */}
+        <div className="absolute inset-y-0 right-0 overflow-hidden" style={{ width: '42%' }}>
+          <img
+            src="https://images.unsplash.com/photo-1522335789203-aabd1fc54bc9?w=900&q=80"
+            alt="" className="w-full h-full object-cover" style={{ opacity: 0.85 }}
+          />
+          <div className="absolute inset-0" style={{ background: 'linear-gradient(to left, rgba(14,26,46,0.1) 0%, rgba(14,26,46,0.98) 100%)' }} />
+        </div>
+
+        {/* Center dark background for text */}
+        <div className="absolute inset-0" style={{ background: 'radial-gradient(ellipse 60% 100% at 50% 50%, rgba(14,26,46,0.55) 0%, transparent 100%)' }} />
 
         <div className="relative max-w-6xl mx-auto px-4 py-16 text-center">
           <div className="inline-flex items-center gap-2 bg-white/20 backdrop-blur-sm border border-white/30 rounded-full px-4 py-1.5 text-white text-xs font-semibold mb-5 tracking-widest uppercase">
