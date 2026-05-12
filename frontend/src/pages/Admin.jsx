@@ -1379,6 +1379,19 @@ export default function Admin() {
           <div style={{ fontSize: isMobile ? 12 : 14, fontWeight: 700, marginTop: 4 }}>Manage Products</div>
           <div style={{ fontSize: 11, marginTop: 2, opacity: 0.8 }}>add · delete</div>
         </button>
+        <button
+          onClick={() => setTab('blogs')}
+          style={{
+            flex: 1, padding: isMobile ? '14px 8px' : '16px 12px', borderRadius: 14, border: 'none', cursor: 'pointer', fontFamily: 'inherit', textAlign: 'center',
+            background: adminPage === 'blogs' ? '#7c3aed' : '#f1f5f9',
+            color: adminPage === 'blogs' ? '#fff' : '#475569',
+            boxShadow: adminPage === 'blogs' ? '0 4px 14px rgba(124,58,237,0.25)' : 'none',
+            transition: 'all 0.15s',
+          }}>
+          <div style={{ fontSize: isMobile ? 22 : 26 }}>📝</div>
+          <div style={{ fontSize: isMobile ? 12 : 14, fontWeight: 700, marginTop: 4 }}>Blog Approvals</div>
+          <div style={{ fontSize: 11, marginTop: 2, opacity: 0.8 }}>review · approve</div>
+        </button>
       </div>
 
       {/* ── PHOTO APPROVALS PAGE ── */}
@@ -1615,6 +1628,110 @@ export default function Admin() {
         </>
       )}
 
+      {/* ── BLOG APPROVALS PAGE ── */}
+      {adminPage === 'blogs' && <BlogApprovals />}
+
+    </div>
+  )
+}
+
+function BlogApprovals() {
+  const [blogs, setBlogs]     = useState([])
+  const [loading, setLoading] = useState(true)
+  const [expanded, setExpanded] = useState(null)
+  const [filter, setFilter]   = useState('pending')
+
+  useEffect(() => { fetchBlogs() }, [filter])
+
+  async function fetchBlogs() {
+    setLoading(true)
+    const { data } = await supabase.from('blogs').select('*').eq('status', filter).order('created_at', { ascending: false })
+    setBlogs(data || [])
+    setLoading(false)
+  }
+
+  async function updateStatus(id, status) {
+    await supabase.from('blogs').update({ status }).eq('id', id)
+    fetchBlogs()
+    setExpanded(null)
+  }
+
+  const filters = [
+    { key: 'pending',  label: 'Pending',  color: '#f59e0b' },
+    { key: 'approved', label: 'Approved', color: '#16a34a' },
+    { key: 'rejected', label: 'Rejected', color: '#ef4444' },
+  ]
+
+  return (
+    <div>
+      <h2 style={{ fontFamily: 'Poppins,sans-serif', fontSize: 16, fontWeight: 700, color: '#111827', marginBottom: 14 }}>
+        📝 Blog Approvals
+      </h2>
+      <div style={{ display: 'flex', gap: 8, marginBottom: 20 }}>
+        {filters.map(f => (
+          <button key={f.key} onClick={() => setFilter(f.key)}
+            style={{ padding: '8px 20px', borderRadius: 99, border: `1.5px solid ${filter === f.key ? f.color : '#e5e7eb'}`, background: filter === f.key ? f.color : '#fff', color: filter === f.key ? '#fff' : '#374151', fontWeight: 600, fontSize: 13, cursor: 'pointer', fontFamily: 'inherit', transition: 'all 0.15s' }}>
+            {f.label}
+          </button>
+        ))}
+      </div>
+      {loading ? (
+        <div style={{ textAlign: 'center', padding: 40, color: '#9ca3af' }}>Loading blogs...</div>
+      ) : blogs.length === 0 ? (
+        <div style={{ textAlign: 'center', padding: 40, color: '#9ca3af' }}>No {filter} blogs.</div>
+      ) : (
+        <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
+          {blogs.map(blog => (
+            <div key={blog.id} style={{ background: '#fff', border: '1.5px solid #e5e7eb', borderRadius: 14, overflow: 'hidden' }}>
+              <div style={{ padding: '16px 20px', display: 'flex', alignItems: 'flex-start', gap: 12, justifyContent: 'space-between' }}>
+                <div style={{ flex: 1 }}>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 4 }}>
+                    <span style={{ background: '#ede9fe', color: '#7c3aed', fontSize: 11, fontWeight: 700, padding: '2px 10px', borderRadius: 99 }}>{blog.category}</span>
+                    <span style={{ fontSize: 11, color: '#9ca3af' }}>{new Date(blog.created_at).toLocaleDateString('en-IN')}</span>
+                  </div>
+                  <div style={{ fontWeight: 700, fontSize: 15, color: '#111827', marginBottom: 2 }}>{blog.title}</div>
+                  <div style={{ fontSize: 12, color: '#6b7280' }}>by {blog.author_name || 'Anonymous'}</div>
+                </div>
+                <button onClick={() => setExpanded(expanded === blog.id ? null : blog.id)}
+                  style={{ background: '#f3f4f6', border: 'none', borderRadius: 8, padding: '6px 14px', fontSize: 12, fontWeight: 600, cursor: 'pointer', color: '#374151', fontFamily: 'inherit', whiteSpace: 'nowrap' }}>
+                  {expanded === blog.id ? 'Hide ▲' : 'Read ▼'}
+                </button>
+              </div>
+              {expanded === blog.id && (
+                <div style={{ borderTop: '1px solid #f3f4f6', padding: '16px 20px' }}>
+                  <div style={{ background: '#f9fafb', borderRadius: 10, padding: '14px 16px', marginBottom: 16, maxHeight: 300, overflowY: 'auto' }}>
+                    <p style={{ fontSize: 13, color: '#374151', lineHeight: 1.8, whiteSpace: 'pre-wrap' }}>{blog.content}</p>
+                  </div>
+                  {filter === 'pending' && (
+                    <div style={{ display: 'flex', gap: 10 }}>
+                      <button onClick={() => updateStatus(blog.id, 'approved')}
+                        style={{ flex: 1, background: '#16a34a', color: '#fff', border: 'none', borderRadius: 10, padding: '12px', fontSize: 14, fontWeight: 700, cursor: 'pointer', fontFamily: 'inherit' }}>
+                        ✅ Approve & Publish
+                      </button>
+                      <button onClick={() => updateStatus(blog.id, 'rejected')}
+                        style={{ flex: 1, background: '#fee2e2', color: '#dc2626', border: 'none', borderRadius: 10, padding: '12px', fontSize: 14, fontWeight: 700, cursor: 'pointer', fontFamily: 'inherit' }}>
+                        ❌ Reject
+                      </button>
+                    </div>
+                  )}
+                  {filter === 'approved' && (
+                    <button onClick={() => updateStatus(blog.id, 'rejected')}
+                      style={{ background: '#fee2e2', color: '#dc2626', border: 'none', borderRadius: 10, padding: '10px 20px', fontSize: 13, fontWeight: 700, cursor: 'pointer', fontFamily: 'inherit' }}>
+                      Remove from published
+                    </button>
+                  )}
+                  {filter === 'rejected' && (
+                    <button onClick={() => updateStatus(blog.id, 'approved')}
+                      style={{ background: '#dcfce7', color: '#16a34a', border: 'none', borderRadius: 10, padding: '10px 20px', fontSize: 13, fontWeight: 700, cursor: 'pointer', fontFamily: 'inherit' }}>
+                      Approve & Publish
+                    </button>
+                  )}
+                </div>
+              )}
+            </div>
+          ))}
+        </div>
+      )}
     </div>
   )
 }

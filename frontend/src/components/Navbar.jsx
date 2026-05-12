@@ -22,6 +22,7 @@ function Navbar() {
     ...(!isHome ? [{ to: '/', label: 'Home' }] : []),
     { to: '/products',          label: 'Products' },
     { to: '/check-ingredient',  label: 'Check Ingredient' },
+    { to: '/blog',              label: 'Blog' },
     { to: '/about',             label: 'About' },
     ...(isAdmin ? [{ to: '/admin', label: '🔐 Admin' }] : []),
   ]
