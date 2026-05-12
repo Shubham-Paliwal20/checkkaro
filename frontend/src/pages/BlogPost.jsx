@@ -96,22 +96,27 @@ export default function BlogPost() {
     <div className="min-h-screen bg-gray-50">
 
       {/* ── HERO / COVER ── */}
-      <div className="relative w-full overflow-hidden" style={{ height: 380 }}>
+      <div className="relative w-full overflow-hidden">
         <img
           src={blog.cover_image || 'https://images.unsplash.com/photo-1512621776951-a57141f2eefd?w=1200&q=80'}
           alt={blog.title}
-          className="w-full h-full object-cover"
+          className="w-full object-contain"
+          style={{ maxHeight: 500, width: '100%', objectFit: 'cover', objectPosition: 'center' }}
         />
-        <div className="absolute inset-0" style={{ background: 'linear-gradient(to bottom, rgba(0,0,0,0.15) 0%, rgba(0,0,0,0.75) 100%)' }} />
-        <div className="absolute inset-0 flex flex-col justify-end">
-          <div className="max-w-6xl mx-auto px-4 pb-10 w-full">
+        <div className="absolute inset-0" style={{ background: 'linear-gradient(to bottom, rgba(0,0,0,0.1) 0%, rgba(0,0,0,0.0) 40%, rgba(0,0,0,0.7) 100%)' }} />
+        <div className="absolute inset-0 flex flex-col justify-between">
+          {/* Back button top */}
+          <div className="max-w-6xl mx-auto px-4 pt-6 w-full">
             <button onClick={() => navigate('/blog')}
-              className="flex items-center gap-2 text-white/70 hover:text-white text-sm mb-5 transition-colors">
+              className="flex items-center gap-2 text-white/80 hover:text-white text-sm transition-colors bg-black/20 backdrop-blur-sm px-3 py-1.5 rounded-lg w-fit">
               <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
               </svg>
               All Blogs
             </button>
+          </div>
+          {/* Title bottom */}
+          <div className="max-w-6xl mx-auto px-4 pb-10 w-full">
             {blog.category && (
               <span style={{ background: catColor.bg, color: catColor.text }}
                 className="inline-block text-xs font-bold px-3 py-1 rounded-full mb-4">
@@ -119,7 +124,7 @@ export default function BlogPost() {
               </span>
             )}
             <h1 className="font-poppins font-black text-white leading-tight max-w-3xl"
-              style={{ fontSize: 'clamp(20px, 4vw, 36px)', textShadow: '0 2px 12px rgba(0,0,0,0.4)' }}>
+              style={{ fontSize: 'clamp(20px, 4vw, 36px)', textShadow: '0 2px 12px rgba(0,0,0,0.5)' }}>
               {blog.title}
             </h1>
           </div>
