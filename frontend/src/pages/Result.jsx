@@ -660,13 +660,16 @@ function Result() {
                 <span key={idx}>
                   {(ing.classification === 'commonly_questioned' || ing.classification === 'worth_knowing') ? (
                     <span
-                      className={`cursor-pointer hover:underline ${
+                      className={`cursor-pointer hover:underline inline-flex items-center gap-0.5 ${
                         ing.classification === 'commonly_questioned' ? 'text-red-700 font-semibold' : 'text-red-500 font-semibold'
                       }`}
                       title="Click to learn more"
                       onClick={() => navigate(`/check-ingredient?q=${encodeURIComponent(ing.name)}`)}
                     >
                       {ing.name}
+                      <svg className="w-3 h-3 flex-shrink-0 opacity-60 inline" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+                      </svg>
                     </span>
                   ) : (
                     <span className="text-gray-700">{ing.name}</span>
