@@ -474,6 +474,7 @@ export default function Blog() {
                           alt={blog.title}
                           className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
                           style={{ minHeight: 110 }}
+                          loading="lazy" decoding="async"
                           onError={e => { e.target.onerror=null; e.target.src='https://images.unsplash.com/photo-1512621776951-a57141f2eefd?w=400&q=80' }}
                         />
                       </div>
@@ -512,6 +513,7 @@ export default function Blog() {
                           src={blog.cover_image || 'https://images.unsplash.com/photo-1512621776951-a57141f2eefd?w=600&q=80'}
                           alt={blog.title}
                           className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                          loading="lazy" decoding="async"
                           onError={e => { e.target.onerror=null; e.target.src='https://images.unsplash.com/photo-1512621776951-a57141f2eefd?w=600&q=80' }}
                         />
                         <div className="absolute top-3 left-3">

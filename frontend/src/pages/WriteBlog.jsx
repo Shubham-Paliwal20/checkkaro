@@ -33,7 +33,9 @@ export default function WriteBlog() {
 
   async function handleSubmit() {
     if (!title.trim())   { setError('Please add a title.'); return }
+    if (title.trim().length > 120) { setError('Title too long (max 120 characters).'); return }
     if (content.trim().split(/\s+/).length < 50) { setError('Blog must be at least 50 words.'); return }
+    if (content.trim().length > 50000) { setError('Blog too long (max 50,000 characters).'); return }
     setSubmitting(true); setError('')
     const excerpt = content.trim().slice(0, 200).replace(/\n/g, ' ') + '...'
     const { error: e } = await supabase.from('blogs').insert({

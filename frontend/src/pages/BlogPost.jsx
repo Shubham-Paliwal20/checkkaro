@@ -18,6 +18,11 @@ const AUTHOR_BIO = {
   },
 }
 
+// Escape HTML entities before any processing to prevent XSS
+function escHtml(str) {
+  return str.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;')
+}
+
 function renderContent(content) {
   return content.split('\n').filter(p => p.trim()).map((para, i) => {
     if (para.startsWith('**') && para.endsWith('**')) {
@@ -33,7 +38,8 @@ function renderContent(content) {
     if (/^\d+\./.test(para)) {
       return <li key={i} className="mb-2 ml-4 list-decimal text-gray-700">{para.replace(/^\d+\.\s/, '')}</li>
     }
-    const rendered = para
+    // Escape raw HTML first, then apply safe markdown-style replacements only
+    const rendered = escHtml(para)
       .replace(/\*\*(.+?)\*\*/g, '<strong style="color:#1B3F8A">$1</strong>')
       .replace(/\*(.+?)\*/g, '<em>$1</em>')
     return <p key={i} className="text-gray-700 leading-relaxed text-base mb-5" dangerouslySetInnerHTML={{ __html: rendered }} />
@@ -102,6 +108,8 @@ export default function BlogPost() {
           alt={blog.title}
           className="absolute inset-0 w-full h-full"
           style={{ objectFit: 'cover', objectPosition: 'center' }}
+          fetchpriority="high"
+          decoding="async"
           onError={e => { e.target.onerror = null; e.target.src = 'https://images.unsplash.com/photo-1512621776951-a57141f2eefd?w=1200&q=80' }}
         />
         <div className="absolute inset-0" style={{ background: 'linear-gradient(to bottom, rgba(0,0,0,0.25) 0%, rgba(0,0,0,0.0) 40%, rgba(0,0,0,0.72) 100%)' }} />
@@ -249,6 +257,7 @@ export default function BlogPost() {
                       <div className="w-16 h-16 rounded-xl overflow-hidden flex-shrink-0">
                         <img src={r.cover_image || 'https://images.unsplash.com/photo-1512621776951-a57141f2eefd?w=200&q=80'}
                           alt={r.title} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300"
+                          loading="lazy" decoding="async"
                           onError={e => { e.target.onerror=null; e.target.src='https://images.unsplash.com/photo-1512621776951-a57141f2eefd?w=200&q=80' }} />
                       </div>
                       <div className="flex-1">
