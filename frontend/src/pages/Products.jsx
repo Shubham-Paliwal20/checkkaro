@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef, memo } from 'react'
-import { useNavigate } from 'react-router-dom' // used in Products and BrowseCard button fallback
+import { useNavigate, useSearchParams } from 'react-router-dom'
 import { motion, AnimatePresence } from 'framer-motion'
 import axios from 'axios'
 import { supabase } from '../lib/supabaseClient'
@@ -107,32 +107,40 @@ const SORT_OPTIONS = [
 ]
 
 export default function Products() {
-  // Restore saved state from sessionStorage (back-navigation)
-  const saved = (() => { try { return JSON.parse(sessionStorage.getItem(SESSION_KEY) || 'null') } catch { return null } })()
+  const [searchParams, setSearchParams] = useSearchParams()
+  const navigate = useNavigate()
 
-  const [products, setProducts]     = useState([])
-  const [loading, setLoading]       = useState(true)
-  const [allCategories, setAllCats] = useState([])
-  const [brands, setBrands]         = useState([])
-  const [category, setCategory]     = useState(saved?.category || '')
-  const [brand, setBrand]           = useState(saved?.brand || '')
-  const [searchInput, setSearchInput] = useState(saved?.searchInput || '')
-  const [q, setQ]                   = useState(saved?.q || '')
-  const [page, setPage]             = useState(saved?.page || 1)
-  const [total, setTotal]           = useState(0)
-  const [pages, setPages]           = useState(1)
-  const [sort, setSort]             = useState(saved?.sort || 'score')
+  // Read initial filter values from URL — browser back button restores the URL automatically
+  const [products, setProducts]       = useState([])
+  const [loading, setLoading]         = useState(true)
+  const [allCategories, setAllCats]   = useState([])
+  const [brands, setBrands]           = useState([])
+  const [category, setCategory]       = useState(searchParams.get('cat') || '')
+  const [brand, setBrand]             = useState(searchParams.get('brand') || '')
+  const [searchInput, setSearchInput] = useState(searchParams.get('q') || '')
+  const [q, setQ]                     = useState(searchParams.get('q') || '')
+  const [page, setPage]               = useState(Number(searchParams.get('page')) || 1)
+  const [total, setTotal]             = useState(0)
+  const [pages, setPages]             = useState(1)
+  const [sort, setSort]               = useState(searchParams.get('sort') || 'score')
   const limit = 24
-  const debounceRef    = useRef(null)
-  const navigate       = useNavigate()
-  const scrollDoneRef  = useRef(false)
-  // True on first mount when we're restoring saved state — prevents debounce from resetting page
-  const skipDebounceRef = useRef(!!saved)
+  const debounceRef   = useRef(null)
+  const scrollDoneRef = useRef(false)
+  const savedScrollY  = (() => { try { return Number(sessionStorage.getItem(SESSION_KEY)) || 0 } catch { return 0 } })()
+
+  // Keep URL in sync with filters (replace so back button skips intermediate states)
+  useEffect(() => {
+    const p = {}
+    if (q)            p.q     = q
+    if (category)     p.cat   = category
+    if (brand)        p.brand = brand
+    if (page > 1)     p.page  = page
+    if (sort !== 'score') p.sort = sort
+    setSearchParams(p, { replace: true })
+  }, [q, category, brand, page, sort])
 
   // Debounce search input → q (300ms)
-  // Skip on first mount when restoring state (would wrongly reset page to 1)
   useEffect(() => {
-    if (skipDebounceRef.current) { skipDebounceRef.current = false; return }
     clearTimeout(debounceRef.current)
     debounceRef.current = setTimeout(() => {
       setQ(searchInput)
@@ -141,24 +149,17 @@ export default function Products() {
     return () => clearTimeout(debounceRef.current)
   }, [searchInput])
 
-  // After products finish loading, restore scroll position once
-  // Use 200ms delay so App.jsx ScrollToTop fires first
+  // Restore scroll position after products load (only once per mount)
   useEffect(() => {
-    if (!loading && !scrollDoneRef.current && saved?.scrollY) {
+    if (!loading && !scrollDoneRef.current && savedScrollY) {
       scrollDoneRef.current = true
-      setTimeout(() => window.scrollTo({ top: saved.scrollY, behavior: 'instant' }), 200)
+      setTimeout(() => window.scrollTo({ top: savedScrollY, behavior: 'instant' }), 150)
     }
   }, [loading])
 
-  // Save filter state whenever it changes (scrollY saved separately on click)
-  useEffect(() => {
-    const current = (() => { try { return JSON.parse(sessionStorage.getItem(SESSION_KEY) || '{}') } catch { return {} } })()
-    sessionStorage.setItem(SESSION_KEY, JSON.stringify({ ...current, searchInput, q, category, brand, page, sort }))
-  }, [searchInput, q, category, brand, page, sort])
-
-  // Navigate to product — snapshot exact scroll position before leaving
+  // Navigate to product — save scroll position, navigate
   function handleProductNavigate(name) {
-    sessionStorage.setItem(SESSION_KEY, JSON.stringify({ searchInput, q, category, brand, page, sort, scrollY: window.scrollY }))
+    try { sessionStorage.setItem(SESSION_KEY, String(window.scrollY)) } catch {}
     navigate(`/result/${encodeURIComponent(name)}`)
   }
 
@@ -235,7 +236,7 @@ export default function Products() {
   }
 
   function clearAll() {
-    sessionStorage.removeItem(SESSION_KEY)
+    try { sessionStorage.removeItem(SESSION_KEY) } catch {}
     setCategory('')
     setBrand('')
     setSearchInput('')
