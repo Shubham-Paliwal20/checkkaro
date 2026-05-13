@@ -126,9 +126,13 @@ export default function Products() {
   const debounceRef    = useRef(null)
   const navigate       = useNavigate()
   const scrollDoneRef  = useRef(false)
+  // True on first mount when we're restoring saved state — prevents debounce from resetting page
+  const skipDebounceRef = useRef(!!saved)
 
   // Debounce search input → q (300ms)
+  // Skip on first mount when restoring state (would wrongly reset page to 1)
   useEffect(() => {
+    if (skipDebounceRef.current) { skipDebounceRef.current = false; return }
     clearTimeout(debounceRef.current)
     debounceRef.current = setTimeout(() => {
       setQ(searchInput)
@@ -137,21 +141,22 @@ export default function Products() {
     return () => clearTimeout(debounceRef.current)
   }, [searchInput])
 
-  // After products load, restore scroll position once (back-navigation)
+  // After products finish loading, restore scroll position once
+  // Use 200ms delay so App.jsx ScrollToTop fires first
   useEffect(() => {
     if (!loading && !scrollDoneRef.current && saved?.scrollY) {
       scrollDoneRef.current = true
-      // Small delay so ScrollToTop in App.jsx fires first
-      setTimeout(() => window.scrollTo({ top: saved.scrollY, behavior: 'instant' }), 80)
+      setTimeout(() => window.scrollTo({ top: saved.scrollY, behavior: 'instant' }), 200)
     }
   }, [loading])
 
-  // Save current state to sessionStorage on every filter/page change
+  // Save filter state whenever it changes (scrollY saved separately on click)
   useEffect(() => {
-    sessionStorage.setItem(SESSION_KEY, JSON.stringify({ searchInput, q, category, brand, page, sort, scrollY: window.scrollY }))
+    const current = (() => { try { return JSON.parse(sessionStorage.getItem(SESSION_KEY) || '{}') } catch { return {} } })()
+    sessionStorage.setItem(SESSION_KEY, JSON.stringify({ ...current, searchInput, q, category, brand, page, sort }))
   }, [searchInput, q, category, brand, page, sort])
 
-  // Navigate to product result — save scroll position first
+  // Navigate to product — snapshot exact scroll position before leaving
   function handleProductNavigate(name) {
     sessionStorage.setItem(SESSION_KEY, JSON.stringify({ searchInput, q, category, brand, page, sort, scrollY: window.scrollY }))
     navigate(`/result/${encodeURIComponent(name)}`)
@@ -230,6 +235,7 @@ export default function Products() {
   }
 
   function clearAll() {
+    sessionStorage.removeItem(SESSION_KEY)
     setCategory('')
     setBrand('')
     setSearchInput('')
