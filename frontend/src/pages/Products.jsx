@@ -1,11 +1,12 @@
 import { useState, useEffect, useRef, memo } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate } from 'react-router-dom' // used in Products and BrowseCard button fallback
 import { motion, AnimatePresence } from 'framer-motion'
 import axios from 'axios'
 import { supabase } from '../lib/supabaseClient'
 import SEO from '../components/SEO'
 
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'https://checkkaro.onrender.com'
+const SESSION_KEY = 'parkho_products_state'
 
 const BRAND_BLUE = '#1B3F8A'
 
@@ -24,11 +25,9 @@ function GradePill({ grade }) {
   )
 }
 
-const BrowseCard = memo(function BrowseCard({ product }) {
-  const navigate = useNavigate()
-
+const BrowseCard = memo(function BrowseCard({ product, onNavigate }) {
   function handleClick() {
-    navigate(`/result/${encodeURIComponent(product.name)}`)
+    onNavigate(product.name)
   }
 
   return (
@@ -108,20 +107,25 @@ const SORT_OPTIONS = [
 ]
 
 export default function Products() {
+  // Restore saved state from sessionStorage (back-navigation)
+  const saved = (() => { try { return JSON.parse(sessionStorage.getItem(SESSION_KEY) || 'null') } catch { return null } })()
+
   const [products, setProducts]     = useState([])
   const [loading, setLoading]       = useState(true)
   const [allCategories, setAllCats] = useState([])
   const [brands, setBrands]         = useState([])
-  const [category, setCategory]     = useState('')
-  const [brand, setBrand]           = useState('')
-  const [searchInput, setSearchInput] = useState('')  // raw input
-  const [q, setQ]                   = useState('')    // debounced
-  const [page, setPage]             = useState(1)
+  const [category, setCategory]     = useState(saved?.category || '')
+  const [brand, setBrand]           = useState(saved?.brand || '')
+  const [searchInput, setSearchInput] = useState(saved?.searchInput || '')
+  const [q, setQ]                   = useState(saved?.q || '')
+  const [page, setPage]             = useState(saved?.page || 1)
   const [total, setTotal]           = useState(0)
   const [pages, setPages]           = useState(1)
-  const [sort, setSort]             = useState('score')
+  const [sort, setSort]             = useState(saved?.sort || 'score')
   const limit = 24
-  const debounceRef = useRef(null)
+  const debounceRef    = useRef(null)
+  const navigate       = useNavigate()
+  const scrollDoneRef  = useRef(false)
 
   // Debounce search input → q (300ms)
   useEffect(() => {
@@ -132,6 +136,26 @@ export default function Products() {
     }, 300)
     return () => clearTimeout(debounceRef.current)
   }, [searchInput])
+
+  // After products load, restore scroll position once (back-navigation)
+  useEffect(() => {
+    if (!loading && !scrollDoneRef.current && saved?.scrollY) {
+      scrollDoneRef.current = true
+      // Small delay so ScrollToTop in App.jsx fires first
+      setTimeout(() => window.scrollTo({ top: saved.scrollY, behavior: 'instant' }), 80)
+    }
+  }, [loading])
+
+  // Save current state to sessionStorage on every filter/page change
+  useEffect(() => {
+    sessionStorage.setItem(SESSION_KEY, JSON.stringify({ searchInput, q, category, brand, page, sort, scrollY: window.scrollY }))
+  }, [searchInput, q, category, brand, page, sort])
+
+  // Navigate to product result — save scroll position first
+  function handleProductNavigate(name) {
+    sessionStorage.setItem(SESSION_KEY, JSON.stringify({ searchInput, q, category, brand, page, sort, scrollY: window.scrollY }))
+    navigate(`/result/${encodeURIComponent(name)}`)
+  }
 
   // Single fetch effect — aborts the previous request when filters/page change
   useEffect(() => {
@@ -378,7 +402,7 @@ export default function Products() {
         ) : (
           <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6 gap-4">
             {products.map(p => (
-              <BrowseCard key={p.id} product={p} />
+              <BrowseCard key={p.id} product={p} onNavigate={handleProductNavigate} />
             ))}
           </div>
         )}
