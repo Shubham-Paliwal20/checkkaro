@@ -194,6 +194,7 @@ function Result() {
   const [adminNameSaving, setAdminNameSaving] = useState(false)
   const [showPhotoModal, setShowPhotoModal] = useState(false)
   const [photoToast, setPhotoToast] = useState(null)
+  const [alternatives, setAlternatives] = useState([])
 
   const isAdmin = user?.email === ADMIN_EMAIL
 
@@ -201,8 +202,23 @@ function Result() {
     setProductNotFound(false)
     setDbPhotos([])
     setAdminDbId(null)
+    setAlternatives([])
     fetchProduct()
   }, [productName])
+
+  useEffect(() => {
+    if (!product || !['C', 'D'].includes(product.grade) || !product.category) return
+    supabase
+      .from('ai_extracted_products')
+      .select('id, name, brand, category, grade, image_url')
+      .eq('category', product.category)
+      .in('grade', ['A', 'B'])
+      .neq('name', product.name)
+      .order('grade')
+      .limit(6)
+      .then(({ data }) => setAlternatives(data || []))
+      .catch(() => {})
+  }, [product?.id, product?.grade, product?.category])
 
   const fetchDbPhotos = async (productId) => {
     try {
@@ -1089,6 +1105,58 @@ function Result() {
                   </div>
                 )}
               </div>
+            </div>
+          </div>
+        )}
+
+        {/* Better Alternatives — shown for C/D grade products */}
+        {alternatives.length > 0 && (
+          <div className="card p-4 sm:p-6 mb-6 border-2 border-green-300 bg-green-50">
+            <div className="flex items-center gap-2 mb-1">
+              <svg className="w-5 h-5 text-green-600 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 014.438 0 3.42 3.42 0 001.946.806 3.42 3.42 0 013.138 3.138 3.42 3.42 0 00.806 1.946 3.42 3.42 0 010 4.438 3.42 3.42 0 00-.806 1.946 3.42 3.42 0 01-3.138 3.138 3.42 3.42 0 00-1.946.806 3.42 3.42 0 01-4.438 0 3.42 3.42 0 00-1.946-.806 3.42 3.42 0 01-3.138-3.138 3.42 3.42 0 00-.806-1.946 3.42 3.42 0 010-4.438 3.42 3.42 0 00.806-1.946 3.42 3.42 0 013.138-3.138z" />
+              </svg>
+              <h2 className="font-poppins font-bold text-lg sm:text-xl text-green-800">Better Alternatives</h2>
+            </div>
+            <p className="text-xs text-green-700 mb-4">
+              Cleaner {product.category} options (Grade A or B) — same category, better ingredients.
+            </p>
+            <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
+              {alternatives.map(alt => (
+                <button
+                  key={alt.id}
+                  onClick={() => navigate(`/result/${encodeURIComponent(alt.name)}`)}
+                  className="bg-white rounded-xl border border-green-200 p-3 text-left hover:border-green-400 hover:shadow-md transition-all cursor-pointer w-full"
+                >
+                  <div className="w-full h-20 rounded-lg overflow-hidden bg-gray-50 mb-2 flex items-center justify-center">
+                    {alt.image_url ? (
+                      <img
+                        src={alt.image_url}
+                        alt={alt.name}
+                        className="w-full h-full object-contain p-1"
+                        loading="lazy"
+                        decoding="async"
+                        onError={e => { e.target.style.display = 'none' }}
+                      />
+                    ) : (
+                      <svg className="w-8 h-8 text-gray-300" fill="currentColor" viewBox="0 0 20 20">
+                        <path fillRule="evenodd" d="M4 3a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V5a2 2 0 00-2-2H4zm12 12H4l4-8 3 6 2-4 3 6z" clipRule="evenodd" />
+                      </svg>
+                    )}
+                  </div>
+                  <div className="flex items-start justify-between gap-1">
+                    <div className="flex-1 min-w-0">
+                      <p className="text-xs font-bold text-navy leading-tight line-clamp-2">{alt.name}</p>
+                      {alt.brand && <p className="text-xs text-gray-500 mt-0.5 truncate">{alt.brand}</p>}
+                    </div>
+                    <span className={`flex-shrink-0 text-xs font-black px-1.5 py-0.5 rounded-md ml-1 ${
+                      alt.grade === 'A' ? 'bg-green-100 text-green-700' : 'bg-blue-100 text-blue-700'
+                    }`}>
+                      {alt.grade}
+                    </span>
+                  </div>
+                </button>
+              ))}
             </div>
           </div>
         )}
