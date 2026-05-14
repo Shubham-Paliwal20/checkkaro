@@ -115,11 +115,6 @@ const UNDISCLOSED_INGREDIENT_RULES = [
   },
   {
     classification: 'commonly_questioned',
-    match: /^natural\s*fragrance$/i,
-    note: 'Not fully disclosed — even "natural fragrance" can contain synthetic carriers and undisclosed aromatic compounds, some of which may cause sensitivities.',
-  },
-  {
-    classification: 'commonly_questioned',
     match: /^(colour?s?|artificial\s*colour?s?|permitted\s*colour?s?|synthetic\s*colour?s?|fd&?c\s*colou?r)$/i,
     note: 'Not fully disclosed — the specific colorant names are hidden under a generic term. Several synthetic dyes are restricted or banned in some countries due to links with allergic reactions and hyperactivity.',
   },
@@ -128,8 +123,38 @@ const UNDISCLOSED_INGREDIENT_RULES = [
     match: /^(preservatives?|permitted\s*preservatives?)$/i,
     note: 'Not fully disclosed — the exact preservative chemicals are not named. Common undisclosed preservatives such as parabens, formaldehyde-releasers, and MIT are associated with hormone disruption and skin sensitisation.',
   },
+  {
+    classification: 'commonly_questioned',
+    match: /^(emulsifiers?|permitted\s*emulsifiers?)$/i,
+    note: 'Not fully disclosed — the specific emulsifying agents are not named. Some emulsifiers are linked to gut microbiome disruption and digestive sensitivity at regular consumption levels.',
+  },
+  {
+    classification: 'commonly_questioned',
+    match: /^(stabilizers?|stabilisers?|permitted\s*stabilizers?)$/i,
+    note: 'Not fully disclosed — the exact stabilizing compounds are not named. Certain stabilizers used in processed foods and cosmetics have raised concerns around long-term safety.',
+  },
+  {
+    classification: 'commonly_questioned',
+    match: /^(artificial\s*)?flavou?r(ing)?s?$/i,
+    note: 'Not fully disclosed — flavoring compounds are grouped under one term. May include synthetic chemicals not individually disclosed, some of which are under ongoing regulatory review.',
+  },
+  {
+    classification: 'commonly_questioned',
+    match: /^(added\s*)?flavou?rs?$/i,
+    note: 'Not fully disclosed — the exact flavoring compounds are not listed individually by the brand.',
+  },
+  {
+    classification: 'commonly_questioned',
+    match: /^(natural\s*flavou?r(ing)?s?)$/i,
+    note: 'Not fully disclosed — "natural flavour" can include a wide range of undisclosed aromatic or taste compounds, some of which may be processed with synthetic solvents.',
+  },
 
   // ── Worth Knowing ────────────────────────────────────────────────────────
+  {
+    classification: 'worth_knowing',
+    match: /^natural\s*fragrance$/i,
+    note: 'Not fully disclosed — even "natural fragrance" can contain undisclosed aromatic compounds and synthetic carriers not individually listed on the label.',
+  },
   {
     classification: 'worth_knowing',
     match: /^(sugandhit\s*dravya|sughandi\s*dravya|sugandhi\s*dravya|sugandhit\s*padarthi?)$/i,
@@ -149,31 +174,6 @@ const UNDISCLOSED_INGREDIENT_RULES = [
     classification: 'worth_knowing',
     match: /^(proprietary\s*blend|herbal\s*blend|essential\s*oil\s*blend|active\s*blend)$/i,
     note: 'Not fully disclosed — a brand proprietary formulation. Individual components and concentrations are intentionally not revealed.',
-  },
-  {
-    classification: 'worth_knowing',
-    match: /^(emulsifiers?|permitted\s*emulsifiers?)$/i,
-    note: 'Not fully disclosed — the specific emulsifying agents are not identified by the brand.',
-  },
-  {
-    classification: 'worth_knowing',
-    match: /^(stabilizers?|stabilisers?|permitted\s*stabilizers?)$/i,
-    note: 'Not fully disclosed — the specific stabilizing compounds used are not named on the label.',
-  },
-  {
-    classification: 'worth_knowing',
-    match: /^(artificial\s*)?flavou?r(ing)?s?$/i,
-    note: 'Not fully disclosed — flavoring compounds are grouped under one term. May include synthetic chemicals that are not individually named.',
-  },
-  {
-    classification: 'worth_knowing',
-    match: /^(natural\s*flavou?r(ing)?s?)$/i,
-    note: 'Not fully disclosed — "natural flavour" can include a wide range of undisclosed aromatic or taste compounds derived from plant or animal sources.',
-  },
-  {
-    classification: 'worth_knowing',
-    match: /^(added\s*)?flavou?rs?$/i,
-    note: 'Not fully disclosed — the exact flavoring compounds are not listed individually by the brand.',
   },
   {
     classification: 'worth_knowing',
