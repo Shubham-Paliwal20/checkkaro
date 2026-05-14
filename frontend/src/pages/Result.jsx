@@ -39,6 +39,94 @@ function parseRawIngredients(raw) {
   return results
 }
 
+const UNDISCLOSED_INGREDIENT_RULES = [
+  // ── Commonly Questioned ──────────────────────────────────────────────────
+  {
+    classification: 'commonly_questioned',
+    match: /^(fragrance|parfum|perfume|cologne)$/i,
+    note: 'Not fully disclosed — "Fragrance" is a legal catch-all that can conceal dozens of individual chemicals, some of which are known allergens, endocrine disruptors, or irritants. Brands are not required to name them individually.',
+  },
+  {
+    classification: 'commonly_questioned',
+    match: /^(colour?s?|artificial\s*colour?s?|permitted\s*colour?s?|synthetic\s*colour?s?|fd&?c\s*colou?r)$/i,
+    note: 'Not fully disclosed — the specific colorant names are hidden under a generic term. Several synthetic dyes are restricted or banned in some countries due to links with allergic reactions and hyperactivity.',
+  },
+  {
+    classification: 'commonly_questioned',
+    match: /^(preservatives?|permitted\s*preservatives?)$/i,
+    note: 'Not fully disclosed — the exact preservative chemicals are not named. Common undisclosed preservatives such as parabens, formaldehyde-releasers, and MIT are associated with hormone disruption and skin sensitisation.',
+  },
+  {
+    classification: 'commonly_questioned',
+    match: /^(emulsifiers?|permitted\s*emulsifiers?)$/i,
+    note: 'Not fully disclosed — the specific emulsifying agents are not named. Some emulsifiers are linked to gut microbiome disruption and digestive sensitivity at regular consumption levels.',
+  },
+  {
+    classification: 'commonly_questioned',
+    match: /^(stabilizers?|stabilisers?|permitted\s*stabilizers?)$/i,
+    note: 'Not fully disclosed — the exact stabilizing compounds are not named. Certain stabilizers used in processed foods and cosmetics have raised concerns around long-term safety.',
+  },
+  {
+    classification: 'commonly_questioned',
+    match: /^(artificial\s*)?flavou?r(ing)?s?$/i,
+    note: 'Not fully disclosed — flavoring compounds are grouped under one term. May include synthetic chemicals not individually disclosed, some of which are under ongoing regulatory review.',
+  },
+  {
+    classification: 'commonly_questioned',
+    match: /^(added\s*)?flavou?rs?$/i,
+    note: 'Not fully disclosed — the exact flavoring compounds are not listed individually by the brand.',
+  },
+  {
+    classification: 'commonly_questioned',
+    match: /^(natural\s*flavou?r(ing)?s?)$/i,
+    note: 'Not fully disclosed — "natural flavour" can include a wide range of undisclosed aromatic or taste compounds, some of which may be processed with synthetic solvents.',
+  },
+
+  // ── Worth Knowing ────────────────────────────────────────────────────────
+  {
+    classification: 'worth_knowing',
+    match: /^natural\s*fragrance$/i,
+    note: 'Not fully disclosed — even "natural fragrance" can contain undisclosed aromatic compounds and synthetic carriers not individually listed on the label.',
+  },
+  {
+    classification: 'worth_knowing',
+    match: /^(sugandhit\s*dravya|sughandi\s*dravya|sugandhi\s*dravya|sugandhit\s*padarthi?)$/i,
+    note: 'Not fully disclosed by brand — Hindi term meaning "fragrant substances". The individual aromatic compounds are not listed separately on the label.',
+  },
+  {
+    classification: 'worth_knowing',
+    match: /^excipients?$/i,
+    note: 'Not fully disclosed by brand — a blanket pharmaceutical/cosmetic term for inactive filler ingredients. The specific compounds used are not listed individually.',
+  },
+  {
+    classification: 'worth_knowing',
+    match: /^(herbal\s*extracts?|plant\s*extracts?|botanical\s*extracts?|ayurvedic\s*extracts?|jadi\s*buti)$/i,
+    note: 'Not fully disclosed — a collective term. The individual herbs or botanicals and their concentrations are not specified by the brand.',
+  },
+  {
+    classification: 'worth_knowing',
+    match: /^(proprietary\s*blend|herbal\s*blend|essential\s*oil\s*blend|active\s*blend)$/i,
+    note: 'Not fully disclosed — a brand proprietary formulation. Individual components and concentrations are intentionally not revealed.',
+  },
+  {
+    classification: 'worth_knowing',
+    match: /^(other\s*ingredients?|misc\.?|q\.?\s*s\.?)$/i,
+    note: 'Not fully disclosed — a generic placeholder. The actual ingredients hidden behind this term are not identified.',
+  },
+]
+
+function enrichIngredients(ingredients) {
+  return ingredients.map(ing => {
+    const trimmed = (ing.name || '').trim()
+    for (const { match, classification, note } of UNDISCLOSED_INGREDIENT_RULES) {
+      if (match.test(trimmed)) {
+        return { ...ing, classification, one_line_note: note }
+      }
+    }
+    return ing
+  })
+}
+
 function ProductImageGallery({ imageUrl, images, name, dbPhotos, onDeleteDbPhoto, isAdmin, user, onOpenUpload, onNeedLogin }) {
   const backendImgs = (images && images.length > 0) ? images : (imageUrl ? [imageUrl] : [])
   const dbImgUrls = (dbPhotos || []).map(p => p.image_url)
@@ -374,15 +462,17 @@ function Result() {
   }
 
   // Categorize ingredients — must be before any early returns (Rules of Hooks)
-  const { allIngredients, generally_recognised, worth_knowing, commonly_questioned } = useMemo(() => {
-    const all = product?.ingredients || []
-    return {
-      allIngredients:       all,
-      generally_recognised: all.filter(i => i.classification === 'generally_recognised'),
-      worth_knowing:        all.filter(i => i.classification === 'worth_knowing'),
-      commonly_questioned:  all.filter(i => i.classification === 'commonly_questioned'),
-    }
-  }, [product?.ingredients])
+  const { allIngredients, generally_recognised, worth_knowing, commonly_questioned, effectiveGrade } = useMemo(() => {
+    const all = enrichIngredients(product?.ingredients || [])
+    const gr = all.filter(i => i.classification === 'generally_recognised')
+    const wk = all.filter(i => i.classification === 'worth_knowing')
+    const cq = all.filter(i => i.classification === 'commonly_questioned')
+    const dbGrade = product?.grade || 'C'
+    let effectiveGrade = dbGrade
+    if (cq.length > 0 && (dbGrade === 'A' || dbGrade === 'B')) effectiveGrade = 'C'
+    else if (wk.length > 0 && dbGrade === 'A') effectiveGrade = 'B'
+    return { allIngredients: all, generally_recognised: gr, worth_knowing: wk, commonly_questioned: cq, effectiveGrade }
+  }, [product?.ingredients, product?.grade])
 
   if (loading) {
     return (
@@ -418,7 +508,7 @@ function Result() {
 
   if (!product) return null
 
-  const grade = product?.grade || 'C'
+  const grade = effectiveGrade
 
   const productSEO = product ? {
     title: `${product.name} Ingredients — Grade ${grade}`,
