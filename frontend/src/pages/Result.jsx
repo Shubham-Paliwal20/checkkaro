@@ -39,45 +39,80 @@ function parseRawIngredients(raw) {
   return results
 }
 
-function getProductKeyword(name) {
+// Groups of synonymous names for the same product type.
+// We extract which group the current product belongs to,
+// then filter alternatives to the same group.
+const PRODUCT_TYPE_GROUPS = [
+  ['soap', 'bathing bar', 'beauty bar', 'bath bar', 'bar soap'],
+  ['shampoo'],
+  ['conditioner', 'hair conditioner'],
+  ['face wash', 'facewash', 'face cleanser', 'foaming cleanser'],
+  ['face cream', 'face moisturizer', 'face moisturiser'],
+  ['face mask', 'face pack', 'sheet mask'],
+  ['face scrub', 'face exfoliant'],
+  ['face serum', 'skin serum'],
+  ['eye cream', 'eye gel', 'under eye'],
+  ['bb cream', 'cc cream'],
+  ['body lotion', 'body moisturizer', 'body moisturiser'],
+  ['body wash', 'shower gel'],
+  ['body cream', 'body butter'],
+  ['body scrub'],
+  ['hand cream', 'hand lotion'],
+  ['foot cream', 'foot lotion'],
+  ['sunscreen', 'sun screen', 'sun block', 'spf lotion', 'spf cream'],
+  ['moisturizer', 'moisturiser', 'night cream', 'day cream'],
+  ['toner', 'face toner'],
+  ['serum'],
+  ['hair mask', 'hair pack', 'hair spa'],
+  ['hair serum'],
+  ['hair oil'],
+  ['hair gel', 'hair wax', 'hair pomade'],
+  ['hair color', 'hair colour', 'hair dye'],
+  ['hand wash', 'handwash'],
+  ['deodorant', 'deo stick', 'roll on', 'antiperspirant'],
+  ['body spray', 'deo spray'],
+  ['perfume', 'cologne', 'eau de toilette', 'eau de parfum'],
+  ['toothpaste'],
+  ['mouthwash', 'mouth rinse'],
+  ['lip balm', 'lip butter', 'chapstick', 'lip care'],
+  ['lip gloss'],
+  ['lipstick', 'lip color', 'lip colour'],
+  ['lip liner'],
+  ['mascara'],
+  ['eyeliner'],
+  ['kajal', 'kohl'],
+  ['foundation'],
+  ['concealer'],
+  ['blush'],
+  ['bronzer', 'highlighter'],
+  ['nail polish', 'nail paint', 'nail lacquer'],
+  ['biscuit', 'cookie', 'cracker'],
+  ['chocolate', 'choco'],
+  ['candy', 'toffee', 'lollipop'],
+  ['chips', 'crisps', 'wafer', 'namkeen'],
+  ['juice', 'fruit drink'],
+  ['yogurt', 'curd', 'yoghurt', 'dahi'],
+  ['ice cream', 'gelato', 'kulfi'],
+  ['protein powder', 'whey protein', 'mass gainer'],
+  ['noodles', 'pasta', 'macaroni'],
+  ['sauce', 'ketchup', 'mayonnaise'],
+  ['jam', 'jelly', 'preserve', 'marmalade'],
+  ['honey'],
+  ['oats', 'muesli', 'granola'],
+  ['cereal', 'cornflakes'],
+  ['ghee'],
+  ['butter'],
+  ['cheese', 'paneer'],
+  ['milk'],
+]
+
+function getProductTypeGroup(name) {
   if (!name) return null
   const lower = name.toLowerCase()
-  const types = [
-    'face wash', 'face cream', 'face mask', 'face pack', 'face scrub', 'face serum',
-    'eye cream', 'eye gel', 'under eye',
-    'bb cream', 'cc cream',
-    'body lotion', 'body wash', 'body cream', 'body scrub', 'body butter',
-    'hand cream', 'hand lotion', 'foot cream',
-    'sunscreen', 'sun screen', 'sun block',
-    'moisturizer', 'moisturiser', 'night cream', 'day cream',
-    'toner', 'serum', 'essence',
-    'shampoo', 'conditioner', 'hair mask', 'hair serum', 'hair oil', 'hair gel',
-    'hair color', 'hair colour', 'hair dye',
-    'soap', 'hand wash',
-    'deodorant', 'body spray', 'antiperspirant',
-    'perfume', 'cologne', 'eau de toilette',
-    'toothpaste', 'mouthwash',
-    'lip balm', 'lip gloss', 'lip liner', 'lipstick',
-    'mascara', 'eyeliner', 'kajal', 'kohl',
-    'foundation', 'concealer', 'blush', 'bronzer', 'highlighter',
-    'nail polish', 'nail paint',
-    'biscuit', 'cookie', 'cracker',
-    'chocolate', 'candy', 'toffee',
-    'chips', 'namkeen',
-    'juice', 'beverage',
-    'yogurt', 'curd', 'yoghurt',
-    'ice cream',
-    'protein powder', 'whey protein',
-    'noodles', 'pasta',
-    'sauce', 'ketchup',
-    'jam', 'jelly',
-    'honey',
-    'oats', 'muesli', 'cereal',
-    'ghee', 'butter',
-    'cheese', 'paneer',
-  ]
-  for (const type of types) {
-    if (lower.includes(type)) return type
+  for (const group of PRODUCT_TYPE_GROUPS) {
+    for (const term of group) {
+      if (lower.includes(term)) return group
+    }
   }
   return null
 }
@@ -251,22 +286,23 @@ function Result() {
 
   useEffect(() => {
     if (!product || !['C', 'D'].includes(product.grade)) return
-    const keyword = getProductKeyword(product.name)
-    let query = supabase
+    const group = getProductTypeGroup(product.name)
+    // No recognisable product type → show nothing rather than wrong products
+    if (!group) return
+
+    // Build an OR filter: name matches ANY synonym in the group
+    const orFilter = group.map(term => `name.ilike.%${term}%`).join(',')
+
+    supabase
       .from('ai_extracted_products')
       .select('id, name, brand, category, grade, image_url')
       .in('grade', ['A', 'B'])
       .neq('name', product.name)
+      .or(orFilter)
       .order('grade')
       .limit(6)
-    if (keyword) {
-      query = query.ilike('name', `%${keyword}%`)
-    } else if (product.category) {
-      query = query.eq('category', product.category)
-    } else {
-      return
-    }
-    query.then(({ data }) => setAlternatives(data || [])).catch(() => {})
+      .then(({ data }) => setAlternatives(data || []))
+      .catch(() => {})
   }, [product?.id, product?.grade, product?.name])
 
   const fetchDbPhotos = async (productId) => {
