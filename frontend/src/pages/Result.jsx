@@ -106,6 +106,77 @@ const PRODUCT_TYPE_GROUPS = [
   ['milk'],
 ]
 
+const UNDISCLOSED_INGREDIENT_RULES = [
+  {
+    match: /^(sugandhit\s*dravya|sughandi\s*dravya|sugandhi\s*dravya|sugandhit\s*padarthi?)$/i,
+    note: 'Not fully disclosed by brand — Hindi term meaning "fragrant substances". The individual aromatic compounds are not listed separately on the label.',
+  },
+  {
+    match: /^excipients?$/i,
+    note: 'Not fully disclosed by brand — a blanket pharmaceutical/cosmetic term for inactive filler ingredients. The specific compounds used are not listed individually.',
+  },
+  {
+    match: /^(fragrance|parfum|perfume|cologne)$/i,
+    note: 'Not fully disclosed — "Fragrance" is a legal catch-all that can hide dozens of individual chemicals, some of which may be allergens or irritants. Brands are not required to list them individually.',
+  },
+  {
+    match: /^natural\s*fragrance$/i,
+    note: 'Not fully disclosed — even "natural fragrance" can contain synthetic carriers and undisclosed aromatic compounds not listed on the label.',
+  },
+  {
+    match: /^(artificial\s*)?flavou?r(ing)?s?$/i,
+    note: 'Not fully disclosed — flavoring compounds are grouped under one term. May include synthetic chemicals that are not individually named.',
+  },
+  {
+    match: /^(natural\s*flavou?r(ing)?s?)$/i,
+    note: 'Not fully disclosed — "natural flavour" can include a wide range of undisclosed aromatic or taste compounds derived from plant or animal sources.',
+  },
+  {
+    match: /^(colour?s?|artificial\s*colour?s?|permitted\s*colour?s?|synthetic\s*colour?s?)$/i,
+    note: 'Not fully disclosed — specific colorant names are not listed. Some synthetic dyes may cause reactions in sensitive individuals.',
+  },
+  {
+    match: /^(preservatives?|permitted\s*preservatives?)$/i,
+    note: 'Not fully disclosed — the exact preservative chemicals are not named. Some common preservatives are associated with skin sensitivity or long-term health concerns.',
+  },
+  {
+    match: /^(emulsifiers?|permitted\s*emulsifiers?)$/i,
+    note: 'Not fully disclosed — the specific emulsifying agents are not identified by the brand.',
+  },
+  {
+    match: /^(stabilizers?|stabilisers?|permitted\s*stabilizers?)$/i,
+    note: 'Not fully disclosed — the specific stabilizing compounds used are not named on the label.',
+  },
+  {
+    match: /^(herbal\s*extracts?|plant\s*extracts?|botanical\s*extracts?|ayurvedic\s*extracts?|jadi\s*buti)$/i,
+    note: 'Not fully disclosed — a collective term. The individual herbs or botanicals and their concentrations are not specified.',
+  },
+  {
+    match: /^(proprietary\s*blend|herbal\s*blend|essential\s*oil\s*blend|active\s*blend)$/i,
+    note: 'Not fully disclosed — a brand proprietary formulation. Individual components and concentrations are intentionally not revealed.',
+  },
+  {
+    match: /^(other\s*ingredients?|misc\.?|q\.?\s*s\.?)$/i,
+    note: 'Not fully disclosed — a generic placeholder. The actual ingredients hidden behind this term are not identified.',
+  },
+  {
+    match: /^(added\s*)?flavou?rs?$/i,
+    note: 'Not fully disclosed — the exact flavoring compounds are not listed individually by the brand.',
+  },
+]
+
+function enrichIngredients(ingredients) {
+  return ingredients.map(ing => {
+    const trimmed = (ing.name || '').trim()
+    for (const { match, note } of UNDISCLOSED_INGREDIENT_RULES) {
+      if (match.test(trimmed)) {
+        return { ...ing, classification: 'worth_knowing', one_line_note: note }
+      }
+    }
+    return ing
+  })
+}
+
 function getProductTypeGroup(name) {
   if (!name) return null
   const lower = name.toLowerCase()
@@ -476,7 +547,7 @@ function Result() {
 
   // Categorize ingredients — must be before any early returns (Rules of Hooks)
   const { allIngredients, generally_recognised, worth_knowing, commonly_questioned } = useMemo(() => {
-    const all = product?.ingredients || []
+    const all = enrichIngredients(product?.ingredients || [])
     return {
       allIngredients:       all,
       generally_recognised: all.filter(i => i.classification === 'generally_recognised'),
