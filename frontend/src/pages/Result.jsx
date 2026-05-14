@@ -39,6 +39,49 @@ function parseRawIngredients(raw) {
   return results
 }
 
+function getProductKeyword(name) {
+  if (!name) return null
+  const lower = name.toLowerCase()
+  const types = [
+    'face wash', 'face cream', 'face mask', 'face pack', 'face scrub', 'face serum',
+    'eye cream', 'eye gel', 'under eye',
+    'bb cream', 'cc cream',
+    'body lotion', 'body wash', 'body cream', 'body scrub', 'body butter',
+    'hand cream', 'hand lotion', 'foot cream',
+    'sunscreen', 'sun screen', 'sun block',
+    'moisturizer', 'moisturiser', 'night cream', 'day cream',
+    'toner', 'serum', 'essence',
+    'shampoo', 'conditioner', 'hair mask', 'hair serum', 'hair oil', 'hair gel',
+    'hair color', 'hair colour', 'hair dye',
+    'soap', 'hand wash',
+    'deodorant', 'body spray', 'antiperspirant',
+    'perfume', 'cologne', 'eau de toilette',
+    'toothpaste', 'mouthwash',
+    'lip balm', 'lip gloss', 'lip liner', 'lipstick',
+    'mascara', 'eyeliner', 'kajal', 'kohl',
+    'foundation', 'concealer', 'blush', 'bronzer', 'highlighter',
+    'nail polish', 'nail paint',
+    'biscuit', 'cookie', 'cracker',
+    'chocolate', 'candy', 'toffee',
+    'chips', 'namkeen',
+    'juice', 'beverage',
+    'yogurt', 'curd', 'yoghurt',
+    'ice cream',
+    'protein powder', 'whey protein',
+    'noodles', 'pasta',
+    'sauce', 'ketchup',
+    'jam', 'jelly',
+    'honey',
+    'oats', 'muesli', 'cereal',
+    'ghee', 'butter',
+    'cheese', 'paneer',
+  ]
+  for (const type of types) {
+    if (lower.includes(type)) return type
+  }
+  return null
+}
+
 function ProductImageGallery({ imageUrl, images, name, dbPhotos, onDeleteDbPhoto, isAdmin, user, onOpenUpload, onNeedLogin }) {
   const backendImgs = (images && images.length > 0) ? images : (imageUrl ? [imageUrl] : [])
   const dbImgUrls = (dbPhotos || []).map(p => p.image_url)
@@ -207,18 +250,24 @@ function Result() {
   }, [productName])
 
   useEffect(() => {
-    if (!product || !['C', 'D'].includes(product.grade) || !product.category) return
-    supabase
+    if (!product || !['C', 'D'].includes(product.grade)) return
+    const keyword = getProductKeyword(product.name)
+    let query = supabase
       .from('ai_extracted_products')
       .select('id, name, brand, category, grade, image_url')
-      .eq('category', product.category)
       .in('grade', ['A', 'B'])
       .neq('name', product.name)
       .order('grade')
       .limit(6)
-      .then(({ data }) => setAlternatives(data || []))
-      .catch(() => {})
-  }, [product?.id, product?.grade, product?.category])
+    if (keyword) {
+      query = query.ilike('name', `%${keyword}%`)
+    } else if (product.category) {
+      query = query.eq('category', product.category)
+    } else {
+      return
+    }
+    query.then(({ data }) => setAlternatives(data || [])).catch(() => {})
+  }, [product?.id, product?.grade, product?.name])
 
   const fetchDbPhotos = async (productId) => {
     try {
@@ -482,7 +531,7 @@ function Result() {
       className="min-h-screen bg-gray-soft py-8"
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        {/* Product Header Card */}
+        {/* Product Header Card — full width */}
         <div className="card p-4 sm:p-6 mb-6">
           <div className="flex flex-col md:flex-row gap-4 sm:gap-6">
             {/* Product Image Gallery */}
@@ -578,6 +627,12 @@ function Result() {
             </div>
           </div>
         </div>
+
+        {/* Two-column layout: main content + sticky alternatives sidebar */}
+        <div className="flex flex-col lg:flex-row gap-6 items-start">
+
+        {/* ── Main content column ── */}
+        <div className="flex-1 min-w-0">
 
         {/* Quick Insight Section */}
         {(() => {
@@ -1109,57 +1164,61 @@ function Result() {
           </div>
         )}
 
-        {/* Better Alternatives — shown for C/D grade products */}
+        </div>{/* end main content column */}
+
+        {/* ── Better Alternatives sidebar ── */}
         {alternatives.length > 0 && (
-          <div className="card p-4 sm:p-6 mb-6 border-2 border-green-300 bg-green-50">
-            <div className="flex items-center gap-2 mb-1">
-              <svg className="w-5 h-5 text-green-600 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 014.438 0 3.42 3.42 0 001.946.806 3.42 3.42 0 013.138 3.138 3.42 3.42 0 00.806 1.946 3.42 3.42 0 010 4.438 3.42 3.42 0 00-.806 1.946 3.42 3.42 0 01-3.138 3.138 3.42 3.42 0 00-1.946.806 3.42 3.42 0 01-4.438 0 3.42 3.42 0 00-1.946-.806 3.42 3.42 0 01-3.138-3.138 3.42 3.42 0 00-.806-1.946 3.42 3.42 0 010-4.438 3.42 3.42 0 00.806-1.946 3.42 3.42 0 013.138-3.138z" />
-              </svg>
-              <h2 className="font-poppins font-bold text-lg sm:text-xl text-green-800">Better Alternatives</h2>
-            </div>
-            <p className="text-xs text-green-700 mb-4">
-              Cleaner {product.category} options (Grade A or B) — same category, better ingredients.
-            </p>
-            <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
-              {alternatives.map(alt => (
-                <button
-                  key={alt.id}
-                  onClick={() => navigate(`/result/${encodeURIComponent(alt.name)}`)}
-                  className="bg-white rounded-xl border border-green-200 p-3 text-left hover:border-green-400 hover:shadow-md transition-all cursor-pointer w-full"
-                >
-                  <div className="w-full h-20 rounded-lg overflow-hidden bg-gray-50 mb-2 flex items-center justify-center">
-                    {alt.image_url ? (
-                      <img
-                        src={alt.image_url}
-                        alt={alt.name}
-                        className="w-full h-full object-contain p-1"
-                        loading="lazy"
-                        decoding="async"
-                        onError={e => { e.target.style.display = 'none' }}
-                      />
-                    ) : (
-                      <svg className="w-8 h-8 text-gray-300" fill="currentColor" viewBox="0 0 20 20">
-                        <path fillRule="evenodd" d="M4 3a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V5a2 2 0 00-2-2H4zm12 12H4l4-8 3 6 2-4 3 6z" clipRule="evenodd" />
-                      </svg>
-                    )}
-                  </div>
-                  <div className="flex items-start justify-between gap-1">
-                    <div className="flex-1 min-w-0">
-                      <p className="text-xs font-bold text-navy leading-tight line-clamp-2">{alt.name}</p>
-                      {alt.brand && <p className="text-xs text-gray-500 mt-0.5 truncate">{alt.brand}</p>}
-                    </div>
-                    <span className={`flex-shrink-0 text-xs font-black px-1.5 py-0.5 rounded-md ml-1 ${
-                      alt.grade === 'A' ? 'bg-green-100 text-green-700' : 'bg-blue-100 text-blue-700'
-                    }`}>
-                      {alt.grade}
-                    </span>
-                  </div>
-                </button>
-              ))}
+          <div className="lg:w-72 flex-shrink-0 w-full">
+            <div className="sticky top-4">
+              <div className="bg-green-50 border-2 border-green-300 rounded-2xl p-4">
+                <div className="flex items-center gap-2 mb-1">
+                  <svg className="w-4 h-4 text-green-600 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                    <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd"/>
+                  </svg>
+                  <h2 className="font-poppins font-bold text-sm text-green-800 uppercase tracking-wide">Better Alternatives</h2>
+                </div>
+                <p className="text-xs text-green-700 mb-3">Cleaner options — Grade A or B</p>
+                <div className="space-y-2">
+                  {alternatives.map(alt => (
+                    <button
+                      key={alt.id}
+                      onClick={() => navigate(`/result/${encodeURIComponent(alt.name)}`)}
+                      className="w-full bg-white rounded-xl border border-green-200 p-2.5 flex items-center gap-2.5 text-left hover:border-green-400 hover:shadow-sm transition-all cursor-pointer"
+                    >
+                      <div className="w-12 h-12 rounded-lg overflow-hidden bg-gray-50 flex-shrink-0 flex items-center justify-center">
+                        {alt.image_url ? (
+                          <img
+                            src={alt.image_url}
+                            alt={alt.name}
+                            className="w-full h-full object-contain p-0.5"
+                            loading="lazy"
+                            decoding="async"
+                            onError={e => { e.target.style.display = 'none' }}
+                          />
+                        ) : (
+                          <svg className="w-5 h-5 text-gray-300" fill="currentColor" viewBox="0 0 20 20">
+                            <path fillRule="evenodd" d="M4 3a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V5a2 2 0 00-2-2H4zm12 12H4l4-8 3 6 2-4 3 6z" clipRule="evenodd" />
+                          </svg>
+                        )}
+                      </div>
+                      <div className="flex-1 min-w-0">
+                        <p className="text-xs font-bold text-navy leading-tight line-clamp-2">{alt.name}</p>
+                        {alt.brand && <p className="text-xs text-gray-400 mt-0.5 truncate">{alt.brand}</p>}
+                      </div>
+                      <span className={`flex-shrink-0 text-xs font-black px-1.5 py-0.5 rounded-md ${
+                        alt.grade === 'A' ? 'bg-green-100 text-green-700' : 'bg-blue-100 text-blue-700'
+                      }`}>
+                        {alt.grade}
+                      </span>
+                    </button>
+                  ))}
+                </div>
+              </div>
             </div>
           </div>
         )}
+
+        </div>{/* end two-column flex */}
 
         {/* Ratings & Reviews */}
         <ProductReviews productId={product.id} productName={product.name} />
