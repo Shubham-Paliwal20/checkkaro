@@ -563,15 +563,26 @@ function Result() {
   }
 
   // Categorize ingredients — must be before any early returns (Rules of Hooks)
-  const { allIngredients, generally_recognised, worth_knowing, commonly_questioned } = useMemo(() => {
+  const { allIngredients, generally_recognised, worth_knowing, commonly_questioned, effectiveGrade } = useMemo(() => {
     const all = enrichIngredients(product?.ingredients || [])
+    const gr = all.filter(i => i.classification === 'generally_recognised')
+    const wk = all.filter(i => i.classification === 'worth_knowing')
+    const cq = all.filter(i => i.classification === 'commonly_questioned')
+    const dbGrade = product?.grade || 'C'
+
+    // Upgrade grade downward if enrichment added flagged ingredients the DB didn't know about
+    let effectiveGrade = dbGrade
+    if (cq.length > 0 && (dbGrade === 'A' || dbGrade === 'B')) effectiveGrade = 'C'
+    else if (wk.length > 0 && dbGrade === 'A') effectiveGrade = 'B'
+
     return {
       allIngredients:       all,
-      generally_recognised: all.filter(i => i.classification === 'generally_recognised'),
-      worth_knowing:        all.filter(i => i.classification === 'worth_knowing'),
-      commonly_questioned:  all.filter(i => i.classification === 'commonly_questioned'),
+      generally_recognised: gr,
+      worth_knowing:        wk,
+      commonly_questioned:  cq,
+      effectiveGrade,
     }
-  }, [product?.ingredients])
+  }, [product?.ingredients, product?.grade])
 
   if (loading) {
     return (
@@ -607,7 +618,7 @@ function Result() {
 
   if (!product) return null
 
-  const grade = product?.grade || 'C'
+  const grade = effectiveGrade
 
   const productSEO = product ? {
     title: `${product.name} Ingredients — Grade ${grade}`,
