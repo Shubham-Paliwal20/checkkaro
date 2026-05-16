@@ -15,22 +15,16 @@ function About() {
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
-      className="min-h-screen bg-gray-soft"
+      className="min-h-screen bg-gray-soft py-12"
     >
-      {/* Hero */}
-      <section className="text-white py-14 sm:py-20 px-4 text-center"
-        style={{ background: 'linear-gradient(135deg, #0077B6 0%, #00B4D8 60%, #48CAE4 100%)' }}>
-        <div className="max-w-3xl mx-auto">
-          <h1 className="font-poppins font-bold text-3xl sm:text-4xl md:text-5xl mb-4">
-            About Us
-          </h1>
-          <p className="text-gray-300 text-base sm:text-lg max-w-xl mx-auto">
+      <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+        {/* Header */}
+        <div className="text-center mb-12">
+          <h1 className="section-heading mb-4">About Parkho</h1>
+          <p className="text-lg text-gray-600">
             Empowering Indian consumers with ingredient awareness
           </p>
         </div>
-      </section>
-
-      <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
 
         {/* Mission */}
         <section className="card p-8 mb-8">
