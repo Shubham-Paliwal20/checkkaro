@@ -20,16 +20,11 @@ function About() {
       {/* Hero — matches CheckIngredient page style */}
       <section className="bg-navy text-white py-14 sm:py-20 px-4 text-center">
         <div className="max-w-3xl mx-auto">
-          <div className="inline-block mb-4">
-            <span className="inline-block px-5 py-2 rounded-full border border-white text-white text-base font-semibold">
-              About Us
-            </span>
-          </div>
           <h1 className="font-poppins font-bold text-3xl sm:text-4xl md:text-5xl mb-4">
-            Know what's in your products
+            About Us
           </h1>
           <p className="text-gray-300 text-base sm:text-lg max-w-xl mx-auto">
-            Parkho helps Indian consumers understand every ingredient in the food and cosmetics they use daily — no jargon, no bias.
+            Empowering Indian consumers with ingredient awareness
           </p>
         </div>
       </section>
