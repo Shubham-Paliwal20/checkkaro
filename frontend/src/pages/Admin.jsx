@@ -1657,6 +1657,13 @@ function BlogApprovals() {
     setExpanded(null)
   }
 
+  async function deleteBlog(id) {
+    if (!window.confirm('Permanently delete this blog? This cannot be undone.')) return
+    await supabase.from('blogs').delete().eq('id', id)
+    fetchBlogs()
+    setExpanded(null)
+  }
+
   const filters = [
     { key: 'pending',  label: 'Pending',  color: '#f59e0b' },
     { key: 'approved', label: 'Approved', color: '#16a34a' },
@@ -1713,19 +1720,35 @@ function BlogApprovals() {
                         style={{ flex: 1, background: '#fee2e2', color: '#dc2626', border: 'none', borderRadius: 10, padding: '12px', fontSize: 14, fontWeight: 700, cursor: 'pointer', fontFamily: 'inherit' }}>
                         ❌ Reject
                       </button>
+                      <button onClick={() => deleteBlog(blog.id)}
+                        style={{ background: '#111827', color: '#fff', border: 'none', borderRadius: 10, padding: '12px 16px', fontSize: 14, fontWeight: 700, cursor: 'pointer', fontFamily: 'inherit' }}>
+                        🗑️
+                      </button>
                     </div>
                   )}
                   {filter === 'approved' && (
-                    <button onClick={() => updateStatus(blog.id, 'rejected')}
-                      style={{ background: '#fee2e2', color: '#dc2626', border: 'none', borderRadius: 10, padding: '10px 20px', fontSize: 13, fontWeight: 700, cursor: 'pointer', fontFamily: 'inherit' }}>
-                      Remove from published
-                    </button>
+                    <div style={{ display: 'flex', gap: 10 }}>
+                      <button onClick={() => updateStatus(blog.id, 'rejected')}
+                        style={{ background: '#fee2e2', color: '#dc2626', border: 'none', borderRadius: 10, padding: '10px 20px', fontSize: 13, fontWeight: 700, cursor: 'pointer', fontFamily: 'inherit' }}>
+                        Remove from published
+                      </button>
+                      <button onClick={() => deleteBlog(blog.id)}
+                        style={{ background: '#111827', color: '#fff', border: 'none', borderRadius: 10, padding: '10px 16px', fontSize: 13, fontWeight: 700, cursor: 'pointer', fontFamily: 'inherit' }}>
+                        🗑️ Delete
+                      </button>
+                    </div>
                   )}
                   {filter === 'rejected' && (
-                    <button onClick={() => updateStatus(blog.id, 'approved')}
-                      style={{ background: '#dcfce7', color: '#16a34a', border: 'none', borderRadius: 10, padding: '10px 20px', fontSize: 13, fontWeight: 700, cursor: 'pointer', fontFamily: 'inherit' }}>
-                      Approve & Publish
-                    </button>
+                    <div style={{ display: 'flex', gap: 10 }}>
+                      <button onClick={() => updateStatus(blog.id, 'approved')}
+                        style={{ background: '#dcfce7', color: '#16a34a', border: 'none', borderRadius: 10, padding: '10px 20px', fontSize: 13, fontWeight: 700, cursor: 'pointer', fontFamily: 'inherit' }}>
+                        Approve & Publish
+                      </button>
+                      <button onClick={() => deleteBlog(blog.id)}
+                        style={{ background: '#111827', color: '#fff', border: 'none', borderRadius: 10, padding: '10px 16px', fontSize: 13, fontWeight: 700, cursor: 'pointer', fontFamily: 'inherit' }}>
+                        🗑️ Delete
+                      </button>
+                    </div>
                   )}
                 </div>
               )}
