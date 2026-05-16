@@ -15,6 +15,13 @@ const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'https://checkkaro.onr
 
 // Module-level cache — navigating back to a product is instant, no refetch
 const _productCache = new Map()  // productName.lower → product data
+const CACHE_MAX = 40
+function cacheSet(key, value) {
+  if (_productCache.size >= CACHE_MAX && !_productCache.has(key)) {
+    _productCache.delete(_productCache.keys().next().value)
+  }
+  _productCache.set(key, value)
+}
 
 const ADMIN_EMAIL = 'shubhampaliwal5@gmail.com'
 
@@ -38,73 +45,6 @@ function parseRawIngredients(raw) {
   if (t) results.push(t)
   return results
 }
-
-// Groups of synonymous names for the same product type.
-// We extract which group the current product belongs to,
-// then filter alternatives to the same group.
-const PRODUCT_TYPE_GROUPS = [
-  ['soap', 'bathing bar', 'beauty bar', 'bath bar', 'bar soap'],
-  ['shampoo'],
-  ['conditioner', 'hair conditioner'],
-  ['face wash', 'facewash', 'face cleanser', 'foaming cleanser'],
-  ['face cream', 'face moisturizer', 'face moisturiser'],
-  ['face mask', 'face pack', 'sheet mask'],
-  ['face scrub', 'face exfoliant'],
-  ['face serum', 'skin serum'],
-  ['eye cream', 'eye gel', 'under eye'],
-  ['bb cream', 'cc cream'],
-  ['body lotion', 'body moisturizer', 'body moisturiser'],
-  ['body wash', 'shower gel'],
-  ['body cream', 'body butter'],
-  ['body scrub'],
-  ['hand cream', 'hand lotion'],
-  ['foot cream', 'foot lotion'],
-  ['sunscreen', 'sun screen', 'sun block', 'spf lotion', 'spf cream'],
-  ['moisturizer', 'moisturiser', 'night cream', 'day cream'],
-  ['toner', 'face toner'],
-  ['serum'],
-  ['hair mask', 'hair pack', 'hair spa'],
-  ['hair serum'],
-  ['hair oil'],
-  ['hair gel', 'hair wax', 'hair pomade'],
-  ['hair color', 'hair colour', 'hair dye'],
-  ['hand wash', 'handwash'],
-  ['deodorant', 'deo stick', 'roll on', 'antiperspirant'],
-  ['body spray', 'deo spray'],
-  ['perfume', 'cologne', 'eau de toilette', 'eau de parfum'],
-  ['toothpaste'],
-  ['mouthwash', 'mouth rinse'],
-  ['lip balm', 'lip butter', 'chapstick', 'lip care'],
-  ['lip gloss'],
-  ['lipstick', 'lip color', 'lip colour'],
-  ['lip liner'],
-  ['mascara'],
-  ['eyeliner'],
-  ['kajal', 'kohl'],
-  ['foundation'],
-  ['concealer'],
-  ['blush'],
-  ['bronzer', 'highlighter'],
-  ['nail polish', 'nail paint', 'nail lacquer'],
-  ['biscuit', 'cookie', 'cracker'],
-  ['chocolate', 'choco'],
-  ['candy', 'toffee', 'lollipop'],
-  ['chips', 'crisps', 'wafer', 'namkeen'],
-  ['juice', 'fruit drink'],
-  ['yogurt', 'curd', 'yoghurt', 'dahi'],
-  ['ice cream', 'gelato', 'kulfi'],
-  ['protein powder', 'whey protein', 'mass gainer'],
-  ['noodles', 'pasta', 'macaroni'],
-  ['sauce', 'ketchup', 'mayonnaise'],
-  ['jam', 'jelly', 'preserve', 'marmalade'],
-  ['honey'],
-  ['oats', 'muesli', 'granola'],
-  ['cereal', 'cornflakes'],
-  ['ghee'],
-  ['butter'],
-  ['cheese', 'paneer'],
-  ['milk'],
-]
 
 const UNDISCLOSED_INGREDIENT_RULES = [
   // ── Commonly Questioned ──────────────────────────────────────────────────
@@ -192,17 +132,6 @@ function enrichIngredients(ingredients) {
     }
     return ing
   })
-}
-
-function getProductTypeGroup(name) {
-  if (!name) return null
-  const lower = name.toLowerCase()
-  for (const group of PRODUCT_TYPE_GROUPS) {
-    for (const term of group) {
-      if (lower.includes(term)) return group
-    }
-  }
-  return null
 }
 
 function ProductImageGallery({ imageUrl, images, name, dbPhotos, onDeleteDbPhoto, isAdmin, user, onOpenUpload, onNeedLogin }) {
@@ -360,7 +289,6 @@ function Result() {
   const [adminNameSaving, setAdminNameSaving] = useState(false)
   const [showPhotoModal, setShowPhotoModal] = useState(false)
   const [photoToast, setPhotoToast] = useState(null)
-  const [alternatives, setAlternatives] = useState([])
 
   const isAdmin = user?.email === ADMIN_EMAIL
 
@@ -368,30 +296,8 @@ function Result() {
     setProductNotFound(false)
     setDbPhotos([])
     setAdminDbId(null)
-    setAlternatives([])
     fetchProduct()
   }, [productName])
-
-  useEffect(() => {
-    if (!product || !['C', 'D'].includes(product.grade)) return
-    const group = getProductTypeGroup(product.name)
-    // No recognisable product type → show nothing rather than wrong products
-    if (!group) return
-
-    // Build an OR filter: name matches ANY synonym in the group
-    const orFilter = group.map(term => `name.ilike.%${term}%`).join(',')
-
-    supabase
-      .from('ai_extracted_products')
-      .select('id, name, brand, category, grade, image_url')
-      .in('grade', ['A', 'B'])
-      .neq('name', product.name)
-      .or(orFilter)
-      .order('grade')
-      .limit(6)
-      .then(({ data }) => setAlternatives(data || []))
-      .catch(() => {})
-  }, [product?.id, product?.grade, product?.name])
 
   const fetchDbPhotos = async (productId) => {
     try {
@@ -465,7 +371,7 @@ function Result() {
           params: { name: productName },
           timeout: 10000,
         })
-        _productCache.set(cacheKey, response.data)
+        cacheSet(cacheKey, response.data)
         setProduct(response.data)
         // Kick off photo fetch immediately without blocking product display
         if (response.data?.id) fetchDbPhotos(response.data.id)
@@ -506,7 +412,7 @@ function Result() {
           confidence: p.static_key ? 'high' : 'medium',
           is_complete: true,
         }
-        _productCache.set(cacheKey, productData)
+        cacheSet(cacheKey, productData)
         setProduct(productData)
         if (p.id) fetchDbPhotos(String(p.id))
         return
@@ -569,19 +475,10 @@ function Result() {
     const wk = all.filter(i => i.classification === 'worth_knowing')
     const cq = all.filter(i => i.classification === 'commonly_questioned')
     const dbGrade = product?.grade || 'C'
-
-    // Upgrade grade downward if enrichment added flagged ingredients the DB didn't know about
     let effectiveGrade = dbGrade
     if (cq.length > 0 && (dbGrade === 'A' || dbGrade === 'B')) effectiveGrade = 'C'
     else if (wk.length > 0 && dbGrade === 'A') effectiveGrade = 'B'
-
-    return {
-      allIngredients:       all,
-      generally_recognised: gr,
-      worth_knowing:        wk,
-      commonly_questioned:  cq,
-      effectiveGrade,
-    }
+    return { allIngredients: all, generally_recognised: gr, worth_knowing: wk, commonly_questioned: cq, effectiveGrade }
   }, [product?.ingredients, product?.grade])
 
   if (loading) {
@@ -666,7 +563,7 @@ function Result() {
       className="min-h-screen bg-gray-soft py-8"
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        {/* Product Header Card — full width */}
+        {/* Product Header Card */}
         <div className="card p-4 sm:p-6 mb-6">
           <div className="flex flex-col md:flex-row gap-4 sm:gap-6">
             {/* Product Image Gallery */}
@@ -762,12 +659,6 @@ function Result() {
             </div>
           </div>
         </div>
-
-        {/* Two-column layout: main content + sticky alternatives sidebar */}
-        <div className="flex flex-col lg:flex-row gap-6 items-start">
-
-        {/* ── Main content column ── */}
-        <div className="flex-1 min-w-0">
 
         {/* Quick Insight Section */}
         {(() => {
@@ -1298,62 +1189,6 @@ function Result() {
             </div>
           </div>
         )}
-
-        </div>{/* end main content column */}
-
-        {/* ── Better Alternatives sidebar ── */}
-        {alternatives.length > 0 && (
-          <div className="lg:w-72 flex-shrink-0 w-full">
-            <div className="sticky top-4">
-              <div className="bg-green-50 border-2 border-green-300 rounded-2xl p-4">
-                <div className="flex items-center gap-2 mb-1">
-                  <svg className="w-4 h-4 text-green-600 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
-                    <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd"/>
-                  </svg>
-                  <h2 className="font-poppins font-bold text-sm text-green-800 uppercase tracking-wide">Better Alternatives</h2>
-                </div>
-                <p className="text-xs text-green-700 mb-3">Cleaner options — Grade A or B</p>
-                <div className="space-y-2">
-                  {alternatives.map(alt => (
-                    <button
-                      key={alt.id}
-                      onClick={() => navigate(`/result/${encodeURIComponent(alt.name)}`)}
-                      className="w-full bg-white rounded-xl border border-green-200 p-2.5 flex items-center gap-2.5 text-left hover:border-green-400 hover:shadow-sm transition-all cursor-pointer"
-                    >
-                      <div className="w-12 h-12 rounded-lg overflow-hidden bg-gray-50 flex-shrink-0 flex items-center justify-center">
-                        {alt.image_url ? (
-                          <img
-                            src={alt.image_url}
-                            alt={alt.name}
-                            className="w-full h-full object-contain p-0.5"
-                            loading="lazy"
-                            decoding="async"
-                            onError={e => { e.target.style.display = 'none' }}
-                          />
-                        ) : (
-                          <svg className="w-5 h-5 text-gray-300" fill="currentColor" viewBox="0 0 20 20">
-                            <path fillRule="evenodd" d="M4 3a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V5a2 2 0 00-2-2H4zm12 12H4l4-8 3 6 2-4 3 6z" clipRule="evenodd" />
-                          </svg>
-                        )}
-                      </div>
-                      <div className="flex-1 min-w-0">
-                        <p className="text-xs font-bold text-navy leading-tight line-clamp-2">{alt.name}</p>
-                        {alt.brand && <p className="text-xs text-gray-400 mt-0.5 truncate">{alt.brand}</p>}
-                      </div>
-                      <span className={`flex-shrink-0 text-xs font-black px-1.5 py-0.5 rounded-md ${
-                        alt.grade === 'A' ? 'bg-green-100 text-green-700' : 'bg-blue-100 text-blue-700'
-                      }`}>
-                        {alt.grade}
-                      </span>
-                    </button>
-                  ))}
-                </div>
-              </div>
-            </div>
-          </div>
-        )}
-
-        </div>{/* end two-column flex */}
 
         {/* Ratings & Reviews */}
         <ProductReviews productId={product.id} productName={product.name} />

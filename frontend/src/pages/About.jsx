@@ -15,16 +15,17 @@ function About() {
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
-      className="min-h-screen bg-gray-soft py-12"
+      className="min-h-screen bg-gray-soft"
     >
-      <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-        {/* Header */}
-        <div className="text-center mb-12">
-          <h1 className="section-heading mb-4">About Parkho</h1>
-          <p className="text-lg text-gray-600">
-            Empowering Indian consumers with ingredient awareness
-          </p>
-        </div>
+      {/* Coloured hero header */}
+      <div style={{ background: 'linear-gradient(135deg, #1B3F8A 0%, #2d5bc7 100%)' }} className="py-14 px-4 text-white text-center">
+        <h1 className="font-poppins font-bold text-3xl sm:text-4xl mb-3">About Parkho</h1>
+        <p className="text-blue-200 text-base sm:text-lg max-w-xl mx-auto">
+          Empowering Indian consumers with ingredient awareness
+        </p>
+      </div>
+
+      <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
 
         {/* Mission */}
         <section className="card p-8 mb-8">
