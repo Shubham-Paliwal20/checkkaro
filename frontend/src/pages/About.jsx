@@ -21,31 +21,16 @@ function About() {
       <section className="bg-navy text-white py-14 sm:py-20 px-4 text-center">
         <div className="max-w-3xl mx-auto">
           <div className="inline-block mb-4">
-            <span className="inline-block px-4 py-1.5 rounded-full border border-primary text-primary text-sm font-medium">
+            <span className="inline-block px-5 py-2 rounded-full border border-white text-white text-base font-semibold">
               About Us
             </span>
           </div>
           <h1 className="font-poppins font-bold text-3xl sm:text-4xl md:text-5xl mb-4">
             Know what's in your products
           </h1>
-          <p className="text-gray-300 text-base sm:text-lg max-w-xl mx-auto mb-10">
+          <p className="text-gray-300 text-base sm:text-lg max-w-xl mx-auto">
             Parkho helps Indian consumers understand every ingredient in the food and cosmetics they use daily — no jargon, no bias.
           </p>
-          {/* Quick stats */}
-          <div className="flex flex-wrap justify-center gap-6 sm:gap-10">
-            <div>
-              <p className="font-poppins font-bold text-2xl sm:text-3xl text-primary">1000+</p>
-              <p className="text-gray-400 text-xs sm:text-sm mt-0.5">Products analysed</p>
-            </div>
-            <div>
-              <p className="font-poppins font-bold text-2xl sm:text-3xl text-primary">100%</p>
-              <p className="text-gray-400 text-xs sm:text-sm mt-0.5">Free to use</p>
-            </div>
-            <div>
-              <p className="font-poppins font-bold text-2xl sm:text-3xl text-primary">FSSAI</p>
-              <p className="text-gray-400 text-xs sm:text-sm mt-0.5">Regulatory data</p>
-            </div>
-          </div>
         </div>
       </section>
 
