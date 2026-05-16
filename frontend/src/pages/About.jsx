@@ -17,20 +17,37 @@ function About() {
       exit={{ opacity: 0 }}
       className="min-h-screen bg-gray-soft"
     >
-      {/* Coloured hero header — saffron / white / green (Indian tricolor) */}
-      <div className="relative overflow-hidden py-16 px-4 text-center"
-        style={{ background: 'linear-gradient(135deg, #FF9933 0%, #FF9933 38%, #ffffff 38%, #ffffff 62%, #138808 62%, #138808 100%)' }}>
-        {/* Overlay to keep text readable */}
-        <div className="absolute inset-0" style={{ background: 'rgba(0,0,0,0.18)' }} />
-        <div className="relative z-10">
-          <h1 className="font-poppins font-bold text-3xl sm:text-4xl text-white mb-3" style={{ textShadow: '0 2px 8px rgba(0,0,0,0.35)' }}>
-            About Parkho
+      {/* Hero — matches CheckIngredient page style */}
+      <section className="bg-navy text-white py-14 sm:py-20 px-4 text-center">
+        <div className="max-w-3xl mx-auto">
+          <div className="inline-block mb-4">
+            <span className="inline-block px-4 py-1.5 rounded-full border border-primary text-primary text-sm font-medium">
+              About Us
+            </span>
+          </div>
+          <h1 className="font-poppins font-bold text-3xl sm:text-4xl md:text-5xl mb-4">
+            Know what's in your products
           </h1>
-          <p className="text-white text-base sm:text-lg max-w-xl mx-auto font-medium" style={{ textShadow: '0 1px 4px rgba(0,0,0,0.4)' }}>
-            Empowering Indian consumers with ingredient awareness
+          <p className="text-gray-300 text-base sm:text-lg max-w-xl mx-auto mb-10">
+            Parkho helps Indian consumers understand every ingredient in the food and cosmetics they use daily — no jargon, no bias.
           </p>
+          {/* Quick stats */}
+          <div className="flex flex-wrap justify-center gap-6 sm:gap-10">
+            <div>
+              <p className="font-poppins font-bold text-2xl sm:text-3xl text-primary">1000+</p>
+              <p className="text-gray-400 text-xs sm:text-sm mt-0.5">Products analysed</p>
+            </div>
+            <div>
+              <p className="font-poppins font-bold text-2xl sm:text-3xl text-primary">100%</p>
+              <p className="text-gray-400 text-xs sm:text-sm mt-0.5">Free to use</p>
+            </div>
+            <div>
+              <p className="font-poppins font-bold text-2xl sm:text-3xl text-primary">FSSAI</p>
+              <p className="text-gray-400 text-xs sm:text-sm mt-0.5">Regulatory data</p>
+            </div>
+          </div>
         </div>
-      </div>
+      </section>
 
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
 
