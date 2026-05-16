@@ -524,8 +524,20 @@ COSMETIC_SAFE_OVERRIDES = {
 }
 
 
+def _normalize_ins(name: str) -> str:
+    """Convert 'INS 200', 'INS200', 'ins-200' → 'e200' so it matches E-number keys."""
+    import re
+    s = name.strip().lower()
+    m = re.match(r'^ins[\s\-]*(\d+)', s)
+    if m:
+        return 'e' + m.group(1)
+    return s
+
+
 def classify_ingredient(ingredient_name, category=None):
     """Classify ingredients based on regulatory and health concerns - SINGLE SOURCE OF TRUTH"""
+    # Normalize INS numbers first: "INS 200" → "e200"
+    ingredient_name = _normalize_ins(ingredient_name)
     # Normalize "CI No. 47000" → "ci 47000", collapse extra spaces
     ingredient_lower = (
         ingredient_name.lower()

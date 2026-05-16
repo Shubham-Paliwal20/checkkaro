@@ -1,11 +1,27 @@
+import re
 from fastapi import APIRouter, Query, HTTPException
 from models.schemas import IngredientRuleResponse
-from routes.ingredient_database import get_ingredient_details, classify_ingredient
+from routes.ingredient_database import get_ingredient_details, classify_ingredient, INGREDIENT_DESCRIPTIONS, _normalize_ins
 from typing import List, Dict
 
 router = APIRouter()
 
 _popular_cache = None  # computed once, never changes
+
+# Build a sorted master list of (key, display_name) once at import time
+def _build_master_list():
+    result = []
+    for key in INGREDIENT_DESCRIPTIONS:
+        if re.match(r'^e\d+', key):
+            display = key.upper()          # e200 → E200
+        elif re.match(r'^ci \d+', key):
+            display = key.upper()          # ci 19140 → CI 19140
+        else:
+            display = key.title()          # sorbic acid → Sorbic Acid
+        result.append((key, display))
+    return result
+
+_MASTER_LIST = _build_master_list()
 
 
 @router.get("/search", response_model=IngredientRuleResponse)
@@ -15,6 +31,8 @@ async def search_ingredient(name: str = Query(..., description="Ingredient name 
     Ensures consistency with product search results
     """
     try:
+        # Normalize INS numbers (INS 200 → E200) before lookup
+        name = _normalize_ins(name).upper() if re.match(r'^ins[\s\-]*\d+', name.strip(), re.I) else name
         # Get ingredient details from centralized database
         ingredient_data = get_ingredient_details(name)
         
@@ -40,72 +58,48 @@ async def get_ingredient_suggestions(
     limit: int = Query(10, description="Maximum number of suggestions", ge=1, le=20)
 ) -> List[Dict]:
     """
-    Get ingredient suggestions for auto-complete functionality
-    Returns matching ingredients from hardcoded patterns
+    Get ingredient suggestions for auto-complete from all 400+ INGREDIENT_DESCRIPTIONS entries.
+    Supports E-numbers (e200, E200), INS numbers (INS 200, INS200), and plain names.
     """
     try:
-        if len(q) < 1:
+        q_stripped = q.strip()
+        if not q_stripped:
             return []
-        
-        # Get all ingredient patterns from the classify_ingredient function
-        from routes.ingredient_database import classify_ingredient
-        
-        # Common ingredients list for suggestions
-        common_ingredients = [
-            # Commonly Questioned
-            'Triclosan', 'Sodium Benzoate', 'Sodium Metabisulphite', 'Sodium Nitrite', 
-            'Sodium Nitrate', 'Sulfur Dioxide', 'Methylparaben', 'Propylparaben', 
-            'Butylparaben', 'Tartrazine', 'Sunset Yellow', 'Allura Red', 'Ponceau 4R',
-            'Carmoisine', 'Brilliant Blue', 'Indigo Carmine', 'Erythrosine', 
-            'Quinoline Yellow', 'Brown HT', 'Disodium Guanylate', 'Disodium Inosinate',
-            'Monosodium Glutamate', 'MSG', 'Phosphoric Acid', 'Caramel Colour',
-            'Methylchloroisothiazolinone', 'Methylisothiazolinone', 'Fragrance',
-            'Perfume', 'Artificial Flavor',
-            
-            # Worth Knowing
-            'Sugar', 'High Fructose Corn Syrup', 'Glucose Syrup', 'Invert Sugar',
-            'Maltodextrin', 'Palm Oil', 'Palmolein', 'Hydrogenated Oil',
-            'Partially Hydrogenated Oil', 'Soy Lecithin', 'Mono and Diglycerides',
-            'Polyglycerol Polyricinoleate', 'Ammonium Phosphatides', 'Carrageenan',
-            'Sodium Laureth Sulfate', 'Sodium Lauryl Sulfate', 'Cocamidopropyl Betaine',
-            'Dimethiconol', 'Dimethicone', 'Tetrasodium EDTA', 'Disodium EDTA',
-            'Potassium Sorbate', 'Citric Acid', 'Titanium Dioxide', 'Beta Carotene',
-            'Guar Gum', 'Xanthan Gum', 'Propylene Glycol', 'Glycerin', 'Sorbitol',
-            'Caffeine', 'Alcohol', 'Ethanol', 'Salt', 'Sodium Chloride',
-            
-            # Generally Recognised
-            'Ascorbic Acid', 'Vitamin C', 'Tocopherol', 'Vitamin E', 'Water',
-            'Lactic Acid', 'Malic Acid', 'Annatto', 'Turmeric', 'Paprika',
-            'Beetroot', 'Shellac', 'Beeswax', 'Carnauba Wax'
-        ]
-        
-        # Filter ingredients that match the query
-        query_lower = q.lower()
-        matching = []
-        
-        for ingredient in common_ingredients:
-            if query_lower in ingredient.lower():
-                # Get classification for this ingredient
-                classification_data = classify_ingredient(ingredient)
-                matching.append({
-                    'id': ingredient.lower().replace(' ', '-'),
-                    'name': ingredient,
-                    'classification': classification_data['classification'],
-                    'what_it_is': classification_data['what_it_is'],
-                    'aliases': []
-                })
-                
-                if len(matching) >= limit:
-                    break
-        
-        # Sort by relevance (starts with query first)
-        matching.sort(key=lambda x: (
-            not x['name'].lower().startswith(query_lower),
-            x['name'].lower()
-        ))
-        
-        return matching[:limit]
-        
+
+        # Normalize INS query → E-number key  (INS 200 → e200, ins2 → e2)
+        q_lower = _normalize_ins(q_stripped)
+
+        # If user typed just "ins" with no digit, treat as prefix "e" to show E-number entries
+        if q_stripped.lower().startswith('ins') and q_lower == q_stripped.lower():
+            q_lower = 'e'
+
+        starts: List[tuple] = []
+        contains: List[tuple] = []
+
+        for key, display in _MASTER_LIST:
+            if key.startswith(q_lower):
+                starts.append((key, display))
+            elif q_lower in key:
+                contains.append((key, display))
+
+        # starts-with first, then contains; both sorted alphabetically
+        starts.sort(key=lambda x: x[0])
+        contains.sort(key=lambda x: x[0])
+        matched = (starts + contains)[:limit]
+
+        results = []
+        for key, display in matched:
+            cls = classify_ingredient(key)
+            results.append({
+                'id': key,
+                'name': display,
+                'classification': cls['classification'],
+                'what_it_is': cls['what_it_is'],
+                'aliases': []
+            })
+
+        return results
+
     except Exception as e:
         print(f"Error getting ingredient suggestions: {str(e)}")
         return []
