@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef, memo } from 'react'
+import { useState, useEffect, useRef, useCallback, memo } from 'react'
 import { useNavigate, useSearchParams } from 'react-router-dom'
 import { motion, AnimatePresence } from 'framer-motion'
 import axios from 'axios'
@@ -105,6 +105,62 @@ const SORT_OPTIONS = [
   { value: 'name',  label: 'Name A–Z' },
   { value: 'brand', label: 'Brand A–Z' },
 ]
+
+// Horizontal scroll row with left/right arrow buttons
+function ScrollRow({ children, className = '' }) {
+  const ref = useRef(null)
+  const [canLeft, setCanLeft]   = useState(false)
+  const [canRight, setCanRight] = useState(false)
+
+  const update = useCallback(() => {
+    const el = ref.current
+    if (!el) return
+    setCanLeft(el.scrollLeft > 4)
+    setCanRight(el.scrollLeft + el.clientWidth < el.scrollWidth - 4)
+  }, [])
+
+  useEffect(() => {
+    const el = ref.current
+    if (!el) return
+    update()
+    el.addEventListener('scroll', update, { passive: true })
+    const ro = new ResizeObserver(update)
+    ro.observe(el)
+    return () => { el.removeEventListener('scroll', update); ro.disconnect() }
+  }, [update])
+
+  const scroll = (dir) => {
+    ref.current?.scrollBy({ left: dir * 220, behavior: 'smooth' })
+  }
+
+  const ArrowBtn = ({ dir }) => (
+    <button
+      onClick={() => scroll(dir)}
+      className="flex-shrink-0 w-8 h-8 rounded-full border border-gray-200 bg-white shadow-sm flex items-center justify-center text-gray-500 hover:text-gray-800 hover:border-gray-400 transition-all"
+      style={{ minWidth: 32 }}
+      aria-label={dir === -1 ? 'Scroll left' : 'Scroll right'}
+    >
+      {dir === -1 ? '‹' : '›'}
+    </button>
+  )
+
+  return (
+    <div className={`flex items-center gap-2 ${className}`}>
+      {canLeft  && <ArrowBtn dir={-1} />}
+      {!canLeft && <div className="w-8 flex-shrink-0" />}
+      <div
+        ref={ref}
+        className="flex-1 overflow-x-auto pb-1"
+        style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
+      >
+        <style>{`.scroll-hide::-webkit-scrollbar{display:none}`}</style>
+        <div className="flex gap-2 min-w-max">{children}</div>
+      </div>
+      {canRight  && <ArrowBtn dir={1} />}
+      {!canRight && <div className="w-8 flex-shrink-0" />}
+    </div>
+  )
+}
 
 export default function Products() {
   const [searchParams, setSearchParams] = useSearchParams()
@@ -298,27 +354,25 @@ export default function Products() {
       <div className="max-w-7xl mx-auto px-4 py-6">
 
         {/* ── Category pills ── */}
-        <div className="mb-3 overflow-x-auto pb-2" style={{ scrollbarWidth: 'none' }}>
-          <div className="flex gap-2 min-w-max">
+        <ScrollRow className="mb-3">
+          <button
+            onClick={() => handleCategory('')}
+            className="flex items-center gap-1.5 px-4 py-2 rounded-full text-sm font-medium border transition-all whitespace-nowrap"
+            style={!category ? { background: BRAND_BLUE, color: '#fff', borderColor: BRAND_BLUE } : { background: '#fff', color: '#374151', borderColor: '#E5E7EB' }}
+          >
+            🔍 All
+          </button>
+          {allCategories.map(cat => (
             <button
-              onClick={() => handleCategory('')}
+              key={cat}
+              onClick={() => handleCategory(cat)}
               className="flex items-center gap-1.5 px-4 py-2 rounded-full text-sm font-medium border transition-all whitespace-nowrap"
-              style={!category ? { background: BRAND_BLUE, color: '#fff', borderColor: BRAND_BLUE } : { background: '#fff', color: '#374151', borderColor: '#E5E7EB' }}
+              style={category === cat ? { background: BRAND_BLUE, color: '#fff', borderColor: BRAND_BLUE } : { background: '#fff', color: '#374151', borderColor: '#E5E7EB' }}
             >
-              🔍 All
+              {CAT_ICON[cat] || '📦'} {cat}
             </button>
-            {allCategories.map(cat => (
-              <button
-                key={cat}
-                onClick={() => handleCategory(cat)}
-                className="flex items-center gap-1.5 px-4 py-2 rounded-full text-sm font-medium border transition-all whitespace-nowrap"
-                style={category === cat ? { background: BRAND_BLUE, color: '#fff', borderColor: BRAND_BLUE } : { background: '#fff', color: '#374151', borderColor: '#E5E7EB' }}
-              >
-                {CAT_ICON[cat] || '📦'} {cat}
-              </button>
-            ))}
-          </div>
-        </div>
+          ))}
+        </ScrollRow>
 
         {/* ── Brand chips (shown when a category is selected or few brands) ── */}
         <AnimatePresence>
@@ -327,13 +381,12 @@ export default function Products() {
               initial={{ opacity: 0, height: 0 }}
               animate={{ opacity: 1, height: 'auto' }}
               exit={{ opacity: 0, height: 0 }}
-              className="mb-4 overflow-x-auto pb-2"
-              style={{ scrollbarWidth: 'none' }}
+              className="mb-4"
             >
-              <div className="flex gap-2 min-w-max">
+              <ScrollRow>
                 <button
                   onClick={() => handleBrand('')}
-                  className="px-3 py-1.5 rounded-full text-xs font-medium border transition-all"
+                  className="px-3 py-1.5 rounded-full text-xs font-medium border transition-all whitespace-nowrap"
                   style={!brand ? { background: '#1f2937', color: '#fff', borderColor: '#1f2937' } : { background: '#fff', color: '#6b7280', borderColor: '#E5E7EB' }}
                 >
                   All Brands
@@ -348,7 +401,7 @@ export default function Products() {
                     {b}
                   </button>
                 ))}
-              </div>
+              </ScrollRow>
             </motion.div>
           )}
         </AnimatePresence>
