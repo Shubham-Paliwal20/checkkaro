@@ -18,8 +18,9 @@ export default function WriteBlog() {
   const [content,    setContent]    = useState('')
   const [coverUrl,   setCoverUrl]   = useState('')
   const [authorName, setAuthorName] = useState('')
-  const [authorBio,  setAuthorBio]  = useState('')
-  const [submitting, setSubmitting] = useState(false)
+  const [authorBio,    setAuthorBio]    = useState('')
+  const [authorAvatar, setAuthorAvatar] = useState('')
+  const [submitting,   setSubmitting]   = useState(false)
   const [error,      setError]      = useState('')
   const [submitted,  setSubmitted]  = useState(false)
 
@@ -44,10 +45,11 @@ export default function WriteBlog() {
       excerpt,
       category,
       cover_image: coverUrl.trim() || null,
-      author_id:   user.id,
-      author_name: authorName.trim() || user.email.split('@')[0],
-      author_bio:  authorBio.trim() || null,
-      status:      'pending',
+      author_id:     user.id,
+      author_name:   authorName.trim() || user.email.split('@')[0],
+      author_bio:    authorBio.trim() || null,
+      author_avatar: authorAvatar.trim() || null,
+      status:        'pending',
     })
     setSubmitting(false)
     if (e) { setError(e.message); return }
