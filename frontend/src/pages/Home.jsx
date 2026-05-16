@@ -1,5 +1,5 @@
 import { motion } from 'framer-motion'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate, Link } from 'react-router-dom'
 import SearchBar from '../components/SearchBar'
 import ReviewsSection from '../components/ReviewsSection'
 import SEO from '../components/SEO'
@@ -152,9 +152,9 @@ function Home() {
               <p className="text-gray-600 text-sm mb-4 leading-relaxed">
                 Parkho breaks down every ingredient in your favourite Indian packaged foods — from Maggi to biscuits. Understand what each ingredient is and how it is viewed by regulators worldwide.
               </p>
-              <a href="/products" className="text-orange text-sm font-medium hover:underline">
+              <Link to="/products" className="text-orange text-sm font-medium hover:underline">
                 Search a food product →
-              </a>
+              </Link>
             </div>
 
             {/* Cosmetic Analysis */}
@@ -168,9 +168,9 @@ function Home() {
               <p className="text-gray-600 text-sm mb-4 leading-relaxed">
                 From fairness creams to shampoos, Parkho analyses ingredients in Indian personal care and cosmetic products and highlights chemicals commonly avoided in other countries.
               </p>
-              <a href="/products" className="text-primary text-sm font-medium hover:underline">
+              <Link to="/products" className="text-primary text-sm font-medium hover:underline">
                 Search a cosmetic →
-              </a>
+              </Link>
             </div>
 
             {/* Check Ingredient */}
@@ -185,9 +185,9 @@ function Home() {
               <p className="text-gray-600 text-sm mb-4 leading-relaxed">
                 Spotted an unfamiliar ingredient on a label? Type it directly and get a clear plain-English explanation of what it is, where it is found, and its regulatory status globally.
               </p>
-              <a href="/check-ingredient" className="text-orange text-sm font-medium hover:underline">
+              <Link to="/check-ingredient" className="text-orange text-sm font-medium hover:underline">
                 Check an ingredient →
-              </a>
+              </Link>
             </div>
           </div>
         </div>

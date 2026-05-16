@@ -183,6 +183,8 @@ function ProductImageGallery({ imageUrl, images, name, dbPhotos, onDeleteDbPhoto
             src={allImgs[idx]}
             alt={name}
             className="w-full h-full object-contain p-3"
+            fetchpriority="high"
+            decoding="async"
             onError={e => { e.target.style.display = 'none' }}
           />
         )}
@@ -229,7 +231,7 @@ function ProductImageGallery({ imageUrl, images, name, dbPhotos, onDeleteDbPhoto
                   border: i === idx ? '2.5px solid #FF9933' : '2px solid #e5e7eb',
                   background: '#f9fafb', padding: 0, cursor: 'pointer',
                 }}>
-                <img src={src} alt="" style={{ width: '100%', height: '100%', objectFit: 'contain', padding: 3 }} />
+                <img src={src} alt="" loading="lazy" decoding="async" style={{ width: '100%', height: '100%', objectFit: 'contain', padding: 3 }} />
               </button>
               {/* Admin: delete badge on thumbnail for db photos */}
               {isAdmin && isDb && (
