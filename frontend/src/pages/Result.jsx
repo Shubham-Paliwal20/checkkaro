@@ -134,7 +134,7 @@ function enrichIngredients(ingredients) {
   })
 }
 
-function ProductImageGallery({ imageUrl, images, name, dbPhotos, onDeleteDbPhoto, isAdmin, user, onOpenUpload, onNeedLogin }) {
+function ProductImageGallery({ imageUrl, images, name, dbPhotos, onDeleteDbPhoto, onDeleteBackendImage, isAdmin, user, onOpenUpload, onNeedLogin }) {
   const backendImgs = (images && images.length > 0) ? images : (imageUrl ? [imageUrl] : [])
   const dbImgUrls = (dbPhotos || []).map(p => p.image_url)
 
@@ -201,10 +201,18 @@ function ProductImageGallery({ imageUrl, images, name, dbPhotos, onDeleteDbPhoto
           </>
         )}
 
-        {/* Admin: delete current db photo */}
+        {/* Admin: delete current image */}
         {isAdmin && currentDbPhoto && (
           <button
             onClick={() => onDeleteDbPhoto(currentDbPhoto.id)}
+            title="Delete this photo"
+            style={{ position: 'absolute', bottom: 8, right: 8, background: '#dc2626', border: 'none', color: '#fff', borderRadius: 8, padding: '5px 10px', fontSize: 12, fontWeight: 700, cursor: 'pointer', display: 'flex', alignItems: 'center', gap: 4 }}>
+            🗑 Delete
+          </button>
+        )}
+        {isAdmin && !currentDbPhoto && allImgs[idx] && (
+          <button
+            onClick={() => onDeleteBackendImage(allImgs[idx])}
             title="Delete this photo"
             style={{ position: 'absolute', bottom: 8, right: 8, background: '#dc2626', border: 'none', color: '#fff', borderRadius: 8, padding: '5px 10px', fontSize: 12, fontWeight: 700, cursor: 'pointer', display: 'flex', alignItems: 'center', gap: 4 }}>
             🗑 Delete
@@ -233,10 +241,16 @@ function ProductImageGallery({ imageUrl, images, name, dbPhotos, onDeleteDbPhoto
                 }}>
                 <img src={src} alt="" loading="lazy" decoding="async" style={{ width: '100%', height: '100%', objectFit: 'contain', padding: 3 }} />
               </button>
-              {/* Admin: delete badge on thumbnail for db photos */}
+              {/* Admin: delete badge on thumbnail */}
               {isAdmin && isDb && (
                 <button
                   onClick={() => onDeleteDbPhoto((dbPhotos || []).find(p => p.image_url === src)?.id)}
+                  title="Delete"
+                  style={{ position: 'absolute', top: -5, right: -5, width: 16, height: 16, borderRadius: '50%', background: '#dc2626', border: '1.5px solid #fff', color: '#fff', fontSize: 10, cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', lineHeight: 1, padding: 0 }}>×</button>
+              )}
+              {isAdmin && !isDb && (
+                <button
+                  onClick={() => onDeleteBackendImage(src)}
                   title="Delete"
                   style={{ position: 'absolute', top: -5, right: -5, width: 16, height: 16, borderRadius: '50%', background: '#dc2626', border: '1.5px solid #fff', color: '#fff', fontSize: 10, cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', lineHeight: 1, padding: 0 }}>×</button>
               )}
@@ -312,6 +326,22 @@ function Result() {
   const handleDeletePhoto = async (photoId) => {
     const { error } = await supabase.from('product_photos').delete().eq('id', photoId)
     if (!error) setDbPhotos(prev => prev.filter(p => p.id !== photoId))
+  }
+
+  const handleDeleteBackendImage = async (url) => {
+    if (!product?.id) return
+    const currentImages = (product.images && product.images.length > 0) ? product.images : (product.image_url ? [product.image_url] : [])
+    const newImages = currentImages.filter(u => u !== url)
+    const newImageUrl = newImages.length > 0 ? newImages[0] : null
+    const { error } = await supabase
+      .from('ai_extracted_products')
+      .update({ image_url: newImageUrl, images: newImages.length > 0 ? newImages : null })
+      .eq('id', product.id)
+    if (!error) {
+      const updated = { ...product, image_url: newImageUrl, images: newImages.length > 0 ? newImages : null }
+      setProduct(updated)
+      cacheSet(productName.toLowerCase(), updated)
+    }
   }
 
   const handlePhotoSuccess = (msg, isAdminAdd) => {
@@ -575,6 +605,7 @@ function Result() {
               name={product.name}
               dbPhotos={dbPhotos}
               onDeleteDbPhoto={handleDeletePhoto}
+              onDeleteBackendImage={handleDeleteBackendImage}
               isAdmin={isAdmin}
               user={user}
               onOpenUpload={() => setShowPhotoModal(true)}
