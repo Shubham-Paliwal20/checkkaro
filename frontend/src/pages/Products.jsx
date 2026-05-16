@@ -204,7 +204,7 @@ export default function Products() {
               const photoMap = {}
               photos.forEach(ph => { if (!photoMap[ph.product_id]) photoMap[ph.product_id] = ph.image_url })
               setProducts(prev => prev.map(p =>
-                (!p.image_url && photoMap[p.id]) ? { ...p, image_url: photoMap[p.id] } : p
+                photoMap[p.id] ? { ...p, image_url: photoMap[p.id] } : p
               ))
             })
             .catch(() => {})

@@ -221,7 +221,7 @@ function ProductImageGallery({ imageUrl, images, name, dbPhotos, onDeleteDbPhoto
         {/* Admin: delete current image */}
         {isAdmin && currentDbPhoto && (
           <button
-            onClick={() => onDeleteDbPhoto(currentDbPhoto.id)}
+            onClick={() => window.confirm('Delete this uploaded photo?') && onDeleteDbPhoto(currentDbPhoto.id)}
             title="Delete this photo"
             style={{ position: 'absolute', bottom: 8, right: 8, background: '#dc2626', border: 'none', color: '#fff', borderRadius: 8, padding: '5px 10px', fontSize: 12, fontWeight: 700, cursor: 'pointer', display: 'flex', alignItems: 'center', gap: 4 }}>
             🗑 Delete
@@ -229,7 +229,7 @@ function ProductImageGallery({ imageUrl, images, name, dbPhotos, onDeleteDbPhoto
         )}
         {isAdmin && !currentDbPhoto && allImgs[idx] && (
           <button
-            onClick={() => onDeleteBackendImage(allImgs[idx])}
+            onClick={() => window.confirm('Delete this product image? This cannot be undone.') && onDeleteBackendImage(allImgs[idx])}
             title="Delete this photo"
             style={{ position: 'absolute', bottom: 8, right: 8, background: '#dc2626', border: 'none', color: '#fff', borderRadius: 8, padding: '5px 10px', fontSize: 12, fontWeight: 700, cursor: 'pointer', display: 'flex', alignItems: 'center', gap: 4 }}>
             🗑 Delete
@@ -261,13 +261,13 @@ function ProductImageGallery({ imageUrl, images, name, dbPhotos, onDeleteDbPhoto
               {/* Admin: delete badge on thumbnail */}
               {isAdmin && isDb && (
                 <button
-                  onClick={() => onDeleteDbPhoto((dbPhotos || []).find(p => p.image_url === src)?.id)}
+                  onClick={() => window.confirm('Delete this photo?') && onDeleteDbPhoto((dbPhotos || []).find(p => p.image_url === src)?.id)}
                   title="Delete"
                   style={{ position: 'absolute', top: -5, right: -5, width: 16, height: 16, borderRadius: '50%', background: '#dc2626', border: '1.5px solid #fff', color: '#fff', fontSize: 10, cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', lineHeight: 1, padding: 0 }}>×</button>
               )}
               {isAdmin && !isDb && (
                 <button
-                  onClick={() => onDeleteBackendImage(src)}
+                  onClick={() => window.confirm('Delete this image? Cannot be undone.') && onDeleteBackendImage(src)}
                   title="Delete"
                   style={{ position: 'absolute', top: -5, right: -5, width: 16, height: 16, borderRadius: '50%', background: '#dc2626', border: '1.5px solid #fff', color: '#fff', fontSize: 10, cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', lineHeight: 1, padding: 0 }}>×</button>
               )}
