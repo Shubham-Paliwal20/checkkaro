@@ -538,6 +538,20 @@ function Result() {
     return { allIngredients: all, generally_recognised: gr, worth_knowing: wk, commonly_questioned: cq, effectiveGrade }
   }, [product?.ingredients, product?.grade])
 
+  // Auto-correct DB grade when effectiveGrade differs — keeps Products page in sync
+  useEffect(() => {
+    if (!product?.id || !effectiveGrade || effectiveGrade === product?.grade) return
+    supabase.from('ai_extracted_products')
+      .update({ grade: effectiveGrade })
+      .eq('id', product.id)
+      .then(() => {
+        // Update cache so navigating back shows correct grade
+        const updated = { ...product, grade: effectiveGrade }
+        cacheSet(productName.toLowerCase(), updated)
+      })
+      .catch(() => {})
+  }, [product?.id, effectiveGrade, product?.grade])
+
   if (loading) {
     return (
       <div className="min-h-screen flex items-center justify-center">

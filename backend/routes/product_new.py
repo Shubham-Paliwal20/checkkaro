@@ -512,7 +512,7 @@ async def browse_products(
     try:
         def _base_query():
             q_ = supabase.from_("ai_extracted_products") \
-                .select("id, name, brand, category, image_url, verdict, grade, static_key")
+                .select("id, name, brand, category, image_url, images, verdict, grade, static_key")
             if category and category != "All":
                 q_ = q_.eq("category", category)
             if brand and brand != "All":
@@ -545,13 +545,20 @@ async def browse_products(
         if existing is None or (p.get("static_key") and not existing.get("static_key")):
             seen[nn] = p
 
+    def _primary_image(p):
+        url = p.get("image_url")
+        if url:
+            return url
+        imgs = p.get("images") or []
+        return imgs[0] if imgs else None
+
     items = [
         {
             "id":        str(p.get("id", "")),
             "name":      p.get("name", ""),
             "brand":     p.get("brand") or "Unknown",
             "category":  p.get("category") or "General",
-            "image_url": p.get("image_url"),
+            "image_url": _primary_image(p),
             "grade":     p.get("grade") or "C",
             "verdict":   p.get("verdict") or "",
         }
