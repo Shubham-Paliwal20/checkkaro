@@ -15,6 +15,13 @@ const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'https://checkkaro.onr
 
 // Module-level cache — navigating back to a product is instant, no refetch
 const _productCache = new Map()  // productName.lower → product data
+const CACHE_MAX = 40
+function cacheSet(key, value) {
+  if (_productCache.size >= CACHE_MAX && !_productCache.has(key)) {
+    _productCache.delete(_productCache.keys().next().value)
+  }
+  _productCache.set(key, value)
+}
 
 const ADMIN_EMAIL = 'shubhampaliwal5@gmail.com'
 
@@ -364,7 +371,7 @@ function Result() {
           params: { name: productName },
           timeout: 10000,
         })
-        _productCache.set(cacheKey, response.data)
+        cacheSet(cacheKey, response.data)
         setProduct(response.data)
         // Kick off photo fetch immediately without blocking product display
         if (response.data?.id) fetchDbPhotos(response.data.id)
@@ -405,7 +412,7 @@ function Result() {
           confidence: p.static_key ? 'high' : 'medium',
           is_complete: true,
         }
-        _productCache.set(cacheKey, productData)
+        cacheSet(cacheKey, productData)
         setProduct(productData)
         if (p.id) fetchDbPhotos(String(p.id))
         return

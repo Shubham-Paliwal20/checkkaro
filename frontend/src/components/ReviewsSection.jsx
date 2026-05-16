@@ -193,10 +193,16 @@ export default function ReviewsSection() {
 
   const startTimer = () => {
     clearInterval(timerRef.current)
+    if (document.hidden) return
     timerRef.current = setInterval(() => setCurrentIdx(p => (p + 1) % totalPages), 4500)
   }
   const stopTimer = () => clearInterval(timerRef.current)
-  useEffect(() => { startTimer(); return stopTimer }, [totalPages])
+  useEffect(() => {
+    startTimer()
+    const onVisibility = () => document.hidden ? stopTimer() : startTimer()
+    document.addEventListener('visibilitychange', onVisibility)
+    return () => { stopTimer(); document.removeEventListener('visibilitychange', onVisibility) }
+  }, [totalPages])
   const goTo = (idx) => { stopTimer(); setCurrentIdx(idx); startTimer() }
 
   const handleSubmitted = async () => {
