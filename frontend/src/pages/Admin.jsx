@@ -1279,7 +1279,7 @@ export default function Admin() {
     }
   }
 
-  const adminPage = tab === 'photos' ? 'photos' : tab === 'reports' ? 'reports' : tab === 'add' ? 'add' : 'products'
+  const adminPage = tab === 'photos' ? 'photos' : tab === 'reports' ? 'reports' : tab === 'add' ? 'add' : tab === 'blogs' ? 'blogs' : 'products'
 
   return (
     <div style={{ maxWidth: 1100, margin: '0 auto', padding: isMobile ? '20px 14px 48px' : '32px 20px 60px' }}>
