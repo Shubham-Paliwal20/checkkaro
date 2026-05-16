@@ -108,56 +108,72 @@ const SORT_OPTIONS = [
 
 // Horizontal scroll row with left/right arrow buttons
 function ScrollRow({ children, className = '' }) {
-  const ref = useRef(null)
+  const outerRef = useRef(null)
+  const innerRef = useRef(null)
   const [canLeft, setCanLeft]   = useState(false)
   const [canRight, setCanRight] = useState(false)
 
   const update = useCallback(() => {
-    const el = ref.current
+    const el = outerRef.current
     if (!el) return
     setCanLeft(el.scrollLeft > 4)
     setCanRight(el.scrollLeft + el.clientWidth < el.scrollWidth - 4)
   }, [])
 
   useEffect(() => {
-    const el = ref.current
+    const el    = outerRef.current
+    const inner = innerRef.current
     if (!el) return
     update()
     el.addEventListener('scroll', update, { passive: true })
     const ro = new ResizeObserver(update)
     ro.observe(el)
+    if (inner) ro.observe(inner) // fires when async content grows the inner div
     return () => { el.removeEventListener('scroll', update); ro.disconnect() }
   }, [update])
 
   const scroll = (dir) => {
-    ref.current?.scrollBy({ left: dir * 220, behavior: 'smooth' })
+    outerRef.current?.scrollBy({ left: dir * 220, behavior: 'smooth' })
   }
 
-  const ArrowBtn = ({ dir }) => (
-    <button
-      onClick={() => scroll(dir)}
-      className="flex-shrink-0 w-8 h-8 rounded-full border border-gray-200 bg-white shadow-sm flex items-center justify-center text-gray-500 hover:text-gray-800 hover:border-gray-400 transition-all"
-      style={{ minWidth: 32 }}
-      aria-label={dir === -1 ? 'Scroll left' : 'Scroll right'}
-    >
-      {dir === -1 ? '‹' : '›'}
-    </button>
-  )
+  const arrowBase = 'flex-shrink-0 w-8 h-8 rounded-full border bg-white shadow-sm flex items-center justify-center text-base font-bold transition-all'
 
   return (
-    <div className={`flex items-center gap-2 ${className}`}>
-      {canLeft  && <ArrowBtn dir={-1} />}
-      {!canLeft && <div className="w-8 flex-shrink-0" />}
+    <div className={`flex items-center gap-1.5 ${className}`}>
+      <button
+        onClick={() => scroll(-1)}
+        disabled={!canLeft}
+        className={arrowBase}
+        style={{
+          borderColor: canLeft ? '#d1d5db' : 'transparent',
+          color: canLeft ? '#374151' : 'transparent',
+          boxShadow: canLeft ? undefined : 'none',
+          pointerEvents: canLeft ? 'auto' : 'none',
+        }}
+        aria-label="Scroll left"
+      >‹</button>
+
       <div
-        ref={ref}
+        ref={outerRef}
         className="flex-1 overflow-x-auto pb-1"
         style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
       >
-        <style>{`.scroll-hide::-webkit-scrollbar{display:none}`}</style>
-        <div className="flex gap-2 min-w-max">{children}</div>
+        <style>{`div::-webkit-scrollbar{display:none}`}</style>
+        <div ref={innerRef} className="flex gap-2 min-w-max">{children}</div>
       </div>
-      {canRight  && <ArrowBtn dir={1} />}
-      {!canRight && <div className="w-8 flex-shrink-0" />}
+
+      <button
+        onClick={() => scroll(1)}
+        disabled={!canRight}
+        className={arrowBase}
+        style={{
+          borderColor: canRight ? '#d1d5db' : 'transparent',
+          color: canRight ? '#374151' : 'transparent',
+          boxShadow: canRight ? undefined : 'none',
+          pointerEvents: canRight ? 'auto' : 'none',
+        }}
+        aria-label="Scroll right"
+      >›</button>
     </div>
   )
 }
