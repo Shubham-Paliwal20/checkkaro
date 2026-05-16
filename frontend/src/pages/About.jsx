@@ -18,7 +18,8 @@ function About() {
       className="min-h-screen bg-gray-soft"
     >
       {/* Hero */}
-      <section className="bg-navy text-white py-14 sm:py-20 px-4 text-center">
+      <section className="text-white py-14 sm:py-20 px-4 text-center"
+        style={{ background: 'linear-gradient(135deg, #1B3F8A 0%, #2d5bc7 100%)' }}>
         <div className="max-w-3xl mx-auto">
           <h1 className="font-poppins font-bold text-3xl sm:text-4xl md:text-5xl mb-4">
             About Us
