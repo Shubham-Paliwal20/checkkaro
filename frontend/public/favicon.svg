@@ -1,0 +1,20 @@
+<svg width="64" height="64" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- Background circle -->
+  <circle cx="32" cy="32" r="32" fill="#1B3F8A"/>
+  <!-- Magnifying glass lens -->
+  <circle cx="27" cy="27" r="13" fill="white" stroke="#FF9933" strokeWidth="3.5"/>
+  <!-- Product label body -->
+  <rect x="19" y="21" width="8" height="10" rx="1.5" fill="#4A87B8"/>
+  <!-- Label highlight -->
+  <ellipse cx="23" cy="25.5" rx="2" ry="3" fill="white" opacity="0.8"/>
+  <!-- Label top cap -->
+  <rect x="19.5" y="19" width="7" height="2.5" rx="1" fill="#4A87B8"/>
+  <!-- Bottle neck -->
+  <rect x="27" y="19" width="6" height="12" rx="2" fill="#4A87B8"/>
+  <rect x="28" y="17" width="4" height="3" rx="1" fill="#4A87B8"/>
+  <!-- Small box -->
+  <rect x="34.5" y="26" width="5" height="5" rx="1.5" fill="#4A87B8"/>
+  <rect x="35" y="24.5" width="4.5" height="2" rx="1" fill="#4A87B8"/>
+  <!-- Magnifying glass handle -->
+  <line x1="38" y1="38" x2="50" y2="50" stroke="#FF9933" strokeWidth="5" strokeLinecap="round"/>
+</svg>
