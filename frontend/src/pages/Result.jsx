@@ -125,11 +125,28 @@ const UNDISCLOSED_INGREDIENT_RULES = [
 function enrichIngredients(ingredients) {
   return ingredients.map(ing => {
     const trimmed = (ing.name || '').trim()
-    for (const { match, classification, note } of UNDISCLOSED_INGREDIENT_RULES) {
-      if (match.test(trimmed)) {
-        return { ...ing, classification, one_line_note: note }
+
+    // Only apply undisclosed rules if the DB has no specific regulatory data for this ingredient.
+    // A non-empty regulatory_note means the AI already analyzed it — trust that over our generic rules.
+    const hasSpecificData = ing.regulatory_note && ing.regulatory_note.trim().length > 0
+    if (!hasSpecificData) {
+      for (const { match, classification, note } of UNDISCLOSED_INGREDIENT_RULES) {
+        if (match.test(trimmed)) {
+          return { ...ing, classification, one_line_note: note }
+        }
       }
     }
+
+    // Fix DB inconsistencies: if the note says "generally recognised" but the classification
+    // is something stricter, the AI note is the accurate source — fix the classification.
+    if (
+      ing.classification !== 'generally_recognised' &&
+      ing.one_line_note &&
+      /generally\s*recogni[sz]ed|generally\s*recogni[sz]ed as safe/i.test(ing.one_line_note)
+    ) {
+      return { ...ing, classification: 'generally_recognised' }
+    }
+
     return ing
   })
 }
@@ -344,9 +361,17 @@ function Result() {
     }
   }
 
-  const handlePhotoSuccess = (msg, isAdminAdd) => {
+  const handlePhotoSuccess = (msg, isAdminAdd, firstUploadedUrl) => {
     setPhotoToast(msg)
-    if (isAdminAdd && product?.id) fetchDbPhotos(product.id)
+    if (isAdminAdd && product?.id) {
+      fetchDbPhotos(product.id)
+      // Update local product state + cache so the gallery shows the new primary image immediately
+      if (firstUploadedUrl) {
+        const updated = { ...product, image_url: firstUploadedUrl }
+        setProduct(updated)
+        cacheSet(productName.toLowerCase(), updated)
+      }
+    }
     setTimeout(() => setPhotoToast(null), 4000)
   }
 

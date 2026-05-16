@@ -81,7 +81,12 @@ export default function PhotoUploadModal({ productId, productName, currentCount,
           }))
         )
         if (dbErr) throw new Error(dbErr.message)
-        onSuccess(`${uploadedUrls.length} photo(s) added to product.`, true)
+        // Update the primary image_url so Products browse page reflects the new photo
+        await supabase
+          .from('ai_extracted_products')
+          .update({ image_url: uploadedUrls[0].url })
+          .eq('id', productId)
+        onSuccess(`${uploadedUrls.length} photo(s) added to product.`, true, uploadedUrls[0].url)
       } else {
         const { error: dbErr } = await supabase.from('product_photo_submissions').insert({
           product_id: productId,
