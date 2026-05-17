@@ -1646,7 +1646,6 @@ function BlogApprovals() {
   async function fetchBlogs() {
     setLoading(true)
     const { data, error } = await supabase.from('blogs').select('*').eq('status', filter).order('created_at', { ascending: false })
-    console.log('[BlogApprovals] data:', data, 'error:', error)
     setBlogs(data || [])
     setLoading(false)
   }
