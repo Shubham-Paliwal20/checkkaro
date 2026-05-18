@@ -122,9 +122,29 @@ const UNDISCLOSED_INGREDIENT_RULES = [
   },
 ]
 
+// Client-side reclassification overrides — applied to any product loaded from DB.
+// Add entries here whenever the backend ingredient_database.py classification changes
+// so stored products get corrected without needing a full DB re-save.
+const CLASSIFICATION_OVERRIDES = [
+  // pattern (case-insensitive substring match on ingredient name) → corrected classification
+  { pattern: /disodium\s+5['-]?\s*ribonucleotides/i, classification: 'worth_knowing' },
+  { pattern: /\be635\b/i,                              classification: 'worth_knowing' },
+  { pattern: /tbhq|tertiary\s+butylhydroquinone/i,     classification: 'commonly_questioned' },
+  { pattern: /titanium\s+dioxide|\be171\b/i,           classification: 'commonly_questioned' },
+  { pattern: /potassium\s+nitrite|\be249\b/i,          classification: 'commonly_questioned' },
+  { pattern: /amaranth\s+dye|\be123\b/i,               classification: 'commonly_questioned' },
+]
+
 function enrichIngredients(ingredients) {
   return ingredients.map(ing => {
     const trimmed = (ing.name || '').trim()
+
+    // Apply reclassification overrides for ingredients whose DB classification is outdated.
+    for (const { pattern, classification } of CLASSIFICATION_OVERRIDES) {
+      if (pattern.test(trimmed)) {
+        return { ...ing, classification }
+      }
+    }
 
     // Only apply undisclosed rules if the DB has no specific regulatory data for this ingredient.
     // A non-empty regulatory_note means the AI already analyzed it — trust that over our generic rules.
