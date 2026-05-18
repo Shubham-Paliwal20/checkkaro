@@ -322,10 +322,28 @@ export default function Products() {
   return (
     <>
       <SEO
-        title="Product Directory — Browse 600+ Indian Products"
-        description="Browse and search 600+ Indian food and cosmetic products. Filter by category or brand, check ingredients, and see ingredient grades A/B/C/D."
-        keywords="Indian food products list, cosmetic products India, browse product ingredients, FSSAI product database, food product directory India"
+        title="Product Directory — Browse 600+ Indian Food & Cosmetic Products"
+        description="Browse and search 600+ Indian food and cosmetic products. Filter by category or brand, check every ingredient, and see FSSAI-verified A/B/C/D safety grades."
+        keywords="Indian food products list, Indian cosmetics ingredients, FSSAI product database, food product directory India, safe products India, check packaged food India, cosmetic ingredient safety India"
         canonical="/products"
+        structuredData={[
+          {
+            '@context': 'https://schema.org',
+            '@type': 'CollectionPage',
+            name: 'Indian Food & Cosmetic Product Directory',
+            description: 'Browse 600+ Indian food and cosmetic products with full ingredient breakdowns and FSSAI-verified safety grades.',
+            url: 'https://www.parkho.in/products',
+            publisher: { '@type': 'Organization', name: 'Parkho', url: 'https://www.parkho.in' },
+          },
+          {
+            '@context': 'https://schema.org',
+            '@type': 'BreadcrumbList',
+            itemListElement: [
+              { '@type': 'ListItem', position: 1, name: 'Home', item: 'https://www.parkho.in' },
+              { '@type': 'ListItem', position: 2, name: 'Products', item: 'https://www.parkho.in/products' },
+            ],
+          },
+        ]}
       />
     <div className="min-h-screen bg-gray-50">
 

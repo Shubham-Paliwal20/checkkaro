@@ -647,23 +647,47 @@ function Result() {
 
   const grade = effectiveGrade
 
-  const productSEO = product ? {
-    title: `${product.name} Ingredients — Grade ${grade}`,
-    description: `Check ingredients in ${product.name} by ${product.brand || 'Indian brand'}. Ingredient Grade: ${grade}. ${product.verdict || ''} Full ingredient breakdown with FSSAI data.`,
-    keywords: `${product.name} ingredients, ${product.brand || ''} product review, ${product.name} food additives, is ${product.name} safe`,
-    canonical: `/result/${encodeURIComponent(productName)}`,
-    ogImage: product.image_url || undefined,
-    ogType: 'article',
-    structuredData: {
-      '@context': 'https://schema.org',
-      '@type': 'Product',
-      name: product.name,
-      brand: { '@type': 'Brand', name: product.brand || 'Unknown' },
-      description: product.summary || product.verdict,
-      image: product.image_url || undefined,
-      category: product.category,
-    },
-  } : null
+  const productSEO = product ? (() => {
+    const cqCount = all.filter(i => i.classification === 'commonly_questioned').length
+    const wkCount = all.filter(i => i.classification === 'worth_knowing').length
+    const ingList = all.slice(0, 8).map(i => i.name).join(', ')
+    const desc = `${product.name} by ${product.brand || 'Indian brand'} — Ingredient Grade ${grade}. Contains ${all.length} ingredients including ${ingList}. ${wkCount > 0 ? `${wkCount} ingredients worth knowing.` : ''} ${cqCount > 0 ? `${cqCount} commonly questioned ingredients.` : ''} Full FSSAI-verified ingredient breakdown.`.trim()
+    return {
+      title: `${product.name} Ingredients — Is It Safe? Grade ${grade} | Parkho`,
+      description: desc.slice(0, 155),
+      keywords: `${product.name} ingredients, is ${product.name} safe, ${product.brand || ''} ingredients, ${product.name} food additives, ${product.name} FSSAI, check ${product.name}`,
+      canonical: `/result/${encodeURIComponent(productName)}`,
+      ogImage: product.image_url || undefined,
+      ogType: 'article',
+      structuredData: [
+        {
+          '@context': 'https://schema.org',
+          '@type': 'Product',
+          name: product.name,
+          brand: { '@type': 'Brand', name: product.brand || 'Unknown' },
+          description: product.summary || product.verdict || desc,
+          image: product.image_url || undefined,
+          category: product.category,
+          url: `https://www.parkho.in/result/${encodeURIComponent(productName)}`,
+          additionalProperty: [
+            { '@type': 'PropertyValue', name: 'Ingredient Grade', value: grade },
+            { '@type': 'PropertyValue', name: 'Total Ingredients', value: String(all.length) },
+            { '@type': 'PropertyValue', name: 'Commonly Questioned', value: String(cqCount) },
+            { '@type': 'PropertyValue', name: 'FSSAI Verified', value: 'Yes' },
+          ],
+        },
+        {
+          '@context': 'https://schema.org',
+          '@type': 'BreadcrumbList',
+          itemListElement: [
+            { '@type': 'ListItem', position: 1, name: 'Home', item: 'https://www.parkho.in' },
+            { '@type': 'ListItem', position: 2, name: 'Products', item: 'https://www.parkho.in/products' },
+            { '@type': 'ListItem', position: 3, name: product.name, item: `https://www.parkho.in/result/${encodeURIComponent(productName)}` },
+          ],
+        },
+      ],
+    }
+  })() : null
 
   return (
     <>

@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react'
 import { useParams, useNavigate, Link } from 'react-router-dom'
 import { supabase } from '../lib/supabaseClient'
 import { STATIC_BLOGS } from './Blog'
+import SEO from '../components/SEO'
 
 const CAT_COLORS = {
   'Food':           { bg: '#fff7ed', text: '#ea580c' },
@@ -97,8 +98,55 @@ export default function BlogPost() {
   const catColor = CAT_COLORS[blog.category] || { bg: '#f3f4f6', text: '#374151' }
   const readTime = Math.max(1, Math.ceil(blog.content.split(/\s+/).length / 200))
   const authorInfo = AUTHOR_BIO[blog.author_name] || null
+  const publishDate = blog.created_at ? new Date(blog.created_at).toISOString() : new Date().toISOString()
+  const excerpt = blog.excerpt || blog.content.replace(/\*\*/g, '').slice(0, 160)
+
+  const articleSchema = {
+    '@context': 'https://schema.org',
+    '@type': 'BlogPosting',
+    headline: blog.title,
+    description: excerpt,
+    image: blog.cover_image || 'https://www.parkho.in/og-image.png',
+    datePublished: publishDate,
+    dateModified: publishDate,
+    author: {
+      '@type': 'Person',
+      name: blog.author_name || 'Parkho Editorial',
+      description: authorInfo?.bio || undefined,
+    },
+    publisher: {
+      '@type': 'Organization',
+      name: 'Parkho',
+      url: 'https://www.parkho.in',
+      logo: { '@type': 'ImageObject', url: 'https://www.parkho.in/favicon.svg' },
+    },
+    mainEntityOfPage: { '@type': 'WebPage', '@id': `https://www.parkho.in/blog/${slug}` },
+    articleSection: blog.category,
+    wordCount: blog.content.split(/\s+/).length,
+    inLanguage: 'en-IN',
+  }
+
+  const breadcrumbSchema = {
+    '@context': 'https://schema.org',
+    '@type': 'BreadcrumbList',
+    itemListElement: [
+      { '@type': 'ListItem', position: 1, name: 'Home', item: 'https://www.parkho.in' },
+      { '@type': 'ListItem', position: 2, name: 'Blog', item: 'https://www.parkho.in/blog' },
+      { '@type': 'ListItem', position: 3, name: blog.title, item: `https://www.parkho.in/blog/${slug}` },
+    ],
+  }
 
   return (
+    <>
+    <SEO
+      title={blog.title}
+      description={excerpt}
+      keywords={`${blog.category} India, ${blog.title.split(' ').slice(0, 5).join(' ')}, food ingredients, Parkho blog`}
+      canonical={`/blog/${slug}`}
+      ogImage={blog.cover_image || undefined}
+      ogType="article"
+      structuredData={[articleSchema, breadcrumbSchema]}
+    />
     <div className="min-h-screen bg-gray-50">
 
       {/* ── HERO / COVER ── */}
@@ -289,5 +337,6 @@ export default function BlogPost() {
         </div>
       </div>
     </div>
+    </>
   )
 }

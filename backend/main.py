@@ -4,7 +4,7 @@ from collections import defaultdict
 from fastapi import FastAPI, Request
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.middleware.gzip import GZipMiddleware
-from fastapi.responses import JSONResponse
+from fastapi.responses import JSONResponse, Response
 from starlette.middleware.base import BaseHTTPMiddleware
 from dotenv import load_dotenv
 
@@ -125,6 +125,99 @@ async def health_check():
 @app.get("/")
 async def root():
     return {"message": "Welcome to Parkho API"}
+
+
+@app.get("/sitemap-products.xml", include_in_schema=False)
+async def sitemap_products():
+    """Dynamic sitemap of all products fetched from Supabase."""
+    import httpx
+    SUPABASE_URL = os.getenv("SUPABASE_URL", "")
+    SUPABASE_KEY = os.getenv("SUPABASE_SERVICE_KEY") or os.getenv("SUPABASE_KEY", "")
+    SITE = "https://www.parkho.in"
+
+    urls = []
+    if SUPABASE_URL and SUPABASE_KEY:
+        try:
+            async with httpx.AsyncClient(timeout=10) as client:
+                resp = await client.get(
+                    f"{SUPABASE_URL}/rest/v1/products",
+                    params={"select": "name,updated_at", "order": "updated_at.desc", "limit": "2000"},
+                    headers={"apikey": SUPABASE_KEY, "Authorization": f"Bearer {SUPABASE_KEY}"},
+                )
+                if resp.status_code == 200:
+                    for p in resp.json():
+                        name = (p.get("name") or "").strip()
+                        if not name:
+                            continue
+                        from urllib.parse import quote
+                        lastmod = (p.get("updated_at") or "")[:10] or "2025-01-01"
+                        urls.append(f"""  <url>
+    <loc>{SITE}/result/{quote(name)}</loc>
+    <lastmod>{lastmod}</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>""")
+        except Exception:
+            pass
+
+    xml = '<?xml version="1.0" encoding="UTF-8"?>\n'
+    xml += '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n'
+    xml += "\n".join(urls)
+    xml += "\n</urlset>"
+    return Response(content=xml, media_type="application/xml")
+
+
+@app.get("/sitemap-blogs.xml", include_in_schema=False)
+async def sitemap_blogs():
+    """Dynamic sitemap of all approved blog posts from Supabase."""
+    import httpx
+    SUPABASE_URL = os.getenv("SUPABASE_URL", "")
+    SUPABASE_KEY = os.getenv("SUPABASE_SERVICE_KEY") or os.getenv("SUPABASE_KEY", "")
+    SITE = "https://www.parkho.in"
+
+    static_slugs = [
+        ("static-1", "2025-01-01"),
+        ("static-2", "2025-01-01"),
+        ("static-3", "2025-01-01"),
+        ("static-4", "2025-01-01"),
+        ("static-5", "2025-01-01"),
+        ("static-6", "2025-01-01"),
+    ]
+    urls = [f"""  <url>
+    <loc>{SITE}/blog/{slug}</loc>
+    <lastmod>{date}</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>""" for slug, date in static_slugs]
+
+    if SUPABASE_URL and SUPABASE_KEY:
+        try:
+            async with httpx.AsyncClient(timeout=10) as client:
+                resp = await client.get(
+                    f"{SUPABASE_URL}/rest/v1/blogs",
+                    params={"select": "slug,updated_at", "status": "eq.approved", "order": "updated_at.desc", "limit": "1000"},
+                    headers={"apikey": SUPABASE_KEY, "Authorization": f"Bearer {SUPABASE_KEY}"},
+                )
+                if resp.status_code == 200:
+                    for b in resp.json():
+                        slug = (b.get("slug") or "").strip()
+                        if not slug:
+                            continue
+                        lastmod = (b.get("updated_at") or "")[:10] or "2025-01-01"
+                        urls.append(f"""  <url>
+    <loc>{SITE}/blog/{slug}</loc>
+    <lastmod>{lastmod}</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>""")
+        except Exception:
+            pass
+
+    xml = '<?xml version="1.0" encoding="UTF-8"?>\n'
+    xml += '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n'
+    xml += "\n".join(urls)
+    xml += "\n</urlset>"
+    return Response(content=xml, media_type="application/xml")
 
 
 if __name__ == "__main__":

@@ -1,4 +1,6 @@
 User-agent: *
 Allow: /
+Disallow: /admin
+Disallow: /write-blog
 
 Sitemap: https://www.parkho.in/sitemap.xml

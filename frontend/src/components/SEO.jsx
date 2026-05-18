@@ -18,6 +18,7 @@ export default function SEO({
 }) {
   const fullTitle = title ? `${title} | ${SITE_NAME}` : DEFAULT_TITLE
   const canonicalUrl = canonical ? `${SITE_URL}${canonical}` : SITE_URL
+  const schemas = structuredData ? (Array.isArray(structuredData) ? structuredData : [structuredData]) : []
 
   return (
     <Helmet>
@@ -42,12 +43,10 @@ export default function SEO({
       <meta name="twitter:description" content={description} />
       <meta name="twitter:image" content={ogImage} />
 
-      {/* Structured Data */}
-      {structuredData && (
-        <script type="application/ld+json">
-          {JSON.stringify(structuredData)}
-        </script>
-      )}
+      {/* Structured Data — supports single object or array of schemas */}
+      {schemas.map((sd, i) => (
+        <script key={i} type="application/ld+json">{JSON.stringify(sd)}</script>
+      ))}
     </Helmet>
   )
 }

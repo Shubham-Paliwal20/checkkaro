@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+
+  <!-- Core pages -->
+  <url>
+    <loc>https://www.parkho.in/</loc>
+    <lastmod>2025-05-18</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>1.0</priority>
+  </url>
+  <url>
+    <loc>https://www.parkho.in/products</loc>
+    <lastmod>2025-05-18</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://www.parkho.in/check-ingredient</loc>
+    <lastmod>2025-05-18</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://www.parkho.in/blog</loc>
+    <lastmod>2025-05-18</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://www.parkho.in/about</loc>
+    <lastmod>2025-05-18</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.5</priority>
+  </url>
+
+  <!-- Static blog posts -->
+  <url>
+    <loc>https://www.parkho.in/blog/static-1</loc>
+    <lastmod>2025-01-01</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://www.parkho.in/blog/static-2</loc>
+    <lastmod>2025-01-01</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://www.parkho.in/blog/static-3</loc>
+    <lastmod>2025-01-01</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://www.parkho.in/blog/static-4</loc>
+    <lastmod>2025-01-01</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://www.parkho.in/blog/static-5</loc>
+    <lastmod>2025-01-01</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://www.parkho.in/blog/static-6</loc>
+    <lastmod>2025-01-01</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+
+  <!-- High-traffic product pages (popular Indian products) -->
+  <url><loc>https://www.parkho.in/result/Maggi%20Masala%20Noodles</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://www.parkho.in/result/Lay%27s%20Classic%20Salted</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://www.parkho.in/result/Oreo%20Original</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://www.parkho.in/result/Parle-G%20Biscuits</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://www.parkho.in/result/Britannia%20Good%20Day%20Cashew</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://www.parkho.in/result/Cadbury%20Dairy%20Milk</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://www.parkho.in/result/KitKat%204%20Finger</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://www.parkho.in/result/Amul%20Butter</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://www.parkho.in/result/Mother%20Dairy%20Curd</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://www.parkho.in/result/Sunfeast%20Dark%20Fantasy</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://www.parkho.in/result/Haldiram%27s%20Bhujia</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://www.parkho.in/result/Kurkure%20Masala%20Munch</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://www.parkho.in/result/Dove%20Body%20Wash</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://www.parkho.in/result/Cetaphil%20Moisturising%20Lotion</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://www.parkho.in/result/Himalaya%20Neem%20Face%20Wash</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://www.parkho.in/result/Mamaearth%20Onion%20Shampoo</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://www.parkho.in/result/Nivea%20Soft%20Moisturising%20Cream</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://www.parkho.in/result/Garnier%20Micellar%20Water</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://www.parkho.in/result/Head%20%26%20Shoulders%20Anti-Dandruff%20Shampoo</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://www.parkho.in/result/Colgate%20Strong%20Teeth%20Toothpaste</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
+
+</urlset>

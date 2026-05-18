@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { supabase } from '../lib/supabaseClient'
 import { useAuth } from '../context/AuthContext'
+import SEO from '../components/SEO'
 
 const CATEGORIES = ['All', 'Food', 'Cosmetics', 'Health', 'Lifestyle', 'Product Review']
 
@@ -341,7 +342,32 @@ export default function Blog() {
   const sideBlogs = filtered.slice(1, 4)
   const gridBlogs = filtered.slice(4)
 
+  const blogListSchema = {
+    '@context': 'https://schema.org',
+    '@type': 'CollectionPage',
+    name: 'Parkho Blog — Food, Cosmetics & Healthy Living',
+    description: 'Articles about food ingredients, cosmetic safety, E-numbers, FSSAI regulations and healthy living in India.',
+    url: 'https://www.parkho.in/blog',
+    publisher: { '@type': 'Organization', name: 'Parkho', url: 'https://www.parkho.in' },
+    hasPart: [...STATIC_BLOGS, ...(blogs || [])].slice(0, 10).map(b => ({
+      '@type': 'BlogPosting',
+      headline: b.title,
+      url: `https://www.parkho.in/blog/${b.slug}`,
+      datePublished: b.created_at || '2025-01-01',
+      author: { '@type': 'Person', name: b.author_name || 'Parkho Editorial' },
+    })),
+  }
+
   return (
+    <>
+    <SEO
+      title="Blog — Food, Cosmetics & Healthy Living"
+      description="Read expert articles about food ingredients, E-numbers, cosmetic safety, FSSAI regulations and healthy choices for Indian consumers. Written by nutritionists and consumer health experts."
+      keywords="food ingredients blog India, cosmetic safety articles, E numbers explained India, FSSAI food additives, healthy eating India, Parkho blog"
+      canonical="/blog"
+      ogType="website"
+      structuredData={blogListSchema}
+    />
     <div className="min-h-screen bg-gray-50">
 
       {/* ── HERO BANNER ── */}
@@ -563,5 +589,6 @@ export default function Blog() {
 
       </div>
     </div>
+    </>
   )
 }

@@ -215,9 +215,30 @@ function CheckIngredient() {
     <>
       <SEO
         title="Check Any Ingredient — Food Additives & E-Numbers Explained"
-        description="Look up any food additive, E-number, or cosmetic ingredient. Understand what it is, why it's used, and its regulatory status in India."
-        keywords="food additives checker India, E numbers explained, check ingredient safety, food preservatives India, what is E102, what is MSG, cosmetic chemicals checker"
+        description="Look up any food additive, E-number or INS number. Know if it's safe, questionable or harmful — with FSSAI, EU and WHO regulatory context. Search 672+ ingredients."
+        keywords="food additives checker India, E numbers explained India, INS numbers food, check ingredient safety, food preservatives India, what is E102, what is MSG, cosmetic chemicals checker, FSSAI permitted additives"
         canonical="/check-ingredient"
+        structuredData={[
+          {
+            '@context': 'https://schema.org',
+            '@type': 'FAQPage',
+            mainEntity: [
+              { '@type': 'Question', name: 'What are E-numbers in food?', acceptedAnswer: { '@type': 'Answer', text: 'E-numbers are codes for food additives approved for use in the European Union. They are the same as INS numbers used by CODEX and FSSAI in India. For example, E621 is MSG (monosodium glutamate) and E102 is Tartrazine (a yellow dye).' } },
+              { '@type': 'Question', name: 'How do I search for an ingredient by E-number?', acceptedAnswer: { '@type': 'Answer', text: 'Type the E-number (e.g. E621, E102) or INS number (e.g. INS 621) directly into the search box. Parkho will find the ingredient and explain what it is, its safety status, and its regulatory limits in India.' } },
+              { '@type': 'Question', name: 'Which food additives are banned in India?', acceptedAnswer: { '@type': 'Answer', text: 'India (FSSAI) bans certain additives including brominated vegetable oil, potassium bromate in bread, and some azo dyes. Parkho flags ingredients that are banned or restricted, and shows their status under FSSAI regulations.' } },
+              { '@type': 'Question', name: 'Is MSG (E621) safe?', acceptedAnswer: { '@type': 'Answer', text: 'Yes — MSG (Monosodium Glutamate / E621) is classified as Generally Recognised as Safe (GRAS) by the FDA and permitted by FSSAI, EU and WHO. It occurs naturally in parmesan cheese, tomatoes and soy sauce. The "Chinese Restaurant Syndrome" has not been confirmed in controlled scientific studies.' } },
+              { '@type': 'Question', name: 'What does "commonly questioned" mean?', acceptedAnswer: { '@type': 'Answer', text: '"Commonly Questioned" ingredients (shown in red on Parkho) are those with significant safety concerns — banned in some countries, linked to health risks in studies, or with regulatory restrictions. Examples include tartrazine (E102), sodium nitrite (E250), and TBHQ (E319).' } },
+            ],
+          },
+          {
+            '@context': 'https://schema.org',
+            '@type': 'BreadcrumbList',
+            itemListElement: [
+              { '@type': 'ListItem', position: 1, name: 'Home', item: 'https://www.parkho.in' },
+              { '@type': 'ListItem', position: 2, name: 'Check Ingredient', item: 'https://www.parkho.in/check-ingredient' },
+            ],
+          },
+        ]}
       />
     <motion.div
       initial={{ opacity: 0 }}
