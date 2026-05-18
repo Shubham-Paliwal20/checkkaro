@@ -141,27 +141,6 @@ async def root():
     return {"message": "Welcome to Parkho API"}
 
 
-@app.get("/sitemap-debug", include_in_schema=False)
-async def sitemap_debug():
-    """Temporary debug endpoint — remove after fixing sitemaps."""
-    info = {
-        "sb_client_ready": _sb_client is not None,
-        "SUPABASE_URL_set": bool(os.getenv("SUPABASE_URL")),
-        "SUPABASE_ANON_KEY_set": bool(os.getenv("SUPABASE_ANON_KEY")),
-    }
-    if _sb_client:
-        try:
-            r = _sb_client.table("products_catalog").select("name").limit(3).execute()
-            info["products_catalog_sample"] = [p["name"] for p in r.data]
-        except Exception as e:
-            info["products_catalog_error"] = str(e)
-        try:
-            r = _sb_client.table("blogs").select("slug").eq("status", "approved").limit(3).execute()
-            info["blogs_sample"] = [b["slug"] for b in r.data]
-        except Exception as e:
-            info["blogs_error"] = str(e)
-    return info
-
 
 @app.get("/sitemap-products.xml", include_in_schema=False)
 async def sitemap_products():
