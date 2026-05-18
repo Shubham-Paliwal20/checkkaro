@@ -648,10 +648,10 @@ function Result() {
   const grade = effectiveGrade
 
   const productSEO = product ? (() => {
-    const cqCount = all.filter(i => i.classification === 'commonly_questioned').length
-    const wkCount = all.filter(i => i.classification === 'worth_knowing').length
-    const ingList = all.slice(0, 8).map(i => i.name).join(', ')
-    const desc = `${product.name} by ${product.brand || 'Indian brand'} — Ingredient Grade ${grade}. Contains ${all.length} ingredients including ${ingList}. ${wkCount > 0 ? `${wkCount} ingredients worth knowing.` : ''} ${cqCount > 0 ? `${cqCount} commonly questioned ingredients.` : ''} Full FSSAI-verified ingredient breakdown.`.trim()
+    const cqCount = allIngredients.filter(i => i.classification === 'commonly_questioned').length
+    const wkCount = allIngredients.filter(i => i.classification === 'worth_knowing').length
+    const ingList = allIngredients.slice(0, 8).map(i => i.name).join(', ')
+    const desc = `${product.name} by ${product.brand || 'Indian brand'} — Ingredient Grade ${grade}. Contains ${allIngredients.length} ingredients including ${ingList}. ${wkCount > 0 ? `${wkCount} ingredients worth knowing.` : ''} ${cqCount > 0 ? `${cqCount} commonly questioned ingredients.` : ''} Full FSSAI-verified ingredient breakdown.`.trim()
     return {
       title: `${product.name} Ingredients — Is It Safe? Grade ${grade} | Parkho`,
       description: desc.slice(0, 155),
@@ -671,7 +671,7 @@ function Result() {
           url: `https://www.parkho.in/result/${encodeURIComponent(productName)}`,
           additionalProperty: [
             { '@type': 'PropertyValue', name: 'Ingredient Grade', value: grade },
-            { '@type': 'PropertyValue', name: 'Total Ingredients', value: String(all.length) },
+            { '@type': 'PropertyValue', name: 'Total Ingredients', value: String(allIngredients.length) },
             { '@type': 'PropertyValue', name: 'Commonly Questioned', value: String(cqCount) },
             { '@type': 'PropertyValue', name: 'FSSAI Verified', value: 'Yes' },
           ],
