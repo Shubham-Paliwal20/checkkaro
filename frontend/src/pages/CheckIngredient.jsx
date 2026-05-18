@@ -234,8 +234,8 @@ function CheckIngredient() {
             '@context': 'https://schema.org',
             '@type': 'BreadcrumbList',
             itemListElement: [
-              { '@type': 'ListItem', position: 1, name: 'Home', item: 'https://www.parkho.in' },
-              { '@type': 'ListItem', position: 2, name: 'Check Ingredient', item: 'https://www.parkho.in/check-ingredient' },
+              { '@type': 'ListItem', position: 1, name: 'Home', item: 'https://parkho.in' },
+              { '@type': 'ListItem', position: 2, name: 'Check Ingredient', item: 'https://parkho.in/check-ingredient' },
             ],
           },
         ]}

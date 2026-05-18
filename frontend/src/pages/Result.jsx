@@ -668,7 +668,7 @@ function Result() {
           description: product.summary || product.verdict || desc,
           image: product.image_url || undefined,
           category: product.category,
-          url: `https://www.parkho.in/result/${encodeURIComponent(productName)}`,
+          url: `https://parkho.in/result/${encodeURIComponent(productName)}`,
           additionalProperty: [
             { '@type': 'PropertyValue', name: 'Ingredient Grade', value: grade },
             { '@type': 'PropertyValue', name: 'Total Ingredients', value: String(all.length) },
@@ -680,9 +680,9 @@ function Result() {
           '@context': 'https://schema.org',
           '@type': 'BreadcrumbList',
           itemListElement: [
-            { '@type': 'ListItem', position: 1, name: 'Home', item: 'https://www.parkho.in' },
-            { '@type': 'ListItem', position: 2, name: 'Products', item: 'https://www.parkho.in/products' },
-            { '@type': 'ListItem', position: 3, name: product.name, item: `https://www.parkho.in/result/${encodeURIComponent(productName)}` },
+            { '@type': 'ListItem', position: 1, name: 'Home', item: 'https://parkho.in' },
+            { '@type': 'ListItem', position: 2, name: 'Products', item: 'https://parkho.in/products' },
+            { '@type': 'ListItem', position: 3, name: product.name, item: `https://parkho.in/result/${encodeURIComponent(productName)}` },
           ],
         },
       ],

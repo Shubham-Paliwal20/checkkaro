@@ -3,4 +3,4 @@ Allow: /
 Disallow: /admin
 Disallow: /write-blog
 
-Sitemap: https://www.parkho.in/sitemap.xml
+Sitemap: https://parkho.in/sitemap.xml

@@ -1,7 +1,7 @@
 import { Helmet } from 'react-helmet-async'
 
 const SITE_NAME = 'Parkho'
-const SITE_URL = 'https://www.parkho.in'
+const SITE_URL = 'https://parkho.in'
 const DEFAULT_OG_IMAGE = `${SITE_URL}/og-image.png`
 const DEFAULT_TITLE = 'Parkho — Check Ingredients in Indian Food & Cosmetic Products'
 const DEFAULT_DESC = 'Check ingredients in any Indian food or cosmetic product. Get a simple breakdown of what\'s safe, questionable, or harmful — based on FSSAI, WHO & peer-reviewed research.'

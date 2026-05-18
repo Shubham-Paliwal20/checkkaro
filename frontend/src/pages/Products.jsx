@@ -332,15 +332,15 @@ export default function Products() {
             '@type': 'CollectionPage',
             name: 'Indian Food & Cosmetic Product Directory',
             description: 'Browse 600+ Indian food and cosmetic products with full ingredient breakdowns and FSSAI-verified safety grades.',
-            url: 'https://www.parkho.in/products',
-            publisher: { '@type': 'Organization', name: 'Parkho', url: 'https://www.parkho.in' },
+            url: 'https://parkho.in/products',
+            publisher: { '@type': 'Organization', name: 'Parkho', url: 'https://parkho.in' },
           },
           {
             '@context': 'https://schema.org',
             '@type': 'BreadcrumbList',
             itemListElement: [
-              { '@type': 'ListItem', position: 1, name: 'Home', item: 'https://www.parkho.in' },
-              { '@type': 'ListItem', position: 2, name: 'Products', item: 'https://www.parkho.in/products' },
+              { '@type': 'ListItem', position: 1, name: 'Home', item: 'https://parkho.in' },
+              { '@type': 'ListItem', position: 2, name: 'Products', item: 'https://parkho.in/products' },
             ],
           },
         ]}
