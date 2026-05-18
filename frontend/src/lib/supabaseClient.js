@@ -18,3 +18,19 @@ export const supabase = createClient(
     },
   }
 )
+
+// Force session refresh when the user returns to the tab after being away.
+// Browsers throttle background tabs — the auto-refresh timer may not fire,
+// leaving the JWT expired and all Supabase queries silently failing.
+let _hiddenAt = 0
+document.addEventListener('visibilitychange', () => {
+  if (document.hidden) {
+    _hiddenAt = Date.now()
+  } else {
+    const awayMs = Date.now() - _hiddenAt
+    // If away for more than 4 minutes, the JWT may need refreshing
+    if (_hiddenAt > 0 && awayMs > 4 * 60 * 1000) {
+      supabase.auth.refreshSession().catch(() => {})
+    }
+  }
+})

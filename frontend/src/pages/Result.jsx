@@ -14,13 +14,20 @@ import SEO from '../components/SEO'
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'https://checkkaro.onrender.com'
 
 // Module-level cache — navigating back to a product is instant, no refetch
-const _productCache = new Map()  // productName.lower → product data
+const _productCache = new Map()  // productName.lower → { data, ts }
 const CACHE_MAX = 40
+const CACHE_TTL_MS = 10 * 60 * 1000  // 10 min — matches Render's ~15min idle window
 function cacheSet(key, value) {
   if (_productCache.size >= CACHE_MAX && !_productCache.has(key)) {
     _productCache.delete(_productCache.keys().next().value)
   }
-  _productCache.set(key, value)
+  _productCache.set(key, { data: value, ts: Date.now() })
+}
+function cacheGet(key) {
+  const entry = _productCache.get(key)
+  if (!entry) return null
+  if (Date.now() - entry.ts > CACHE_TTL_MS) { _productCache.delete(key); return null }
+  return entry.data
 }
 
 const ADMIN_EMAIL = 'shubhampaliwal5@gmail.com'
@@ -352,6 +359,25 @@ function Result() {
     fetchProduct()
   }, [productName])
 
+  // Re-fetch when user returns to the tab after a long idle.
+  // Render.com free tier spins down after ~15 min — if the user was away longer
+  // than the cache TTL, the cached data is already expired so fetchProduct()
+  // will hit the network again, warming up the backend automatically.
+  useEffect(() => {
+    let hiddenAt = 0
+    const onVisibility = () => {
+      if (document.hidden) {
+        hiddenAt = Date.now()
+      } else if (hiddenAt > 0 && Date.now() - hiddenAt > CACHE_TTL_MS) {
+        // Cache TTL expired while away — re-fetch so stale data isn't shown
+        // and the Render dyno is warmed up before the user interacts.
+        fetchProduct()
+      }
+    }
+    document.addEventListener('visibilitychange', onVisibility)
+    return () => document.removeEventListener('visibilitychange', onVisibility)
+  }, [productName])
+
   const fetchDbPhotos = async (productId) => {
     try {
       const { data } = await supabase.from('product_photos')
@@ -436,18 +462,31 @@ function Result() {
 
       // ── Cache hit → instant render ───────────────────────────────────────
       const cacheKey = productName.toLowerCase()
-      if (_productCache.has(cacheKey)) {
-        setProduct(_productCache.get(cacheKey))
+      const cached = cacheGet(cacheKey)
+      if (cached) {
+        setProduct(cached)
         setLoading(false)
         return
       }
 
-      // Try backend first — short timeout so cold Render starts fail fast to fallback
+      // Try backend — retry once with a longer timeout to handle Render cold starts
+      const tryBackend = async (timeout) => axios.get(`${API_BASE_URL}/api/product/search`, {
+        params: { name: productName },
+        timeout,
+      })
       try {
-        const response = await axios.get(`${API_BASE_URL}/api/product/search`, {
-          params: { name: productName },
-          timeout: 10000,
-        })
+        let response
+        try {
+          response = await tryBackend(10000)
+        } catch (firstErr) {
+          // Cold start: timed out or network hiccup — wait briefly then retry
+          if (firstErr.code === 'ECONNABORTED' || firstErr.code === 'ERR_NETWORK') {
+            await new Promise(r => setTimeout(r, 2000))
+            response = await tryBackend(25000)
+          } else {
+            throw firstErr
+          }
+        }
         cacheSet(cacheKey, response.data)
         setProduct(response.data)
         // Kick off photo fetch immediately without blocking product display
