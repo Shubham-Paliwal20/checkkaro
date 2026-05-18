@@ -349,7 +349,7 @@ export default function Blog() {
     description: 'Articles about food ingredients, cosmetic safety, E-numbers, FSSAI regulations and healthy living in India.',
     url: 'https://www.parkho.in/blog',
     publisher: { '@type': 'Organization', name: 'Parkho', url: 'https://www.parkho.in' },
-    hasPart: [...STATIC_BLOGS, ...(blogs || [])].slice(0, 10).map(b => ({
+    hasPart: [...STATIC_BLOGS, ...dbBlogs].slice(0, 10).map(b => ({
       '@type': 'BlogPosting',
       headline: b.title,
       url: `https://www.parkho.in/blog/${b.slug}`,
