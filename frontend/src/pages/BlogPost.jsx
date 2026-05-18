@@ -106,7 +106,7 @@ export default function BlogPost() {
     '@type': 'BlogPosting',
     headline: blog.title,
     description: excerpt,
-    image: blog.cover_image || 'https://parkho.in/og-image.png',
+    image: blog.cover_image || 'https://www.parkho.in/og-image.png',
     datePublished: publishDate,
     dateModified: publishDate,
     author: {
@@ -117,10 +117,10 @@ export default function BlogPost() {
     publisher: {
       '@type': 'Organization',
       name: 'Parkho',
-      url: 'https://parkho.in',
-      logo: { '@type': 'ImageObject', url: 'https://parkho.in/favicon.svg' },
+      url: 'https://www.parkho.in',
+      logo: { '@type': 'ImageObject', url: 'https://www.parkho.in/favicon.svg' },
     },
-    mainEntityOfPage: { '@type': 'WebPage', '@id': `https://parkho.in/blog/${slug}` },
+    mainEntityOfPage: { '@type': 'WebPage', '@id': `https://www.parkho.in/blog/${slug}` },
     articleSection: blog.category,
     wordCount: blog.content.split(/\s+/).length,
     inLanguage: 'en-IN',
@@ -130,9 +130,9 @@ export default function BlogPost() {
     '@context': 'https://schema.org',
     '@type': 'BreadcrumbList',
     itemListElement: [
-      { '@type': 'ListItem', position: 1, name: 'Home', item: 'https://parkho.in' },
-      { '@type': 'ListItem', position: 2, name: 'Blog', item: 'https://parkho.in/blog' },
-      { '@type': 'ListItem', position: 3, name: blog.title, item: `https://parkho.in/blog/${slug}` },
+      { '@type': 'ListItem', position: 1, name: 'Home', item: 'https://www.parkho.in' },
+      { '@type': 'ListItem', position: 2, name: 'Blog', item: 'https://www.parkho.in/blog' },
+      { '@type': 'ListItem', position: 3, name: blog.title, item: `https://www.parkho.in/blog/${slug}` },
     ],
   }
 
