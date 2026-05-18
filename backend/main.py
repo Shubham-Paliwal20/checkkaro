@@ -13,6 +13,20 @@ from routes import product_new, ingredient, history, admin_extract, reports
 
 load_dotenv()
 
+# Supabase client for sitemap endpoints
+_sb_client = None
+try:
+    from supabase import create_client
+    _sb_url = os.getenv("SUPABASE_URL", "")
+    _sb_key = os.getenv("SUPABASE_ANON_KEY") or os.getenv("SUPABASE_SERVICE_KEY") or os.getenv("SUPABASE_KEY", "")
+    if _sb_url and _sb_key:
+        _sb_client = create_client(_sb_url, _sb_key)
+        print("[SITEMAP] Supabase client ready")
+    else:
+        print("[SITEMAP] Supabase env vars missing")
+except Exception as _e:
+    print(f"[SITEMAP] Supabase init failed: {_e}")
+
 # ── Rate limiter (in-memory, per IP) ──────────────────────────────────────────
 # Slots: { ip: [timestamp, ...] }
 _rate_store: dict = defaultdict(list)
@@ -127,31 +141,43 @@ async def root():
     return {"message": "Welcome to Parkho API"}
 
 
+@app.get("/sitemap-debug", include_in_schema=False)
+async def sitemap_debug():
+    """Temporary debug endpoint — remove after fixing sitemaps."""
+    info = {
+        "sb_client_ready": _sb_client is not None,
+        "SUPABASE_URL_set": bool(os.getenv("SUPABASE_URL")),
+        "SUPABASE_ANON_KEY_set": bool(os.getenv("SUPABASE_ANON_KEY")),
+    }
+    if _sb_client:
+        try:
+            r = _sb_client.table("products_catalog").select("name").limit(3).execute()
+            info["products_catalog_sample"] = [p["name"] for p in r.data]
+        except Exception as e:
+            info["products_catalog_error"] = str(e)
+        try:
+            r = _sb_client.table("blogs").select("slug").eq("status", "approved").limit(3).execute()
+            info["blogs_sample"] = [b["slug"] for b in r.data]
+        except Exception as e:
+            info["blogs_error"] = str(e)
+    return info
+
+
 @app.get("/sitemap-products.xml", include_in_schema=False)
 async def sitemap_products():
     """Dynamic sitemap of all products fetched from Supabase."""
-    import httpx
     from urllib.parse import quote
-    SUPABASE_URL = os.getenv("SUPABASE_URL", "")
-    SUPABASE_KEY = os.getenv("SUPABASE_ANON_KEY") or os.getenv("SUPABASE_SERVICE_KEY") or os.getenv("SUPABASE_KEY", "")
     SITE = "https://www.parkho.in"
-
     urls = []
-    if SUPABASE_URL and SUPABASE_KEY:
+    if _sb_client:
         try:
-            async with httpx.AsyncClient(timeout=15) as client:
-                resp = await client.get(
-                    f"{SUPABASE_URL}/rest/v1/products_catalog",
-                    params={"select": "name,updated_at", "order": "updated_at.desc", "limit": "2000"},
-                    headers={"apikey": SUPABASE_KEY, "Authorization": f"Bearer {SUPABASE_KEY}"},
-                )
-                if resp.status_code == 200:
-                    for p in resp.json():
-                        name = (p.get("name") or "").strip()
-                        if not name:
-                            continue
-                        lastmod = (p.get("updated_at") or "")[:10] or "2025-01-01"
-                        urls.append(f"""  <url>
+            resp = _sb_client.table("products_catalog").select("name,updated_at").order("updated_at", desc=True).limit(2000).execute()
+            for p in resp.data:
+                name = (p.get("name") or "").strip()
+                if not name:
+                    continue
+                lastmod = (p.get("updated_at") or "")[:10] or "2025-01-01"
+                urls.append(f"""  <url>
     <loc>{SITE}/result/{quote(name)}</loc>
     <lastmod>{lastmod}</lastmod>
     <changefreq>monthly</changefreq>
@@ -170,11 +196,7 @@ async def sitemap_products():
 @app.get("/sitemap-blogs.xml", include_in_schema=False)
 async def sitemap_blogs():
     """Dynamic sitemap of all approved blog posts from Supabase."""
-    import httpx
-    SUPABASE_URL = os.getenv("SUPABASE_URL", "")
-    SUPABASE_KEY = os.getenv("SUPABASE_ANON_KEY") or os.getenv("SUPABASE_SERVICE_KEY") or os.getenv("SUPABASE_KEY", "")
     SITE = "https://www.parkho.in"
-
     static_slugs = [
         ("static-1", "2025-01-01"),
         ("static-2", "2025-01-01"),
@@ -190,21 +212,15 @@ async def sitemap_blogs():
     <priority>0.7</priority>
   </url>""" for slug, date in static_slugs]
 
-    if SUPABASE_URL and SUPABASE_KEY:
+    if _sb_client:
         try:
-            async with httpx.AsyncClient(timeout=10) as client:
-                resp = await client.get(
-                    f"{SUPABASE_URL}/rest/v1/blogs",
-                    params={"select": "slug,updated_at", "status": "eq.approved", "order": "updated_at.desc", "limit": "1000"},
-                    headers={"apikey": SUPABASE_KEY, "Authorization": f"Bearer {SUPABASE_KEY}"},
-                )
-                if resp.status_code == 200:
-                    for b in resp.json():
-                        slug = (b.get("slug") or "").strip()
-                        if not slug:
-                            continue
-                        lastmod = (b.get("updated_at") or "")[:10] or "2025-01-01"
-                        urls.append(f"""  <url>
+            resp = _sb_client.table("blogs").select("slug,updated_at").eq("status", "approved").order("updated_at", desc=True).limit(1000).execute()
+            for b in resp.data:
+                slug = (b.get("slug") or "").strip()
+                if not slug:
+                    continue
+                lastmod = (b.get("updated_at") or "")[:10] or "2025-01-01"
+                urls.append(f"""  <url>
     <loc>{SITE}/blog/{slug}</loc>
     <lastmod>{lastmod}</lastmod>
     <changefreq>monthly</changefreq>
