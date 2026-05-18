@@ -131,16 +131,17 @@ async def root():
 async def sitemap_products():
     """Dynamic sitemap of all products fetched from Supabase."""
     import httpx
+    from urllib.parse import quote
     SUPABASE_URL = os.getenv("SUPABASE_URL", "")
-    SUPABASE_KEY = os.getenv("SUPABASE_SERVICE_KEY") or os.getenv("SUPABASE_KEY", "")
+    SUPABASE_KEY = os.getenv("SUPABASE_ANON_KEY") or os.getenv("SUPABASE_SERVICE_KEY") or os.getenv("SUPABASE_KEY", "")
     SITE = "https://www.parkho.in"
 
     urls = []
     if SUPABASE_URL and SUPABASE_KEY:
         try:
-            async with httpx.AsyncClient(timeout=10) as client:
+            async with httpx.AsyncClient(timeout=15) as client:
                 resp = await client.get(
-                    f"{SUPABASE_URL}/rest/v1/products",
+                    f"{SUPABASE_URL}/rest/v1/products_catalog",
                     params={"select": "name,updated_at", "order": "updated_at.desc", "limit": "2000"},
                     headers={"apikey": SUPABASE_KEY, "Authorization": f"Bearer {SUPABASE_KEY}"},
                 )
@@ -149,7 +150,6 @@ async def sitemap_products():
                         name = (p.get("name") or "").strip()
                         if not name:
                             continue
-                        from urllib.parse import quote
                         lastmod = (p.get("updated_at") or "")[:10] or "2025-01-01"
                         urls.append(f"""  <url>
     <loc>{SITE}/result/{quote(name)}</loc>
@@ -157,8 +157,8 @@ async def sitemap_products():
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>""")
-        except Exception:
-            pass
+        except Exception as e:
+            print(f"[sitemap-products] error: {e}")
 
     xml = '<?xml version="1.0" encoding="UTF-8"?>\n'
     xml += '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n'
@@ -172,7 +172,7 @@ async def sitemap_blogs():
     """Dynamic sitemap of all approved blog posts from Supabase."""
     import httpx
     SUPABASE_URL = os.getenv("SUPABASE_URL", "")
-    SUPABASE_KEY = os.getenv("SUPABASE_SERVICE_KEY") or os.getenv("SUPABASE_KEY", "")
+    SUPABASE_KEY = os.getenv("SUPABASE_ANON_KEY") or os.getenv("SUPABASE_SERVICE_KEY") or os.getenv("SUPABASE_KEY", "")
     SITE = "https://www.parkho.in"
 
     static_slugs = [
@@ -210,8 +210,8 @@ async def sitemap_blogs():
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>""")
-        except Exception:
-            pass
+        except Exception as e:
+            print(f"[sitemap-blogs] error: {e}")
 
     xml = '<?xml version="1.0" encoding="UTF-8"?>\n'
     xml += '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n'
