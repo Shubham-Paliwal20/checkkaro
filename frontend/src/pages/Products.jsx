@@ -38,7 +38,7 @@ const BrowseCard = memo(function BrowseCard({ product, onNavigate }) {
       className="bg-white rounded-2xl overflow-hidden cursor-pointer border border-gray-100 flex flex-col"
     >
       {/* Image */}
-      <div className="aspect-square bg-gray-50 flex items-center justify-center overflow-hidden">
+      <div className="aspect-square bg-gray-50 flex items-center justify-center overflow-hidden relative">
         {product.image_url ? (
           <img
             src={product.image_url}
@@ -46,13 +46,21 @@ const BrowseCard = memo(function BrowseCard({ product, onNavigate }) {
             loading="lazy"
             decoding="async"
             className="w-full h-full object-contain p-2"
-            onError={e => { e.currentTarget.style.display = 'none' }}
+            onError={e => {
+              e.currentTarget.style.display = 'none'
+              const fb = e.currentTarget.nextElementSibling
+              if (fb) fb.style.display = 'flex'
+            }}
           />
-        ) : (
-          <svg className="w-12 h-12 text-gray-200" fill="currentColor" viewBox="0 0 20 20">
-            <path fillRule="evenodd" d="M4 3a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V5a2 2 0 00-2-2H4zm12 12H4l4-8 3 6 2-4 3 6z" clipRule="evenodd" />
-          </svg>
-        )}
+        ) : null}
+        <svg
+          className="w-12 h-12 text-gray-200"
+          fill="currentColor"
+          viewBox="0 0 20 20"
+          style={{ display: product.image_url ? 'none' : 'block' }}
+        >
+          <path fillRule="evenodd" d="M4 3a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V5a2 2 0 00-2-2H4zm12 12H4l4-8 3 6 2-4 3 6z" clipRule="evenodd" />
+        </svg>
       </div>
 
       {/* Info */}
@@ -263,23 +271,27 @@ export default function Products() {
         if (data.brands?.length)     setBrands(data.brands)
         setLoading(false)
 
-        // Fetch uploaded photos in background and fill in missing image_urls
+        // Fetch uploaded photos in background and fill in missing image_urls.
+        // product_photos.product_id stores the static_key (e.g. "kinley-water"),
+        // not the numeric database id — use static_key for the lookup.
         if (active && pageProducts.length > 0) {
-          const ids = pageProducts.map(p => p.id)
-          supabase
-            .from('product_photos')
-            .select('product_id, image_url')
-            .in('product_id', ids)
-            .order('created_at')
-            .then(({ data: photos }) => {
-              if (!active || !photos?.length) return
-              const photoMap = {}
-              photos.forEach(ph => { if (!photoMap[ph.product_id]) photoMap[ph.product_id] = ph.image_url })
-              setProducts(prev => prev.map(p =>
-                photoMap[p.id] ? { ...p, image_url: photoMap[p.id] } : p
-              ))
-            })
-            .catch(() => {})
+          const keys = pageProducts.map(p => p.static_key).filter(Boolean)
+          if (keys.length > 0) {
+            supabase
+              .from('product_photos')
+              .select('product_id, image_url')
+              .in('product_id', keys)
+              .order('created_at')
+              .then(({ data: photos }) => {
+                if (!active || !photos?.length) return
+                const photoMap = {}
+                photos.forEach(ph => { if (!photoMap[ph.product_id]) photoMap[ph.product_id] = ph.image_url })
+                setProducts(prev => prev.map(p =>
+                  (p.static_key && photoMap[p.static_key]) ? { ...p, image_url: photoMap[p.static_key] } : p
+                ))
+              })
+              .catch(() => {})
+          }
         }
       } catch (err) {
         if (axios.isCancel(err) || !active) return

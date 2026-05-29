@@ -84,6 +84,10 @@ _QUESTIONED = [
     # Formaldehyde releasers / strong skin sensitisers
     'methylchloroisothiazolinone','methylisothiazolinone','dmdm hydantoin',
     'imidazolidinyl urea','diazolidinyl urea','quaternium-15',
+    # EU-banned fragrance ingredient — CMR 1B reproductive toxicant (banned March 2022)
+    'butylphenyl methylpropional','lilial',
+    # Antiseptic — severe allergic reactions including anaphylaxis; EU restricted
+    'chlorhexidine digluconate','chlorhexidine',
     # Sweeteners — IARC 2B carcinogen (aspartame), bladder cancer risk (saccharin)
     'aspartame','acesulfame','saccharin','e951','e950','e954',
     # Chelating agents — strip minerals, penetration enhancers
@@ -134,12 +138,23 @@ _WORTH = [
     # Natural flavors (from natural sources) — generally safe; check for hidden allergens
     'natural flavor','natural flavour','nature identical',
     # Permitted food additives
-    'citric acid','emulsifier','stabilizer','stabiliser','thickener',
+    'emulsifier','stabilizer','stabiliser','thickener',
     'lecithin','soy lecithin','potassium sorbate','e202',
     'polyglycerol','ammonium phosphatides',
     'e322','e471','e466','e412','e410','e476',
     # Cosmetic preservative — safe at EU-permitted levels (<1%)
     'phenoxyethanol',
+    # EU mandatory 26 fragrance allergens — must be declared on cosmetic labels above threshold
+    'limonene','linalool','benzyl salicylate','hexyl cinnamal','eugenol','geraniol',
+    'citronellol','coumarin','isoeugenol','cinnamyl alcohol','cinnamal','farnesol',
+    'hydroxycitronellal','amyl cinnamal','benzyl cinnamate','benzyl benzoate',
+    'alpha-isomethyl ionone','methyl 2-octynoate','anise alcohol',
+    # Quaternary ammonium conditioners — EU concentration-restricted
+    'behentrimonium chloride','cetrimonium chloride','quaternium-33',
+    # Ethoxylated surfactant — trace 1,4-dioxane contamination risk
+    'trideceth-6','trideceth',
+    # IPA — very drying to skin; disrupts skin barrier with repeated use
+    'isopropyl alcohol','isopropanol',
     # Sweetener — alters gut microbiome; FDA GRAS; concern less severe than aspartame
     'sucralose','e955',
     # MSG — FDA GRAS; some individuals report sensitivity at high doses
@@ -166,7 +181,8 @@ _WORTH_C      = [re.sub(r'[\s\-/]', '', k) for k in _WORTH]
 # agents with zero health concern — their food-context warnings don't apply.
 _COSMETIC_CATS = {'skincare', 'skin care', 'hair care', 'haircare',
                   'personal care', 'cosmetics', 'baby care', 'oral care', 'household'}
-_COSMETIC_GR   = {'salt', 'sodium chloride', 'citric acid'}
+_COSMETIC_GR   = {'salt', 'sodium chloride', 'citric acid', 'lactic acid',
+                  'ascorbic acid', 'tocopherol'}
 # Ingredients that are commonly_questioned in food but only worth_knowing in topical products
 _COSMETIC_WORTH = {'sodium benzoate'}
 
@@ -554,13 +570,14 @@ async def browse_products(
 
     items = [
         {
-            "id":        str(p.get("id", "")),
-            "name":      p.get("name", ""),
-            "brand":     p.get("brand") or "Unknown",
-            "category":  p.get("category") or "General",
-            "image_url": _primary_image(p),
-            "grade":     p.get("grade") or "C",
-            "verdict":   p.get("verdict") or "",
+            "id":         str(p.get("id", "")),
+            "static_key": p.get("static_key") or "",
+            "name":       p.get("name", ""),
+            "brand":      p.get("brand") or "Unknown",
+            "category":   p.get("category") or "General",
+            "image_url":  _primary_image(p),
+            "grade":      p.get("grade") or "C",
+            "verdict":    p.get("verdict") or "",
         }
         for p in seen.values()
     ]
