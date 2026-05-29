@@ -3,14 +3,26 @@ import { supabase } from '../lib/supabaseClient'
 
 const AuthContext = createContext(null)
 
-const INACTIVITY_MS = 30 * 60 * 1000 // 30 minutes
+const INACTIVITY_MS = 30 * 60 * 1000
 
-// Decode JWT iat claim to tell fresh logins from page-load token restores
 function tokenAge(accessToken) {
   try {
     const payload = JSON.parse(atob(accessToken.split('.')[1]))
     return Math.floor(Date.now() / 1000) - (payload.iat || 0)
   } catch { return Infinity }
+}
+
+// Wipe every Supabase auth key from localStorage and sessionStorage directly.
+// This runs before calling supabase.auth.signOut() so that even if the SDK
+// throws (e.g. storage lock conflict), the session is already gone from disk.
+function clearSupabaseStorage() {
+  for (const storage of [localStorage, sessionStorage]) {
+    try {
+      Object.keys(storage)
+        .filter(k => k.startsWith('sb-'))
+        .forEach(k => storage.removeItem(k))
+    } catch (_) {}
+  }
 }
 
 export function AuthProvider({ children }) {
@@ -19,8 +31,10 @@ export function AuthProvider({ children }) {
   const [showAuthModal, setShowAuthModal] = useState(false)
   const [authModalStep, setAuthModalStep] = useState('main')
 
-  // Use a ref so the inactivity timer always calls the latest signOut
-  const signOutRef = useRef(null)
+  // Guards the onAuthStateChange listener from restoring the user
+  // while a sign-out is in progress (prevents race with auto-refresh)
+  const signingOut = useRef(false)
+  const signOutFn  = useRef(null)  // keeps inactivity timer pointing at latest signOut
 
   useEffect(() => {
     supabase.auth.getSession().then(({ data: { session } }) => {
@@ -29,7 +43,19 @@ export function AuthProvider({ children }) {
     })
 
     const { data: { subscription } } = supabase.auth.onAuthStateChange(async (event, session) => {
-      // Password recovery link clicked — show set-new-password form, don't silently log in
+      // Always handle sign-out cleanly regardless of the guard
+      if (event === 'SIGNED_OUT') {
+        setUser(null)
+        setLoading(false)
+        signingOut.current = false
+        return
+      }
+
+      // Block any SIGNED_IN / TOKEN_REFRESHED events that arrive while we're
+      // in the middle of signing out — these are stale callbacks from the
+      // auto-refresh timer firing concurrently with the logout call.
+      if (signingOut.current) return
+
       if (event === 'PASSWORD_RECOVERY') {
         window.history.replaceState(null, '', window.location.pathname)
         setAuthModalStep('reset_password')
@@ -38,18 +64,16 @@ export function AuthProvider({ children }) {
       }
 
       setUser(session?.user ?? null)
-      setLoading(false)   // auth state is now known — stop spinning regardless of source
+      setLoading(false)
 
-      // Wipe auth tokens from the URL the moment Supabase reads them.
-      // Without this, sharing the post-login URL hands over your session to anyone who opens it.
+      // Remove auth tokens from the URL immediately so the link isn't reusable.
       if (event === 'SIGNED_IN' && (window.location.hash || window.location.search.includes('code='))) {
         window.history.replaceState(null, '', window.location.pathname)
       }
 
-      // Only show quiz on a genuinely fresh sign-in (token issued < 90s ago).
-      // This prevents the quiz modal from firing on every page reload.
+      // Only show the quiz on a genuinely fresh sign-in, not on page-load token restores.
       if (event === 'SIGNED_IN' && session?.user && session.access_token) {
-        if (tokenAge(session.access_token) > 90) return   // page-load token restore
+        if (tokenAge(session.access_token) > 90) return
 
         const userId = session.user.id
         const { data: profile } = await supabase
@@ -58,9 +82,7 @@ export function AuthProvider({ children }) {
           .eq('id', userId)
           .maybeSingle()
 
-        if (!profile) {
-          await supabase.from('user_profiles').upsert({ id: userId })
-        }
+        if (!profile) await supabase.from('user_profiles').upsert({ id: userId })
         if (!profile?.quiz_completed) {
           setAuthModalStep('quiz')
           setShowAuthModal(true)
@@ -71,30 +93,43 @@ export function AuthProvider({ children }) {
     return () => subscription.unsubscribe()
   }, [])
 
-  // scope:'local' clears localStorage immediately without a server round-trip,
-  // preventing a concurrent token-refresh from racing and re-logging the user in.
   const signOut = async () => {
+    signingOut.current = true   // block stray auth events immediately
+
+    // Clear UI before any async work
     setUser(null)
     setShowAuthModal(false)
-    try { await supabase.auth.signOut({ scope: 'local' }) } catch (e) { console.warn('signOut:', e) }
+
+    // Force-wipe storage directly so the session is gone even if the SDK call fails
+    clearSupabaseStorage()
+
+    // Tell Supabase server to invalidate the refresh token (best-effort; we don't
+    // depend on this succeeding — local storage is already clear)
+    try {
+      await supabase.auth.signOut({ scope: 'global' })
+    } catch (e) {
+      console.warn('signOut server call failed (session cleared locally):', e)
+    }
+
+    // Release the guard after a short window to handle any last stray events
+    setTimeout(() => { signingOut.current = false }, 1500)
   }
 
-  // Keep the ref current every render so the inactivity timer never closes over a stale signOut
-  signOutRef.current = signOut
+  signOutFn.current = signOut
 
-  // Auto-logout after 30 minutes of inactivity — only active while user is logged in
+  // Auto-logout after 30 minutes of inactivity — only runs while logged in
   useEffect(() => {
     if (!user) return
 
     let timer
     const reset = () => {
       clearTimeout(timer)
-      timer = setTimeout(() => signOutRef.current(), INACTIVITY_MS)
+      timer = setTimeout(() => signOutFn.current(), INACTIVITY_MS)
     }
 
     const EVENTS = ['mousemove', 'mousedown', 'keydown', 'scroll', 'touchstart', 'click']
     EVENTS.forEach(e => window.addEventListener(e, reset, { passive: true }))
-    reset() // start timer immediately on login
+    reset()
 
     return () => {
       clearTimeout(timer)
