@@ -130,7 +130,7 @@ export default function AuthModal({ onClose, initialStep }) {
     setLoading(true); clearError()
     const { error: e } = await supabase.auth.signInWithOAuth({
       provider: 'google',
-      options: { redirectTo: window.location.href },
+      options: { redirectTo: 'https://www.parkho.in' },
     })
     if (e) { setError(e.message); setLoading(false) }
   }
@@ -209,7 +209,7 @@ export default function AuthModal({ onClose, initialStep }) {
     if (!resetEmail.trim()) { setError('Please enter your email address.'); return }
     setLoading(true); clearError()
     const { error: e } = await supabase.auth.resetPasswordForEmail(resetEmail.trim(), {
-      redirectTo: window.location.origin,
+      redirectTo: 'https://www.parkho.in',
     })
     setLoading(false)
     if (e) { setError(e.message); return }
