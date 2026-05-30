@@ -140,6 +140,37 @@ const CLASSIFICATION_OVERRIDES = [
   { pattern: /titanium\s+dioxide|\be171\b/i,           classification: 'commonly_questioned' },
   { pattern: /potassium\s+nitrite|\be249\b/i,          classification: 'commonly_questioned' },
   { pattern: /amaranth\s+dye|\be123\b/i,               classification: 'commonly_questioned' },
+  // EU-banned fragrance (CMR 1B reproductive toxicant — banned March 2022)
+  { pattern: /butylphenyl\s*methylpropional|lilial/i,  classification: 'commonly_questioned' },
+  // Antiseptic — anaphylaxis risk, EU restricted; ototoxic in ears
+  { pattern: /chlorhexidine/i,                         classification: 'commonly_questioned' },
+  // EU mandatory 26 fragrance allergens
+  { pattern: /\blimonene\b/i,                          classification: 'worth_knowing' },
+  { pattern: /\blinalool\b/i,                          classification: 'worth_knowing' },
+  { pattern: /benzyl\s+salicylate/i,                   classification: 'worth_knowing' },
+  { pattern: /hexyl\s+cinnamal/i,                      classification: 'worth_knowing' },
+  { pattern: /\beugenol\b/i,                           classification: 'worth_knowing' },
+  { pattern: /\bgeraniol\b/i,                          classification: 'worth_knowing' },
+  { pattern: /\bcitronellol\b/i,                       classification: 'worth_knowing' },
+  { pattern: /\bcoumarin\b/i,                          classification: 'worth_knowing' },
+  { pattern: /\bisoeugenol\b/i,                        classification: 'worth_knowing' },
+  { pattern: /cinnamyl\s+alcohol/i,                    classification: 'worth_knowing' },
+  { pattern: /\bcinnamal\b/i,                          classification: 'worth_knowing' },
+  { pattern: /\bfarnesol\b/i,                          classification: 'worth_knowing' },
+  { pattern: /hydroxycitronellal/i,                    classification: 'worth_knowing' },
+  { pattern: /benzyl\s+cinnamate/i,                    classification: 'worth_knowing' },
+  { pattern: /benzyl\s+benzoate/i,                     classification: 'worth_knowing' },
+  { pattern: /alpha.isomethyl\s+ionone/i,              classification: 'worth_knowing' },
+  // Quaternary ammonium conditioners — EU concentration-restricted
+  { pattern: /behentrimonium\s+chloride/i,             classification: 'worth_knowing' },
+  { pattern: /cetrimonium\s+chloride/i,                classification: 'worth_knowing' },
+  { pattern: /quaternium-33/i,                         classification: 'worth_knowing' },
+  // Ethoxylated surfactant — trace 1,4-dioxane risk
+  { pattern: /\btrideceth/i,                           classification: 'worth_knowing' },
+  // IPA — skin barrier disruptor with repeated use
+  { pattern: /isopropyl\s+alcohol|isopropanol/i,       classification: 'worth_knowing' },
+  // Cosmetic preservative — safe at <1%; worth noting
+  { pattern: /\bphenoxyethanol\b/i,                    classification: 'worth_knowing' },
 ]
 
 function enrichIngredients(ingredients) {

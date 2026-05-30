@@ -5,6 +5,7 @@ import re
 import time
 from db.supabase_client import supabase, supabase_admin
 from grading import calculate_grade, grade_to_legacy_score
+from routes.ingredient_database import classify_ingredient as _db_classify_ingredient
 
 router = APIRouter()
 
@@ -84,6 +85,10 @@ _QUESTIONED = [
     # Formaldehyde releasers / strong skin sensitisers
     'methylchloroisothiazolinone','methylisothiazolinone','dmdm hydantoin',
     'imidazolidinyl urea','diazolidinyl urea','quaternium-15',
+    # EU-banned fragrance ingredient — CMR 1B reproductive toxicant (banned March 2022)
+    'butylphenyl methylpropional','lilial',
+    # Antiseptic — severe allergic reactions including anaphylaxis; EU restricted
+    'chlorhexidine digluconate','chlorhexidine',
     # Sweeteners — IARC 2B carcinogen (aspartame), bladder cancer risk (saccharin)
     'aspartame','acesulfame','saccharin','e951','e950','e954',
     # Chelating agents — strip minerals, penetration enhancers
@@ -134,12 +139,23 @@ _WORTH = [
     # Natural flavors (from natural sources) — generally safe; check for hidden allergens
     'natural flavor','natural flavour','nature identical',
     # Permitted food additives
-    'citric acid','emulsifier','stabilizer','stabiliser','thickener',
+    'emulsifier','stabilizer','stabiliser','thickener',
     'lecithin','soy lecithin','potassium sorbate','e202',
     'polyglycerol','ammonium phosphatides',
     'e322','e471','e466','e412','e410','e476',
     # Cosmetic preservative — safe at EU-permitted levels (<1%)
     'phenoxyethanol',
+    # EU mandatory 26 fragrance allergens — must be declared on cosmetic labels above threshold
+    'limonene','linalool','benzyl salicylate','hexyl cinnamal','eugenol','geraniol',
+    'citronellol','coumarin','isoeugenol','cinnamyl alcohol','cinnamal','farnesol',
+    'hydroxycitronellal','amyl cinnamal','benzyl cinnamate','benzyl benzoate',
+    'alpha-isomethyl ionone','methyl 2-octynoate','anise alcohol',
+    # Quaternary ammonium conditioners — EU concentration-restricted
+    'behentrimonium chloride','cetrimonium chloride','quaternium-33',
+    # Ethoxylated surfactant — trace 1,4-dioxane contamination risk
+    'trideceth-6','trideceth',
+    # IPA — very drying to skin; disrupts skin barrier with repeated use
+    'isopropyl alcohol','isopropanol',
     # Sweetener — alters gut microbiome; FDA GRAS; concern less severe than aspartame
     'sucralose','e955',
     # MSG — FDA GRAS; some individuals report sensitivity at high doses
@@ -166,7 +182,8 @@ _WORTH_C      = [re.sub(r'[\s\-/]', '', k) for k in _WORTH]
 # agents with zero health concern — their food-context warnings don't apply.
 _COSMETIC_CATS = {'skincare', 'skin care', 'hair care', 'haircare',
                   'personal care', 'cosmetics', 'baby care', 'oral care', 'household'}
-_COSMETIC_GR   = {'salt', 'sodium chloride', 'citric acid'}
+_COSMETIC_GR   = {'salt', 'sodium chloride', 'citric acid', 'lactic acid',
+                  'ascorbic acid', 'tocopherol'}
 # Ingredients that are commonly_questioned in food but only worth_knowing in topical products
 _COSMETIC_WORTH = {'sodium benzoate'}
 
@@ -216,6 +233,19 @@ def _classify(name: str, category: str = '') -> str:
         if kw in n or kw_c in n_c: return 'commonly_questioned'
     for kw, kw_c in zip(_WORTH, _WORTH_C):
         if kw in n or kw_c in n_c: return 'worth_knowing'
+
+    # Fall back to ingredient_database for anything not in our local lists.
+    # This ensures product pages automatically pick up new entries added to
+    # ingredient_database.py without needing a separate update here.
+    try:
+        result = _db_classify_ingredient(name, category)
+        if isinstance(result, dict):
+            cls = result.get('classification', '')
+            if cls in ('commonly_questioned', 'worth_knowing', 'banned'):
+                return cls
+    except Exception:
+        pass
+
     return 'generally_recognised'
 
 def _note(name: str, cls: str) -> str:
@@ -426,12 +456,27 @@ async def search_product(name: str = Query(..., description="Product name to sea
         grade_changed = grade != p.get("grade")
         ings_missing  = not stored_ings or len(stored_ings) == 0
 
-        if grade_changed or ings_missing:
+        # Detect stale classifications — any ingredient whose stored classification
+        # differs from the freshly computed one (happens when new patterns are added
+        # to ingredient_database.py after a product was first saved).
+        def _ings_outdated():
+            if ings_missing:
+                return False
+            stored_map = {(i.get('name') or '').lower().strip(): i.get('classification', '')
+                          for i in stored_ings}
+            return any(
+                stored_map.get((fi.name or '').lower().strip(), fi.classification) != fi.classification
+                for fi in ingredients
+            )
+
+        ings_outdated = _ings_outdated()
+
+        if grade_changed or ings_missing or ings_outdated:
             try:
                 update_payload: dict = {}
                 if grade_changed:
                     update_payload["grade"] = grade
-                if ings_missing:
+                if ings_missing or ings_outdated:
                     update_payload["ingredients"] = [i.dict() for i in ingredients]
                 supabase_admin.from_("ai_extracted_products") \
                     .update(update_payload).eq("id", p["id"]).execute()
@@ -554,13 +599,14 @@ async def browse_products(
 
     items = [
         {
-            "id":        str(p.get("id", "")),
-            "name":      p.get("name", ""),
-            "brand":     p.get("brand") or "Unknown",
-            "category":  p.get("category") or "General",
-            "image_url": _primary_image(p),
-            "grade":     p.get("grade") or "C",
-            "verdict":   p.get("verdict") or "",
+            "id":         str(p.get("id", "")),
+            "static_key": p.get("static_key") or "",
+            "name":       p.get("name", ""),
+            "brand":      p.get("brand") or "Unknown",
+            "category":   p.get("category") or "General",
+            "image_url":  _primary_image(p),
+            "grade":      p.get("grade") or "C",
+            "verdict":    p.get("verdict") or "",
         }
         for p in seen.values()
     ]
