@@ -163,7 +163,11 @@ export default function AuthModal({ onClose, initialStep }) {
     if (!email.trim()) { setError('Please enter your email.'); return }
     if (password.length < 6) { setError('Password must be at least 6 characters.'); return }
     setLoading(true); clearError()
-    const { data, error: e } = await supabase.auth.signUp({ email: email.trim(), password })
+    const { data, error: e } = await supabase.auth.signUp({
+      email: email.trim(),
+      password,
+      options: { emailRedirectTo: 'https://www.parkho.in' },
+    })
 
     if (e) {
       const msg = e.message?.toLowerCase() || ''
@@ -172,11 +176,6 @@ export default function AuthModal({ onClose, initialStep }) {
         setLoading(false)
         if (e2) { setError('This email is already registered. Switch to "Sign In".'); return }
         await handlePostLogin(d2.user?.id)
-        return
-      }
-      if (msg.includes('email') || msg.includes('sending') || msg.includes('rate') || msg.includes('smtp')) {
-        setLoading(false)
-        setStep('check_email')
         return
       }
       setLoading(false)
