@@ -5,6 +5,7 @@ import re
 import time
 from db.supabase_client import supabase, supabase_admin
 from grading import calculate_grade, grade_to_legacy_score
+from routes.ingredient_database import classify_ingredient as _db_classify_ingredient
 
 router = APIRouter()
 
@@ -232,6 +233,19 @@ def _classify(name: str, category: str = '') -> str:
         if kw in n or kw_c in n_c: return 'commonly_questioned'
     for kw, kw_c in zip(_WORTH, _WORTH_C):
         if kw in n or kw_c in n_c: return 'worth_knowing'
+
+    # Fall back to ingredient_database for anything not in our local lists.
+    # This ensures product pages automatically pick up new entries added to
+    # ingredient_database.py without needing a separate update here.
+    try:
+        result = _db_classify_ingredient(name, category)
+        if isinstance(result, dict):
+            cls = result.get('classification', '')
+            if cls in ('commonly_questioned', 'worth_knowing', 'banned'):
+                return cls
+    except Exception:
+        pass
+
     return 'generally_recognised'
 
 def _note(name: str, cls: str) -> str:
@@ -442,12 +456,27 @@ async def search_product(name: str = Query(..., description="Product name to sea
         grade_changed = grade != p.get("grade")
         ings_missing  = not stored_ings or len(stored_ings) == 0
 
-        if grade_changed or ings_missing:
+        # Detect stale classifications — any ingredient whose stored classification
+        # differs from the freshly computed one (happens when new patterns are added
+        # to ingredient_database.py after a product was first saved).
+        def _ings_outdated():
+            if ings_missing:
+                return False
+            stored_map = {(i.get('name') or '').lower().strip(): i.get('classification', '')
+                          for i in stored_ings}
+            return any(
+                stored_map.get((fi.name or '').lower().strip(), fi.classification) != fi.classification
+                for fi in ingredients
+            )
+
+        ings_outdated = _ings_outdated()
+
+        if grade_changed or ings_missing or ings_outdated:
             try:
                 update_payload: dict = {}
                 if grade_changed:
                     update_payload["grade"] = grade
-                if ings_missing:
+                if ings_missing or ings_outdated:
                     update_payload["ingredients"] = [i.dict() for i in ingredients]
                 supabase_admin.from_("ai_extracted_products") \
                     .update(update_payload).eq("id", p["id"]).execute()
