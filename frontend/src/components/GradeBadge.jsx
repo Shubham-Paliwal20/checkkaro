@@ -4,7 +4,7 @@ const GRADE_META = {
   A: { label: 'Excellent', color: '#16a34a', bg: '#f0fdf4', border: '#86efac', desc: 'Minimal concern ingredients. Largely clean label.' },
   B: { label: 'Good',      color: '#2563eb', bg: '#eff6ff', border: '#93c5fd', desc: 'Mostly safe. Some commonly noted additives.' },
   C: { label: 'Average',   color: '#d97706', bg: '#fffbeb', border: '#fcd34d', desc: 'Mixed formulation. Several commonly questioned ingredients.' },
-  D: { label: 'Poor',      color: '#dc2626', bg: '#fef2f2', border: '#fca5a5', desc: 'High proportion of questioned or banned ingredients.' },
+  D: { label: 'Poor',      color: '#dc2626', bg: '#fef2f2', border: '#fca5a5', desc: 'Proportion of questioned or banned ingredients.' },
 }
 
 const SIZES = {
