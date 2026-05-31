@@ -904,6 +904,585 @@ INGREDIENT_DESCRIPTIONS = {
     'hydroxypropyl starch e1440': 'Hydroxypropyl Starch (E1440/INS 1440) is a modified starch with improved freeze-thaw stability. Used in frozen foods, dairy desserts and sauces.',
     'distarch phosphate': 'Distarch Phosphate (E1412/INS 1412) is a cross-linked modified starch providing enhanced stability under heat, shear and acidic conditions. Used in soups, sauces and canned foods.',
     'e1412': 'E1412/INS 1412 is Distarch Phosphate, a cross-linked modified starch thickener with high stability. Used in soups and canned foods.',
+
+
+    # ── INS/E-Number entries added for searchability by number ────────────────
+
+    # --- Raising Agents / Leavening Agents ---
+    'e500': 'E500 / INS 500 — Sodium Carbonates. A group of leavening and pH-adjusting agents used in baking, confectionery and biscuits. Sodium bicarbonate (500ii) is common baking soda; sodium carbonate (500i) is washing soda. Permitted by FSSAI and Codex as a safe food additive.',
+    'e500i': 'E500(i) / INS 500(i) — Sodium Carbonate (soda ash / washing soda). Used as a leavening agent, pH adjuster and firming agent in baked goods, cocoa powder and noodles. Safe at permitted food levels.',
+    'e500ii': 'E500(ii) / INS 500(ii) — Sodium Bicarbonate (baking soda). The most widely used leavening agent in baking — reacts with acidic ingredients to produce CO₂ bubbles that make cakes, cookies and bread rise. Safe; the body handles it like ordinary sodium and CO₂.',
+    'e500iii': 'E500(iii) / INS 500(iii) — Sodium Sesquicarbonate. A mixture of sodium carbonate and sodium bicarbonate used as a leavening and pH-control agent. Safe at food-use levels.',
+    'e501': 'E501 / INS 501 — Potassium Carbonates. Used as leavening agents and acidity regulators in biscuits, cocoa and baked goods. Provide a milder alkalinity than sodium carbonates.',
+    'e501i': 'E501(i) / INS 501(i) — Potassium Carbonate. Used as a leavening agent and pH adjuster in baked goods and cocoa products. Generally safe.',
+    'e501ii': 'E501(ii) / INS 501(ii) — Potassium Bicarbonate. A leavening agent used in baking as a sodium-free alternative to baking soda. Safe.',
+    'e503': 'E503 / INS 503 — Ammonium Carbonates. Leavening agents used in dry biscuits, crackers and cookies. At baking temperatures they fully decompose to CO₂, ammonia and water — no ammonia remains in the finished product.',
+    'e503i': 'E503(i) / INS 503(i) — Ammonium Carbonate (bakers ammonia). Traditional leavening agent for crisp baked goods. Fully decomposes during baking; no ammonia residue in finished product.',
+    'e503ii': 'E503(ii) / INS 503(ii) — Ammonium Bicarbonate. A leavening agent used in dry biscuits, crackers and cookies. Decomposes completely at baking temperatures into CO₂, water and ammonia gas — no ammonia remains in the baked product.',
+    'e504': 'E504 / INS 504 — Magnesium Carbonates. Used as an anti-caking agent, colour retention agent and leavening agent. Also used as a dietary magnesium supplement.',
+    'e504i': 'E504(i) / INS 504(i) — Magnesium Carbonate. Anti-caking and leavening agent; also used as a dietary magnesium source.',
+    'e504ii': 'E504(ii) / INS 504(ii) — Magnesium Hydroxide Carbonate (magnesite). Used as an anti-caking agent and leavening agent. Safe.',
+    'e450': 'E450 / INS 450 — Diphosphates (Pyrophosphates). A group of raising agents and emulsifying salts used in baking powder, processed meats and processed cheese. The most common is sodium acid pyrophosphate (SAPP/E450i). Excessive phosphate intake is a concern for kidney health.',
+    'e450i': 'E450(i) / INS 450(i) — Disodium Diphosphate (SAPP). Used in baking powder as a slow-acting leavening acid, and in processed meats and seafood to retain moisture.',
+    'e451': 'E451 / INS 451 — Triphosphates (Tripolyphosphates). Used as emulsifying salts in processed cheese and as water-retention agents in seafood and processed meats. High phosphate intake may affect kidney function.',
+    'e451i': 'E451(i) / INS 451(i) — Pentasodium Triphosphate (STPP). Used in processed cheese, seafood and meat products to retain moisture and improve texture.',
+    'e452': 'E452 / INS 452 — Polyphosphates. Used as emulsifying salts in processed cheese and as stabilisers and moisture-retention agents in meat and seafood products.',
+
+    # --- Emulsifiers ---
+    'e322': 'E322 / INS 322 — Lecithins. Natural emulsifiers extracted from soybean oil, sunflower or egg yolk. Widely used in chocolate, bread, margarine and baked goods to blend fat and water smoothly. The most commonly used food emulsifier globally. Important soy allergen if soy-derived.',
+    'e322i': 'E322(i) / INS 322(i) — Lecithin. The most widely used natural emulsifier, typically from soybean or sunflower. Used in chocolate, baked goods, margarine and confectionery. Natural and well-tolerated; note soy allergen if soy-sourced.',
+    'e322ii': 'E322(ii) / INS 322(ii) — Hydroxylated Lecithin. Chemically modified lecithin with improved emulsifying efficiency. Used in bread, margarine and confectionery. Same allergen profile as standard lecithin.',
+    'e471': 'E471 / INS 471 — Mono- and Diglycerides of Fatty Acids. Emulsifiers produced from glycerol and fatty acids (from vegetable or animal fats). Widely used in bread, margarine, ice cream and baked goods to improve texture, volume and shelf life. May contain residual trans-fatty acids if made from partially hydrogenated oils; also contains glycidol fatty acid esters (GFAEs) at trace levels — the European Food Safety Authority has reviewed this and set limits.',
+    'e472a': 'E472a / INS 472a — Acetic Acid Esters of Mono- and Diglycerides (ACETEM). Emulsifier used in bread and baked goods. Derived from E471 esterified with acetic acid. Generally safe.',
+    'e472b': 'E472b / INS 472b — Lactic Acid Esters of Mono- and Diglycerides (LACTEM). Emulsifier used in bread, whipped products and dairy analogs. Improves aeration and shelf life. Generally safe.',
+    'e472c': 'E472c / INS 472c — Citric Acid Esters of Mono- and Diglycerides (CITREM). Emulsifier used in margarine and processed foods as an antioxidant emulsifier. Generally safe.',
+    'e472e': 'E472e / INS 472e — Diacetyl Tartaric Acid Esters of Mono- and Diglycerides (DATEM). A powerful dough emulsifier and gluten network strengthener used in bread, rolls and wraps to improve volume and crumb structure. Widely used in commercial bread-making. Generally safe.',
+    'e473': 'E473 / INS 473 — Sucrose Esters of Fatty Acids. Emulsifiers made from sucrose and fatty acids, used in coffee creamers, baked goods and dairy products. Generally safe.',
+    'e475': 'E475 / INS 475 — Polyglycerol Esters of Fatty Acids. Emulsifiers used in low-fat spreads, margarine and baked goods. Generally recognised as safe.',
+    'e476': 'E476 / INS 476 — Polyglycerol Polyricinoleate (PGPR). A synthetic emulsifier made from glycerol and castor oil, primarily used in chocolate to improve flow and reduce cocoa butter usage. Generally safe at permitted levels.',
+    'e481': 'E481 / INS 481 — Sodium Stearoyl Lactylate (SSL). An emulsifier and dough conditioner made from stearic acid and lactic acid. Strengthens gluten networks in bread, improves volume and extends shelf life. Widely used in commercial bread. Generally safe.',
+    'e482': 'E482 / INS 482 — Calcium Stearoyl Lactylate (CSL). Similar to SSL but calcium-based. Used as a dough conditioner in bread and as an emulsifier in coffee whiteners and whipped toppings. Generally safe.',
+    'e491': 'E491 / INS 491 — Sorbitan Monostearate (Span 60). An emulsifier used in baked goods, confectionery fillings and yeast-raised products. Generally safe.',
+    'e442': 'E442 / INS 442 — Ammonium Phosphatides. An emulsifier from rapeseed oil used in chocolate as a lecithin alternative to improve flow properties. Generally safe.',
+
+    # --- Acidity Regulators / Acidulants ---
+    'e260': 'E260 / INS 260 — Acetic Acid (Vinegar acid). The acid responsible for the sour taste and preserving properties of vinegar. Used as an acidulant and preservative in pickles, sauces, condiments and baked goods. Safe.',
+    'e270': 'E270 / INS 270 — Lactic Acid. A naturally occurring organic acid produced by fermentation, present in yoghurt, cheese, sauerkraut and sourdough. Used as an acidulant, pH adjuster and preservative in a wide range of foods. Safe.',
+    'e296': 'E296 / INS 296 — Malic Acid. A naturally occurring fruit acid found in apples, pears and cherries. Used as an acidulant to give a smooth, tart flavour in beverages, confectionery and bakery products. Safe.',
+    'e297': 'E297 / INS 297 — Fumaric Acid. A dicarboxylic acid used as an acidulant and leavening acid in baked goods, beverages and confectionery. Used as a natural alternative to citric acid. Safe.',
+    'e325': 'E325 / INS 325 — Sodium Lactate. The sodium salt of lactic acid, used as a humectant, acidity regulator and preservative in meat products, confectionery and baked goods. Generally safe.',
+    'e327': 'E327 / INS 327 — Calcium Lactate. The calcium salt of lactic acid, used as a firming agent, acidity regulator and calcium fortification agent. Generally safe.',
+    'e330': 'E330 / INS 330 — Citric Acid. The most widely used acidulant in the food industry, naturally found in citrus fruits. Used in beverages, confectionery, jams and processed foods to add tartness and act as a pH adjuster and preservative. Safe.',
+    'e331': 'E331 / INS 331 — Sodium Citrates. Sodium salts of citric acid used as acidity regulators, emulsifying salts and preservatives in beverages, processed cheese, confectionery and sausages. Safe.',
+    'e332': 'E332 / INS 332 — Potassium Citrates. Potassium salts of citric acid used as acidity regulators and sequestrants in beverages and confectionery. Safe.',
+    'e333': 'E333 / INS 333 — Calcium Citrates. Calcium salts of citric acid used as acidity regulators, firming agents and calcium supplements. Safe.',
+    'e334': 'E334 / INS 334 — Tartaric Acid. A naturally occurring acid from grapes and other fruits, used as an acidulant and antioxidant in baking powder, wine, confectionery and beverages. Safe.',
+    'e335': 'E335 / INS 335 — Sodium Tartrates. Sodium salts of tartaric acid used as acidity regulators and stabilisers in confectionery and processed foods. Safe.',
+    'e336': 'E336 / INS 336 — Potassium Tartrates (Cream of Tartar). Potassium salt of tartaric acid used as a leavening agent with baking soda, a stabiliser for whipped egg whites and a wine stabiliser. Safe.',
+    'e337': 'E337 / INS 337 — Potassium Sodium Tartrate (Rochelle Salt). A mixed tartrate salt used as an acidity regulator and sequestrant in confectionery and meat products. Safe.',
+    'e339': 'E339 / INS 339 — Sodium Phosphates. A group of sodium salts of phosphoric acid used as emulsifying salts, acidity regulators and nutrient supplements. Used in processed cheese, meat products and cereals. High phosphate intake may affect kidney health with chronic excess.',
+    'e340': 'E340 / INS 340 — Potassium Phosphates. Potassium salts of phosphoric acid used as acidity regulators, emulsifying salts and potassium supplements. Used in processed cheese and instant beverages.',
+    'e341': 'E341 / INS 341 — Calcium Phosphates. Calcium salts of phosphoric acid used as a raising agent, firming agent, anti-caking agent and calcium supplement. Found in baking powder, flour treatment and cereals. Safe.',
+    'e341i': 'E341(i) / INS 341(i) — Monocalcium Phosphate (MCP). A fast-acting leavening acid used in baking powder. Reacts with sodium bicarbonate during mixing to produce CO₂. Used in cakes, muffins and self-raising flour.',
+    'e341ii': 'E341(ii) / INS 341(ii) — Dicalcium Phosphate (DCP). Used as a leavening agent, calcium supplement and anti-caking agent in flour and cereals. Safe.',
+    'e341iii': 'E341(iii) / INS 341(iii) — Tricalcium Phosphate (TCP). Used as an anti-caking agent, calcium fortification agent and leavening agent in powdered foods, cereals and supplements. Safe.',
+
+    # --- Antioxidants ---
+    'e300': 'E300 / INS 300 — Ascorbic Acid (Vitamin C). The most widely used food antioxidant — prevents browning, rancidity and vitamin degradation. Used in fruit juices, meat products, bread and cereals. Same as supplemental Vitamin C; safe and beneficial.',
+    'e301': 'E301 / INS 301 — Sodium Ascorbate. The sodium salt of Vitamin C, used as an antioxidant preservative in processed meats, cured meats and bakery products. Provides the same antioxidant action as ascorbic acid. Safe.',
+    'e302': 'E302 / INS 302 — Calcium Ascorbate. The calcium salt of Vitamin C, used as an antioxidant and calcium supplement. Safe.',
+    'e304': 'E304 / INS 304 — Ascorbyl Palmitate / Ascorbyl Stearate. Fat-soluble esters of Vitamin C used to protect oils and fat-containing foods from oxidation. Used in frying oils, margarines and infant formula. Safe.',
+    'e306': 'E306 / INS 306 — Mixed Tocopherols (Natural Vitamin E). A natural antioxidant extract from vegetable oils containing alpha, beta, gamma and delta tocopherols. Used to protect oils and fat-containing foods. Safe.',
+    'e307': 'E307 / INS 307 — Alpha-Tocopherol (Vitamin E). The most biologically active form of Vitamin E, used as a natural antioxidant in oils, margarines and infant formula. Safe and nutritionally beneficial.',
+    'e308': 'E308 / INS 308 — Gamma-Tocopherol. A form of Vitamin E used as an antioxidant in edible fats and oils. Safe.',
+    'e309': 'E309 / INS 309 — Delta-Tocopherol. A form of Vitamin E used as an antioxidant. Safe.',
+    'e315': 'E315 / INS 315 — Erythorbic Acid (Isoascorbic Acid). A stereoisomer of Vitamin C used as an antioxidant in cured meats and beverages. Not equivalent to Vitamin C nutritionally, but effective as an antioxidant preservative. Safe.',
+    'e316': 'E316 / INS 316 — Sodium Erythorbate. The sodium salt of erythorbic acid, widely used in hot dogs, sausages and cured meats to preserve colour and prevent rancidity. Safe.',
+
+    # --- Sweeteners (Sugar Alcohols and Novel) ---
+    'e420': 'E420 / INS 420 — Sorbitol. A naturally occurring sugar alcohol found in fruits, also produced commercially. Used as a low-calorie sweetener, humectant and bulking agent in sugar-free confectionery, diabetic foods and cosmetics. May cause digestive upset at high doses (>50g). About 60% as sweet as sugar.',
+    'e420i': 'E420(i) / INS 420(i) — Sorbitol. Sugar alcohol sweetener and humectant. See E420.',
+    'e421': 'E421 / INS 421 — Mannitol. A naturally occurring sugar alcohol found in mushrooms, seaweed and sweet potatoes. Used as a low-calorie sweetener and anti-caking agent in sugar-free confectionery. Poorly absorbed; may cause laxative effect at high doses.',
+    'e953': 'E953 / INS 953 — Isomalt. A sugar substitute derived from sucrose, approximately half as sweet. Used in sugar-free confectionery, chewing gum and diabetic foods. Low glycaemic index; may cause digestive discomfort in large quantities.',
+    'e960': 'E960 / INS 960 — Steviol Glycosides (Stevia). Natural zero-calorie sweeteners extracted from the stevia plant (Stevia rebaudiana), 200–400 times sweeter than sugar. Used in beverages, dairy products and tabletop sweeteners. Approved by FSSAI, FDA and EU. Generally well-tolerated.',
+    'e960a': 'E960a / INS 960a — Steviol Glycosides from Stevia. Natural high-intensity sweetener from stevia leaves. Zero calorie. Generally safe.',
+    'e961': 'E961 / INS 961 — Neotame. A synthetic high-intensity sweetener (7,000–13,000 times sweeter than sugar) derived from aspartame but metabolised differently — safe for people with phenylketonuria. Used in tiny amounts in beverages and processed foods.',
+    'e962': 'E962 / INS 962 — Aspartame-Acesulfame Salt. A blend of aspartame and acesulfame potassium in a 2:1 ratio, providing a more sugar-like taste profile than either alone. Used in beverages and sugar-free products. Contains phenylalanine (PKU warning).',
+    'e965': 'E965 / INS 965 — Maltitol. A sugar alcohol approximately 75–90% as sweet as sugar, derived from maltose. Used in sugar-free chocolates, baked goods and confectionery. Low glycaemic impact; may cause laxative effects at high intakes.',
+    'e966': 'E966 / INS 966 — Lactitol. A sugar alcohol made from lactose (milk sugar), approximately 40% as sweet as sugar. Used in sugar-free confectionery and as a bulk laxative in pharmaceutical use. Contains lactose backbone — relevant for lactose-intolerant individuals.',
+    'e967': 'E967 / INS 967 — Xylitol. A naturally occurring sugar alcohol found in birch trees, plums and corn cobs. Approximately as sweet as sugar with 40% fewer calories. Used in sugar-free gum, confectionery and dental products — proven to reduce tooth decay. High doses cause laxative effects.',
+    'e968': 'E968 / INS 968 — Erythritol. A naturally occurring sugar alcohol found in fermented foods. Zero calories, approximately 60–70% as sweet as sugar. Does not spike blood glucose or insulin. Best tolerated of all sugar alcohols; rarely causes digestive upset.',
+
+    # --- Food Colours ---
+    'e100': 'E100 / INS 100 — Curcumin. A natural bright-yellow pigment derived from turmeric (Curcuma longa) rhizomes. Used to colour mustard, dairy products, confectionery and sauces. Also used as a dietary supplement for its anti-inflammatory properties. Safe.',
+    'e100i': 'E100(i) / INS 100(i) — Curcumin. Natural yellow pigment from turmeric. Permitted food colour. Safe.',
+    'e101': 'E101 / INS 101 — Riboflavin (Vitamin B2). A natural yellow-orange pigment used as a food colour and nutritional supplement. Found naturally in milk, eggs, meat and leafy greens. Used to colour pasta, bread and dairy products. Safe and nutritionally beneficial.',
+    'e101i': 'E101(i) / INS 101(i) — Riboflavin. Natural Vitamin B2 used as a yellow food colour and nutritional supplement. Safe.',
+    'e120': 'E120 / INS 120 — Cochineal / Carmine / Carminic Acid. A red dye derived from dried female cochineal insects (Dactylopius coccus). Used to colour yoghurts, juices, confectionery and cosmetics. Animal-derived — not vegan. Can cause severe allergic reactions including anaphylaxis in susceptible individuals; FDA mandates explicit labelling.',
+    'e140': 'E140 / INS 140 — Chlorophylls and Chlorophyllins. Natural green pigments extracted from plants. Used to give green colour to oils, fats, confectionery and beverages. Safe.',
+    'e141': 'E141 / INS 141 — Copper Complexes of Chlorophylls / Chlorophyllins. Copper-stabilised versions of chlorophyll used to create a more stable, brighter green colour in foods. Approved by FSSAI and EU. Safe at permitted levels.',
+    'e142': 'E142 / INS 142 — Green S (Lissamine Green). A synthetic green dye used in canned vegetables, mint jelly and some confectionery. Banned in USA, Canada, Japan and Australia. Approved in EU and India with restrictions.',
+    'e150a': 'E150a / INS 150a — Plain Caramel (Caramel I). Produced by heating carbohydrates without acids or alkalis. Used in spirits, vinegar and confectionery. Considered the safest class of caramel colour.',
+    'e150b': 'E150b / INS 150b — Caustic Sulfite Caramel (Caramel II). Produced by reacting carbohydrates with sulfite compounds. Used in spirits. Rare in other foods.',
+    'e150c': 'E150c / INS 150c — Ammonia Caramel (Caramel III). Produced by reacting carbohydrates with ammonium compounds. Used in beer and soy sauce. Contains 2-methylimidazole and 4-methylimidazole (4-MEI) as trace by-products — 4-MEI is listed as a possible carcinogen by IARC (Group 2B); California Prop 65 warning required.',
+    'e150d': 'E150d / INS 150d — Sulfite Ammonia Caramel (Caramel IV). Produced with both sulfite and ammonium compounds. The most widely used caramel colour — in colas, soy sauce, beer and baked goods. Contains 4-MEI (possible carcinogen, IARC Group 2B); Coca-Cola reformulated in some markets due to Prop 65. FSSAI permits it; California requires a cancer warning label.',
+    'e151': 'E151 / INS 151 — Brilliant Black BN (Black PN). A synthetic black azo dye used to colour confectionery, sauces and condiments. Banned in USA, Canada, Japan and Australia. Carries the EU hyperactivity warning label. Approved in EU and India with restrictions.',
+    'e160b': 'E160b / INS 160b — Annatto (Bixin / Norbixin). A natural orange-yellow colour derived from the seeds of the annatto tree (Bixa orellana). Widely used in cheeses, butter, margarines, snacks and ice cream. Generally safe; occasional allergic reactions reported. No hyperactivity concerns.',
+    'e160c': 'E160c / INS 160c — Paprika Extract / Capsanthin / Capsorubin. Natural orange-red colour from dried red peppers. Used in sausages, processed meats, sauces, snacks and dairy products. Safe.',
+    'e162': 'E162 / INS 162 — Beetroot Red (Betanin). Natural red pigment extracted from red beetroot. Used in yoghurts, ice cream, confectionery and beverages. Safe. Not stable to heat; colour may fade in cooking.',
+    'e163': 'E163 / INS 163 — Anthocyanins. Natural blue-purple to red pigments found in berries, red cabbage, grapes and other fruits. Used to colour beverages, confectionery and dairy products. Safe and rich in antioxidants.',
+    'e172': 'E172 / INS 172 — Iron Oxides and Iron Hydroxides. Inorganic colouring agents (yellow, red, black) used in sugar coatings, chocolate casings, olives and pharmaceuticals. Also provide a small amount of dietary iron. Safe at food-use levels.',
+
+    # --- Preservatives (additional) ---
+    'e200': 'E200 / INS 200 — Sorbic Acid. A natural organic acid originally isolated from rowan berries, now produced synthetically. The parent compound of the sorbate preservatives (E202, E203). Used to inhibit mould and yeast in cheese, wine, dried fruits and baked goods. Safe.',
+    'e201': 'E201 / INS 201 — Sodium Sorbate. The sodium salt of sorbic acid, used as a preservative. Inhibits mould and yeast in foods and beverages. Generally safe at permitted levels.',
+    'e203': 'E203 / INS 203 — Calcium Sorbate. The calcium salt of sorbic acid, used as a preservative to inhibit mould and yeast. Provides a calcium source alongside the preservative function. Safe.',
+    'e210': 'E210 / INS 210 — Benzoic Acid. The acid form of sodium benzoate (E211). Naturally present in cranberries, cinnamon and prunes. Used as a preservative in acidic foods and beverages. Same benzene-formation concern as E211 when combined with Vitamin C.',
+    'e212': 'E212 / INS 212 — Potassium Benzoate. The potassium salt of benzoic acid, used as an antimicrobial preservative in foods and beverages. Same benzene-formation risk as sodium benzoate (E211) in combination with Vitamin C.',
+    'e213': 'E213 / INS 213 — Calcium Benzoate. The calcium salt of benzoic acid used as a preservative. Similar properties and concerns as sodium benzoate (E211).',
+    'e218': 'E218 / INS 218 — Methyl p-Hydroxybenzoate (Methylparaben). The INS/E-number code for methylparaben, a widely used preservative in cosmetics, pharmaceuticals and foods. Hormone-disrupting paraben — same concerns as "methylparaben".',
+    'e219': 'E219 / INS 219 — Sodium Methyl p-Hydroxybenzoate (Sodium Methylparaben). Sodium salt of methylparaben used as a preservative in cosmetics and some food products. Same endocrine disruption concerns as methylparaben.',
+    'e221': 'E221 / INS 221 — Sodium Sulfite. A sulfite preservative used to prevent browning in dried fruits, potatoes and wines. Same allergen concerns as other sulfites — can trigger asthma attacks; must be declared on labels.',
+    'e222': 'E222 / INS 222 — Sodium Bisulfite (Sodium Hydrogen Sulfite). A sulfite preservative used in winemaking, food processing and brewing. Asthma and allergy risk; mandatory label declaration for sulfite content.',
+    'e224': 'E224 / INS 224 — Potassium Metabisulfite. A sulfite preservative used in winemaking, brewing and food processing. Same asthma and allergy risks as other sulfites; mandatory declaration.',
+    'e225': 'E225 / INS 225 — Potassium Sulfite. A sulfite preservative with the same allergen/asthma profile as other sulfites. Mandatory declaration required.',
+    'e234': 'E234 / INS 234 — Nisin. A natural antimicrobial peptide produced by the bacterium Lactococcus lactis during fermentation. Used to prevent growth of pathogenic bacteria (especially Listeria and Clostridium) in processed cheese, dairy products and canned goods. Considered safe.',
+    'e235': 'E235 / INS 235 — Natamycin (Pimaricin). A natural antifungal agent produced by Streptomyces natalensis bacteria. Used as a surface treatment on hard cheeses, sausage casings and dried meats to prevent mould growth. Not absorbed through the gut. Safe.',
+    'e280': 'E280 / INS 280 — Propionic Acid. A naturally occurring short-chain fatty acid produced during fermentation and digestion. Used as an antifungal preservative in bread, baked goods and dairy products to prevent mould growth. Safe.',
+    'e281': 'E281 / INS 281 — Sodium Propionate. The sodium salt of propionic acid, used as an antifungal preservative primarily in bread and baked goods. Generally safe; some links to migraine in sensitive individuals.',
+    'e282': 'E282 / INS 282 — Calcium Propionate. The calcium salt of propionic acid — the most widely used bread preservative in commercial baking. Inhibits mould and rope bacteria in bread. Provides small amount of dietary calcium. Generally safe; occasional migraine reports.',
+    'e283': 'E283 / INS 283 — Potassium Propionate. The potassium salt of propionic acid used as a preservative in baked goods. Same function and safety profile as calcium propionate.',
+    'e290': 'E290 / INS 290 — Carbon Dioxide. The natural gas used in carbonated beverages, beer, wine and modified atmosphere packaging to prevent oxidation and microbial growth. Safe.',
+
+    # --- Thickeners / Stabilisers / Hydrocolloids ---
+    'e400': 'E400 / INS 400 — Alginic Acid. A natural polysaccharide extracted from brown seaweed. Used as a thickener and gelling agent in ice cream, salad dressings and pharmaceuticals. Safe.',
+    'e401': 'E401 / INS 401 — Sodium Alginate. The sodium salt of alginic acid, widely used as a thickener and gel-former in ice cream, sauces, bakery and restructured foods. Safe.',
+    'e402': 'E402 / INS 402 — Potassium Alginate. Potassium salt of alginic acid, similar uses to sodium alginate. Safe.',
+    'e404': 'E404 / INS 404 — Calcium Alginate. Calcium salt of alginic acid — forms firmer gels. Used in restructured fish and meat products and controlled-release pharmaceuticals. Safe.',
+    'e406': 'E406 / INS 406 — Agar (Agar-agar). A natural gelling agent derived from red algae (primarily Gelidium species), used for centuries in Asian cuisine. Sets at lower concentrations than gelatin. Widely used in desserts, confectionery and as a vegetarian gelatin substitute. Safe.',
+    'e410': 'E410 / INS 410 — Locust Bean Gum (Carob Gum). A natural thickener from the seeds of the carob tree. Used in ice cream, cheese, salad dressings and infant formula to improve texture and prevent ice crystal formation. Safe.',
+    'e412': 'E412 / INS 412 — Guar Gum. A natural thickener and emulsifier ground from guar bean seeds, primarily grown in India and Pakistan. Widely used in ice cream, dairy products, sauces and gluten-free baked goods. One of the most widely used food hydrocolloids globally. Safe.',
+    'e414': 'E414 / INS 414 — Acacia Gum (Gum Arabic). A natural gum from acacia trees, used as a thickener, stabiliser and encapsulant in confectionery, beverages, flavour emulsions and pharmaceutical coating. One of the oldest food additives, used for over 4,000 years. Also a prebiotic fibre. Safe.',
+    'e440': 'E440 / INS 440 — Pectins. Natural gelling agents from citrus peel, apple pomace and sugar beet. Used to make jams, jellies and marmalades set; also used in confectionery, dairy and beverages. A source of soluble dietary fibre. Safe and beneficial.',
+    'e440i': 'E440(i) / INS 440(i) — Pectin (amidated). Amidated pectin forms gels that are more tolerant to calcium levels and temperature. Used in jams, dairy products and low-sugar preserves. Safe.',
+    'e460': 'E460 / INS 460 — Cellulose. The most abundant natural polymer — the structural component of plant cell walls. Used as a filler, anti-caking agent and dietary fibre in processed foods and pharmaceuticals. Not digestible; provides bulk. Safe.',
+    'e460i': 'E460(i) / INS 460(i) — Microcrystalline Cellulose (MCC/Avicel). Refined cellulose used as an anti-caking agent, bulking agent, fat replacer and texturiser in processed foods and supplements. Safe.',
+    'e461': 'E461 / INS 461 — Methyl Cellulose. A cellulose derivative used as a thickener, stabiliser and fat replacer in foods. Unique property: forms a gel when heated and dissolves when cooled (opposite of gelatin). Used in vegetarian burgers. Safe.',
+    'e462': 'E462 / INS 462 — Ethyl Cellulose. A cellulose ether used as a film former and binder in pharmaceutical tablet coating and as an edible packaging material. Safe.',
+    'e463': 'E463 / INS 463 — Hydroxypropyl Cellulose (HPC). A cellulose derivative used as a thickener, binder and film former in food products and pharmaceuticals. Safe.',
+    'e464': 'E464 / INS 464 — Hydroxypropyl Methyl Cellulose (HPMC). A cellulose derivative used as a thickener, emulsifier and film former in gluten-free bread, sauces and pharmaceuticals. Safe.',
+    'e466': 'E466 / INS 466 — Sodium Carboxymethyl Cellulose (CMC / Cellulose Gum). A cellulose derivative used as a thickener, stabiliser and water-retention agent in ice cream, baked goods and beverages. Also used in pharmaceutical tablets and personal care products. Some animal studies at very high doses showed effects; at food-use levels it is safe.',
+
+    # --- Anti-caking Agents ---
+    'e530': 'E530 / INS 530 — Magnesium Oxide. Used as an anti-caking agent in cocoa powder and as a dietary magnesium supplement. Safe.',
+    'e551': 'E551 / INS 551 — Silicon Dioxide (Silica). An inorganic anti-caking agent used to prevent powdered foods (spices, instant soups, protein powders) from clumping. Not absorbed by the body. Safe. Note: nanoparticle forms are under review by regulators.',
+    'e552': 'E552 / INS 552 — Calcium Silicate. An inorganic anti-caking agent used in baking powder, table salt and powdered mixes. Safe.',
+    'e553a': 'E553a / INS 553(i) and 553(ii) — Magnesium Silicates. Anti-caking agents used in spices, baking powder and powdered foods. Safe.',
+    'e553b': 'E553b / INS 553b — Talc (Magnesium Silicate). A naturally occurring mineral used as an anti-caking agent and coating for confectionery (e.g., rice-paper coating on sweets). Concerns exist about asbestos contamination of some talc deposits; some regulatory bodies restrict its food use. Distinct from cosmetic talc used in powders.',
+    'e554': 'E554 / INS 554 — Sodium Aluminosilicate (Zeolite). An anti-caking agent used in salt, powdered foods and spices. Contains aluminium; generally considered safe at food-use levels, but populations with kidney disease should limit aluminium exposure.',
+    'e559': 'E559 / INS 559 — Aluminium Silicate (Kaolin). An anti-caking agent used in some food products. Contains aluminium. Assess as with other aluminium-containing additives.',
+
+    # --- Flavour Enhancers (additional) ---
+    'e620': 'E620 / INS 620 — Glutamic Acid. The amino acid form of MSG, found naturally in tomatoes, parmesan, mushrooms and soy sauce. Produced by fermentation. Used as a flavour enhancer to intensify umami taste. Safe.',
+    'e622': 'E622 / INS 622 — Monopotassium Glutamate. The potassium salt of glutamic acid, used as a flavour enhancer similarly to MSG (E621). Generally safe.',
+    'e623': 'E623 / INS 623 — Calcium Glutamate. The calcium salt of glutamic acid, used as a flavour enhancer. Generally safe.',
+    'e624': 'E624 / INS 624 — Monoammonium Glutamate. The ammonium salt of glutamic acid, used as a flavour enhancer. Generally safe.',
+    'e625': 'E625 / INS 625 — Magnesium Glutamate. The magnesium salt of glutamic acid, used as a flavour enhancer. Provides dietary magnesium alongside flavour-enhancing action. Safe.',
+    'e626': 'E626 / INS 626 — Guanylic Acid. A ribonucleotide flavour enhancer found naturally in mushrooms, meat and fish. Used to amplify umami taste. Generally safe.',
+    'e628': 'E628 / INS 628 — Dipotassium Guanylate. Potassium salt of guanylic acid, used as a flavour enhancer in chips and savoury snacks. Safe.',
+    'e629': 'E629 / INS 629 — Calcium Guanylate. Calcium salt of guanylic acid, used as a flavour enhancer. Safe.',
+    'e630': 'E630 / INS 630 — Inosinic Acid. A ribonucleotide found naturally in meat and fish, used as a flavour enhancer to boost umami taste. Usually used with MSG and guanylates. Safe.',
+    'e632': 'E632 / INS 632 — Dipotassium Inosinate. Potassium salt of inosinic acid, used as a flavour enhancer. Often combined with MSG and disodium guanylate. Safe.',
+    'e633': 'E633 / INS 633 — Calcium Inosinate. Calcium salt of inosinic acid, used as a flavour enhancer in processed foods. Safe.',
+    'e635': 'E635 / INS 635 — Disodium 5\'\'-Ribonucleotides. A blend of disodium inosinate (E631) and disodium guanylate (E627) in an optimised ratio for maximum umami enhancement. Used in chips, instant noodles and savoury snacks. Safe at permitted levels. Not suitable for gout sufferers (high purine content).',
+
+    # --- Modified Starches (additional E-numbers) ---
+    'e1410': 'E1410 / INS 1410 — Monostarch Phosphate. A modified starch with a small degree of phosphate cross-linking. Used as a thickener with improved acid and heat stability in sauces, soups and ready meals. Safe.',
+    'e1420': 'E1420 / INS 1420 — Acetylated Starch. Starch modified by reaction with acetic anhydride to reduce retrogradation (staling). Used in sauces, dressings and dairy products. Safe.',
+    'e1422': 'E1422 / INS 1422 — Acetylated Distarch Adipate. A more extensively modified starch with excellent freeze-thaw stability. Used in frozen sauces, soups and ready meals. Safe.',
+    'e1440': 'E1440 / INS 1440 — Hydroxypropyl Starch. Starch modified with propylene oxide for improved freeze-thaw stability. Used in frozen foods and dairy products. Safe.',
+    'e1442': 'E1442 / INS 1442 — Hydroxypropyl Distarch Phosphate. Combines cross-linking (phosphate) and substitution (hydroxypropyl) for maximum stability under heat, acid and freezing. Used in sauces, soups and canned foods. Safe.',
+    'e1201': 'E1201 / INS 1201 — Polyvinylpyrrolidone (PVP / Povidone). A synthetic polymer used as a clarifying agent in beer and wine, and as a binder in pharmaceutical tablets. Safe at food-use levels.',
+
+    # ── New Cosmetic & Personal Care Ingredients ──────────────────────────────
+    'cetyl esters': 'Cetyl Esters is a mixture of esters of saturated fatty alcohols and fatty acids, used as a waxy emollient in hair conditioners and skin creams. It gives a rich, creamy texture without greasiness and is a plant-derived alternative to spermaceti wax (historically from sperm whales). CIR Expert Panel has confirmed it is safe for cosmetic use.',
+    'quaternium-33': 'Quaternium-33 is a quaternary ammonium conditioning polymer used in hair care products to reduce static and improve combability. It provides anti-static and softening effects by adsorbing onto the negatively charged hair surface. Generally considered safe at cosmetic use concentrations.',
+    'hydroxypropyltrimonium hydrolyzed wheat protein': 'Hydroxypropyltrimonium Hydrolyzed Wheat Protein is a cationic (positively charged) derivative of hydrolyzed wheat protein. The quaternary ammonium group allows it to bond electrostatically to damaged, negatively charged hair, depositing protein to reinforce and strengthen the hair shaft. Effective for frizz control and damage repair. Safe at cosmetic concentrations. Note: contains wheat — relevant for those with wheat allergy using rinse-off products with prolonged contact.',
+    'behentrimonium chloride': 'Behentrimonium Chloride (BTAC-22) is a quaternary ammonium salt derived from rapeseed or coconut oil, used as a conditioning agent in hair conditioners and treatments. It imparts smoothness, reduces frizz and improves detangling. EU Cosmetics Regulation restricts its use to 3% in rinse-off and 1% in leave-on products. Generally safe within these limits; higher concentrations can irritate skin and eyes.',
+    'trideceth-6': 'Trideceth-6 is a non-ionic surfactant and emulsifier produced by ethoxylating tridecanol (a fatty alcohol) with approximately 6 moles of ethylene oxide. Used to emulsify oils in water in creams and conditioners. The ethoxylation process can introduce trace amounts of 1,4-dioxane, a possible carcinogen (IARC Group 2B) — manufacturers can minimise this through vacuum stripping. Generally considered safe within approved cosmetic use concentrations.',
+    'chlorhexidine digluconate': 'Chlorhexidine Digluconate is a water-soluble salt of chlorhexidine — a potent broad-spectrum antiseptic effective against a wide range of bacteria, fungi and some viruses. Used in mouthwashes, wound care and surgical scrubs. EU Cosmetics Regulation restricts it to 0.3% in oral hygiene products and 0.5% in other applications. Rare but serious risk of severe allergic reactions (anaphylaxis) has been documented, primarily from medical-grade products. Ototoxic — must not contact the middle ear. Not recommended for daily home cosmetic use.',
+    'limonene': 'Limonene is a naturally occurring cyclic terpene found in the peel of citrus fruits (lemons, oranges, limes) and in many plant essential oils. It is widely used as a fragrance ingredient and is one of the most prevalent terpenes in nature. However, it is also one of the most common causes of fragrance-related contact dermatitis. The EU Cosmetics Regulation requires individual declaration on labels when present above 0.001% in leave-on products or 0.01% in rinse-off products. Limonene can also auto-oxidise on storage to form more potent skin sensitisers.',
+    'linalool': 'Linalool is a naturally occurring terpene alcohol found in lavender, coriander, rosewood and many other plants. It contributes to floral, woody scents in perfumes, personal care products and household products. Like limonene, linalool is an EU-mandated fragrance allergen that must be individually declared on cosmetic labels above threshold concentrations. Linalool can oxidise on storage to form linalool hydroperoxides, which are stronger skin sensitisers than the parent compound. A common trigger for fragrance-related contact dermatitis.',
+    'benzyl salicylate': 'Benzyl Salicylate is a synthetic ester with a sweet, floral, balsamic fragrance, used in perfumes, shampoos and lotions. It is one of the 26 fragrance allergens required by EU Cosmetics Regulation to be individually declared on labels when present above threshold concentrations. Associated with contact allergic reactions in sensitised individuals, particularly those with fragrance allergy.',
+    'hexyl cinnamal': 'Hexyl Cinnamal (Hexyl Cinnamaldehyde) is a synthetic aldehyde with a strong jasmine-like fragrance, widely used in personal care products, perfumes and household cleaners. It is one of the 26 EU-mandated fragrance allergens that must be individually declared on cosmetic labels. Can cause contact allergic dermatitis in sensitised individuals. One of the more common fragrance allergens identified in patch testing.',
+    'isopropyl alcohol': 'Isopropyl Alcohol (IPA / Isopropanol) is a petroleum-derived short-chain alcohol used as a solvent, antiseptic and astringent in cosmetics, hand sanitisers, antiseptic wipes and pharmaceuticals. Effective at denaturing proteins and killing bacteria and viruses. However, frequent application is drying to the skin — it can strip natural oils and disrupt the skin barrier, leading to dryness, irritation and potential sensitisation. Not recommended for daily cosmetic use on the face or as a primary skincare ingredient.',
+    'cetrimonium chloride': 'Cetrimonium Chloride (CTAC) is a quaternary ammonium salt used as a conditioning agent in hair rinses, conditioners and hair masks. It imparts smoothness and reduces static by coating the negatively charged hair surface. EU Cosmetics Regulation restricts it to 0.25% in rinse-off products due to its potential to cause skin and eye irritation at higher concentrations. Also used as a mild preservative at low concentrations. Toxic to aquatic organisms — environmental persistence noted.',
+    'butylphenyl methylpropional': 'Butylphenyl Methylpropional (Lilial) is a synthetic fragrance ingredient with a floral, lily-like scent that was widely used in perfumes, shampoos, conditioners, lotions and household products for decades. It has been BANNED in the European Union since March 2022 under the EU Cosmetics Regulation (Regulation EC 1223/2009, Amendment 2021/1099) due to its classification as a Category 1B reproductive toxicant (toxic to reproduction). Studies demonstrated adverse effects on fertility in animal studies. Products containing Lilial can no longer be sold in the EU. Consumers should avoid products still listing this ingredient.',
+    'arginine': 'Arginine is a semi-essential amino acid naturally present in the body and in protein-rich foods such as meat, dairy, nuts and legumes. In cosmetics, it is used as a hair and skin conditioning agent — it helps neutralise negative charges on damaged hair and can help repair the cortex. In skincare, it supports wound healing and barrier function. Safe and well-tolerated; naturally occurring.',
+    'serine': 'Serine is a non-essential amino acid naturally found in the skin as part of the Natural Moisturising Factor (NMF) — the collection of water-soluble compounds in the stratum corneum that keep skin hydrated. Used in cosmetics as a humectant and skin-conditioning agent to help maintain skin hydration. Safe and naturally occurring.',
+    '2-oleamido-1,3-octadecanediol': '2-Oleamido-1,3-Octadecanediol is a synthetic ceramide analogue (a compound that structurally mimics natural skin ceramides). It contains both an oleic acid-derived amide group and a diol that replicate the sphingolipid backbone of endogenous ceramides. Used in advanced barrier-repair skin care formulations to restore the skin lipid lamellar structure, reduce transepidermal water loss (TEWL) and soothe dry, eczema-prone or compromised skin. Safe and well tolerated.',
+    'glyceryl linoleate': 'Glyceryl Linoleate is a naturally occurring glyceryl ester of linoleic acid (omega-6 fatty acid). Found naturally in many vegetable oils including safflower and sunflower oil. Used in cosmetics as an emollient and skin-conditioning agent. Linoleic acid is an essential fatty acid for healthy skin barrier function — it is depleted in acne-prone and atopic skin. Restores the skin lipid barrier, reduces inflammation and supports the ceramide pathway. Safe and skin-compatible.',
+    'glyceryl oleate': 'Glyceryl Oleate (Glyceryl Monooleate) is a natural emulsifier and emollient derived from oleic acid and glycerol. Found naturally in olive and sunflower oils. Used in skin and hair care as a gentle emulsifier, emollient and conditioner. Helps maintain the skin moisture barrier. Safe and well-tolerated.',
+    'glyceryl linolenate': 'Glyceryl Linolenate is a glyceryl ester of alpha-linolenic acid (ALA, omega-3 fatty acid), found naturally in flaxseed, perilla and hemp oils. Used in cosmetics as an emollient and skin barrier-restoring ingredient. Omega-3 fatty acids have anti-inflammatory properties and support ceramide synthesis in skin. Safe and skin-compatible.',
+
+    # ── EU Fragrance Allergens (additional) ──────────────────────────────────
+    'eugenol': 'Eugenol is a naturally occurring phenol found abundantly in clove oil, cinnamon, basil and nutmeg. Used as a flavouring in food and as a fragrance ingredient in cosmetics. It is also used as a local anaesthetic and antiseptic in dentistry. One of the 26 EU mandatory fragrance allergens that must be declared on cosmetic labels. Can cause contact allergic dermatitis in sensitised individuals.',
+    'geraniol': 'Geraniol is a naturally occurring terpene alcohol found in geranium, rose, palmarosa and citronella essential oils. Used as a fragrance ingredient in cosmetics, personal care and household products. One of the 26 EU mandatory fragrance allergens that must be individually declared. Can oxidise on storage to form stronger skin sensitisers. A common fragrance allergen in patch testing.',
+    'coumarin': 'Coumarin is a naturally occurring lactone found in tonka beans, sweet clover, cassia cinnamon and many essential oils. Used as a fragrance ingredient in perfumes, cosmetics and formerly as a flavouring. EU Cosmetics Regulation requires individual declaration as an allergen. In food, EU restricts coumarin content due to hepatotoxicity at very high doses (studies in rodents at high doses showed liver damage). Safe at the very low amounts typical of cosmetic use.',
+    'cinnamal': 'Cinnamal (Cinnamic Aldehyde) is the primary fragrance compound responsible for the characteristic scent of cinnamon. A potent skin sensitiser and one of the 26 EU mandatory fragrance allergens. Must be declared individually on cosmetic labels. Can cause contact allergic dermatitis — particularly in occupational settings (bakers, confectioners) and in leave-on personal care products.',
+    'benzyl alcohol': 'Benzyl Alcohol is a naturally occurring aromatic alcohol found in jasmine, hyacinth and many other plant essential oils; also produced synthetically. Used as a preservative, solvent and fragrance ingredient in cosmetics and pharmaceuticals. One of the 26 EU mandatory fragrance allergens — must be declared above threshold concentrations. At high concentrations, it metabolises to benzaldehyde and benzoic acid, which can be irritating. Critically, benzyl alcohol is toxic to neonates — it can cause fatal "gasping syndrome" in premature or newborn infants; never use products containing it on newborns.',
+    'farnesol': 'Farnesol is a naturally occurring sesquiterpene alcohol found in ylang-ylang, rose, musk and many other essential oils. Used in fragrances and cosmetics. One of the 26 EU mandatory fragrance allergens. Can cause contact allergic dermatitis in sensitised individuals. Also has antimicrobial properties at higher concentrations.',
+    'citronellol': 'Citronellol is a natural terpene alcohol found in geranium, rose, citronella and lemon essential oils. Widely used in perfumes and cosmetics for its floral, rosy scent. One of the 26 EU mandatory fragrance allergens — must be declared individually on cosmetic labels. Can cause contact allergy in sensitised individuals.',
+    'hydroxycitronellal': 'Hydroxycitronellal is a synthetic aldehyde fragrance with a strong lily-of-the-valley and muguet scent. Used in perfumes and personal care products. One of the 26 EU mandatory fragrance allergens. Can cause contact sensitisation and allergic reactions in some individuals.',
+    'isoeugenol': 'Isoeugenol is a structural isomer of eugenol found in ylang-ylang, nutmeg and clove oils. Used as a fragrance ingredient. One of the 26 EU mandatory fragrance allergens. Considered a stronger sensitiser than eugenol — it has been voluntarily restricted or banned in some cosmetic applications by the fragrance industry.',
+    'benzyl benzoate': 'Benzyl Benzoate is a naturally occurring ester in Peru balsam and some essential oils; also produced synthetically. Used as a fragrance fixative and in cosmetics. Also used medically as an antiparasitic agent (scabies, lice treatment). One of the 26 EU mandatory fragrance allergens. Can cause contact allergy in sensitive individuals.',
+    'benzyl cinnamate': 'Benzyl Cinnamate (Cinnamein) is a naturally occurring ester in Peru balsam, styrax and tolu balsam. Used as a fragrance fixative. One of the 26 EU mandatory fragrance allergens. Found to cause contact sensitisation in some individuals.',
+    'amyl cinnamal': 'Amyl Cinnamal (Amyl Cinnamic Aldehyde) is a synthetic fragrance with a jasmine-like floral scent. Used in perfumes and personal care products. One of the 26 EU mandatory fragrance allergens that must be individually declared on cosmetic labels. Potential skin sensitiser in sensitive individuals.',
+    'alpha-isomethyl ionone': 'Alpha-Isomethyl Ionone is a synthetic fragrance compound with a violet and iris-like floral scent. Widely used in fine fragrance, personal care and household products. One of the 26 EU mandatory fragrance allergens. Can cause contact allergic dermatitis in sensitised individuals.',
+
+    # ── Quaternary Ammonium Compounds ────────────────────────────────────────
+    'behentrimonium methosulfate': 'Behentrimonium Methosulfate (BTMS) is a cationic conditioning agent derived from rapeseed oil, widely used in hair conditioners and detangling products. Compared to behentrimonium chloride, it has a more neutral pH, can be used in emulsifier blends (BTMS-50), and is considered milder and less irritating. Popular in natural and "clean" formulation. Safe at cosmetic use concentrations.',
+    'cetrimonium bromide': 'Cetrimonium Bromide (CTAB) is a quaternary ammonium surfactant and preservative used in hair rinses and conditioners. Has similar conditioning properties to cetrimonium chloride. Also used as an antimicrobial in laboratory settings. EU restricts its use in cosmetics. Potential irritant at higher concentrations.',
+    'guar hydroxypropyltrimonium chloride': 'Guar Hydroxypropyltrimonium Chloride is a cationic guar gum derivative — natural guar gum modified with a quaternary ammonium group. Used as a conditioning polymer in shampoos and conditioners to provide detangling and softness. Better biodegradable profile than fully synthetic cationic polymers. Generally well tolerated.',
+    'quaternium-18': 'Quaternium-18 (Dimethyldioctadecyl Ammonium Chloride) is a quaternary ammonium conditioning compound used in hair care. Provides conditioning and anti-static effects. Similar environmental persistence concerns as other quats; generally safe at cosmetic use concentrations.',
+
+    # ── Cosmetic Skin-Brightening and Active Ingredients ─────────────────────
+    'tranexamic acid': 'Tranexamic Acid is an amino acid derivative (a lysine analogue) clinically used as a haemostatic drug at high doses. In dermatology and cosmetics, it is used at much lower concentrations (2–5%) as a skin-brightening and anti-melasma active. Clinical studies have shown effectiveness in reducing hyperpigmentation. At cosmetic concentrations, it does not carry the systemic procoagulant risks of the pharmaceutical form. Safe and well-tolerated topically.',
+    'tetrahexyldecyl ascorbate': 'Tetrahexyldecyl Ascorbate (THD Ascorbate) is an oil-soluble, lipid-stable form of Vitamin C. Unlike water-soluble ascorbic acid, it penetrates the lipid-rich stratum corneum more effectively and is significantly more stable against oxidation. Converts to ascorbic acid once inside the skin. Used in anti-ageing and brightening serums at concentrations of 10–30%. Safe and well-tolerated.',
+    'ascorbyl glucoside': 'Ascorbyl Glucoside is a water-soluble glycoside of Vitamin C produced by bonding ascorbic acid to glucose. More stable than ascorbic acid; enzymes in the skin cleave the glucose to release free ascorbic acid. Used in brightening and antioxidant skincare at 2–3%. Gentler than ascorbic acid; well-tolerated.',
+    'ethyl ascorbic acid': 'Ethyl Ascorbic Acid (3-O-Ethyl Ascorbic Acid) is a stable, water-soluble Vitamin C derivative that is both more stable and potentially more potent than ascorbyl glucoside. Converts to ascorbic acid in the skin. Used at 0.5–3% in brightening serums. Safe and generally well-tolerated.',
+    'kojic dipalmitate': 'Kojic Dipalmitate is a more stable, oil-soluble form of kojic acid — a natural tyrosinase inhibitor produced by Aspergillus fermentation of rice and sake. Inhibits melanin production for skin brightening. Less irritating than kojic acid itself. Safe for cosmetic use within approved concentrations.',
+    'resveratrol': 'Resveratrol is a naturally occurring polyphenolic stilbenoid found in grape skin, red wine, blueberries and Japanese knotweed. A potent antioxidant with studied anti-inflammatory and anti-ageing properties in laboratory research. Used in premium skincare serums and supplements. Safe for topical and oral use; oral bioavailability is limited — topical delivery is more direct. The evidence for anti-ageing effects is promising but requires further human clinical validation.',
+    'ferulic acid': 'Ferulic Acid is a natural hydroxycinnamic acid found in the cell walls of rice, wheat and oat bran. A potent antioxidant that acts as a photoprotectant and synergises strongly with Vitamins C and E in skincare (stabilising them and enhancing their antioxidant effect). Used in cosmetics as an antioxidant active and food-grade preservative. Safe; well-tolerated.',
+
+    # ── Additional Functional Cosmetic Ingredients ────────────────────────────
+    'caprylyl methicone': 'Caprylyl Methicone is a lightweight, low-viscosity silicone fluid with an organic (caprylyl) modification that makes it more skin-compatible and with a lower environmental persistence than cyclic silicones. Used for a smooth, non-greasy skin feel. Safe for topical cosmetic use.',
+    'trimethylsilylamodimethicone': 'Trimethylsilylamodimethicone is a non-cyclic, trimethylsilyl-terminated amino-functional silicone. Used in hair care products for long-lasting conditioning, anti-frizz effects and shine. The non-cyclic structure means it does not share the EU restrictions placed on cyclic silicones (D4, D5). Generally safe.',
+    'sodium phytate': 'Sodium Phytate is the sodium salt of phytic acid, a natural compound found in rice bran, sesame and other grains. Used in cosmetics as a chelating agent (sequestering trace metal ions that could degrade products) and as a mild skin-brightening ingredient. Safe natural alternative to synthetic chelators like EDTA.',
+    'phytic acid': 'Phytic Acid is a naturally occurring organic acid (inositol hexaphosphoric acid) found in cereal brans, legumes and seeds. In cosmetics, it functions as a chelating agent (binds and inactivates trace metal ions) and as a gentle skin-brightening and exfoliating agent. Safe for cosmetic use.',
+    'gluconolactone': 'Gluconolactone is a polyhydroxy acid (PHA) — a gentler, larger-molecular relative of AHAs (alpha-hydroxy acids) like glycolic acid. Provides mild exfoliation without significant irritation, making it suitable for sensitive and post-procedure skin. Also acts as a humectant and antioxidant chelator. Safe and well-tolerated.',
+    'lactobionic acid': 'Lactobionic Acid is a polyhydroxy acid (PHA) derived from lactose. Like gluconolactone, it is a larger molecule that exfoliates more gently than AHAs. Additionally acts as a strong humectant and antioxidant through its metal-chelating properties. Well-tolerated by sensitive skin. Safe.',
+    'mandelic acid': 'Mandelic Acid is an alpha-hydroxy acid (AHA) derived from bitter almonds. Its larger molecular size (compared to glycolic acid) means it penetrates the skin more slowly, resulting in a gentler exfoliating action with fewer side effects. Also has antibacterial properties, making it useful for acne-prone skin. Photosensitising — SPF protection recommended. Safe at cosmetic concentrations.',
+    'propanediol': 'Propanediol (1,3-Propanediol) is a naturally derived glycol produced by fermenting corn sugars, used as a humectant and solvent in cosmetics. It is a sustainable alternative to petroleum-derived propylene glycol, with a gentler skin feel and minimal irritation potential. FDA GRAS status. Very safe and well-tolerated.',
+    'caprylyl glycol': 'Caprylyl Glycol (1,2-Octanediol) is an 8-carbon diol used in cosmetics both as a humectant and a preservative booster. It has intrinsic antimicrobial activity against Gram-positive bacteria and Candida, allowing it to enhance the efficacy of preservative systems. Safe and generally well-tolerated at typical cosmetic concentrations.',
+    'pentylene glycol': 'Pentylene Glycol (1,5-Pentanediol) is a multifunctional glycol used as a humectant, solvent and mild preservative booster in cosmetics. It has good skin compatibility, provides moisture retention and enhances the penetration of other actives. Generally well-tolerated. Often used in natural-oriented formulations.',
+    'betaine': 'Betaine (Trimethylglycine) is a naturally occurring compound derived from sugar beet processing. Used in cosmetics as a humectant, anti-irritant and osmoprotectant — it helps protect the skin from environmental stressors. Also used in hair care to provide gentle conditioning and reduce the irritation potential of surfactants. Safe and well-tolerated.',
+    'colloidal oatmeal': 'Colloidal Oatmeal is finely milled whole oat grain (Avena sativa) that has been processed to remain suspended in water. FDA-approved as an OTC skin protectant at 0.5–2%. Rich in avenanthramides (unique oat polyphenols with potent anti-inflammatory properties), beta-glucan and natural oils. Clinical evidence supports its use for atopic dermatitis (eczema), dry skin and skin barrier repair. Excellent tolerability; safe. Possible concern only for individuals with severe oat or wheat allergy via topical route.',
+    'saccharide isomerate': 'Saccharide Isomerate (trade name PENTAVITIN) is a carbohydrate complex derived from corn. It is claimed to form lasting covalent bonds with skin keratins, providing long-duration hydration effects. Used in premium moisturisers. Generally safe and well-tolerated.',
+    'trehalose': 'Trehalose is a naturally occurring disaccharide found in mushrooms, yeast, insects and resurrection plants (which use it to survive desiccation). Used in cosmetics as a humectant and cryoprotectant. Also used in some food products. Safe and well-tolerated.',
+
+    # ── Isopropyl Alcohol ─────────────────────────────────────────────────────
+    'isopropanol': 'Isopropanol (Isopropyl Alcohol / IPA / 2-Propanol) is a petroleum-derived secondary alcohol used as a solvent, antiseptic and astringent. Effective as a disinfectant at 60–70% concentrations. In cosmetics, used as a solvent or quick-drying agent, but frequent application is drying and can disrupt the skin barrier. Not suitable as a primary skincare ingredient for regular use.',
+
+    # ── Ceramide Analogues ────────────────────────────────────────────────────
+    'ceramide np': 'Ceramide NP (N-Palmitoyl Sphinganine) is the most abundant ceramide type in human stratum corneum, making up approximately 20% of total skin ceramides. Critical for maintaining the lamellar lipid barrier of the skin. Used in barrier-repair moisturisers for dry skin, eczema and aged skin. Safe and bioidentical to skin lipids.',
+    'ceramide ap': 'Ceramide AP (N-Palmitoyldihydrosphingosine) is another important skin ceramide type. Works alongside ceramide NP and other ceramides to form the intercellular lipid matrix of the stratum corneum. Used in barrier-repair formulations. Safe.',
+    'phytosphingosine': 'Phytosphingosine is a sphingoid base (the backbone component of ceramides) naturally found in yeast and skin. It has intrinsic anti-inflammatory and antimicrobial properties in addition to its role as a ceramide precursor. Used in acne-prone and sensitive skin formulations. Safe.',
+
+    # ── Butylphenyl Methylpropional ───────────────────────────────────────────
+    'lilial': 'Lilial (Butylphenyl Methylpropional / p-t-Bucinal) is a synthetic fragrance ingredient formerly used for its fresh, lily-like floral scent in numerous cosmetics and personal care products. It has been BANNED in the European Union since 1 March 2022, classified as a Category 1B reproductive toxicant under CLP Regulation — animal studies demonstrated adverse effects on fertility. Products containing Lilial cannot be placed on the EU market. Consumers should avoid any product still listing this ingredient.',
+
+    # ══ Food Additive E Numbers / INS Numbers (comprehensive) ══════════════════
+
+    # ── Colours ──────────────────────────────────────────────────────────────
+    'curcumin': 'Curcumin (E100/INS 100) is the natural yellow pigment from turmeric. Safe and anti-inflammatory. FSSAI, EU and Codex approved.',
+    'e100': 'E100 is the EU/INS code for Curcumin. Natural turmeric yellow food colour. Safe and beneficial.',
+    'annatto': 'Annatto (E160b/INS 160b) is a natural orange-yellow pigment from achiote seeds, used in cheeses, margarine and snacks. Safe; rare allergy in aspirin-sensitive individuals.',
+    'e160b': 'E160b is the EU/INS code for Annatto (Bixin/Norbixin). Natural orange-red colour. Safe.',
+    'paprika extract': 'Paprika Extract (E160c/INS 160c) is a natural red-orange carotenoid from red capsicum peppers. Safe.',
+    'e160c': 'E160c is the EU/INS code for Paprika Extract. Natural red-orange colour from capsicum. Safe.',
+    'lycopene': 'Lycopene (E160d/INS 160d) is the natural red carotenoid from tomatoes with antioxidant benefits. Safe.',
+    'e160d': 'E160d is the EU/INS code for Lycopene. Natural red colour from tomatoes. Safe.',
+    'lutein': 'Lutein (E161b/INS 161b) is a natural yellow carotenoid from marigold flowers. Associated with eye health. Safe.',
+    'e161b': 'E161b is the EU/INS code for Lutein. Natural yellow colour with eye health benefits. Safe.',
+    'beetroot red': 'Beetroot Red / Betanin (E162/INS 162) is the natural red-purple pigment from red beetroot. Safe; harmless pink urine (beeturia) possible.',
+    'betanin': 'Betanin (E162/INS 162) is the red pigment from beetroot used as a natural food colour. Safe.',
+    'e162': 'E162 is the EU/INS code for Beetroot Red (Betanin). Natural red-purple colour. Safe.',
+    'anthocyanins': 'Anthocyanins (E163/INS 163) are natural red-purple-blue pigments from berries, grapes and red cabbage. Rich in antioxidants. Safe.',
+    'e163': 'E163 is the EU/INS code for Anthocyanins. Natural plant pigments from berries. Safe.',
+    'calcium carbonate food': 'Calcium Carbonate (E170/INS 170) is used as a white food colour, anti-caking agent and calcium supplement. Safe and nutritionally beneficial.',
+    'e170': 'E170 is the EU/INS code for Calcium Carbonate. White colour and calcium supplement. Safe.',
+    'iron oxides': 'Iron Oxides (E172/INS 172) are mineral pigments producing red, yellow, brown and black food colours. Safe at approved levels.',
+    'e172': 'E172 is the EU/INS code for Iron Oxides and Hydroxides. Mineral food colours. Safe at approved levels.',
+    'e174': 'E174 is the EU code for Silver. Metallic surface decoration on confectionery. Chemically inert; safe in decorative amounts.',
+    'e175': 'E175 is the EU code for Gold. Metallic food decoration. Chemically inert; safe.',
+    'e140': 'E140 is the EU/INS code for Chlorophylls. Natural green plant pigments. Safe.',
+    'e141': 'E141 is the EU/INS code for Copper Complexes of Chlorophylls. Stabilised natural green colours. Safe at permitted levels.',
+    'e150a': 'E150a is Plain Caramel (Class I). Produced without ammonia or sulphites. Used in spirits. Safest caramel class.',
+    'e150b': 'E150b is Caustic Sulphite Caramel (Class II). Used in cognac and sherry. Safe.',
+    'e150c': 'E150c is Ammonia Caramel (Class III). Used in beer and sauces. Safe at typical food levels.',
+
+    # ── Acidity regulators ─────────────────────────────────────────────────
+    'acetic acid': 'Acetic Acid (E260/INS 260) is the acid in vinegar. Naturally produced by fermentation. Safe acidity regulator and preservative in pickles, sauces and condiments.',
+    'e260': 'E260 is the EU/INS code for Acetic Acid (vinegar acid). Safe acidity regulator.',
+    'potassium acetate': 'Potassium Acetate (E261/INS 261) is the potassium salt of acetic acid. Acidity regulator and low-sodium salt substitute. Safe.',
+    'e261': 'E261 is the EU/INS code for Potassium Acetate. Acidity regulator and salt substitute. Safe.',
+    'sodium acetate': 'Sodium Acetate (E262/INS 262) is the sodium salt of acetic acid. Acidity regulator; gives salt-and-vinegar crisps their flavour. Safe.',
+    'e262': 'E262 is the EU/INS code for Sodium Acetates. Acidity regulator. Safe.',
+    'e270': 'E270 is the EU/INS code for Lactic Acid. Natural fermentation acid found in yoghurt and pickles. Safe.',
+    'propionic acid': 'Propionic Acid (E280/INS 280) is a short-chain fatty acid naturally in Swiss cheese. Used as a mould inhibitor in bread. Safe -- metabolised as a normal fatty acid.',
+    'e280': 'E280 is the EU/INS code for Propionic Acid. Natural mould inhibitor in bread. Safe.',
+    'sodium propionate': 'Sodium Propionate (E281/INS 281) is the sodium salt of propionic acid. Mould inhibitor in bakery products. Safe.',
+    'e281': 'E281 is the EU/INS code for Sodium Propionate. Mould inhibitor in baked goods. Safe.',
+    'calcium propionate': 'Calcium Propionate (E282/INS 282) is the most widely used bread preservative. Inhibits mould and adds dietary calcium. Safe.',
+    'e282': 'E282 is the EU/INS code for Calcium Propionate. Most widely used bread mould inhibitor; adds calcium. Safe.',
+    'potassium propionate': 'Potassium Propionate (E283/INS 283) is the potassium salt of propionic acid. Mould inhibitor in baked goods. Safe.',
+    'e283': 'E283 is the EU/INS code for Potassium Propionate. Mould inhibitor in baked goods. Safe.',
+    'e290': 'E290 is the EU/INS code for Carbon Dioxide. Used to carbonate drinks and preserve freshness. Safe -- the gas we exhale.',
+    'malic acid': 'Malic Acid (E296/INS 296) is the natural tart acid from apples and grapes. Used as an acidity regulator in beverages and confectionery. Safe.',
+    'e296': 'E296 is the EU/INS code for Malic Acid. Natural apple acid; acidity regulator. Safe.',
+    'fumaric acid': 'Fumaric Acid (E297/INS 297) is a naturally occurring acid from the Krebs cycle. Used as an acidity regulator and raising acid. Safe.',
+    'e297': 'E297 is the EU/INS code for Fumaric Acid. Natural acidity regulator. Safe.',
+
+    # ── Antioxidants (E300-E329) ─────────────────────────────────────────
+    'e300': 'E300 is the EU/INS code for Ascorbic Acid (Vitamin C). Essential vitamin and food antioxidant. Safe and nutritionally beneficial.',
+    'sodium ascorbate': 'Sodium Ascorbate (E301/INS 301) is a non-acidic form of Vitamin C. Antioxidant in processed meats and beverages. Safe.',
+    'e301': 'E301 is the EU/INS code for Sodium Ascorbate. Non-acidic Vitamin C antioxidant. Safe.',
+    'calcium ascorbate': 'Calcium Ascorbate (E302/INS 302) is the calcium salt of Vitamin C. Antioxidant and calcium supplement. Safe.',
+    'e302': 'E302 is the EU/INS code for Calcium Ascorbate. Vitamin C and calcium supplement. Safe.',
+    'ascorbyl palmitate': 'Ascorbyl Palmitate (E304/INS 304) is a fat-soluble Vitamin C ester. Antioxidant in oils and fats. Safe.',
+    'e304': 'E304 is the EU/INS code for Ascorbyl Palmitate. Fat-soluble Vitamin C antioxidant. Safe.',
+    'e306': 'E306 is the EU/INS code for Tocopherol-rich extract (Vitamin E). Natural antioxidant. Safe and nutritionally beneficial.',
+    'e307': 'E307 is the EU/INS code for Alpha-Tocopherol (most active Vitamin E form). Safe.',
+    'e308': 'E308 is the EU/INS code for Gamma-Tocopherol (Vitamin E form). Safe.',
+    'e309': 'E309 is the EU/INS code for Delta-Tocopherol (Vitamin E form). Safe.',
+    'propyl gallate': 'Propyl Gallate (E310/INS 310) is a synthetic antioxidant in fats and oils. Associated with tumour promotion in animal studies; banned in baby foods in the EU; under EFSA review. Approved with quantity limits for general food use.',
+    'e310': 'E310 is the EU/INS code for Propyl Gallate. Synthetic antioxidant under regulatory review; banned in baby foods in EU.',
+    'octyl gallate': 'Octyl Gallate (E311/INS 311) is a synthetic gallate antioxidant in edible fats. Approved with quantity limits.',
+    'e311': 'E311 is the EU/INS code for Octyl Gallate. Synthetic antioxidant. Approved with limits.',
+    'dodecyl gallate': 'Dodecyl Gallate (E312/INS 312) is a synthetic gallate antioxidant in edible fats. Approved with quantity limits.',
+    'e312': 'E312 is the EU/INS code for Dodecyl Gallate. Synthetic antioxidant. Approved with limits.',
+    'sodium lactate': 'Sodium Lactate (E325/INS 325) is the sodium salt of lactic acid. Humectant and low-sodium salt substitute. Safe.',
+    'e325': 'E325 is the EU/INS code for Sodium Lactate. Humectant and salt substitute. Safe.',
+    'potassium lactate': 'Potassium Lactate (E326/INS 326) is the potassium salt of lactic acid. Antimicrobial in processed meats. Safe.',
+    'e326': 'E326 is the EU/INS code for Potassium Lactate. Antimicrobial in processed meats. Safe.',
+    'calcium lactate': 'Calcium Lactate (E327/INS 327) is the calcium salt of lactic acid. Firming agent and calcium supplement. Safe.',
+    'e327': 'E327 is the EU/INS code for Calcium Lactate. Firming agent and calcium source. Safe.',
+    'tartaric acid': 'Tartaric Acid (E334/INS 334) is the natural acid from grapes, responsible for wine tartness. Used as an acidity regulator in baked goods and confectionery. Safe.',
+    'e334': 'E334 is the EU/INS code for Tartaric Acid. Natural grape acid. Safe.',
+    'e335': 'E335 is the EU/INS code for Sodium Tartrates. Acidity regulators. Safe.',
+    'e336': 'E336 is the EU/INS code for Potassium Tartrates (Cream of Tartar). Classic baking ingredient. Safe.',
+    'e337': 'E337 is the EU/INS code for Sodium Potassium Tartrate (Rochelle Salt). Acidity regulator. Safe.',
+    'e340': 'E340 is the EU/INS code for Potassium Phosphates. Acidity regulators. Safe at approved levels.',
+    'calcium phosphate': 'Calcium Phosphates (E341/INS 341) are used as raising agents and calcium supplements in baked goods and fortified foods. Safe.',
+    'e341': 'E341 is the EU/INS code for Calcium Phosphates. Raising agents and calcium supplements. Safe.',
+    'adipic acid': 'Adipic Acid (E355/INS 355) is an organic dicarboxylic acid used as an acidity regulator and raising acid. Safe.',
+    'e355': 'E355 is the EU/INS code for Adipic Acid. Acidity regulator and raising acid. Safe.',
+    'succinic acid': 'Succinic Acid (E363/INS 363) is a naturally occurring acid from fermentation. Acidity regulator. Safe.',
+    'e363': 'E363 is the EU/INS code for Succinic Acid. Natural acidity regulator. Safe.',
+    'gluconic acid': 'Gluconic Acid (E574/INS 574) is a natural acid from fermentation found in honey and wine. Safe.',
+    'e574': 'E574 is the EU/INS code for Gluconic Acid. Natural fermentation acid. Safe.',
+    'glucono delta-lactone': 'Glucono Delta-Lactone (GDL/E575/INS 575) is a natural mild acidifier used in tofu, cheese and baked goods. Safe.',
+    'e575': 'E575 is the EU/INS code for Glucono Delta-Lactone (GDL). Natural mild acidifier. Safe.',
+    'sodium gluconate': 'Sodium Gluconate (E576/INS 576) is the sodium salt of gluconic acid. Sequestrant and acidity regulator. Safe.',
+    'e576': 'E576 is the EU/INS code for Sodium Gluconate. Sequestrant. Safe.',
+    'potassium gluconate': 'Potassium Gluconate (E577/INS 577) is the potassium salt of gluconic acid. Potassium supplement. Safe.',
+    'e577': 'E577 is the EU/INS code for Potassium Gluconate. Potassium supplement. Safe.',
+    'calcium gluconate': 'Calcium Gluconate (E578/INS 578) is the calcium salt of gluconic acid. Calcium supplement. Safe.',
+    'e578': 'E578 is the EU/INS code for Calcium Gluconate. Calcium supplement. Safe.',
+    'ferrous gluconate': 'Ferrous Gluconate (E579/INS 579) is used to colour black olives and as an iron supplement. Safe.',
+    'e579': 'E579 is the EU/INS code for Ferrous Gluconate. Iron source and colour fixative. Safe.',
+
+    # ── Emulsifiers / Hydrocolloids (E400-E499) ──────────────────────────
+    'alginic acid': 'Alginic Acid (E400/INS 400) is a natural polysaccharide from brown seaweed. Thickener and gelling agent. Safe; dietary fibre.',
+    'e400': 'E400 is the EU/INS code for Alginic Acid. Natural seaweed thickener. Safe.',
+    'sodium alginate': 'Sodium Alginate (E401/INS 401) is the most widely used alginate from brown seaweed. Gelling agent in ice cream, salad dressings and molecular gastronomy. Safe; dietary fibre.',
+    'e401': 'E401 is the EU/INS code for Sodium Alginate. Widely used seaweed gelling agent. Safe.',
+    'potassium alginate': 'Potassium Alginate (E402/INS 402) is the potassium salt of alginic acid. Seaweed thickener. Safe.',
+    'e402': 'E402 is the EU/INS code for Potassium Alginate. Seaweed thickener. Safe.',
+    'e403': 'E403 is the EU/INS code for Ammonium Alginate. Seaweed thickener. Safe.',
+    'calcium alginate': 'Calcium Alginate (E404/INS 404) forms thermo-irreversible gels from seaweed. Used in food and wound dressings. Safe.',
+    'e404': 'E404 is the EU/INS code for Calcium Alginate. Natural seaweed gel-former. Safe.',
+    'propylene glycol alginate': 'Propylene Glycol Alginate (E405/INS 405) is an acid-stable alginate ester used in salad dressings and beer foam. Safe at approved levels.',
+    'e405': 'E405 is the EU/INS code for Propylene Glycol Alginate. Acid-stable seaweed gum. Safe.',
+    'agar': 'Agar (E406/INS 406, Agar-Agar) is a natural polysaccharide from red algae. The vegetarian/vegan alternative to gelatin. Forms firm, clear gels. Safe; dietary fibre.',
+    'e406': 'E406 is the EU/INS code for Agar (Agar-Agar). Natural red algae gelling agent. Vegetarian gelatin. Safe.',
+    'locust bean gum': 'Locust Bean Gum (E410/INS 410, Carob Bean Gum) is a natural polysaccharide from carob seeds. Thickener in ice cream and dairy. Safe; dietary fibre.',
+    'e410': 'E410 is the EU/INS code for Locust Bean Gum (Carob Gum). Natural seed thickener. Safe.',
+    'tragacanth': 'Tragacanth (E413/INS 413) is a natural gum from Astragalus shrubs. One of the oldest food gums; used in confectionery. Safe.',
+    'e413': 'E413 is the EU/INS code for Tragacanth. Natural plant gum thickener. Safe.',
+    'gum arabic': 'Gum Arabic (E414/INS 414, Acacia Gum) is a natural gum from acacia trees of Africa. The world\'s most widely used food gum. Safe; prebiotic dietary fibre.',
+    'acacia gum': 'Acacia Gum (E414/INS 414, Gum Arabic) from acacia trees is the world\'s most widely used food gum. Safe; prebiotic.',
+    'e414': 'E414 is the EU/INS code for Gum Arabic (Acacia Gum). World\'s most used food gum. Safe.',
+    'karaya gum': 'Karaya Gum (E416/INS 416) is a natural gum from Indian Sterculia trees. Thickener and stabiliser. Safe; rare sensitivity possible.',
+    'e416': 'E416 is the EU/INS code for Karaya Gum. Indian plant gum. Safe.',
+    'tara gum': 'Tara Gum (E417/INS 417) is a natural polysaccharide from tara plant seeds. Thickener. Safe.',
+    'e417': 'E417 is the EU/INS code for Tara Gum. Natural seed gum. Safe.',
+    'gellan gum': 'Gellan Gum (E418/INS 418) is a polysaccharide from bacterial fermentation. Gelling agent in plant-based milks and confectionery. Safe.',
+    'e418': 'E418 is the EU/INS code for Gellan Gum. Microbial gelling agent. Safe.',
+    'e420': 'E420 is the EU/INS code for Sorbitol. Sugar alcohol sweetener from fruits; laxative effects at >50g/day; label warning required.',
+    'e421': 'E421 is the EU/INS code for Mannitol. Natural sugar alcohol; laxative effects; label warning required.',
+    'e422': 'E422 is the EU/INS code for Glycerol (Glycerine). Natural humectant from fats. Safe.',
+    'konjac': 'Konjac (E425/INS 425) is a polysaccharide from the konjac plant. Rich in glucomannan fibre with cholesterol-lowering benefits. EU restricts certain firm jelly formats for children due to choking risk.',
+    'e425': 'E425 is the EU/INS code for Konjac (Konjac Gum). High-fibre gelling agent; EU restricts certain children\'s jelly formats.',
+    'e440': 'E440 is the EU/INS code for Pectins. Natural gelling agent from citrus peel. Safe; soluble dietary fibre.',
+    'e441': 'E441 is the EU/INS code for Gelatin. Animal-derived gelling protein. Not suitable for vegetarians, vegans or halal/kosher.',
+    'ammonium phosphatides': 'Ammonium Phosphatides (E442/INS 442) are emulsifiers from vegetable oils used in chocolate to reduce viscosity. Safe.',
+    'e442': 'E442 is the EU/INS code for Ammonium Phosphatides. Chocolate emulsifier. Safe.',
+    'sucrose esters': 'Sucrose Esters of Fatty Acids (E473/INS 473) are emulsifiers from sucrose and fatty acids. Used in baked goods and dairy. Safe.',
+    'e473': 'E473 is the EU/INS code for Sucrose Esters of Fatty Acids. Emulsifiers. Safe.',
+    'e475': 'E475 is the EU/INS code for Polyglycerol Esters of Fatty Acids. Emulsifiers in confectionery. Safe.',
+    'polysorbate 20': 'Polysorbate 20 (E432/INS 432) is a non-ionic emulsifier in food and cosmetics. Ethoxylation may introduce trace 1,4-dioxane (IARC Group 2B). Safe within approved limits.',
+    'e432': 'E432 is the EU/INS code for Polysorbate 20. Non-ionic emulsifier; trace 1,4-dioxane possible from ethoxylation. Safe within limits.',
+    'polysorbate 80': 'Polysorbate 80 (E433/INS 433) is a widely used non-ionic emulsifier in food, vaccines and cosmetics. Ethoxylation may introduce trace 1,4-dioxane. Safe within approved limits.',
+    'e433': 'E433 is the EU/INS code for Polysorbate 80. Widely used emulsifier; trace 1,4-dioxane possible. Safe within limits.',
+    'polysorbate 60': 'Polysorbate 60 (E435/INS 435) is a non-ionic emulsifier in baked goods and whipped toppings. Safe within approved limits.',
+    'e435': 'E435 is the EU/INS code for Polysorbate 60. Emulsifier in baked goods. Safe within limits.',
+    'polysorbate 65': 'Polysorbate 65 (E436/INS 436) is an emulsifier in ice cream and chocolate coatings. Safe within approved limits.',
+    'e436': 'E436 is the EU/INS code for Polysorbate 65. Emulsifier. Safe within limits.',
+    'e460': 'E460 is the EU/INS code for Microcrystalline Cellulose. Insoluble dietary fibre; anti-caking agent. Safe.',
+    'e461': 'E461 is the EU/INS code for Methyl Cellulose. Heat-set modified cellulose in plant-based burgers. Safe.',
+    'e464': 'E464 is the EU/INS code for Hydroxypropyl Methyl Cellulose (HPMC). Used in vegetarian capsules and gluten-free baking. Safe.',
+    'datem': 'DATEM (E472e/INS 472e) is a highly effective bread dough emulsifier. Key ingredient in industrial baking. Safe.',
+    'e472e': 'E472e is the EU/INS code for DATEM. Key bread dough emulsifier. Safe.',
+    'sodium stearoyl lactylate': 'Sodium Stearoyl Lactylate (SSL/E481/INS 481) is a bread emulsifier that strengthens gluten and extends shelf life. Safe.',
+    'e481': 'E481 is the EU/INS code for Sodium Stearoyl Lactylate (SSL). Key bread emulsifier. Safe.',
+    'calcium stearoyl lactylate': 'Calcium Stearoyl Lactylate (CSL/E482/INS 482) is a bread emulsifier and dough conditioner. Safe.',
+    'e482': 'E482 is the EU/INS code for Calcium Stearoyl Lactylate (CSL). Bread emulsifier. Safe.',
+    'e491': 'E491 is the EU/INS code for Sorbitan Monostearate (Span 60). Emulsifier. Safe.',
+    'e492': 'E492 is the EU/INS code for Sorbitan Tristearate. Emulsifier. Safe.',
+    'e493': 'E493 is the EU/INS code for Sorbitan Monolaurate (Span 20). Emulsifier. Safe.',
+    'e494': 'E494 is the EU/INS code for Sorbitan Monooleate. Emulsifier. Safe.',
+    'e495': 'E495 is the EU/INS code for Sorbitan Monopalmitate. Emulsifier. Safe.',
+    'diphosphates': 'Diphosphates (E450/INS 450, Pyrophosphates) are emulsifying salts in processed cheese and leavening agents in baking. Safe at approved levels.',
+    'e450': 'E450 is the EU/INS code for Diphosphates (Pyrophosphates). Emulsifying salts in processed cheese. Safe at approved levels.',
+    'e451': 'E451 is the EU/INS code for Triphosphates. Moisture-retaining agent in processed meats. Safe.',
+    'e452': 'E452 is the EU/INS code for Polyphosphates. Emulsifying salts. Safe.',
+
+    # ── Raising agents / minerals (E500-E599) ────────────────────────────
+    'e500': 'E500 is the EU/INS code for Sodium Carbonates (including Baking Soda). Most widely used raising agent. Safe.',
+    'sodium bicarbonate': 'Sodium Bicarbonate (Baking Soda/E500ii) is the most widely used leavening agent. Reacts with acids to release CO2 for rising. Safe.',
+    'e501': 'E501 is the EU/INS code for Potassium Carbonates. Raising agent in cocoa and noodles. Safe.',
+    'ammonium carbonate': 'Ammonium Carbonate (E503/INS 503, Bakers\' Ammonia) is a traditional raising agent for thin biscuits. Ammonia fully evaporates during baking. Safe.',
+    'e503': 'E503 is the EU/INS code for Ammonium Carbonates. Traditional raising agent. Ammonia bakes out. Safe.',
+    'magnesium carbonate': 'Magnesium Carbonate (E504/INS 504) is used as an anti-caking agent. Provides dietary magnesium. Safe.',
+    'e504': 'E504 is the EU/INS code for Magnesium Carbonates. Anti-caking agent; provides magnesium. Safe.',
+    'potassium chloride food': 'Potassium Chloride (E508/INS 508) is a low-sodium salt substitute and firming agent in tofu and vegetables. Provides dietary potassium. Safe.',
+    'e508': 'E508 is the EU/INS code for Potassium Chloride. Low-sodium salt substitute. Safe.',
+    'calcium chloride food': 'Calcium Chloride (E509/INS 509) is a firming agent in tofu, canned vegetables and cheese. Provides dietary calcium. Safe.',
+    'e509': 'E509 is the EU/INS code for Calcium Chloride. Firming agent in tofu and vegetables. Safe.',
+    'magnesium chloride food': 'Magnesium Chloride (E511/INS 511, Nigari) is the traditional Japanese tofu coagulant. Provides dietary magnesium. Safe.',
+    'e511': 'E511 is the EU/INS code for Magnesium Chloride (Nigari). Traditional tofu coagulant. Safe.',
+    'calcium sulphate food': 'Calcium Sulphate (E516/INS 516, food-grade gypsum) is a tofu coagulant and firming agent. Provides dietary calcium. Safe.',
+    'e516': 'E516 is the EU/INS code for Calcium Sulphate (food-grade gypsum). Tofu coagulant. Safe.',
+    'e524': 'E524 is the EU/INS code for Sodium Hydroxide (Lye). Processing aid for pretzels and olives; neutralised in final product. Safe.',
+    'e525': 'E525 is the EU/INS code for Potassium Hydroxide. Processing aid in cocoa; neutralised in final product. Safe.',
+    'e526': 'E526 is the EU/INS code for Calcium Hydroxide (Slaked Lime). Used in traditional nixtamalisation of corn; provides calcium. Safe.',
+    'e530': 'E530 is the EU/INS code for Magnesium Oxide. Anti-caking agent; provides magnesium. Safe.',
+    'silicon dioxide food': 'Silicon Dioxide (E551/INS 551, Amorphous Silica) is the most widely used anti-caking agent in powdered foods, salt and spices. Not absorbed by the body. Safe.',
+    'e551': 'E551 is the EU/INS code for Silicon Dioxide (Amorphous Silica). Most widely used anti-caking agent. Not absorbed; safe.',
+    'e552': 'E552 is the EU/INS code for Calcium Silicate. Anti-caking agent. Safe.',
+    'e553a': 'E553a is the EU/INS code for Magnesium Silicates. Anti-caking agent. Safe.',
+    'e572': 'E572 is the EU/INS code for Magnesium Stearate. Anti-caking agent in supplements. Safe.',
+    'sodium ferrocyanide': 'Sodium Ferrocyanide (E535/INS 535) prevents table salt from clumping. Despite the name, the cyanide is firmly bound to iron and not released at food-use conditions. Safe in the tiny concentrations used in salt.',
+    'e535': 'E535 is the EU/INS code for Sodium Ferrocyanide. Anti-caking agent in salt. Cyanide firmly bound -- safe at approved levels.',
+    'e536': 'E536 is the EU/INS code for Potassium Ferrocyanide. Anti-caking agent in salt. Stable; safe.',
+    'e558': 'E558 is the EU/INS code for Bentonite. Natural clay used to clarify wine; filtered out. Safe.',
+    'e559': 'E559 is the EU/INS code for Kaolin (China Clay). Anti-caking agent. Safe.',
+
+    # ── Flavour enhancers (E620-E650) ────────────────────────────────────
+    'glutamic acid food': 'Glutamic Acid (E620/INS 620) is the naturally occurring amino acid responsible for umami taste in meat, cheese, tomatoes and mushrooms. Safe -- one of the most abundant amino acids in the diet.',
+    'e620': 'E620 is the EU/INS code for Glutamic Acid. Natural amino acid responsible for umami taste. Safe.',
+    'e622': 'E622 is the EU/INS code for Monopotassium Glutamate. Umami flavour enhancer. Safe.',
+    'e623': 'E623 is the EU/INS code for Calcium Diglutamate. Umami flavour enhancer and calcium source. Safe.',
+    'e624': 'E624 is the EU/INS code for Monoammonium Glutamate. Umami flavour enhancer. Safe.',
+    'e625': 'E625 is the EU/INS code for Magnesium Diglutamate. Umami flavour enhancer. Safe.',
+    'guanylic acid': 'Guanylic Acid (E626/INS 626) is a nucleotide from dried mushrooms and fish that amplifies umami. High purine content -- avoid with gout. Safe for most.',
+    'e626': 'E626 is the EU/INS code for Guanylic Acid. Nucleotide umami enhancer; high purine -- avoid with gout.',
+    'e628': 'E628 is the EU/INS code for Dipotassium Guanylate. Nucleotide flavour enhancer; avoid with gout.',
+    'e629': 'E629 is the EU/INS code for Calcium Guanylate. Nucleotide flavour enhancer; avoid with gout.',
+    'inosinic acid': 'Inosinic Acid (E630/INS 630) is a nucleotide from meat and fish. Umami taste enhancer. High purine -- avoid with gout. Safe for most.',
+    'e630': 'E630 is the EU/INS code for Inosinic Acid. Nucleotide umami enhancer; avoid with gout.',
+    'e632': 'E632 is the EU/INS code for Dipotassium Inosinate. Nucleotide flavour enhancer; avoid with gout.',
+    'e633': 'E633 is the EU/INS code for Calcium Inosinate. Nucleotide flavour enhancer; avoid with gout.',
+    'glycine food': 'Glycine (E640/INS 640) is the simplest amino acid, used as a mild sweetener and bitter masker. Naturally in gelatin and bone broth. Safe.',
+    'e640': 'E640 is the EU/INS code for Glycine and its Sodium Salt. Amino acid flavour enhancer. Safe.',
+
+    # ── Glazing agents / waxes / gases (E900-E999) ───────────────────────
+    'dimethyl polysiloxane': 'Dimethyl Polysiloxane (PDMS/E900/INS 900) is a silicone polymer anti-foaming agent in frying oils and beverages. Not absorbed by the body. Safe.',
+    'e900': 'E900 is the EU/INS code for Dimethyl Polysiloxane. Silicone anti-foaming agent. Safe.',
+    'beeswax food': 'Beeswax (E901/INS 901) is natural wax from honeybees. Used as a glazing agent on confectionery and fruit. Safe; not vegan.',
+    'e901': 'E901 is the EU/INS code for Beeswax. Natural glazing agent. Safe; not vegan.',
+    'candelilla wax': 'Candelilla Wax (E902/INS 902) is a plant-based wax from the candelilla shrub. Vegan alternative to beeswax. Safe.',
+    'e902': 'E902 is the EU/INS code for Candelilla Wax. Plant-based vegan glazing agent. Safe.',
+    'carnauba wax food': 'Carnauba Wax (E903/INS 903) is the hardest natural wax from Brazilian carnauba palms. Gives shine to hard-coated sweets. Safe.',
+    'e903': 'E903 is the EU/INS code for Carnauba Wax. The shine on hard-coated confectionery. Safe.',
+    'shellac food': 'Shellac (E904/INS 904) is a natural resin from lac insects. High-gloss coating on confectionery and pharmaceutical tablets. Safe; not vegan. India is the world\'s largest producer.',
+    'e904': 'E904 is the EU/INS code for Shellac. Insect-derived glazing agent. Safe; not vegan.',
+    'e920': 'E920 is the EU/INS code for L-Cysteine. Dough conditioner amino acid. Often from hair/feathers -- check vegan status. Safe.',
+    'e941': 'E941 is the EU/INS code for Nitrogen. Inert packaging gas. Safe -- makes up 78% of air.',
+    'e942': 'E942 is the EU/INS code for Nitrous Oxide. Whipped cream propellant. Safe in food; dangerous recreationally.',
+
+    # ── Sweeteners (E950-E968) ───────────────────────────────────────────
+    'steviol glycosides': 'Steviol Glycosides (Stevia/E960/INS 960) are naturally sweet compounds from the stevia plant -- 200-400 times sweeter than sugar. Zero calories. Approved by FSSAI, FDA, EU and Codex. Safe; suitable for diabetics.',
+    'e960': 'E960 is the EU/INS code for Steviol Glycosides (Stevia). Natural zero-calorie sweetener. Safe; suitable for diabetics.',
+    'thaumatin': 'Thaumatin (E957/INS 957) is a natural sweet protein from the katemfe fruit -- about 2,500 times sweeter than sugar. Zero calories at use levels. Safe.',
+    'e957': 'E957 is the EU/INS code for Thaumatin. Natural sweet protein; ~2,500x sweeter than sugar. Safe.',
+    'neotame': 'Neotame (E961/INS 961) is an ultra-intense sweetener (~8,000x sweeter than sugar). Unlike aspartame, safe for phenylketonurics. FDA and EU approved.',
+    'e961': 'E961 is the EU/INS code for Neotame. Ultra-intense sweetener. Safe for phenylketonurics. FDA and EU approved.',
+    'e953': 'E953 is the EU/INS code for Isomalt. Sugar alcohol from sucrose; laxative at high intake; label warning required.',
+    'e965': 'E965 is the EU/INS code for Maltitol. Sugar alcohol sweetener; laxative at >40g/day; label warning required.',
+    'e966': 'E966 is the EU/INS code for Lactitol. Sugar alcohol; laxative at high intake; not for lactose-intolerant individuals.',
+    'e967': 'E967 is the EU/INS code for Xylitol. Natural sugar alcohol with dental benefits. CAUTION -- toxic to dogs. Laxative effects in humans at high doses.',
+    'erythritol': 'Erythritol (E968/INS 968) is a naturally occurring sugar alcohol from fermented foods. Near-zero calories; minimal laxative effect. Used in zero-calorie products. Safe.',
+    'e968': 'E968 is the EU/INS code for Erythritol. Natural sugar alcohol; near-zero calories; minimal laxative effect. Safe.',
+    'cyclamate': 'Cyclamate (E952/INS 952) is an artificial sweetener. Banned in USA (1969) and UK due to bladder cancer in rat studies. Permitted in India and EU at specified limits.',
+    'e952': 'E952 is the EU/INS code for Cyclamate. Banned in USA and UK; permitted in India and EU at limits.',
+    'sodium cyclamate': 'Sodium Cyclamate is the sodium salt form of cyclamate. Banned in USA and UK; approved in EU and India at limits.',
+
+    # ── Modified starches (E1400-E1599) ──────────────────────────────────
+    'e1404': 'E1404 is the EU/INS code for Oxidised Starch. Modified starch for confectionery coatings. Safe.',
+    'e1410': 'E1410 is the EU/INS code for Monostarch Phosphate. Modified starch thickener. Safe.',
+    'e1412': 'E1412 is the EU/INS code for Distarch Phosphate. Cross-linked modified starch. Safe.',
+    'e1420': 'E1420 is the EU/INS code for Acetylated Starch. Modified starch. Safe.',
+    'e1422': 'E1422 is the EU/INS code for Acetylated Distarch Adipate. Modified starch in soups and frozen foods. Safe.',
+    'e1440': 'E1440 is the EU/INS code for Hydroxypropyl Starch. Modified starch. Safe.',
+    'e1442': 'E1442 is the EU/INS code for Hydroxypropyl Distarch Phosphate. Widely used modified starch in ketchup, mayo and baby food. Safe.',
+    'e1450': 'E1450 is the EU/INS code for Starch Sodium Octenyl Succinate. Emulsifying modified starch for encapsulating flavours. Safe.',
+    'hydroxypropyl distarch phosphate': 'Hydroxypropyl Distarch Phosphate (E1442/INS 1442) has superior heat, acid and freeze-thaw stability. Widely used in ketchup, mayonnaise, sauces and baby food. Safe.',
+
+    # ── INS number lookup entries ─────────────────────────────────────────
+    'ins 100': 'INS 100 / E100 -- Curcumin (Turmeric Yellow). Natural yellow colour. Safe.',
+    'ins 101': 'INS 101 / E101 -- Riboflavin (Vitamin B2). Natural yellow colour and B-vitamin. Safe.',
+    'ins 102': 'INS 102 / E102 -- Tartrazine. Synthetic yellow azo dye. EU warning label required. See tartrazine.',
+    'ins 110': 'INS 110 / E110 -- Sunset Yellow FCF. Synthetic orange azo dye. EU warning label required.',
+    'ins 129': 'INS 129 / E129 -- Allura Red AC (Red 40). Synthetic red azo dye. EU warning label required.',
+    'ins 150d': 'INS 150d / E150d -- Sulphite Ammonia Caramel. Contains 4-MEI (IARC Group 2B). See e150d.',
+    'ins 160a': 'INS 160a / E160a -- Beta-Carotene. Natural orange-yellow colour; Vitamin A precursor. Safe.',
+    'ins 160b': 'INS 160b / E160b -- Annatto. Natural orange colour. Safe.',
+    'ins 162': 'INS 162 / E162 -- Beetroot Red (Betanin). Natural red-purple colour. Safe.',
+    'ins 171': 'INS 171 / E171 -- Titanium Dioxide. White colour. BANNED in EU food since 2022.',
+    'ins 200': 'INS 200 / E200 -- Sorbic Acid. Natural mould inhibitor. Safe.',
+    'ins 202': 'INS 202 / E202 -- Potassium Sorbate. Most widely used food preservative. Safe.',
+    'ins 211': 'INS 211 / E211 -- Sodium Benzoate. Preservative; forms benzene with Vitamin C. See sodium benzoate.',
+    'ins 220': 'INS 220 / E220 -- Sulfur Dioxide. Preservative; triggers asthma in sensitive individuals. See sulfur dioxide.',
+    'ins 250': 'INS 250 / E250 -- Sodium Nitrite. Meat curing agent; forms nitrosamines when heated. See sodium nitrite.',
+    'ins 260': 'INS 260 / E260 -- Acetic Acid (Vinegar acid). Safe acidity regulator.',
+    'ins 270': 'INS 270 / E270 -- Lactic Acid. Natural fermentation acid. Safe.',
+    'ins 296': 'INS 296 / E296 -- Malic Acid. Natural apple acid. Safe.',
+    'ins 300': 'INS 300 / E300 -- Ascorbic Acid (Vitamin C). Essential vitamin and antioxidant. Safe.',
+    'ins 306': 'INS 306 / E306 -- Tocopherol (Vitamin E). Natural antioxidant. Safe.',
+    'ins 320': 'INS 320 / E320 -- BHA. Synthetic antioxidant; IARC Group 2B possible carcinogen.',
+    'ins 321': 'INS 321 / E321 -- BHT. Synthetic antioxidant; IARC possible carcinogen.',
+    'ins 330': 'INS 330 / E330 -- Citric Acid. Natural fruit acid. Safe.',
+    'ins 338': 'INS 338 / E338 -- Phosphoric Acid. Gives cola drinks their tang; erodes tooth enamel with heavy use.',
+    'ins 400': 'INS 400 / E400 -- Alginic Acid. Natural seaweed thickener. Safe.',
+    'ins 401': 'INS 401 / E401 -- Sodium Alginate. Seaweed gelling agent. Safe.',
+    'ins 406': 'INS 406 / E406 -- Agar. Natural red algae gelling agent. Vegetarian gelatin. Safe.',
+    'ins 407': 'INS 407 / E407 -- Carrageenan. Seaweed stabiliser. Gut inflammation concerns; banned in EU infant formula.',
+    'ins 410': 'INS 410 / E410 -- Locust Bean Gum (Carob Gum). Natural seed thickener. Safe.',
+    'ins 412': 'INS 412 / E412 -- Guar Gum. Natural Indian seed gum. Safe.',
+    'ins 414': 'INS 414 / E414 -- Gum Arabic (Acacia Gum). Natural food gum. Safe.',
+    'ins 415': 'INS 415 / E415 -- Xanthan Gum. Microbial thickener; key to gluten-free baking. Safe.',
+    'ins 420': 'INS 420 / E420 -- Sorbitol. Sugar alcohol; laxative at >50g/day.',
+    'ins 422': 'INS 422 / E422 -- Glycerol (Glycerine). Natural humectant. Safe.',
+    'ins 433': 'INS 433 / E433 -- Polysorbate 80. Emulsifier; trace 1,4-dioxane possible. Safe within limits.',
+    'ins 440': 'INS 440 / E440 -- Pectin. Natural gelling agent from citrus peel. Safe.',
+    'ins 450': 'INS 450 / E450 -- Diphosphates. Emulsifying salts. Safe.',
+    'ins 471': 'INS 471 / E471 -- Mono- and Diglycerides of Fatty Acids. Most widely used food emulsifier. Safe.',
+    'ins 476': 'INS 476 / E476 -- PGPR. Chocolate emulsifier. Safe.',
+    'ins 481': 'INS 481 / E481 -- Sodium Stearoyl Lactylate (SSL). Key bread emulsifier. Safe.',
+    'ins 500': 'INS 500 / E500 -- Sodium Carbonates (Baking Soda). Most widely used raising agent. Safe.',
+    'ins 508': 'INS 508 / E508 -- Potassium Chloride. Low-sodium salt substitute. Safe.',
+    'ins 509': 'INS 509 / E509 -- Calcium Chloride. Firming agent. Safe.',
+    'ins 511': 'INS 511 / E511 -- Magnesium Chloride (Nigari). Tofu coagulant. Safe.',
+    'ins 516': 'INS 516 / E516 -- Calcium Sulphate. Tofu coagulant. Safe.',
+    'ins 551': 'INS 551 / E551 -- Silicon Dioxide. Most widely used anti-caking agent. Not absorbed; safe.',
+    'ins 575': 'INS 575 / E575 -- Glucono Delta-Lactone (GDL). Natural mild acidifier. Safe.',
+    'ins 621': 'INS 621 / E621 -- Monosodium Glutamate (MSG). Umami flavour enhancer. FDA GRAS. Safe.',
+    'ins 627': 'INS 627 / E627 -- Disodium Guanylate. Nucleotide flavour enhancer; avoid with gout.',
+    'ins 631': 'INS 631 / E631 -- Disodium Inosinate. Nucleotide flavour enhancer; avoid with gout.',
+    'ins 635': "INS 635 / E635 -- Disodium 5'-Ribonucleotides (I+G). Nucleotide enhancer blend; avoid with gout.",
+    'ins 900': 'INS 900 / E900 -- Dimethyl Polysiloxane. Silicone anti-foaming agent. Safe.',
+    'ins 903': 'INS 903 / E903 -- Carnauba Wax. Natural glazing agent. Safe.',
+    'ins 951': 'INS 951 / E951 -- Aspartame. Artificial sweetener (IARC Group 2B). See aspartame.',
+    'ins 954': 'INS 954 / E954 -- Saccharin. Artificial sweetener. Bladder cancer concerns. See saccharin.',
+    'ins 955': 'INS 955 / E955 -- Sucralose. Artificial sweetener. See sucralose.',
+    'ins 960': 'INS 960 / E960 -- Steviol Glycosides (Stevia). Natural zero-calorie sweetener. Safe.',
+    'ins 967': 'INS 967 / E967 -- Xylitol. Sugar alcohol. TOXIC TO DOGS. Dental benefits for humans.',
+    'ins 968': 'INS 968 / E968 -- Erythritol. Natural sugar alcohol; near-zero calories. Safe.',
+    'ins 1442': 'INS 1442 / E1442 -- Hydroxypropyl Distarch Phosphate. Modified starch in ketchup and baby food. Safe.',
+
 }
 
 
@@ -938,18 +1517,43 @@ COSMETIC_SAFE_OVERRIDES = {
 
 
 def _normalize_ins(name: str) -> str:
-    """Convert 'INS 200', 'INS200', 'ins-200' → 'e200' so it matches E-number keys."""
+    """
+    Normalize additive number formats to a lowercase 'eNNN[sub]' key:
+      'INS 322'       → 'e322'
+      'INS322(i)'     → 'e322i'
+      '322(i)'        → 'e322i'
+      '500(ii)'       → 'e500ii'
+      '503 ii'        → 'e503ii'
+      '471'           → 'e471'
+      'E471'          → 'e471'
+      'E 500(ii)'     → 'e500ii'
+    """
     import re
-    s = name.strip().lower()
-    m = re.match(r'^ins[\s\-]*(\d+)', s)
+    s = name.strip()
+    # Pattern: optional 'INS' or 'E' prefix + optional space, then digits,
+    # then optional sub-type: (i), (ii), (iii), (iv), (v) or bare i/ii/iii/iv
+    m = re.match(
+        r'^(?:ins[\s\-]?|e[\s]?)?(\d+)\s*[\(\s\-]*(i{1,3}v?|iv|v)\s*\)?\s*$',
+        s, re.IGNORECASE
+    )
     if m:
-        return 'e' + m.group(1)
-    return s
+        return 'e' + m.group(1) + m.group(2).lower()
+    # Just a number (bare, or with INS/E prefix, no sub-type)
+    m2 = re.match(r'^(?:ins[\s\-]?|e[\s]?)?(\d+)', s, re.IGNORECASE)
+    if m2:
+        return 'e' + m2.group(1)
+    # Old behaviour: 'INS 200' → 'e200'
+    m3 = re.match(r'^ins[\s\-]*(\d+)', s, re.IGNORECASE)
+    if m3:
+        return 'e' + m3.group(1)
+    return s.lower()
+
 
 
 def classify_ingredient(ingredient_name, category=None):
     """Classify ingredients based on regulatory and health concerns - SINGLE SOURCE OF TRUTH"""
-    # Normalize INS numbers first: "INS 200" → "e200"
+    import re as _re
+    # Normalize INS numbers first: "INS 200" / "471" / "500(ii)" → "e200" / "e471" / "e500ii"
     ingredient_name = _normalize_ins(ingredient_name)
     # Normalize "CI No. 47000" → "ci 47000", collapse extra spaces
     ingredient_lower = (
@@ -1094,7 +1698,6 @@ def classify_ingredient(ingredient_name, category=None):
         'partially hydrogenated': ('Trans fat source', 'Contains trans fatty acids — banned in USA (2018), EU, Canada, many countries; raises LDL cholesterol, lowers HDL; significantly increases heart disease and stroke risk'),
 
         # Emulsifiers with trans fat and glycidol concerns
-        'mono and diglycerides': ('Emulsifier E471', 'May contain trans fats from hydrogenated oil sources; can contain glycidol fatty acid esters (IARC Group 2A carcinogen); EFSA raised safety concerns in 2018 review'),
 
         # Preservatives with severe toxicity
         'benzyl alcohol': ('Preservative/solvent', 'Toxic to neonates — can cause fatal gasping syndrome; metabolizes to benzaldehyde and benzoic acid; banned in products for infants; contact dermatitis in sensitive individuals'),
@@ -1165,9 +1768,26 @@ def classify_ingredient(ingredient_name, category=None):
         'tertiary butylhydroquinone': ('Antioxidant E319/INS 319', 'Petroleum-derived; toxic at high doses; animal studies link very high intakes to immune effects; banned in Japan; FDA permits up to 0.02% of fat content in the USA'),
         'e319': ('TBHQ (E319)', 'Petroleum-derived antioxidant in cooking oils and instant noodles; banned in Japan; FSSAI-permitted at specified limits; controversial — some animal research on immune effects at high doses'),
 
+
+        # E-number aliases for existing commonly_questioned ingredients
+        'e142': ('Synthetic green dye E142 (Green S)', 'Banned in USA, Canada, Japan, Australia — hyperactivity concerns and lack of comprehensive safety data'),
+        'e150c': ('Ammonia Caramel (E150c / Caramel III)', '4-MEI by-product is IARC Group 2B possible carcinogen; California Prop 65 cancer warning required; used in beer and soy sauce'),
+        'e150d': ('Sulfite Ammonia Caramel (E150d / Caramel IV)', '4-MEI by-product is IARC Group 2B possible carcinogen; used in colas — Coca-Cola reformulated in some markets; California Prop 65 warning required'),
+        'e151': ('Brilliant Black BN (E151)', 'Banned in USA, Canada, Japan, Australia; hyperactivity warning required in EU; azo dye with cancer and hyperactivity concerns'),
+        'e218': ('Methylparaben as E218', 'Same as methylparaben — estrogen mimic, accumulates in breast tissue, endocrine disruptor; EU restricts concentration'),
+        'e219': ('Sodium Methylparaben (E219)', 'Sodium salt of methylparaben; same hormone disruption concerns; EU restricts concentration'),
+
         # Potassium nitrite — curing salt, forms nitrosamines
         'potassium nitrite': ('Curing agent E249/INS 249', 'Curing salt in processed meats; can form N-nitrosamines (IARC Group 2A probable carcinogens) when heated to high temperatures, especially in combination with amines in meat; FSSAI and EU set strict maximum levels'),
         'e249': ('Potassium nitrite (E249)', 'Curing agent in processed meats; same nitrosamine formation risk as sodium nitrite (E250); FSSAI, EU and Codex permit at strict limits; avoid heavily cured meats in diet'),
+
+        # Fragrance allergens — EU banned or mandatory declaration
+        'butylphenyl methylpropional': ('Fragrance allergen (Lilial) — EU BANNED', 'BANNED across the EU since March 2022 (CMR 1B substance — reproductive toxicant); classified as toxic to reproduction in animal studies; still appears in many products sold outside Europe; avoid'),
+        'lilial': ('Fragrance allergen (Butylphenyl Methylpropional) — EU BANNED', 'Same as Butylphenyl Methylpropional — banned in EU cosmetics since March 2022 due to reproductive toxicity; may persist on market in non-EU products and old stock; avoid'),
+
+        # Chlorhexidine — antiseptic with allergy and ototoxicity risk
+        'chlorhexidine digluconate': ('Antiseptic / disinfectant', 'Potent broad-spectrum antiseptic; EU Cosmetics Regulation restricts to 0.3% in mouthwash and 0.5% in other products; can cause severe allergic reactions including anaphylaxis (documented in medical settings); ototoxic — must not contact middle ear; not recommended for routine daily use'),
+        'chlorhexidine': ('Antiseptic / disinfectant', 'Broad-spectrum antiseptic used in oral care and wound treatment; potential for severe contact allergy including anaphylaxis; ototoxic if enters middle ear; EU restricts concentration; suitable for therapeutic use, not daily cosmetic use'),
     }
 
     # WORTH KNOWING INGREDIENTS (YELLOW) - Generally safe but with considerations
@@ -1212,7 +1832,104 @@ def classify_ingredient(ingredient_name, category=None):
         'potassium sorbate': ('Preservative E202', 'Generally safe; may cause skin irritation and allergic reactions; migraines reported'),
         'e202': ('Potassium sorbate (E202)', 'Generally safe preservative; may cause contact allergies in sensitive individuals'),
         'e955': ('Sucralose (E955)', 'Alters gut microbiome; may impair insulin response; glucose intolerance in some studies'),
-        # e954 / saccharin → moved to commonly_questioned (bladder cancer in rats, historical bans)
+        # e954 / saccharin → moved to commonly_questioned
+
+        # Raising agents — safe but worth knowing what they are
+        'e500': ('Sodium Carbonates (E500)', 'Safe leavening and pH agents; high sodium intake concern if excessive'),
+        'e500i': ('Sodium Carbonate (E500i)', 'Safe leavening agent; standard baking ingredient'),
+        'e500ii': ('Sodium Bicarbonate / Baking Soda (E500ii)', 'Widely used, safe leavening agent; standard baking soda'),
+        'e500iii': ('Sodium Sesquicarbonate (E500iii)', 'Safe leavening and pH agent'),
+        'e501': ('Potassium Carbonates (E501)', 'Safe leavening agents'),
+        'e501i': ('Potassium Carbonate (E501i)', 'Safe leavening agent'),
+        'e501ii': ('Potassium Bicarbonate (E501ii)', 'Safe sodium-free leavening agent'),
+        'e503': ('Ammonium Carbonates (E503)', 'Safe leavening agent; fully decomposes during baking — no ammonia in finished product'),
+        'e503i': ('Ammonium Carbonate (E503i)', 'Traditional baking leavening agent; fully decomposes on heating'),
+        'e503ii': ('Ammonium Bicarbonate (E503ii)', 'Safe leavening agent in dry baked goods; fully decomposes during baking'),
+        'e504': ('Magnesium Carbonates (E504)', 'Safe anti-caking and leavening agent; provides dietary magnesium'),
+        'e504i': ('Magnesium Carbonate (E504i)', 'Safe anti-caking and leavening agent'),
+        'e504ii': ('Magnesium Hydroxide Carbonate (E504ii)', 'Safe anti-caking and leavening agent'),
+        'e450': ('Diphosphates (E450)', 'Baking powder component; excessive phosphate intake may affect kidney health and bone metabolism'),
+        'e450i': ('Disodium Diphosphate/SAPP (E450i)', 'Leavening acid in baking powder; excess phosphate concern for kidney health'),
+        'e451': ('Triphosphates (E451)', 'Used in processed cheese and meats; excess phosphate concern for kidney health'),
+        'e451i': ('Pentasodium Triphosphate/STPP (E451i)', 'Emulsifying salt in processed cheese; excess phosphate concern'),
+        'e452': ('Polyphosphates (E452)', 'Emulsifying salt in processed cheese; excess phosphate concern for kidney health'),
+        # Emulsifiers
+        'e322': ('Lecithin (E322)', 'Natural emulsifier; generally safe but soy allergen if soy-derived; sunflower lecithin is allergen-free'),
+        'e322i': ('Lecithin (E322i)', 'Natural emulsifier; soy allergen if soy-derived'),
+        'e322ii': ('Hydroxylated Lecithin (E322ii)', 'Modified lecithin; soy allergen if soy-derived'),
+        'e472e': ('DATEM (E472e)', 'Synthetic emulsifier derived from mono/diglycerides and tartaric acid; widely used in bread; generally safe but processed ingredient'),
+        'e472a': ('ACETEM (E472a)', 'Acetic acid ester of mono/diglycerides; synthetic emulsifier; generally safe in bread and baked goods'),
+        'e472b': ('LACTEM (E472b)', 'Lactic acid ester of mono/diglycerides; synthetic emulsifier; generally safe'),
+        'e472c': ('CITREM (E472c)', 'Citric acid ester of mono/diglycerides; synthetic emulsifier; generally safe'),
+        'e473': ('Sucrose Esters (E473)', 'Synthetic emulsifier from sucrose and fatty acids; generally safe'),
+        'e475': ('Polyglycerol Esters (E475)', 'Synthetic emulsifier; generally safe'),
+        'e476': ('PGPR (E476)', 'Synthetic emulsifier from castor oil; may cause digestive upset at high doses; animal studies at very high doses showed liver effects'),
+        'e481': ('Sodium Stearoyl Lactylate/SSL (E481)', 'Synthetic dough emulsifier; generally safe; improves bread quality'),
+        'e491': ('Sorbitan Monostearate (E491)', 'Synthetic emulsifier; generally safe in confectionery and baked goods'),
+        'e442': ('Ammonium Phosphatides (E442)', 'Chocolate emulsifier; synthetic; limited safety data; generally considered safe'),
+        # Sweeteners (moderate concern)
+        'e420': ('Sorbitol / Sugar alcohol (E420)', 'May cause digestive discomfort, bloating and diarrhoea at doses above 50g; laxative effect'),
+        'e420i': ('Sorbitol (E420i)', 'Sugar alcohol — laxative effect at high intake; generally safe in moderate amounts'),
+        'e421': ('Mannitol / Sugar alcohol (E421)', 'Poorly absorbed; laxative and gas-forming at high doses; generally safe in small amounts'),
+        'e953': ('Isomalt / Sugar alcohol (E953)', 'May cause digestive discomfort at high intake; low glycaemic index'),
+        'e965': ('Maltitol / Sugar alcohol (E965)', 'Digestive discomfort and laxative effect at high doses; raises blood sugar more than other sugar alcohols'),
+        'e966': ('Lactitol / Sugar alcohol (E966)', 'Laxative effect at high doses; contains lactose backbone — relevant for lactose-intolerant people'),
+        'e967': ('Xylitol / Sugar alcohol (E967)', 'Digestive discomfort at high doses; safe for teeth; toxic to dogs — keep out of pet reach'),
+        'e961': ('Neotame (E961)', 'High-intensity synthetic sweetener; generally safe; metabolised differently from aspartame'),
+        'e962': ('Aspartame-Acesulfame Salt (E962)', 'Contains phenylalanine — PKU warning required; same aspartame concerns apply'),
+        'e960a': ('Steviol Glycosides from Stevia (E960a)', 'Natural sweetener from stevia; generally safe at normal use levels'),
+        # Caramel colours (safer variants)
+        'e150a': ('Plain Caramel / Caramel I (E150a)', 'Safest class of caramel colour; no ammonia or sulfite process; generally safe'),
+        'e150b': ('Caustic Sulfite Caramel / Caramel II (E150b)', 'Contains sulfite process by-products; generally safe at food levels; sulfite allergen note'),
+        # Preservatives (moderate)
+        'e200': ('Sorbic Acid (E200)', 'Generally safe preservative; may cause contact sensitisation in some individuals'),
+        'e201': ('Sodium Sorbate (E201)', 'Generally safe preservative; may cause mild allergic reactions in sensitive people'),
+        'e203': ('Calcium Sorbate (E203)', 'Generally safe preservative; similar profile to potassium sorbate'),
+        'e210': ('Benzoic Acid (E210)', 'Forms benzene with Vitamin C in acidic beverages; hyperactivity links in children; mandatory EU label declaration'),
+        'e212': ('Potassium Benzoate (E212)', 'Same benzene-formation and hyperactivity concerns as sodium benzoate (E211)'),
+        'e213': ('Calcium Benzoate (E213)', 'Similar concerns to sodium benzoate (E211); benzene formation with Vitamin C'),
+        'e221': ('Sodium Sulfite (E221)', 'Sulfite allergen — can trigger asthma attacks; mandatory label declaration'),
+        'e222': ('Sodium Bisulfite (E222)', 'Sulfite allergen — asthma trigger; mandatory declaration'),
+        'e224': ('Potassium Metabisulfite (E224)', 'Sulfite allergen — asthma trigger; mandatory declaration'),
+        'e225': ('Potassium Sulfite (E225)', 'Sulfite allergen — asthma trigger; mandatory declaration'),
+        'e280': ('Propionic Acid (E280)', 'Antifungal preservative; safe at food use levels; some migraine sensitivity reports'),
+        'e281': ('Sodium Propionate (E281)', 'Bread preservative; generally safe; occasional migraine sensitivity'),
+        'e282': ('Calcium Propionate (E282)', 'Most widely used bread preservative; generally safe; occasional migraine sensitivity reported'),
+        'e283': ('Potassium Propionate (E283)', 'Bread preservative; generally safe; occasional migraine sensitivity'),
+        # Phosphate additives
+        'e339': ('Sodium Phosphates (E339)', 'Excess phosphate intake may affect kidney function and bone metabolism; generally safe at food levels'),
+        'e340': ('Potassium Phosphates (E340)', 'Excess phosphate concern for kidney health at high intake'),
+        'e341': ('Calcium Phosphates (E341)', 'Safe at food levels; provides calcium; generally recognised as safe'),
+        'e341i': ('Monocalcium Phosphate/MCP (E341i)', 'Common baking powder ingredient; generally safe'),
+        'e341ii': ('Dicalcium Phosphate/DCP (E341ii)', 'Safe leavening and supplement ingredient'),
+        'e341iii': ('Tricalcium Phosphate/TCP (E341iii)', 'Safe anti-caking agent and calcium supplement'),
+        # Silicates — aluminium content
+        'e554': ('Sodium Aluminosilicate (E554)', 'Contains aluminium; generally safe at food levels; caution for kidney disease patients'),
+        'e559': ('Kaolin / Aluminium Silicate (E559)', 'Contains aluminium; generally safe at food levels; concern for kidney patients'),
+        # Colours with mild concerns
+        'e120': ('Cochineal / Carmine (E120)', 'Animal-derived (insect); can cause severe allergic reactions including anaphylaxis; not vegan; must be labelled explicitly'),
+        'e142': ('Green S (E142)', 'Banned in USA, Canada, Japan and Australia; approved in EU and India with restrictions; hyperactivity concern'),
+        'e160b': ('Annatto (E160b)', 'Natural colour from annatto seeds; generally safe; occasional allergic reactions reported'),
+        # Flavour enhancers (additional)
+        'e620': ('Glutamic Acid (E620)', 'Natural amino acid; some sensitivity similar to MSG reported; generally safe'),
+        'e622': ('Monopotassium Glutamate (E622)', 'Similar to MSG; generally safe for most people'),
+        'e623': ('Calcium Glutamate (E623)', 'Similar to MSG; generally safe'),
+        'e624': ('Monoammonium Glutamate (E624)', 'Similar to MSG; generally safe'),
+        'e625': ('Magnesium Glutamate (E625)', 'Similar to MSG; also provides magnesium; generally safe'),
+        'e626': ('Guanylic Acid (E626)', 'Natural flavour enhancer; gout sufferers should limit purine-rich foods including guanylates'),
+        'e628': ('Dipotassium Guanylate (E628)', 'Flavour enhancer; high purine content — concern for gout sufferers'),
+        'e629': ('Calcium Guanylate (E629)', 'Flavour enhancer; high purine content — concern for gout sufferers'),
+        'e630': ('Inosinic Acid (E630)', 'Flavour enhancer found in meat and fish; high purine content — concern for gout sufferers'),
+        'e632': ('Dipotassium Inosinate (E632)', 'Flavour enhancer; high purine — concern for gout sufferers'),
+        'e633': ('Calcium Inosinate (E633)', 'Flavour enhancer; high purine — concern for gout sufferers'),
+        'e635': ('Disodium Ribonucleotides (E635)', 'Blend of E631+E627; strong flavour enhancer; high purine — avoid if prone to gout'),
+        # Cellulose derivatives
+        'e466': ('Sodium CMC / Cellulose Gum (E466)', 'Synthetic cellulose thickener; animal studies at very high doses showed gut effects; safe at normal food levels'),
+        # Polysorbates / modified
+        'e533': ('Magnesium Silicate (E553a)', 'Anti-caking agent; safe at food levels'),
+        'e553b': ('Talc (E553b)', 'Anti-caking agent; concerns about asbestos contamination of some talc deposits; FDA and EU regulate its use'),
+        # Colours (safe variants)
+        'e150': ('Caramel Colour (E150)', 'Most widely used food colour; Classes III and IV contain 4-MEI (possible carcinogen); California Prop 65 warning required for Caramel IV'),
         # mineral oil, petrolatum, paraffinum liquidum, paraffin wax → moved to commonly_questioned (PAH/MOAH contamination)
 
         # Denatured alcohols
@@ -1252,8 +1969,7 @@ def classify_ingredient(ingredient_name, category=None):
 
         # Chelating agents (moved to commonly_questioned — see below)
         
-        # Mild acids
-        'citric acid': ('Preservative/acidulant E330', 'Tooth enamel erosion with frequent exposure, stomach upset in large amounts'),
+        # Mild acids (citric acid and lactic acid moved to generally_recognised — safe in food and cosmetics)
 
         # Colorants (natural/mineral)
         'beta carotene': ('Provitamin A colorant E160a', 'Safe at normal food exposure levels; concern only at very high supplement doses (20mg+/day) in active smokers'),
@@ -1279,15 +1995,12 @@ def classify_ingredient(ingredient_name, category=None):
         'salt': ('Sodium chloride', 'High intake causes high blood pressure, heart disease, stroke, kidney damage'),
         'sodium chloride': ('Salt', 'Excess linked to hypertension, cardiovascular disease, kidney stones'),
         
-        # Acids (milder)
-        'lactic acid': ('Acid E270', 'Skin irritation, sun sensitivity, stinging on broken skin'),
+        # Acids (milder) — lactic acid and ascorbic acid moved to generally_recognised
         'malic acid': ('Acid E296', 'Tooth enamel erosion, mouth irritation, digestive upset in large amounts'),
-        
-        # Vitamins and minerals (when added)
-        'ascorbic acid': ('Vitamin C E300', 'Generally safe but high doses cause diarrhea, kidney stones, nausea'),
-        'tocopherol': ('Vitamin E E306', 'Safe but very high doses may increase bleeding risk, interfere with medications'),
-        'vitamin': ('Nutrient', 'Fortified - check if you need extra, excess can cause toxicity'),
-        'mineral': ('Nutrient', 'Fortified - excess minerals can interfere with absorption of others'),
+
+        # Vitamins and minerals (when added) — ascorbic acid / tocopherol moved to generally_recognised
+        'vitamin': ('Nutrient', 'Fortified — check if you need extra; excess of fat-soluble vitamins (A, D, E, K) can accumulate'),
+        'mineral': ('Nutrient', 'Fortified — excess minerals can interfere with absorption of others'),
         
         # Proteins
         'whey': ('Milk protein', 'Dairy allergen, digestive issues in lactose intolerant, acne trigger for some'),
@@ -1352,13 +2065,10 @@ def classify_ingredient(ingredient_name, category=None):
         'e304': ('Ascorbyl palmitate (E304)', 'Fat-soluble Vitamin C ester antioxidant; FSSAI, EU and CODEX approved; safe at permitted levels'),
 
         # Thickeners and gelling agents
-        'e401': ('Sodium alginate (E401)', 'Natural seaweed-derived thickener; FSSAI, EU and CODEX approved; generally safe; may interact with some mineral supplements'),
         'e402': ('Potassium alginate (E402)', 'Natural seaweed-derived thickener; CODEX and EU approved; generally safe'),
         'potassium alginate': ('Thickener E402/INS 402', 'Natural seaweed-derived gum; EU and CODEX approved; generally safe'),
         'e404': ('Calcium alginate (E404)', 'Natural seaweed-derived gelling agent; CODEX and EU approved; generally safe'),
         'calcium alginate': ('Thickener E404/INS 404', 'Natural seaweed-derived gelling agent; CODEX and EU approved; generally safe'),
-        'agar': ('Gelling agent E406/INS 406', 'Natural red algae-derived vegetarian gelatine substitute; FSSAI, EU and CODEX approved; generally safe; may cause mild digestive discomfort in large amounts'),
-        'e406': ('Agar (E406)', 'Natural seaweed-derived gelling agent; FSSAI, EU and CODEX approved; safe; mild laxative at large doses'),
         'locust bean gum': ('Thickener E410/INS 410', 'Natural carob seed gum; FSSAI, EU and CODEX approved; generally safe; high doses may cause flatulence'),
         'carob bean gum': ('Thickener E410/INS 410', 'Natural carob seed gum; EU and CODEX approved; generally safe'),
         'e410': ('Locust bean gum (E410)', 'Natural seed gum; FSSAI, EU and CODEX approved; generally safe; mild digestive effects at high doses'),
@@ -1368,7 +2078,6 @@ def classify_ingredient(ingredient_name, category=None):
         'gellan gum': ('Thickener E418/INS 418', 'Fermentation-derived gelling agent; FSSAI, EU and FDA approved; generally safe; no significant adverse effects at food-use concentrations'),
         'e418': ('Gellan gum (E418)', 'Fermentation-derived gelling agent; FSSAI, EU and FDA approved; generally safe'),
         'pectin': ('Gelling agent E440/INS 440', 'Natural fruit-derived soluble fibre; FSSAI, EU and CODEX approved; excellent safety profile; minor digestive effects at very high doses'),
-        'e440': ('Pectin (E440)', 'Natural fruit-derived gelling agent; FSSAI, EU and CODEX approved; safe dietary fibre with no known concerns'),
         'microcrystalline cellulose': ('Texturiser E460/INS 460', 'Refined plant cellulose; FSSAI, EU and CODEX approved; indigestible; safe as a bulking agent'),
         'e460': ('Microcrystalline cellulose (E460)', 'Refined cellulose; FSSAI, EU and CODEX approved; safe indigestible bulking agent'),
         'methyl cellulose': ('Thickener E461/INS 461', 'Modified plant cellulose; EU and CODEX approved; indigestible; may cause gas and bloating at high doses'),
@@ -1387,7 +2096,6 @@ def classify_ingredient(ingredient_name, category=None):
         'ssl': ('Sodium stearoyl lactylate (E481)', 'FDA, EU and FSSAI approved emulsifier in bread and pastries; generally safe'),
         'e481': ('SSL — Sodium stearoyl lactylate (E481)', 'FDA, EU and FSSAI approved bread emulsifier; generally safe at specified limits'),
         'calcium stearoyl lactylate': ('Emulsifier E482/INS 482', 'EU and CODEX approved emulsifier for baked goods; generally safe'),
-        'e482': ('CSL — Calcium stearoyl lactylate (E482)', 'EU and CODEX approved emulsifier; generally safe at specified limits'),
 
         # Sweeteners with considerations
         'mannitol': ('Sugar alcohol sweetener E421/INS 421', 'FSSAI, EU and CODEX approved; laxative effect when consumed above 20g/day; may cause gas and bloating'),
@@ -1396,11 +2104,7 @@ def classify_ingredient(ingredient_name, category=None):
         'e953': ('Isomalt (E953)', 'Sugar-derived sweetener; FSSAI, EU and CODEX approved; laxative at high doses; mild digestive effects'),
         'xylitol': ('Sugar alcohol sweetener E967/INS 967', 'FSSAI, EU and FDA approved; dental health benefits; laxative above 40g/day; TOXIC TO DOGS — do not share products with pets'),
         'e967': ('Xylitol (E967)', 'FSSAI, EU and FDA approved sweetener; dental protective; laxative at high doses; TOXIC TO DOGS'),
-        'erythritol': ('Sugar alcohol sweetener E968/INS 968', 'EU and CODEX approved; zero calories; better tolerated than other polyols; high doses (>50g) may cause nausea in some individuals'),
-        'e968': ('Erythritol (E968)', 'EU and CODEX approved zero-calorie sweetener; very well tolerated; very high doses may cause nausea'),
-        'steviol glycosides': ('Natural sweetener E960/INS 960', 'FSSAI, EU, FDA GRAS and CODEX approved; zero calorie; ADI 4mg/kg bw as steviol equivalents; very safe profile'),
         'stevia': ('Natural sweetener E960/INS 960', 'FSSAI, EU and FDA approved; zero-calorie natural sweetener; excellent safety record; some individuals report a slightly bitter aftertaste'),
-        'e960': ('Steviol glycosides / Stevia (E960)', 'FSSAI, EU, FDA and CODEX approved; zero-calorie natural sweetener; good safety profile at approved ADI'),
         'neotame': ('Artificial sweetener E961/INS 961', 'FDA (2002), EU (2010) and CODEX approved; ultra-high potency — 7,000–13,000x sweeter than sugar; no PKU concern unlike aspartame; limited long-term human data'),
         'e961': ('Neotame (E961)', 'FDA, EU and CODEX approved artificial sweetener; safe — no PKU risk; limited long-term human exposure data compared to older sweeteners'),
 
@@ -1444,11 +2148,9 @@ def classify_ingredient(ingredient_name, category=None):
         'e900': ('Dimethylpolysiloxane (E900)', 'FDA GRAS; EU and CODEX approved; generally safe as antifoaming agent in frying oils and some beverages'),
 
         # Acidity regulators
-        'acetic acid': ('Acidity regulator E260/INS 260 (Vinegar acid)', 'FSSAI, EU and CODEX approved; one of the safest food acids; tooth enamel erosion concern with frequent direct contact'),
         'e260': ('Acetic acid (E260)', 'FSSAI, EU and CODEX approved; safe at normal food use levels; minimal concerns'),
         'sodium acetate': ('Acidity regulator E262/INS 262', 'FSSAI, EU and CODEX approved; generally safe; watch sodium intake if on restricted diet'),
         'e262': ('Sodium acetate (E262)', 'FSSAI, EU and CODEX approved acidity regulator; generally safe'),
-        'tartaric acid': ('Acidulant E334/INS 334', 'FSSAI, EU and CODEX approved; natural grape-derived acid; EFSA ADI 30mg/kg bw; generally safe at food use levels'),
         'e334': ('L-Tartaric acid (E334)', 'FSSAI, EU and CODEX approved; natural acidulant; generally safe at specified levels'),
         'sodium citrate': ('Acidity regulator E331/INS 331', 'FSSAI, EU and CODEX approved; generally safe; watch sodium intake; safe for most people'),
         'e331': ('Sodium citrate (E331)', 'FSSAI, EU and CODEX approved; generally safe acidity regulator'),
@@ -1507,6 +2209,103 @@ def classify_ingredient(ingredient_name, category=None):
         'e535': ('Sodium ferrocyanide (E535)', 'Anti-caking agent in table salt; despite the "cyanide" name, it is chemically stable and safe at food-use levels; FSSAI, EU and CODEX approved'),
         'sodium ferrocyanide': ('Anti-caking agent E535/INS 535', 'Used in table salt; FSSAI, EU and CODEX approved; stable compound — cyanide is tightly bound and not released; safe at food additive levels'),
         'e249': ('Potassium nitrite (E249)', 'Curing agent that can form nitrosamines (probable carcinogens) at high cooking temperatures; FSSAI and EU strictly limit use; consume cured meats in moderation'),
+
+        # ── EU Mandatory Fragrance Allergens ─────────────────────────────────────
+        # EU Cosmetics Regulation requires individual declaration of these 26 allergens above 0.001% (leave-on) / 0.01% (rinse-off)
+        'limonene': ('Fragrance allergen — EU mandatory declaration', 'A citrus-derived terpene fragrance that is one of the most common causes of fragrance-related contact dermatitis; EU requires individual label declaration above 0.001% in leave-on products; also a common trigger for allergic reactions in sensitive individuals'),
+        'linalool': ('Fragrance allergen — EU mandatory declaration', 'A naturally occurring floral terpene alcohol found in lavender, coriander and bergamot; one of the top causes of fragrance allergy; EU mandates individual declaration above threshold; linalool can oxidise on storage to form stronger sensitisers'),
+        'benzyl salicylate': ('Fragrance allergen — EU mandatory declaration', 'A synthetic or naturally occurring fragrance ester with a floral balsamic scent; EU requires individual label declaration; associated with contact allergy and sensitization; used in perfumes, lotions and shampoos'),
+        'hexyl cinnamal': ('Fragrance allergen — EU mandatory declaration', 'A synthetic jasmine-scented aldehyde fragrance; EU mandates individual declaration above threshold; can cause contact allergic dermatitis in sensitized individuals; common in hair care and personal care products'),
+        'eugenol': ('Fragrance allergen — EU mandatory declaration', 'A natural phenol from clove oil; EU mandatory declaration allergen; common cause of contact dermatitis in dental and cosmetic products; also a fragrance used in personal care'),
+        'geraniol': ('Fragrance allergen — EU mandatory declaration', 'A natural rose-scented terpene alcohol from geranium and palmarosa oil; EU mandatory allergen declaration; can oxidise on storage to form stronger skin sensitisers'),
+        'citronellol': ('Fragrance allergen — EU mandatory declaration', 'A natural rose and citrus-scented terpene alcohol; EU mandatory declaration allergen; can cause contact allergy in sensitive individuals'),
+        'coumarin': ('Fragrance allergen — EU mandatory declaration', 'A natural lactone from tonka beans and sweet clover with a sweet vanilla-hay scent; EU mandatory allergen declaration; some animal studies raised hepatotoxicity concerns at very high doses; restricted in food applications'),
+        'isoeugenol': ('Fragrance allergen — EU mandatory declaration', 'A structural isomer of eugenol found in ylang-ylang and nutmeg essential oils; EU mandatory allergen declaration; strong sensitiser — has been banned in cosmetics in some jurisdictions'),
+        'cinnamyl alcohol': ('Fragrance allergen — EU mandatory declaration', 'A cinnamon-scented alcohol that is an EU mandatory allergen; can cause contact allergy and is a known skin sensitiser at higher concentrations'),
+        'cinnamal': ('Fragrance allergen — EU mandatory declaration', 'Cinnamic aldehyde, the primary aroma compound in cinnamon; EU mandatory allergen declaration; strong sensitiser in cosmetics; restricted in leave-on products'),
+        'farnesol': ('Fragrance allergen — EU mandatory declaration', 'A natural sesquiterpene alcohol with a sweet floral scent; EU mandatory allergen declaration; can cause contact allergy in sensitive individuals'),
+        'hydroxycitronellal': ('Fragrance allergen — EU mandatory declaration', 'A synthetic lily-of-the-valley scented aldehyde; EU mandatory declaration allergen; can cause contact sensitisation and allergic reactions'),
+        'amyl cinnamal': ('Fragrance allergen — EU mandatory declaration', 'A synthetic jasmine-scented fragrance aldehyde; EU mandatory allergen declaration; contact allergy potential in sensitive individuals'),
+        'benzyl cinnamate': ('Fragrance allergen — EU mandatory declaration', 'A fragrance ester with a sweet balsamic scent; EU mandatory declaration allergen; found in Peru balsam derivatives; sensitiser in some individuals'),
+        'benzyl benzoate': ('Fragrance allergen — EU mandatory declaration', 'A fragrance ester also used as an antiparasitic agent (scabies, lice); EU mandatory declaration allergen; contact allergy potential; some reports of skin irritation'),
+        'alpha-isomethyl ionone': ('Fragrance allergen — EU mandatory declaration', 'A synthetic violet-scented fragrance; EU mandatory allergen declaration; contact dermatitis potential in sensitised individuals'),
+        'methyl 2-octynoate': ('Fragrance allergen — EU mandatory declaration', 'A powerful synthetic fruity fragrance chemical; EU mandatory declaration allergen; strong sensitiser at higher concentrations'),
+        'anise alcohol': ('Fragrance allergen — EU mandatory declaration', 'Anisyl alcohol with sweet anise scent; EU mandatory declaration allergen; potential sensitiser'),
+
+        # ── Quaternary Ammonium Conditioning Agents ───────────────────────────────
+        'behentrimonium chloride': ('Quaternary ammonium conditioner', 'A positively charged (cationic) conditioning agent used in hair conditioners and treatments derived from rapeseed or coconut oil; EU restricts to 3% in rinse-off and 1% in leave-on products; may cause skin sensitisation and eye irritation at higher concentrations; environmental persistence concerns'),
+        'behentrimonium methosulfate': ('Quaternary ammonium conditioner', 'A milder alternative to behentrimonium chloride; widely used in natural-oriented conditioners and hair masks; generally better tolerated than chloride salts of quaternary ammonium compounds'),
+        'cetrimonium chloride': ('Quaternary ammonium conditioner', 'A cationic conditioning surfactant used to reduce hair frizz and static; EU restricts to 0.25% in rinse-off and is banned in leave-on products above 0.25%; can cause contact allergy, eye and skin irritation; toxic to aquatic organisms'),
+        'cetrimonium bromide': ('Quaternary ammonium conditioner', 'A positively charged conditioning surfactant; similar profile to cetrimonium chloride; EU restricts concentration; antimicrobial activity at higher concentrations; potential irritant and sensitiser'),
+        'quaternium-33': ('Quaternary ammonium conditioning agent', 'A conditioning polymeric quaternary ammonium compound used in hair products; generally safe at cosmetic use concentrations; some potential for skin sensitisation; provides anti-static and smoothing effects'),
+        'quaternium-18': ('Quaternary ammonium compound', 'A conditioning quaternary ammonium compound used in hair care; provides conditioning and anti-static effects; may cause irritation at high concentrations'),
+        'guar hydroxypropyltrimonium chloride': ('Cationic guar conditioner', 'A quaternized guar gum derivative used as a conditioning polymer in shampoos and conditioners; generally well tolerated; provides slip and detangling properties; biodegradable biopolymer base'),
+
+        # ── Ethoxylated Compounds (1,4-Dioxane risk) ─────────────────────────────
+        'trideceth-6': ('Ethoxylated surfactant/emulsifier', 'A non-ionic surfactant made by ethoxylating tridecanol; ethoxylation may introduce trace 1,4-dioxane contamination (IARC Group 2B possible carcinogen); generally mild surfactant at permitted levels; manufacturers can reduce dioxane via vacuum stripping'),
+        'trideceth-': ('Ethoxylated surfactant (trideceth series)', 'Non-ionic emulsifier from the trideceth series; same ethoxylation-related 1,4-dioxane contamination risk as other ethoxylates; mild and effective surfactant'),
+        'peg-100 stearate': ('PEG emulsifier (ethoxylated)', 'A PEG-based emulsifier from ethoxylation of stearic acid; potential trace 1,4-dioxane (IARC Group 2B) contamination from ethoxylation process; approved for cosmetic use'),
+        'ceteareth-': ('Ethoxylated emulsifier (ceteareth series)', 'Non-ionic emulsifier from ethoxylation of cetearyl alcohol; potential 1,4-dioxane contamination from ethoxylation; widely used emulsifier at approved concentrations'),
+        'laureth-': ('Ethoxylated lauryl alcohol surfactant series', 'Non-ionic surfactant from ethoxylation of lauryl alcohol; same 1,4-dioxane contamination risk as SLES; milder than SLS; widely used in cleansers'),
+        'steareth-': ('Ethoxylated stearyl alcohol emulsifier series', 'Non-ionic emulsifier from ethoxylation of stearyl alcohol; potential 1,4-dioxane contamination; widely used cosmetic emulsifier'),
+
+        # ── Solvents ──────────────────────────────────────────────────────────────
+        'isopropyl alcohol': ('Solvent / antiseptic (IPA)', 'A petroleum-derived short-chain alcohol used as a solvent and antiseptic in cosmetics, hand sanitisers and pharmaceuticals; very drying to skin with repeated use; can disrupt the skin barrier and cause irritation, especially in sensitive or eczema-prone individuals; not for ingestion'),
+        'isopropanol': ('Isopropyl alcohol / IPA', 'Same as isopropyl alcohol; drying to skin and scalp with repeated use; can compromise the skin barrier; used as a solvent and antiseptic in cosmetics'),
+
+        # ── Cosmetic Emollients / Lipids ──────────────────────────────────────────
+        'cetyl alcohol': ('Fatty alcohol emollient/emulsifier', 'A waxy fatty alcohol derived from coconut or palm oil; safe and well-tolerated; classified as an allergen only in rare cases; despite the word "alcohol" it is not drying and actually acts as a moisturiser'),
+        'cetearyl alcohol': ('Fatty alcohol emollient/emulsifier', 'A blend of cetyl and stearyl alcohols; waxy emollient derived from coconut or palm oil; generally very well tolerated; occasional contact allergy reported in rare cases'),
+        'stearyl alcohol': ('Fatty alcohol emollient/emulsifier', 'A naturally derived fatty alcohol used as an emollient and thickener in creams; generally very well tolerated; safe'),
+        'behenyl alcohol': ('Fatty alcohol emollient/emulsifier', 'A long-chain fatty alcohol used as an emollient and thickener in hair and skin care; derived from rapeseed or coconut; generally very well tolerated'),
+        'myristyl alcohol': ('Fatty alcohol emollient/emulsifier', 'A fatty alcohol derived from coconut oil; safe emollient and thickener; generally well tolerated'),
+        'octyldodecanol': ('Fatty alcohol emollient', 'A branched-chain fatty alcohol used as an emollient and solubiliser in cosmetics; safe and non-comedogenic; well tolerated'),
+
+        # ── Silicones (non-cyclic) ────────────────────────────────────────────────
+        'phenyl trimethicone': ('Linear silicone (non-cyclic)', 'A phenyl-modified silicone used in hair and skin products for high-shine effects; environmental persistence but less restricted than cyclic silicones D4/D5; generally safe for topical use'),
+        'trimethylsilylamodimethicone': ('Functional silicone (non-cyclic)', 'A trimethylsilyl-terminated amino silicone used in hair conditioning; provides long-lasting anti-frizz and shine; non-cyclic — less restricted than D4/D5; generally safe'),
+        'bis-aminopropyl dimethicone': ('Amino silicone (non-cyclic)', 'A modified silicone with reactive amino groups for hair conditioning and repair; non-cyclic; generally safe'),
+        # ── Ethoxylated emulsifiers (trace 1,4-dioxane concern) ────────────────
+        'polysorbate 20': ('Emulsifier E432/INS 432', 'Non-ionic ethoxylated emulsifier; ethoxylation may introduce trace 1,4-dioxane (IARC Group 2B possible carcinogen); safe within approved limits'),
+        'polysorbate 40': ('Emulsifier E434/INS 434', 'Non-ionic ethoxylated emulsifier; trace 1,4-dioxane possible; safe within approved limits'),
+        'polysorbate 60': ('Emulsifier E435/INS 435', 'Non-ionic ethoxylated emulsifier in baked goods; trace 1,4-dioxane possible; safe within approved limits'),
+        'polysorbate 65': ('Emulsifier E436/INS 436', 'Non-ionic ethoxylated emulsifier; safe within approved limits'),
+        'polysorbate 80': ('Emulsifier E433/INS 433', 'Widely used non-ionic ethoxylated emulsifier in food, vaccines and cosmetics; trace 1,4-dioxane (IARC Group 2B) possible from ethoxylation; safe within approved limits'),
+        'e432': ('Polysorbate 20 (E432)', 'Ethoxylated emulsifier; trace 1,4-dioxane possible; safe within approved limits'),
+        'e433': ('Polysorbate 80 (E433)', 'Widely used ethoxylated emulsifier; trace 1,4-dioxane possible; safe within approved limits'),
+        'e434': ('Polysorbate 40 (E434)', 'Ethoxylated emulsifier; safe within approved limits'),
+        'e435': ('Polysorbate 60 (E435)', 'Ethoxylated emulsifier in baked goods; safe within approved limits'),
+        'e436': ('Polysorbate 65 (E436)', 'Ethoxylated emulsifier; safe within approved limits'),
+
+        # ── Animal/insect-derived — dietary restrictions ────────────────────────
+        'gelatin': ('Animal-derived gelling protein E441/INS 441', 'Protein from animal collagen (bones/cartilage); used in gummies, jellies and capsules; NOT suitable for vegetarians, vegans or halal/kosher'),
+        'e441': ('Gelatin (E441)', 'Animal collagen-derived gelling agent; not suitable for vegetarians, vegans or halal/kosher requirements'),
+        'shellac': ('Insect-derived glazing agent E904/INS 904', 'Natural resin from lac insects; high-gloss coating on confectionery and tablets; not vegan; India is the world\'s largest producer; safe'),
+        'beeswax': ('Natural glazing agent E901/INS 901', 'Wax from honeybees used to glaze confectionery and fruit; safe; not vegan'),
+
+        # ── Nucleotide flavour enhancers (gout concern) ────────────────────────
+        'guanylic acid': ('Nucleotide flavour enhancer E626/INS 626', 'Naturally from dried mushrooms and fish; amplifies umami taste; high purine content — avoid if you have gout or hyperuricaemia; safe for most people'),
+        'e626': ('Guanylic Acid (E626)', 'Nucleotide umami enhancer; high purine — avoid with gout; safe for most'),
+        'inosinic acid': ('Nucleotide flavour enhancer E630/INS 630', 'Natural nucleotide from meat and fish; high purine — avoid with gout; safe for most'),
+        'e630': ('Inosinic Acid (E630)', 'Nucleotide umami enhancer; high purine — avoid with gout; safe for most'),
+
+        # ── Sugar alcohols with laxative effects ──────────────────────────────
+        'sorbitol': ('Sugar alcohol sweetener E420/INS 420', 'Naturally in apples, pears and other fruits; laxative effects at >50g/day — EU label warning required'),
+        'mannitol': ('Sugar alcohol sweetener E421/INS 421', 'Natural sugar alcohol from mushrooms; more pronounced laxative effects than sorbitol; EU label warning required'),
+        'maltitol': ('Sugar alcohol sweetener E965/INS 965', 'Sugar alcohol in sugar-free confectionery; laxative effects at >40g/day; EU label warning required'),
+        'lactitol': ('Sugar alcohol sweetener E966/INS 966', 'Sugar alcohol from lactose; laxative at high intake; not for lactose-intolerant individuals'),
+        'xylitol': ('Sugar alcohol sweetener E967/INS 967', 'Natural sugar alcohol with proven dental benefits; laxative at high intake; CAUTION — extremely toxic to dogs'),
+        'isomalt': ('Sugar alcohol sweetener E953/INS 953', 'Sugar alcohol from sucrose; laxative at high intake; EU label warning required'),
+
+        # ── Konjac (EU children restriction) ─────────────────────────────────
+        'konjac': ('High-fibre gelling agent E425/INS 425', 'Polysaccharide from konjac plant; EU restricts certain firm jelly formats for children due to choking risk; otherwise safe'),
+        'konjac flour': ('High-fibre gelling agent E425/INS 425', 'EU restricts certain firm jelly formats for children; safe in other uses'),
+        'konjac gum': ('High-fibre thickener E425/INS 425', "EU restricts certain children's jelly formats; safe"),
+
+        # ── Misc worth noting ─────────────────────────────────────────────────
+        'nitrous oxide': ('Propellant E942/INS 942', 'Whipped cream canister propellant; safe in food; dangerous when misused recreationally as a drug'),
+        'l-cysteine': ('Dough conditioner E920/INS 920', 'Amino acid used to reduce bread dough mixing time; often sourced from hair or feathers — check vegan/vegetarian compliance; safe'),
+        'propylene glycol alginate': ('Modified seaweed gum E405/INS 405', 'Contains propylene glycol moiety; used in salad dressings and beer foam; safe at approved levels'),
     }
     
     # GENERALLY RECOGNISED - Natural/herbal/organic ingredients (check FIRST before worth_knowing)
@@ -1695,6 +2494,155 @@ def classify_ingredient(ingredient_name, category=None):
         'cream of tartar': ('Potassium hydrogen tartrate (natural baking acid)', 'Natural from wine fermentation; safe leavening acid'),
         'dextrose monohydrate': ('Glucose / Dextrose sweetener', 'Safe natural sugar; high GI — moderate use recommended for diabetics'),
         'calcium propionate': ('Bread preservative E282/INS 282', 'FSSAI, EU, FDA and CODEX approved; widely used bread mould inhibitor; generally safe'),
+
+        # ── Dual-use ingredients moved here from worth_knowing (safe in both food and cosmetics) ──
+        'lactic acid': ('Natural fermentation acid (E270 / AHA)', 'Naturally produced by fermentation; found in yoghurt, sauerkraut and pickles; used as a preservative in food and as an alpha-hydroxy acid (AHA) exfoliant in skincare; safe and widely used in both contexts'),
+        'citric acid': ('Natural fruit acid (E330)', 'The primary acid in citrus fruits; produced commercially by fermenting sugars; widely used as a pH adjuster, preservative and flavour agent in food, beverages and cosmetics; very safe and widely used'),
+        'ascorbic acid': ('Vitamin C (E300)', 'Essential water-soluble vitamin naturally found in citrus fruits, berries and vegetables; used as a nutritional supplement, antioxidant preservative and skin-brightening agent; safe and nutritionally beneficial'),
+        'tocopherol': ('Vitamin E (E306/E307)', 'Natural fat-soluble antioxidant found in nuts, seeds and vegetable oils; used as a natural preservative in food products and as a skin-conditioning antioxidant in cosmetics; safe and nutritionally beneficial'),
+        'tocopheryl acetate': ('Vitamin E ester (tocopheryl acetate)', 'A stable ester form of Vitamin E widely used in cosmetics as an antioxidant and skin-conditioning agent; converts to vitamin E on the skin; safe'),
+
+        # ── Cosmetic Actives — Generally Recognised (new additions) ──────────────
+        'cetyl esters': ('Waxy emollient (synthetic jojoba substitute)', 'A mixture of long-chain fatty esters used as a skin and hair emollient; mimics the feel and function of spermaceti wax; biodegradable; CIR panel confirmed safe for cosmetic use; very well tolerated'),
+        'hydroxypropyltrimonium hydrolyzed wheat protein': ('Cationic wheat protein conditioning agent', 'A quaternized hydrolyzed wheat protein that bonds to damaged hair via electrostatic attraction; repairs hair, reduces breakage and improves smoothness; safe at cosmetic use concentrations; contains quaternary ammonium group — environmental persistence noted'),
+        'hydroxypropyltrimonium hydrolyzed': ('Cationic hydrolyzed protein conditioning agent', 'A quaternized hydrolyzed protein (wheat, rice, or corn source) for hair conditioning; bonds to hair and skin; safe at cosmetic concentrations'),
+        'hydrolyzed wheat protein': ('Wheat-derived protein conditioning ingredient', 'Wheat protein broken down into smaller peptide fragments that can penetrate the hair shaft; strengthens and conditions hair; safe; wheat-allergic individuals should use caution with topical exposure'),
+        'hydrolyzed keratin': ('Keratin protein hydrolysate for hair repair', 'Hydrolyzed keratin peptides from wool or hair; fill and temporarily repair gaps in the hair cuticle; strengthen and smooth the hair shaft; safe and effective for damaged hair'),
+        'hydrolyzed collagen': ('Hydrolyzed collagen peptides (skin and hair conditioning)', 'Collagen broken into smaller peptides; used to add film-forming, moisturising and conditioning properties; safe; animal-derived unless labelled vegan'),
+        'arginine': ('Natural amino acid (skin and hair conditioning)', 'An essential amino acid found naturally in the body; used in cosmetics to condition hair and support skin barrier function; helps repair damaged hair cuticles; safe; naturally present in foods like meat, dairy and nuts'),
+        'serine': ('Natural amino acid (humectant and conditioner)', 'A non-essential amino acid naturally found in skin and hair; used as a humectant and skin-conditioning agent in cosmetics; safe and well-tolerated; part of the skin Natural Moisturising Factor (NMF)'),
+        'glutamic acid': ('Natural amino acid (skin conditioning)', 'Naturally occurring amino acid found in proteins; used as a humectant and skin conditioner in cosmetics; safe; related to glutamate found in fermented foods'),
+        'glycine': ('Natural amino acid (skin and hair conditioning)', 'The simplest amino acid; used in cosmetics for skin conditioning and buffering; safe; found naturally in collagen-rich foods'),
+        'proline': ('Natural amino acid (collagen support)', 'Amino acid important in collagen synthesis; used in skincare to support skin elasticity; safe and naturally occurring in foods'),
+        'threonine': ('Natural amino acid', 'Essential amino acid used in cosmetics for hair conditioning and moisturising; safe'),
+        'alanine': ('Natural amino acid (skin conditioning)', 'Non-essential amino acid used as a humectant in cosmetics; safe and naturally occurring'),
+        'leucine': ('Natural amino acid (skin conditioning)', 'Essential amino acid used in cosmetics for hair and skin conditioning; safe'),
+        'isoleucine': ('Natural amino acid (skin conditioning)', 'Essential amino acid used in cosmetics; safe'),
+        'valine': ('Natural amino acid (skin conditioning)', 'Essential amino acid used in cosmetics for hair strengthening; safe'),
+        'lysine': ('Natural amino acid (skin and hair conditioning)', 'Essential amino acid used in hair care to strengthen hair protein structure; safe'),
+        'cysteine': ('Natural amino acid (hair repair)', 'A sulfur-containing amino acid critical for keratin structure; used in hair treatments to improve strength; safe'),
+        'cystine': ('Natural amino acid (hair strengthening)', 'The oxidised dimer of cysteine; contributes to the disulfide bonds in keratin; safe'),
+        'histidine': ('Natural amino acid (skin conditioning)', 'Essential amino acid with antioxidant properties; used in skincare; safe'),
+        'methionine': ('Natural amino acid (antioxidant)', 'Sulfur-containing essential amino acid; used as an antioxidant in cosmetics; safe'),
+        'phenylalanine': ('Natural amino acid', 'Essential amino acid used in cosmetic conditioning; safe; individuals with PKU must monitor dietary phenylalanine'),
+        'tryptophan': ('Natural amino acid', 'Essential amino acid; safe for cosmetic use'),
+        'tyrosine': ('Natural amino acid (skin conditioning)', 'Non-essential amino acid; used in cosmetics; safe'),
+
+        # ── Natural Glyceryl Fatty Acid Esters ───────────────────────────────────
+        'glyceryl linoleate': ('Natural skin lipid (glyceryl ester of linoleic acid)', 'A naturally occurring glycerol ester of linoleic acid (omega-6); restores the skin lipid barrier; anti-inflammatory; safe and compatible with skin; found naturally in many plant oils'),
+        'glyceryl oleate': ('Natural skin lipid (glyceryl ester of oleic acid)', 'A glycerol ester of oleic acid (omega-9); an emollient and emulsifier naturally present in olive and sunflower oil; safe and skin-compatible; moisturising'),
+        'glyceryl linolenate': ('Natural skin lipid (glyceryl ester of linolenic acid)', 'A glycerol ester of alpha-linolenic acid (omega-3); skin barrier-restoring and anti-inflammatory lipid; safe and naturally found in flaxseed oil'),
+        'glyceryl stearate': ('Natural emollient/emulsifier (glyceryl ester)', 'A widely used emulsifier and emollient derived from glycerol and stearic acid; occurs naturally in the human body; CIR confirmed safe; excellent tolerability in cosmetics'),
+        'glyceryl behenate': ('Waxy emollient/emulsifier (glyceryl ester)', 'A glycerol ester of behenic acid used as a solid emollient and binder in cosmetics; safe; derived from rapeseed oil or coconut oil'),
+        'glyceryl caprylate': ('Skin-compatible emollient and preservative booster', 'A glycerol ester of caprylic acid derived from coconut oil; used as an emollient and natural preservative booster (antimicrobial activity against gram-positive bacteria and Candida); safe; commonly used in natural formulations'),
+        'glyceryl caprate': ('Skin-compatible emollient (glyceryl ester)', 'A glycerol ester of capric acid; emollient and mild preservative-boosting properties; safe; derived from coconut oil'),
+
+        # ── Ceramide-like and Barrier Lipids ─────────────────────────────────────
+        '2-oleamido-1,3-octadecanediol': ('Ceramide-like skin barrier lipid (oleamide diol)', 'A synthetic ceramide analogue that mimics the structure of natural skin ceramides; reinforces the skin lipid barrier, reduces transepidermal water loss and soothes dry skin; safe and well tolerated; used in high-performance barrier repair creams'),
+        'ceramide np': ('Natural skin ceramide (type NP)', 'Ceramide NP (N-palmitoyl sphinganine) is the most abundant ceramide in human skin; restores the lamellar skin barrier; excellent tolerability; safe'),
+        'ceramide ap': ('Natural skin ceramide (type AP)', 'Ceramide AP (N-palmitoyldihydrosphingosine) is a key skin barrier ceramide; barrier-restoring and moisturising; safe'),
+        'ceramide eop': ('Natural skin ceramide (type EOP)', 'Long-chain ceramide important for linking the corneocyte lipid envelope; barrier-restoring; safe'),
+        'phytosphingosine': ('Sphingoid base (natural ceramide precursor)', 'A sphingosine analog naturally found in skin; antimicrobial, anti-inflammatory and ceramide-building properties; safe'),
+        'sphingosine': ('Natural ceramide component', 'A sphingoid base naturally present in human skin; precursor to ceramide synthesis; safe at cosmetic concentrations'),
+
+        # ── Silicones (additional safe/common types) ─────────────────────────────
+        'caprylyl methicone': ('Volatile silicone (non-cyclic)', 'A lightweight volatile silicone used for smooth application and non-greasy feel; non-cyclic — does not share the D4/D5 environmental concerns; safe for cosmetic use'),
+        'stearoxy dimethicone': ('Silicone emollient (non-cyclic)', 'A silicone wax used in conditioners and creams for smooth texture; non-cyclic silicone; safe'),
+        'methicone': ('Low-viscosity silicone fluid (non-cyclic)', 'A monomethyl silicone fluid used in cosmetics for smooth texture; non-cyclic; safe for topical use'),
+        'dimethicone/vinyl dimethicone crosspolymer': ('Cross-linked silicone elastomer', 'A silicone elastomer used to create a smooth, velvety skin feel; non-volatile; safe; used in primers and foundations'),
+        'dimethicone crosspolymer': ('Cross-linked silicone polymer', 'A silicone elastomer that delivers a silky texture without leaving a greasy residue; safe for cosmetic use'),
+        'silicone quaternium': ('Cationic silicone (quat-silicone hybrid)', 'A quaternized silicone that combines conditioning and silicone properties; provides excellent hair conditioning with some potential for buildup; safer than separate quaternary ammonium compounds alone'),
+
+        # ── Hair and Skin Conditioning Polymers ───────────────────────────────────
+        'polyquaternium-': ('Cationic conditioning polymer (polyquaternium series)', 'A group of quaternized polymers used in shampoos and conditioners to reduce static, improve combing and add conditioning; generally well tolerated at cosmetic concentrations; environmental persistence noted'),
+        'polyquaternium-10': ('Cationic cellulose conditioning polymer', 'A quaternized hydroxyethylcellulose polymer used in shampoos; excellent safety profile; biodegradable biopolymer base; provides conditioning and anti-static effects; one of the safest cationic polymers'),
+        'polyquaternium-11': ('Cationic vinyl/PVP conditioning polymer', 'A film-forming conditioning polymer used in hair styling and conditioning products; generally safe at cosmetic concentrations'),
+        'polyquaternium-7': ('Acrylamide-based cationic polymer', 'A conditioning polymer; the acrylamide monomer is a potential contaminant — well-made grades have very low residual acrylamide; generally safe in finished cosmetics at permitted concentrations'),
+        'hydroxypropyl guar': ('Modified guar gum conditioning agent', 'A non-ionic derivative of guar gum used in hair care to improve detangling and conditioning; biodegradable; safe and gentle'),
+
+        # ── UV Filters (safe mineral) ─────────────────────────────────────────────
+        'titanium dioxide': ('Mineral UV filter and white pigment (E171)', 'FDA Category I mineral UV filter in sunscreens; safe for topical use in cosmetics; EU banned as food additive in 2022 due to genotoxicity concerns — the topical safety profile is separate and generally accepted'),
+
+        # ── Esters and Emollients ──────────────────────────────────────────────────
+        'isopropyl myristate': ('Lightweight emollient ester', 'An ester of isopropyl alcohol and myristic acid used as a lightweight emollient; can be comedogenic (pore-clogging) — avoid in acne-prone skin; otherwise safe; widely used'),
+        'isopropyl palmitate': ('Emollient ester', 'An ester of isopropyl alcohol and palmitic acid; lightweight emollient; some comedogenicity potential; safe for most skin types'),
+        'caprylic/capric triglyceride': ('Natural plant-derived emollient', 'A light, non-greasy emollient made from glycerol and coconut/palm kernel-derived fatty acids; hypoallergenic; non-comedogenic; excellent tolerability; widely regarded as one of the best cosmetic emollients'),
+        'cetyl octanoate': ('Emollient ester', 'An ester of cetyl alcohol and caprylic acid; lightweight skin emollient; safe and well tolerated'),
+        'ethylhexyl palmitate': ('Emollient ester', 'An ester of 2-ethylhexanol and palmitic acid; lightweight dry-feel emollient; safe; mild comedogenicity in some individuals'),
+        'diisopropyl sebacate': ('Lightweight emollient ester', 'An ester used as a non-greasy skin emollient; safe for cosmetic use'),
+        'C12-15 alkyl benzoate': ('Dry-feel emollient ester', 'A synthetic emollient ester that provides a dry, silky skin feel; safe for cosmetic use; non-comedogenic; widely used'),
+
+        # ── Humectants and Film-formers ───────────────────────────────────────────
+        'betaine': ('Natural humectant from sugar beets', 'A naturally derived trimethylglycine (betaine) from sugar beet processing; excellent humectant and anti-irritant; very safe; used in hair and skin care for moisture retention and scalp soothing'),
+        'glycereth-26': ('PEG-derived glycerol humectant', 'An ethoxylated glycerol used as a humectant; mild 1,4-dioxane contamination potential from ethoxylation; generally safe at permitted concentrations'),
+        'propanediol': ('Natural glycol humectant/solvent', 'A 1,3-propanediol derived from corn fermentation; a gentler, more sustainable alternative to propylene glycol; excellent humectant with minimal irritation potential; GRAS status by FDA; very safe'),
+        'caprylyl glycol': ('Multifunctional humectant and preservative booster', 'An 8-carbon diol used as a humectant and preservative-boosting agent; antimicrobial activity against gram-positive bacteria and yeast; safe and generally well tolerated'),
+        'pentylene glycol': ('Natural-origin multifunctional glycol', 'A 1,5-pentanediol humectant with mild preservative-boosting and solvent properties; skin-compatible; generally well tolerated'),
+        'butylene glycol': ('Short-chain diol humectant/solvent', 'A small synthetic diol used as a humectant, solvent and preservative booster in cosmetics; safe at cosmetic use concentrations; well tolerated'),
+        'hexylene glycol': ('Glycol humectant/solvent', 'A short-chain diol used as a solvent and humectant in cosmetics; safe at cosmetic concentrations; high concentrations can cause skin irritation'),
+        'fructooligosaccharides': ('Prebiotic fibre (FOS)', 'A natural prebiotic carbohydrate from chicory or agave; promotes beneficial gut bacteria; safe; minor bloating at high doses'),
+
+        # ── Chelating agents (milder, cosmetic) ───────────────────────────────────
+        'phytic acid': ('Natural chelating agent (from rice bran/corn)', 'A natural phytate chelating agent that binds metal ions to improve product stability; also used for its mild skin-brightening properties; safe for cosmetic use'),
+        'sodium phytate': ('Natural chelating agent', 'Sodium salt of phytic acid; a plant-derived chelator for cosmetic preservation; safe alternative to EDTA'),
+
+        # ── Botanical Extracts (cosmetic) ─────────────────────────────────────────
+        'green tea extract': ('Polyphenol-rich botanical antioxidant', 'Rich in catechins (EGCG) with antioxidant and anti-inflammatory properties; safe for topical and dietary use; GRAS'),
+        'chamomile extract': ('Soothing botanical (Matricaria chamomilla)', 'Contains bisabolol and apigenin; anti-inflammatory and soothing; safe and well tolerated; patch test for those with composite allergies'),
+        'lavender extract': ('Botanical extract (Lavandula angustifolia)', 'Soothing and mildly antimicrobial; generally safe for topical use; lavender OIL (fragrance) is a declared EU allergen, but plant extracts at low levels are generally well tolerated'),
+        'witch hazel': ('Astringent botanical (Hamamelis virginiana)', 'Natural astringent from witch hazel bark and leaves; contains tannins and gallic acid; safe; may be drying with very frequent use on sensitive skin'),
+        'calendula extract': ('Anti-inflammatory botanical (Calendula officinalis)', 'Traditional wound-healing and anti-inflammatory herb; excellent tolerability; safe; very gentle — used in baby products'),
+        'cucumber extract': ('Soothing botanical extract', 'Rich in antioxidants and silica; cooling and soothing; safe for topical use'),
+        'licorice root extract': ('Skin-brightening botanical', 'Contains glabridin, a potent tyrosinase inhibitor; effective skin brightener; safe at cosmetic concentrations'),
+        'licorice extract': ('Skin-brightening botanical (licorice root)', 'Contains skin-brightening glabridin and anti-inflammatory compounds; safe at cosmetic concentrations'),
+        'willowbark extract': ('Natural BHA-containing botanical', 'Contains salicin (converts to salicylic acid); mild exfoliant; safe at cosmetic concentrations'),
+        'bearberry extract': ('Skin-brightening botanical (contains arbutin)', 'Natural source of arbutin (alpha-arbutin) for skin brightening; safe at cosmetic concentrations'),
+        'grapeseed extract': ('Antioxidant botanical (proanthocyanidins)', 'Rich in oligomeric proanthocyanidins (OPCs); potent antioxidant; safe for topical and dietary use'),
+        'raspberry seed extract': ('Antioxidant botanical', 'Rich in antioxidants and omega-3; safe for topical use'),
+        'blueberry extract': ('Antioxidant botanical', 'Rich in anthocyanins; potent antioxidant; safe for topical and dietary use'),
+        'lotus extract': ('Botanical antioxidant', 'Traditional Ayurvedic and Asian medicine ingredient; antioxidant and skin-conditioning; safe for topical use'),
+        'peony root extract': ('Botanical anti-inflammatory (Paeonia lactiflora)', 'Contains paeoniflorin; anti-inflammatory and brightening; safe at cosmetic concentrations'),
+        'mulberry root extract': ('Skin-brightening botanical (Morus alba)', 'Contains oxyresveratrol and mulberroside F; potent tyrosinase inhibitors for skin brightening; safe at cosmetic concentrations'),
+        'magnolia bark extract': ('Botanical anti-inflammatory (Magnolia officinalis)', 'Contains honokiol and magnolol; anti-inflammatory and antimicrobial; safe at cosmetic use levels'),
+        'lotus flower extract': ('Botanical extract (Nelumbo nucifera)', 'Traditional Asian medicinal plant; antioxidant and skin-conditioning properties; safe'),
+        'rice bran extract': ('Antioxidant botanical (oryzanol-rich)', 'Contains ferulic acid, oryzanol and tocopherols; antioxidant and brightening; safe'),
+        'green coffee extract': ('Antioxidant botanical (caffeine-rich)', 'Rich in chlorogenic acids; antioxidant and mild skin-firming properties; safe'),
+        'frankincense extract': ('Boswellia resin extract', 'Traditional anti-inflammatory ingredient; safe for topical use; used in luxury skincare for anti-ageing properties'),
+        'bakuchiol': ('Plant-based retinol alternative (babchi plant)', 'Natural meroterpene with retinol-like effects; safe in pregnancy unlike retinol; well-tolerated with minimal irritation; clinically studied alternative to retinol'),
+
+        # ── Functional Cosmetic Ingredients ──────────────────────────────────────
+        'panthenol': ('Provitamin B5 (humectant and healing agent)', 'A skin and hair conditioning humectant that converts to pantothenic acid (Vitamin B5) in the body; promotes wound healing, reduces inflammation and deeply moisturises; safe and very well tolerated'),
+        'niacinamide': ('Vitamin B3 (Nicotinamide) skincare active', 'One of the best-studied cosmetic actives; evidence for skin-brightening, barrier-strengthening and sebum-reducing effects; very safe and well tolerated; no purging effect unlike retinoids'),
+        'biotin': ('Vitamin B7 / Vitamin H', 'B-vitamin used in hair care and cosmetics; safe; the evidence for topical biotin effectiveness in hair growth is limited'),
+        'inositol': ('Vitamin B8 / polyol (hair conditioning)', 'A naturally occurring carbohydrate found in all cells; used in hair care for strengthening and smoothing; safe; food-grade ingredient'),
+        'pyridoxine': ('Vitamin B6', 'Water-soluble B-vitamin used in cosmetics and food; safe at normal levels'),
+        'riboflavin': ('Vitamin B2 (E101)', 'Essential B-vitamin that also acts as a natural yellow food colouring; safe and nutritionally beneficial'),
+        'thiamine': ('Vitamin B1', 'Essential B-vitamin; safe at normal dietary and cosmetic levels'),
+        'zinc gluconate': ('Zinc salt (anti-acne mineral)', 'Bioavailable zinc salt used in anti-acne cosmetics and food supplements; safe at recommended levels'),
+        'zinc sulfate': ('Zinc salt (mineral supplement)', 'Bioavailable zinc salt; safe at approved levels in food and cosmetics'),
+        'ferrous gluconate': ('Iron salt (mineral supplement / colorant)', 'An iron supplement with good bioavailability; also used as a food colouring (E579) in olives; safe at approved levels'),
+        'copper gluconate': ('Copper salt (skin conditioning mineral)', 'Bioavailable copper salt; used in cosmetics for skin conditioning and as a dietary supplement; safe at low concentrations'),
+        'sodium pca': ('Natural humectant (Sodium 2-Pyrrolidone-5-Carboxylate)', 'Naturally present in human skin as part of the Natural Moisturising Factor (NMF); one of the most effective humectants; safe and very skin-compatible'),
+        'urea': ('Natural humectant and keratolytic (at high levels)', 'Naturally present in the skin as part of NMF; at low concentrations (3–10%) acts as a humectant; at higher concentrations (20–40%) acts as a gentle keratolytic (softens thick skin); safe at cosmetic levels'),
+        'urocanic acid': ('Natural NMF component (UV absorber)', 'Naturally present in skin and sweat; a UV-absorbing component of the skin Natural Moisturising Factor; safe'),
+        'hydrolyzed silk': ('Silk protein hydrolysate (hair and skin conditioning)', 'Hydrolyzed silk fibroin peptides; conditioning and film-forming on hair and skin; safe; improves shine and smoothness'),
+        'silk amino acids': ('Silk protein amino acids (hair conditioning)', 'Individual amino acids derived from silk; conditioning on hair and skin; safe'),
+        'colloidal oatmeal': ('Finely milled oat extract (anti-inflammatory soothing agent)', 'FDA-approved OTC skin protectant at 0.5–2%; rich in avenanthramides (anti-inflammatory polyphenols); excellent tolerability including for eczema; safe'),
+        'oat extract': ('Oat-derived soothing extract', 'Contains avenanthramides and beta-glucan; anti-inflammatory and barrier-supporting; safe; possible concern for those with severe oat/gluten sensitivity'),
+        'beta-glucan': ('Natural polysaccharide (immune modulator and skin moisturiser)', 'A soluble fibre from oats, mushrooms or yeast cell walls; FDA heart health claim for oat beta-glucan; skin hydrating; safe and well-tolerated'),
+        'saccharide isomerate': ('Natural carbohydrate skin hydrator (PENTAVITIN)', 'Carbohydrate complex from corn; claimed to bind to skin keratin for long-lasting hydration; safe and well-tolerated'),
+        'trehalose': ('Natural disaccharide (cryoprotectant humectant)', 'A naturally occurring disaccharide found in mushrooms and desert plants; excellent humectant; safe for food and cosmetic use'),
+        'gluconolactone': ('Polyhydroxy acid (PHA) exfoliant and antioxidant', 'A gentler exfoliating acid than AHAs; also acts as a chelating agent; safe; well tolerated even on sensitive skin; provides humectant benefits alongside exfoliation'),
+        'lactobionic acid': ('Polyhydroxy acid (PHA) exfoliant', 'A PHA derived from lactose; gentler than glycolic acid with added humectant properties; safe; suitable for sensitive skin; provides antioxidant and chelating benefits'),
+        'mandelic acid': ('Alpha hydroxy acid (AHA) from bitter almonds', 'A mild AHA with antibacterial properties; larger molecular size than glycolic acid means slower skin penetration and gentler action; safe; photosensitising — use SPF'),
+        'tranexamic acid': ('Skin-brightening amino acid derivative', 'A lysine derivative clinically studied for skin brightening and melasma; safe for topical use; well tolerated; does not carry the procoagulant risks of systemic use at topical concentrations'),
+        'kojic dipalmitate': ('Stable kojic acid ester (skin brightening)', 'A lipid-soluble, more stable form of kojic acid; tyrosinase inhibitor for skin brightening; safe for topical use; less irritating than kojic acid itself'),
+        'diacetyl boldine': ('Alkaloid skin-brightening active', 'A derivative of boldine (from boldo plant); tyrosinase inhibitor for skin brightening; EU-reviewed; safe at specified concentrations'),
+        'resveratrol': ('Polyphenol antioxidant (from grapes and berries)', 'Natural stilbenoid with antioxidant and anti-inflammatory properties; safe for topical and oral use; limited bioavailability orally — topical application delivers directly to skin'),
+        'ferulic acid': ('Natural phenolic antioxidant (from bran)', 'Found in rice, wheat and oat bran; potent antioxidant that synergises with Vitamins C and E in skincare; safe; used as a food-grade antioxidant and cosmetic active'),
+        'tetrahexyldecyl ascorbate': ('Oil-soluble stable Vitamin C ester', 'A lipid-soluble form of Vitamin C that penetrates the skin more effectively than ascorbic acid and is more stable; safe; no irritation at typical concentrations'),
+        'ascorbyl glucoside': ('Water-soluble stable Vitamin C derivative', 'A glycoside of Vitamin C; stable and gentle; releases ascorbic acid on the skin; safe and well tolerated'),
+        'ethyl ascorbic acid': ('Stable Vitamin C derivative', 'A direct, stable form of Vitamin C; well tolerated; more potent and stable than ascorbyl glucoside; safe'),
     }
 
     # For cosmetic/topical products, override food-context concerns with cosmetic-appropriate classification
@@ -1719,6 +2667,93 @@ def classify_ingredient(ingredient_name, category=None):
                     'one_line_note': note,
                     'regulatory_note': 'Approved in cosmetics within regulatory limits; benzene formation risk applies to food/beverages, not topical use'
                 }
+
+    # Additional generally recognised E-number entries
+    generally_recognised_patterns.update({
+
+        # Antioxidants (Vitamin C family)
+        'e300': ('Ascorbic Acid / Vitamin C (E300)', 'Vitamin C as food antioxidant — safe and nutritionally beneficial'),
+        'e301': ('Sodium Ascorbate (E301)', 'Sodium salt of Vitamin C — safe antioxidant and preservative'),
+        'e302': ('Calcium Ascorbate (E302)', 'Calcium salt of Vitamin C — safe antioxidant with calcium benefit'),
+        'e304': ('Ascorbyl Palmitate (E304)', 'Fat-soluble Vitamin C ester — safe natural antioxidant for oils'),
+        'e306': ('Mixed Tocopherols / Natural Vitamin E (E306)', 'Natural Vitamin E extract — safe antioxidant from vegetable oils'),
+        'e307': ('Alpha-Tocopherol / Vitamin E (E307)', 'Active Vitamin E — safe and nutritionally beneficial antioxidant'),
+        'e308': ('Gamma-Tocopherol / Vitamin E (E308)', 'Natural Vitamin E — safe antioxidant'),
+        'e309': ('Delta-Tocopherol / Vitamin E (E309)', 'Natural Vitamin E — safe antioxidant'),
+        'e315': ('Erythorbic Acid (E315)', 'Antioxidant isomer of Vitamin C — safe preservative in cured meats'),
+        'e316': ('Sodium Erythorbate (E316)', 'Sodium salt of erythorbic acid — safe antioxidant in cured meats'),
+        # Safe natural colours
+        'e100': ('Curcumin / Turmeric (E100)', 'Natural yellow colour from turmeric — safe and traditionally consumed'),
+        'e100i': ('Curcumin (E100i)', 'Natural turmeric extract — safe food colour'),
+        'e101': ('Riboflavin / Vitamin B2 (E101)', 'Natural yellow colour — also a B vitamin; safe and nutritionally beneficial'),
+        'e101i': ('Riboflavin (E101i)', 'Vitamin B2 used as food colour — safe and nutritious'),
+        'e140': ('Chlorophylls (E140)', 'Natural green plant pigments — safe food colour'),
+        'e141': ('Copper Complexes of Chlorophylls (E141)', 'Stabilised natural green colour — safe at permitted levels'),
+        'e160c': ('Paprika Extract (E160c)', 'Natural orange-red colour from red peppers — safe'),
+        'e162': ('Beetroot Red (E162)', 'Natural red colour from beetroot — safe and rich in antioxidants'),
+        'e163': ('Anthocyanins (E163)', 'Natural plant pigments from berries and red cabbage — safe and rich in antioxidants'),
+        'e172': ('Iron Oxides (E172)', 'Natural inorganic mineral colouring — safe; also provides small amount of dietary iron'),
+        # Vitamins and minerals
+        'e101': ('Riboflavin / Vitamin B2 (E101)', 'Vitamin B2 — safe, essential nutrient used also as a food colour'),
+        # Natural hydrocolloids (generally safe)
+        'e400': ('Alginic Acid (E400)', 'Natural seaweed fibre — safe thickener and gelling agent'),
+        'e401': ('Sodium Alginate (E401)', 'Natural seaweed thickener — safe and widely used'),
+        'e402': ('Potassium Alginate (E402)', 'Natural seaweed gum — safe thickener'),
+        'e404': ('Calcium Alginate (E404)', 'Natural seaweed gel-former — safe'),
+        'e406': ('Agar-Agar (E406)', 'Natural seaweed gelling agent — safe; vegan gelatin substitute'),
+        'e410': ('Locust Bean Gum / Carob Gum (E410)', 'Natural seed thickener — safe; dietary fibre source'),
+        'e412': ('Guar Gum (E412)', 'Natural seed thickener from India — safe; source of dietary fibre'),
+        'e414': ('Acacia / Gum Arabic (E414)', 'Natural tree gum — safe; prebiotic fibre; used for 4000+ years'),
+        'e440': ('Pectins (E440)', 'Natural fruit gelling agent — safe; source of soluble dietary fibre'),
+        'e440i': ('Amidated Pectin (E440i)', 'Modified natural pectin — safe gelling agent'),
+        # Cellulose (inert)
+        'e460': ('Cellulose (E460)', 'Natural plant fibre — indigestible and inert; safe bulking agent'),
+        'e460i': ('Microcrystalline Cellulose/MCC (E460i)', 'Refined plant fibre — safe inert bulking agent'),
+        'e461': ('Methyl Cellulose (E461)', 'Cellulose derivative — safe thickener and fat replacer'),
+        'e462': ('Ethyl Cellulose (E462)', 'Cellulose derivative used in coatings — safe'),
+        'e463': ('Hydroxypropyl Cellulose/HPC (E463)', 'Cellulose derivative — safe thickener and binder'),
+        'e464': ('Hydroxypropyl Methyl Cellulose/HPMC (E464)', 'Cellulose derivative — safe in gluten-free bread and pharmaceuticals'),
+        # Safe anti-caking
+        'e530': ('Magnesium Oxide (E530)', 'Safe inorganic anti-caking agent; dietary magnesium source'),
+        'e551': ('Silicon Dioxide / Silica (E551)', 'Inorganic anti-caking agent — not absorbed; safe at food levels'),
+        'e552': ('Calcium Silicate (E552)', 'Inorganic anti-caking agent — safe'),
+        'e553a': ('Magnesium Silicates (E553a)', 'Inorganic anti-caking agent — safe'),
+        # Acidity regulators (natural)
+        'e260': ('Acetic Acid / Vinegar Acid (E260)', 'The acid in vinegar — safe natural acidulant and preservative'),
+        'e270': ('Lactic Acid (E270)', 'Natural fermentation acid — safe; found in yoghurt, cheese and sourdough'),
+        'e296': ('Malic Acid (E296)', 'Natural fruit acid from apples — safe acidulant'),
+        'e297': ('Fumaric Acid (E297)', 'Natural organic acid — safe leavening acid and acidulant'),
+        'e325': ('Sodium Lactate (E325)', 'Sodium salt of lactic acid — safe humectant and preservative'),
+        'e327': ('Calcium Lactate (E327)', 'Calcium salt of lactic acid — safe; provides calcium'),
+        'e330': ('Citric Acid (E330)', 'Natural fruit acid — most widely used acidulant; safe'),
+        'e331': ('Sodium Citrates (E331)', 'Sodium salts of citric acid — safe acidity regulators and emulsifying salts'),
+        'e332': ('Potassium Citrates (E332)', 'Potassium salts of citric acid — safe acidity regulators'),
+        'e333': ('Calcium Citrates (E333)', 'Calcium salts of citric acid — safe; provides calcium'),
+        'e334': ('Tartaric Acid (E334)', 'Natural grape acid — safe; used in wine and baking powder'),
+        'e335': ('Sodium Tartrates (E335)', 'Sodium salts of tartaric acid — safe'),
+        'e336': ('Potassium Tartrates / Cream of Tartar (E336)', 'Natural wine-derived salt — safe; classic baking ingredient'),
+        'e337': ('Potassium Sodium Tartrate / Rochelle Salt (E337)', 'Mixed tartrate — safe acidity regulator'),
+        # Carbon dioxide
+        'e290': ('Carbon Dioxide (E290)', 'Natural gas — safe; responsible for carbonation in beverages'),
+        # Preservatives (safe ones)
+        'e200': ('Sorbic Acid (E200)', 'Natural preservative from rowan berries — safe at food levels'),
+        'e201': ('Sodium Sorbate (E201)', 'Safe natural-origin preservative'),
+        'e203': ('Calcium Sorbate (E203)', 'Safe natural-origin preservative'),
+        'e234': ('Nisin (E234)', 'Natural antimicrobial peptide from fermentation — safe; not absorbed by gut'),
+        'e235': ('Natamycin / Pimaricin (E235)', 'Natural antifungal from fermentation — safe; used on cheese surfaces only'),
+        'e280': ('Propionic Acid (E280)', 'Natural fermentation acid — safe mould inhibitor in bread'),
+        # Sugar alcohols (safe ones)
+        'e968': ('Erythritol (E968)', 'Natural zero-calorie sugar alcohol — best tolerated of all; rarely causes digestive issues'),
+        'e967': ('Xylitol (E967)', 'Natural sugar alcohol — safe for teeth; digestive discomfort only at high doses'),
+        # Starch modifications (generally safe)
+        'e1410': ('Monostarch Phosphate (E1410)', 'Modified starch — safe thickener'),
+        'e1420': ('Acetylated Starch (E1420)', 'Modified starch — safe thickener'),
+        'e1422': ('Acetylated Distarch Adipate (E1422)', 'Modified starch — safe in frozen foods'),
+        'e1440': ('Hydroxypropyl Starch (E1440)', 'Modified starch — safe in frozen foods'),
+        'e1442': ('Hydroxypropyl Distarch Phosphate (E1442)', 'Modified starch — safe; high stability under heat and acid'),
+        'e1201': ('Polyvinylpyrrolidone / PVP (E1201)', 'Synthetic clarifying agent — safe at food/pharmaceutical use levels'),
+
+    })
 
     # IFRA certified / allergen-free fragrance → worth_knowing
     if any(w in ingredient_lower for w in ('fragrance', 'parfum', 'perfume')) and \
@@ -1756,7 +2791,13 @@ def classify_ingredient(ingredient_name, category=None):
                     'regulatory_note': 'Safe ingredient; Q.S notation indicates quantity added as needed'
                 }
 
-    # Check commonly questioned first (highest priority — serious concerns)
+    # Sub-type fallback: if 'e500ii' not found in any pattern, retry with parent 'e500'
+    if _re.match(r'^e\d+(i{1,3}v?|iv|v)$', ingredient_lower):
+        parent = _re.sub(r'(i{1,3}v?|iv|v)$', '', ingredient_lower)
+        if parent != ingredient_lower:
+            return classify_ingredient(parent, category)
+
+        # Check commonly questioned first (highest priority — serious concerns)
     # Also check compact form so "Methyl Paraben" matches keyword "methylparaben"
     for pattern, (what_it_is, note) in commonly_questioned_patterns.items():
         pattern_compact = pattern.replace(' ', '').replace('-', '').replace('/', '')
