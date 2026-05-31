@@ -912,7 +912,7 @@ function Result() {
               </svg>
             )
           } else {
-            insight = "High proportion of questioned or banned ingredients. Review the ingredient details closely before choosing this product."
+            insight = "Proportion of questioned or banned ingredients. Review the ingredient details closely before choosing this product."
             insightBg = "bg-red-50"
             insightBorder = "border-red-300"
             insightTextColor = "text-red-700"
@@ -947,7 +947,7 @@ function Result() {
                 } else if (grade === 'C') {
                   rec = `This product contains ${cqCount} commonly questioned ingredient${cqCount !== 1 ? 's' : ''}. Review the ingredient details below before regular use, especially if you have skin sensitivities or dietary restrictions.`
                 } else {
-                  rec = `This product has a high number of questioned ingredients. We strongly recommend reviewing the ingredient breakdown below before purchasing, and considering alternatives with cleaner formulations.`
+                  rec = `This product has questioned ingredients. We strongly recommend reviewing the ingredient breakdown below before purchasing, and considering alternatives with cleaner formulations.`
                 }
 
                 if (hasFragrance) rec += ' ' + fragranceNote
