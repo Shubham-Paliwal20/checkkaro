@@ -47,14 +47,18 @@ export function AuthProvider({ children }) {
         if (tokenAge(session.access_token) > 90) return   // page-load token restore
 
         const userId = session.user.id
+        const userEmail = session.user.email || null
         const { data: profile } = await supabase
           .from('user_profiles')
-          .select('id, quiz_completed')
+          .select('id, quiz_completed, email')
           .eq('id', userId)
           .maybeSingle()
 
         if (!profile) {
-          await supabase.from('user_profiles').upsert({ id: userId })
+          await supabase.from('user_profiles').upsert({ id: userId, email: userEmail })
+        } else if (userEmail && profile.email !== userEmail) {
+          // Keep email in sync if user changes it
+          await supabase.from('user_profiles').update({ email: userEmail }).eq('id', userId)
         }
         if (!profile?.quiz_completed) {
           setAuthModalStep('quiz')
