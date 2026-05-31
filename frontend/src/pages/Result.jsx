@@ -33,23 +33,54 @@ function cacheGet(key) {
 const ADMIN_EMAIL = 'shubhampaliwal5@gmail.com'
 
 // Parse comma-separated ingredient text respecting parentheses depth
+// Group-label pattern: "raising agents (INS 503(ii), INS 500(ii))" etc.
+const _GROUP_LABEL_RE = /^(raising agents?|emulsifiers?|stabilisers?|stabilizers?|acidity regulators?|anti[- ]?caking agents?|permitted (?:synthetic )?food colou?rs?|colou?ring agents?|artificial colou?rs?|colou?rs?|preservatives?|antioxidants?|flavou?ring agents?|flavou?rings?|sequestrants?|thickeners?|humectants?|glazing agents?|modified starches?|food starches?)\s*\((.+)\)$/i
+
+function _splitInner(inner) {
+  const parts = []; let cur = '', d = 0
+  for (const ch of inner) {
+    if (ch === '(') d++
+    else if (ch === ')') d--
+    if (ch === ',' && d === 0) { if (cur.trim()) parts.push(cur.trim()); cur = '' }
+    else cur += ch
+  }
+  if (cur.trim()) parts.push(cur.trim())
+  return parts
+}
+
 function parseRawIngredients(raw) {
-  const results = []
-  let current = ''
-  let depth = 0
+  // Step 1: split by commas at depth 0 (skip commas inside parentheses)
+  const items = []
+  let current = '', depth = 0
   for (const ch of raw) {
     if (ch === '(') depth++
     else if (ch === ')') depth--
     else if (ch === ',' && depth === 0) {
       const t = current.trim()
-      if (t) results.push(t)
+      if (t) items.push(t)
       current = ''
       continue
     }
     current += ch
   }
-  const t = current.trim()
-  if (t) results.push(t)
+  const last = current.trim()
+  if (last) items.push(last)
+
+  // Step 2: expand grouped additive declarations
+  const results = []
+  for (const item of items) {
+    const m = item.match(_GROUP_LABEL_RE)
+    if (m) {
+      const label = m[1], inner = m[2]
+      const parts = _splitInner(inner)
+      if (parts.length > 1) {
+        const short = label.replace(/\b(permitted|synthetic|food|artificial)\b\s*/gi, '').replace(/s$/i, '').trim()
+        parts.forEach(p => results.push(`${short} ${p}`))
+        continue
+      }
+    }
+    results.push(item)
+  }
   return results
 }
 
