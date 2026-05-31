@@ -1162,6 +1162,63 @@ INGREDIENT_DESCRIPTIONS = {
     # ── Butylphenyl Methylpropional ───────────────────────────────────────────
     'lilial': 'Lilial (Butylphenyl Methylpropional / p-t-Bucinal) is a synthetic fragrance ingredient formerly used for its fresh, lily-like floral scent in numerous cosmetics and personal care products. It has been BANNED in the European Union since 1 March 2022, classified as a Category 1B reproductive toxicant under CLP Regulation — animal studies demonstrated adverse effects on fertility. Products containing Lilial cannot be placed on the EU market. Consumers should avoid any product still listing this ingredient.',
 
+    # ══ Cosmetic Polymers / Film-formers ══════════════════════════════════════
+    'polyethylene': 'Polyethylene (PE) is a synthetic thermoplastic polymer used in cosmetics as a texture modifier, thickener and emollient in anhydrous formulations like lipsticks, foundations and mascaras. High-molecular-weight polyethylene wax is safe for topical use. Note: low-molecular-weight PE microbeads have been banned in rinse-off products in many countries (UK, USA, EU) due to marine microplastic pollution — but the wax form used in leave-on cosmetics is different and not banned.',
+    'polysilicone-11': 'Polysilicone-11 is a cross-linked dimethicone silicone elastomer used in long-wear makeup formulations (foundations, eye shadows, lipsticks) as a film-former and suspension agent. It provides a smooth, non-tacky film and excellent wear-resistance. Not absorbed through the skin; safe for topical use.',
+    'nylon-12': 'Nylon-12 (Polyamide-12) is a synthetic polyamide polymer used as a texture agent and film-former in cosmetics including foundations, eyeshadows and mascara. It produces a smooth, soft-focus finish and improves long-wear properties. Safe for topical cosmetic use; not absorbed.',
+    'methyl methacrylate crosspolymer': 'Methyl Methacrylate Crosspolymer is a cross-linked acrylic polymer used as a soft-focus agent, mattifying powder and film-former in foundations, primers and skincare products. Creates a blurring effect by scattering light. Safe for topical use; not absorbed.',
+
+    # ══ Cosmetic Emollients / Esters ══════════════════════════════════════════
+    'caprylic/capric triglyceride': 'Caprylic/Capric Triglyceride (CCT) is a light, non-greasy emollient derived from coconut oil by esterifying glycerol with caprylic (C8) and capric (C10) fatty acids. It is one of the most widely used cosmetic emollients — hypoallergenic, non-comedogenic, and exceptionally well-tolerated by all skin types including sensitive and acne-prone skin. Also functions as an excellent carrier oil for active ingredients. Safe.',
+    'polyhydroxystearic acid': 'Polyhydroxystearic Acid (PHSA) is a branched, polymeric ester of 12-hydroxystearic acid used as an emulsifier and dispersing agent, particularly to stabilise inorganic UV filters (zinc oxide, titanium dioxide) in sunscreens and mineral makeup. It prevents nanoparticle clumping and ensures even distribution. Safe for topical cosmetic use.',
+    'pentaerythrityl tetra-di-t-butyl hydroxyhydrocinnamate': 'Pentaerythrityl Tetra-di-t-butyl Hydroxyhydrocinnamate (trade name Irganox 1010) is a synthetic hindered phenol antioxidant used at trace levels in cosmetics to prevent oxidation of oils, fats and polymers during manufacturing and storage. It is not a skin-active ingredient — it protects the formula, not the skin. Safe at the trace concentrations used.',
+    'tocopheryl acetate': 'Tocopheryl Acetate (Vitamin E Acetate) is the most widely used esterified form of Vitamin E in cosmetics. More stable against oxidation than tocopherol itself. It acts as an antioxidant, protects the skin lipid barrier from free-radical damage, and is used as a skin conditioner in moisturisers, sunscreens and anti-ageing products. Converts to free tocopherol on the skin. Safe and very well-tolerated.',
+    'cholesterol': 'Cholesterol is a natural lipid found abundantly in the stratum corneum as a key component of the skin\'s lamellar lipid barrier (alongside ceramides and fatty acids in a roughly 1:1:1 ratio). In cosmetics, it is derived from animal or plant sources (lanolin-derived or from wool). Used in barrier-repair formulations for dry skin, eczema and aged skin. Safe; bioidentical to skin lipids.',
+
+    # ══ Cosmetic Minerals / Clays ══════════════════════════════════════════════
+    'mica': 'Mica is a group of naturally occurring phyllosilicate minerals (muscovite, phlogopite, lepidolite) that split into thin, shiny, reflective sheets. Widely used in makeup (eyeshadows, highlighters, foundations, lip products) for shimmer, sparkle and light-reflective effects. Safe for topical cosmetic use. The primary concern with mica is ethical rather than toxicological — large-scale mica mining in India (Jharkhand, Rajasthan) and Madagascar has been linked to child labour, and reputable brands now use responsibly sourced or synthetic mica.',
+    'dicalcium phosphate': 'Dicalcium Phosphate (DCP) is a calcium phosphate mineral (CaHPO4) used in toothpaste as a mild polishing abrasive and in cosmetics as an opacifier and bulking agent. In food, it is used as a calcium supplement and leavening agent (E341). Safe and nutritionally beneficial as a calcium source.',
+    'stearalkonium bentonite': 'Stearalkonium Bentonite is a clay mineral (bentonite) that has been organically modified with stearalkonium chloride (a quaternary ammonium salt) to become compatible with anhydrous (non-water) formulations. Used as a rheology modifier — it thickens and stabilises anhydrous cosmetic formulations such as foundations, lipsticks and eyeshadows, suspending pigments evenly. Safe for topical cosmetic use.',
+
+    # ══ UV Filters / Sunscreen Actives ════════════════════════════════════════
+    'ethylhexyl salicylate': 'Ethylhexyl Salicylate (Octyl Salicylate / 2-Ethylhexyl Salicylate) is an organic UVB-absorbing sunscreen active that absorbs UV radiation in the 295–315nm range. Used at concentrations up to 5% (EU) to protect skin from UVB-induced sunburn. Generally well-tolerated; low sensitisation risk. Some in-vitro endocrine activity detected at high concentrations but not considered clinically relevant at sunscreen-use levels. Safe and approved by EU, FDA (as Octyl Salicylate) and CDSCO.',
+    'phenylbenzimidazole sulfonic acid': 'Phenylbenzimidazole Sulfonic Acid (Ensulizole / PBSA) is a water-soluble UVB sunscreen filter approved by the EU, FDA and many other regulatory bodies. Absorbs UVB radiation in the 290–320nm range. The water-soluble nature makes it suitable for lightweight, non-greasy sunscreen formulations. Safe at approved concentrations (up to 8% EU, 4% FDA).',
+    'butyl methoxydibenzoylmethane': 'Butyl Methoxydibenzoylmethane (Avobenzone / Parsol 1789) is the most widely used broad-spectrum UVA filter, absorbing UVA1 radiation in the 320–400nm range. A key ingredient in most broad-spectrum sunscreens globally. Its main limitation is photostability — it degrades in sunlight when used alone. Combined with photostabilisers (Octocrylene, Tinosorb S) it remains effective. Safe at approved concentrations (up to 5% EU, 3% FDA). Some studies showed skin penetration and trace detection in blood — FDA has requested additional data, but current evidence does not indicate a safety concern.',
+    'octocrylene food': 'Octocrylene is both a UVB/UVA2 sunscreen filter and a photostabiliser for unstable UV filters like Avobenzone. See the main "Octocrylene" entry for full details.',
+
+    # ══ Cosmetic Surfactants / Emulsifiers ════════════════════════════════════
+    'laureth-12': 'Laureth-12 is a non-ionic surfactant and emulsifier produced by ethoxylating lauryl alcohol with 12 ethylene oxide units. Like all ethoxylated ingredients, manufacturing may leave trace amounts of 1,4-dioxane (IARC Group 2B possible carcinogen) — reputable manufacturers vacuum-strip this contaminant to well below safe limits. Used in cleansers and emulsions. Safe within approved limits; the 1,4-dioxane concern is a manufacturing quality issue.',
+    'steareth-21': 'Steareth-21 is a non-ionic emulsifier produced by ethoxylating stearyl alcohol with 21 ethylene oxide units. Used as an O/W emulsifier in lotions, creams and conditioners. Ethoxylation may leave trace 1,4-dioxane (IARC Group 2B) — manufacturers control this via vacuum stripping. Safe within approved limits.',
+    'steareth-2': 'Steareth-2 is a non-ionic emulsifier produced by ethoxylating stearyl alcohol with 2 ethylene oxide units. Used alongside Steareth-21 in classic emulsion systems. Same trace 1,4-dioxane concern as other ethoxylates. Safe within approved limits.',
+    'sodium lauroyl lactylate': 'Sodium Lauroyl Lactylate (SLL) is a mild, biodegradable anionic surfactant and emulsifier derived from coconut-sourced lauric acid and lactic acid. Used in gentle cleansers, moisturisers and hair care. Excellent skin tolerability; milder than SLS. Safe.',
+
+    # ══ Conditioning / Quat Agents ════════════════════════════════════════════
+    'linoleamidopropyl pg-dimonium chloride phosphate': 'Linoleamidopropyl PG-Dimonium Chloride Phosphate is a quaternary ammonium conditioning agent derived from linoleic acid (an omega-6 fatty acid). Used as an antistatic conditioning agent in hair care and skincare products. The quaternary ammonium group improves hair manageability and reduces static. Safe at cosmetic-use concentrations; biodegradable.',
+
+    # ══ Hyaluronic Acid Variants ══════════════════════════════════════════════
+    'sodium acetylated hyaluronate': 'Sodium Acetylated Hyaluronate is a modified form of sodium hyaluronate in which acetyl groups are attached to the hyaluronic acid polymer. The acetylation makes it more lipophilic (fat-attracting), improving its affinity for the skin surface and enabling longer-lasting moisture retention compared to standard sodium hyaluronate. Safe and very well-tolerated.',
+    'sodium hyaluronate crosspolymer': 'Sodium Hyaluronate Crosspolymer is a cross-linked, high-molecular-weight form of sodium hyaluronate. The cross-linking increases its molecular size so it remains on the skin surface, providing a long-lasting film that continuously releases moisture. Used in premium anti-ageing and hydrating formulations. Safe.',
+    'hydrolyzed sodium hyaluronate': 'Hydrolyzed Sodium Hyaluronate consists of very small fragments of sodium hyaluronate produced by enzymatic hydrolysis. The small molecular size (typically under 10 kDa) allows deeper penetration into the upper layers of the stratum corneum compared to high-molecular-weight HA. Used in serums and moisturisers for deeper hydration. Safe.',
+
+    # ══ Cosmetic Polymers / Rheology Modifiers ════════════════════════════════
+    'acrylates/c10-30 alkyl acrylate crosspolymer': 'Acrylates/C10-30 Alkyl Acrylate Crosspolymer is a synthetic thickener and stabiliser related to Carbomer but with added long-chain alkyl groups, making it more effective at stabilising emulsions with oil droplets. Widely used in sunscreens, moisturisers and gel formulations. Safe for topical use.',
+    'propylene carbonate': 'Propylene Carbonate is an organic solvent and plasticiser used in cosmetics to dissolve and stabilise ingredients, improve spreadability and act as a coupling agent. Also used in pharmaceutical formulations. Safe at cosmetic-use concentrations; good skin tolerability.',
+
+    # ══ Cosmetic Colourants / Pigments ════════════════════════════════════════
+    'red 7 lake': 'Red 7 Lake (D&C Red 7 Lake / CI 15850:1 / Lithol Rubine BCA) is a synthetic azo dye lake used in cosmetics (lipsticks, blushers, eyeshadows) for its bright, vivid red-pink colour. "Lake" pigments are precipitated onto a substrate (usually aluminium), making them more opaque and bleed-resistant than their soluble counterparts. EU and FDA approved for cosmetic use within specified limits. Safe for external cosmetic use.',
+    'red 6': 'Red 6 (D&C Red 6 / CI 15850 / Lithol Rubine B) is a synthetic azo dye used as a cosmetic colorant in lipsticks, blushers and other makeup products. The non-lake (soluble salt) form. FDA approved for cosmetic use; EU permitted in cosmetics. Safe for external cosmetic application.',
+    'red 28 lake': 'Red 28 Lake (D&C Red 28 Lake / CI 45410 / Phloxine B Lake) is a synthetic xanthene dye lake used as a cosmetic colorant in lipsticks and other makeup. Approved by FDA for cosmetic use (not for use around the eyes in the US). EU permitted at specified limits. Generally safe for topical cosmetic use; some photosensitisation concern at high concentrations.',
+    'ci 15850': 'CI 15850 is the Colour Index number for Lithol Rubine, a synthetic azo dye. Used in cosmetics (Red 6, Red 7 and their lake forms) for red-pink shades in lipsticks and blushers. EU and FDA approved for cosmetic use.',
+    'ci 45410': 'CI 45410 is the Colour Index number for Phloxine B (Red 28), a synthetic xanthene dye used as a cosmetic colorant. FDA approved for lipsticks; EU permitted in cosmetics at specified limits.',
+    'ci 77491': 'CI 77491 is the Colour Index number for Red Iron Oxide (ferric oxide, Fe2O3). A natural inorganic mineral pigment providing red-brown shades in foundations, eyeshadows and lipsticks. Very safe; chemically inert; approved globally.',
+    'ci 77492': 'CI 77492 is the Colour Index number for Yellow Iron Oxide (goethite, FeOOH). A natural inorganic mineral pigment providing yellow-gold shades in foundations and makeup. Very safe; chemically inert; approved globally.',
+
+    # ══ Bis-PEG Silicone Compounds ════════════════════════════════════════════
+    'bis-peg-12 dimethicone beeswax': 'Bis-PEG-12 Dimethicone Beeswax is a PEG-modified dimethicone-based wax used as an emulsifier and skin conditioner in anhydrous cosmetic formulations. The PEG modification makes the silicone wax water-dispersible. Contains a PEG group (ethylene oxide-based) — ethoxylation may introduce trace 1,4-dioxane (IARC Group 2B possible carcinogen); reputable manufacturers minimise this. Also contains a beeswax-derived component — not suitable for strict vegans. Safe at cosmetic-use concentrations within approved limits.',
+
+    # ══ Ceramide EOP ══════════════════════════════════════════════════════════
+    'ceramide eop': 'Ceramide EOP (Ceramide 1 / N-[(1R,2R)-2-Hydroxy-1-(hydroxymethyl)heptadecyl]-... ester) is one of the nine ceramide types identified in human skin. It is unique among ceramides for having an ester-linked omega-hydroxy fatty acid — it forms the structural backbone of the lamellar lipid sheets in the stratum corneum. Critically important for maintaining the skin\'s water-permeability barrier. Used in barrier-repair and eczema-care formulations alongside other ceramides (NP, AP). Safe; bioidentical to skin lipids.',
+
     # ══ Food Additive E Numbers / INS Numbers (comprehensive) ══════════════════
 
     # ── Colours ──────────────────────────────────────────────────────────────
@@ -1495,6 +1552,16 @@ COSMETIC_WORTH_OVERRIDES = {
     'e211': (
         'Sodium benzoate (E211)',
         'Benzene formation risk is specific to acidic beverages with Vitamin C — not a topical concern. Approved in cosmetics at ≤0.5%; may cause skin irritation at higher concentrations.'
+    ),
+    # PEG-modified silicone waxes — the PEG concern (1,4-dioxane) is a manufacturing
+    # quality issue at trace levels; in cosmetics these are worth noting, not CQ
+    'bis-peg-12 dimethicone beeswax': (
+        'PEG-modified silicone wax emulsifier',
+        'Contains a PEG moiety — ethoxylation may introduce trace 1,4-dioxane (IARC Group 2B possible carcinogen); reputable manufacturers control this via vacuum stripping; also contains a beeswax-derived component (not vegan); safe at cosmetic-use concentrations within approved limits'
+    ),
+    'bis-peg': (
+        'PEG-modified silicone compound',
+        'PEG-modified silicone; ethoxylation may introduce trace 1,4-dioxane; safe at approved cosmetic concentrations; manufacturers control 1,4-dioxane via vacuum stripping'
     ),
 }
 
@@ -2306,6 +2373,21 @@ def classify_ingredient(ingredient_name, category=None):
         'nitrous oxide': ('Propellant E942/INS 942', 'Whipped cream canister propellant; safe in food; dangerous when misused recreationally as a drug'),
         'l-cysteine': ('Dough conditioner E920/INS 920', 'Amino acid used to reduce bread dough mixing time; often sourced from hair or feathers — check vegan/vegetarian compliance; safe'),
         'propylene glycol alginate': ('Modified seaweed gum E405/INS 405', 'Contains propylene glycol moiety; used in salad dressings and beer foam; safe at approved levels'),
+
+        # ── UV Filters with mild concerns ─────────────────────────────────────
+        'butyl methoxydibenzoylmethane': ('UVA sunscreen filter (Avobenzone)', 'Broad-spectrum UVA1 filter; photodegrades in sunlight when used alone — combine with photostabilisers; some skin penetration detected in studies but no confirmed safety risk at approved levels; FDA (3%) and EU (5%) approved'),
+        'avobenzone': ('UVA sunscreen filter (Butyl Methoxydibenzoylmethane)', 'Same as Butyl Methoxydibenzoylmethane — the most widely used UVA filter; photounstable alone; safe within approved limits'),
+
+        # ── PEG-modified silicone compounds ──────────────────────────────────
+        'bis-peg-12 dimethicone beeswax': ('PEG-modified silicone wax emulsifier', 'PEG compound — ethoxylation may introduce trace 1,4-dioxane (IARC Group 2B possible carcinogen); also not vegan (contains beeswax derivative); safe at cosmetic-use concentrations within approved limits'),
+        'bis-peg': ('PEG-modified silicone compound', 'PEG-modified silicone; ethoxylation may introduce trace 1,4-dioxane; generally safe at approved cosmetic concentrations'),
+
+        # ── Cosmetic azo dye lakes (worth knowing in cosmetics) ───────────────
+        'red 28 lake': ('Synthetic xanthene dye lake (D&C Red 28 / CI 45410)', 'Cosmetic colorant in lipsticks; FDA-approved; some photosensitisation concern at high concentrations; not permitted around eyes in the USA'),
+        'red 28': ('Synthetic xanthene dye (D&C Red 28)', 'Cosmetic colorant; FDA-approved; some photosensitisation potential; not for eye area in USA'),
+
+        # ── Quaternary ammonium conditioning agents ───────────────────────────
+        'linoleamidopropyl pg-dimonium chloride phosphate': ('Cationic conditioning agent (quat)', 'Quaternary ammonium compound derived from linoleic acid; antistatic conditioner for hair and skin; safe at cosmetic concentrations; environmental persistence noted for quats'),
     }
     
     # GENERALLY RECOGNISED - Natural/herbal/organic ingredients (check FIRST before worth_knowing)
@@ -2541,8 +2623,53 @@ def classify_ingredient(ingredient_name, category=None):
         '2-oleamido-1,3-octadecanediol': ('Ceramide-like skin barrier lipid (oleamide diol)', 'A synthetic ceramide analogue that mimics the structure of natural skin ceramides; reinforces the skin lipid barrier, reduces transepidermal water loss and soothes dry skin; safe and well tolerated; used in high-performance barrier repair creams'),
         'ceramide np': ('Natural skin ceramide (type NP)', 'Ceramide NP (N-palmitoyl sphinganine) is the most abundant ceramide in human skin; restores the lamellar skin barrier; excellent tolerability; safe'),
         'ceramide ap': ('Natural skin ceramide (type AP)', 'Ceramide AP (N-palmitoyldihydrosphingosine) is a key skin barrier ceramide; barrier-restoring and moisturising; safe'),
-        'ceramide eop': ('Natural skin ceramide (type EOP)', 'Long-chain ceramide important for linking the corneocyte lipid envelope; barrier-restoring; safe'),
+        'ceramide eop': ('Natural skin ceramide (type EOP)', 'Ester-linked omega-hydroxy ceramide; forms the structural backbone of stratum corneum lamellar sheets; critical for skin barrier integrity; safe'),
         'phytosphingosine': ('Sphingoid base (natural ceramide precursor)', 'A sphingosine analog naturally found in skin; antimicrobial, anti-inflammatory and ceramide-building properties; safe'),
+        'cholesterol': ('Natural skin lipid (barrier component)', 'One of the three essential stratum corneum lipids (with ceramides and fatty acids); restores the lamellar lipid barrier; bioidentical to skin lipids; safe'),
+
+        # ── Cosmetic Polymers / Film-formers ─────────────────────────────────
+        'polyethylene': ('Synthetic polymer wax (texture modifier)', 'High-molecular-weight polyethylene wax used in lipsticks and foundations; safe for topical use; different from microplastic PE beads (banned in rinse-offs)'),
+        'polysilicone-11': ('Cross-linked silicone elastomer (film-former)', 'Silicone polymer used in long-wear makeup; film-former and suspension agent; not absorbed; safe'),
+        'nylon-12': ('Synthetic polyamide polymer (texture agent)', 'Soft-focus texture agent and film-former in foundations and eyeshadows; not absorbed; safe for topical use'),
+        'methyl methacrylate crosspolymer': ('Acrylic polymer (soft-focus agent)', 'Cross-linked acrylic polymer for mattifying and blurring effects in foundations; not absorbed; safe'),
+        'acrylates/c10-30 alkyl acrylate crosspolymer': ('Synthetic thickener and emulsion stabiliser', 'Long-chain modified Carbomer analogue used in sunscreens and moisturisers; safe for topical use'),
+        'acrylates': ('Acrylic polymer thickener/stabiliser', 'Cross-linked acrylic polymer used to thicken and stabilise cosmetic emulsions; safe'),
+
+        # ── Cosmetic Emollients ───────────────────────────────────────────────
+        'caprylic/capric triglyceride': ('Light coconut-derived emollient (CCT)', 'Hypoallergenic, non-comedogenic emollient from coconut oil; excellent skin tolerability; widely regarded as one of the best cosmetic emollients; safe'),
+        'caprylic capric triglyceride': ('Light coconut-derived emollient (CCT)', 'Non-comedogenic coconut-derived emollient; hypoallergenic; safe and very well-tolerated'),
+        'polyhydroxystearic acid': ('Emulsifier/dispersing agent for mineral UV filters', 'Used to stabilise zinc oxide and titanium dioxide in sunscreens; safe for topical use'),
+        'pentaerythrityl tetra-di-t-butyl hydroxyhydrocinnamate': ('Hindered phenol antioxidant (formula stabiliser)', 'Trace-level antioxidant added to protect cosmetic oils and polymers from oxidation; not a skin active; safe'),
+        'tocopheryl acetate': ('Vitamin E acetate (antioxidant and skin conditioner)', 'Stable esterified Vitamin E; antioxidant and emollient; converts to free tocopherol on skin; very safe and well-tolerated'),
+
+        # ── Cosmetic Minerals / Clays ─────────────────────────────────────────
+        'mica': ('Natural mineral pigment (shimmer/sparkle)', 'Phyllosilicate mineral used in makeup for light-reflective shimmer; safe topically; ethical sourcing concern in supply chain'),
+        'dicalcium phosphate': ('Mineral abrasive / opacifier / calcium source', 'Used in toothpaste and cosmetics; provides dietary calcium in food; safe'),
+        'stearalkonium bentonite': ('Organically-modified clay (rheology modifier)', 'Quat-modified bentonite clay; thickens and stabilises anhydrous cosmetic formulations; safe'),
+
+        # ── UV Filters (generally safe) ───────────────────────────────────────
+        'ethylhexyl salicylate': ('UVB sunscreen filter (Octyl Salicylate)', 'Approved UVB absorber; well-tolerated; safe within approved limits (up to 5% EU)'),
+        'octyl salicylate': ('UVB sunscreen filter (Ethylhexyl Salicylate)', 'Same as ethylhexyl salicylate; EU and FDA approved UVB filter; safe'),
+        'phenylbenzimidazole sulfonic acid': ('Water-soluble UVB sunscreen filter (Ensulizole)', 'Approved UVB filter (EU up to 8%, FDA up to 4%); water-soluble; safe and well-tolerated'),
+        'ensulizole': ('UVB sunscreen filter (Phenylbenzimidazole Sulfonic Acid)', 'Water-soluble UVB filter; safe and approved'),
+
+        # ── Hyaluronic Acid Variants ──────────────────────────────────────────
+        'sodium acetylated hyaluronate': ('Acetylated hyaluronic acid (enhanced HA)', 'Lipophilic modified HA with longer-lasting skin surface retention; superior moisturisation to standard HA; safe'),
+        'sodium hyaluronate crosspolymer': ('Cross-linked hyaluronic acid (film-forming HA)', 'High-molecular-weight cross-linked HA; forms a long-lasting moisture film on skin surface; safe'),
+        'hydrolyzed sodium hyaluronate': ('Low molecular weight HA fragments (penetrating HA)', 'Small HA fragments that penetrate deeper into stratum corneum; deeper hydration than standard HA; safe'),
+        'hydrolyzed hyaluronic acid': ('Low molecular weight HA (penetrating)', 'Enzymatically hydrolysed HA for deeper skin penetration; safe'),
+
+        # ── Surfactants / Emulsifiers (safe) ──────────────────────────────────
+        'sodium lauroyl lactylate': ('Mild biodegradable surfactant/emulsifier', 'Derived from coconut lauric acid and lactic acid; milder than SLS; excellent tolerability; safe'),
+
+        # ── Misc safe cosmetic ingredients ────────────────────────────────────
+        'propylene carbonate': ('Cosmetic solvent and plasticiser', 'Organic solvent used to dissolve and stabilise cosmetic ingredients; good skin tolerability; safe'),
+        'red 7 lake': ('Cosmetic azo dye lake (D&C Red 7 / CI 15850)', 'EU and FDA approved cosmetic colorant in lipsticks and makeup; safe for external cosmetic use'),
+        'red 7': ('Cosmetic azo dye (D&C Red 7 / CI 15850:1)', 'Approved cosmetic colorant; safe for external use'),
+        'red 6': ('Cosmetic azo dye (D&C Red 6 / CI 15850)', 'FDA-approved cosmetic colorant in lipsticks; safe for external cosmetic application'),
+        'ci 15850': ('Cosmetic azo dye colorant (Red 6 / Red 7)', 'Lithol Rubine family dye; EU and FDA approved for cosmetic use; safe'),
+        'ci 77491': ('Red Iron Oxide mineral pigment', 'Natural inorganic mineral pigment; chemically inert; safe; approved globally for cosmetics and food'),
+        'ci 77492': ('Yellow Iron Oxide mineral pigment', 'Natural inorganic mineral pigment; chemically inert; safe; approved globally'),
         'sphingosine': ('Natural ceramide component', 'A sphingoid base naturally present in human skin; precursor to ceramide synthesis; safe at cosmetic concentrations'),
 
         # ── Silicones (additional safe/common types) ─────────────────────────────
