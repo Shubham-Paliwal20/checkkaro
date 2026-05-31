@@ -311,7 +311,15 @@ def _reg_note(cls: str) -> str:
     return 'Approved under FSSAI/CODEX standards'
 
 def _parse_raw(raw: str) -> list:
-    """Split ingredients_raw text into individual ingredient strings."""
+    """Split ingredients_raw text into individual ingredient strings.
+
+    Handles grouped additive declarations like:
+      "raising agents (INS 503(ii), INS 500(ii), INS 450(i))"
+      "emulsifiers (INS 322(i), INS 471)"
+      "permitted synthetic food colours (INS 110, INS 102, INS 124)"
+    These are expanded so each INS/E number becomes a separate ingredient
+    prefixed with its category label, e.g. "raising agent INS 503(ii)".
+    """
     raw = raw.strip().rstrip('.')
     depth, current, items = 0, [], []
     for ch in raw:
@@ -324,12 +332,55 @@ def _parse_raw(raw: str) -> list:
             current.append(ch)
     if current:
         items.append(''.join(current).strip())
-    cleaned = []
+
+    # Expand grouped additive items: "label (A, B, C)" → ["label A", "label B", "label C"]
+    # Only expand when the parenthetical contains multiple INS/E numbers or comma-separated entries
+    _GROUP_LABELS = re.compile(
+        r'^(raising agents?|emulsifiers?|stabilisers?|stabilizers?|'
+        r'acidity regulators?|anti[- ]?caking agents?|'
+        r'permitted (synthetic )?food colou?rs?|colou?ring agents?|'
+        r'artificial colou?rs?|colou?rs?|preservatives?|antioxidants?|'
+        r'flavou?ring agents?|flavou?rings?|sequestrants?|'
+        r'thickeners?|humectants?|glazing agents?|'
+        r'modified starches?|food starches?)\s*\((.+)\)$',
+        re.IGNORECASE,
+    )
+
+    def _expand_group(label: str, inner: str) -> list:
+        """Split inner content by commas not inside sub-parentheses."""
+        parts, cur, d = [], [], 0
+        for ch in inner:
+            if ch == '(': d += 1
+            elif ch == ')': d -= 1
+            if ch == ',' and d == 0:
+                p = cur_s = ''.join(cur).strip()
+                if p: parts.append(p)
+                cur = []
+            else:
+                cur.append(ch)
+        last = ''.join(cur).strip()
+        if last: parts.append(last)
+
+        if len(parts) <= 1:
+            return [f"{label} ({inner.strip()})"]
+
+        # Derive a short singular label (remove "permitted", "synthetic", "food" qualifiers)
+        short = re.sub(r'\b(permitted|synthetic|food|artificial)\b\s*', '', label, flags=re.IGNORECASE).strip()
+        short = re.sub(r's$', '', short, flags=re.IGNORECASE)  # singularise
+        return [f"{short} {p}" for p in parts]
+
+    expanded = []
     for item in items:
         item = re.sub(r'^[A-Za-z\s]+:\s*', '', item).strip()
-        if len(item) > 1:
-            cleaned.append(item)
-    return cleaned
+        if len(item) <= 1:
+            continue
+        m = _GROUP_LABELS.match(item)
+        if m:
+            label, _, inner = m.group(1), m.group(2), m.group(3)
+            expanded.extend(_expand_group(label, inner))
+        else:
+            expanded.append(item)
+    return expanded
 
 def _build_ingredient_item(ing, category: str = '') -> IngredientItem:
     name = ing if isinstance(ing, str) else ing.get('name', '')
