@@ -272,23 +272,28 @@ export default function Products() {
         setLoading(false)
 
         // Fetch uploaded photos in background and fill in missing image_urls.
-        // product_photos.product_id stores the static_key (e.g. "kinley-water"),
-        // not the numeric database id — use static_key for the lookup.
+        // product_photos.product_id can store either the static_key ("kinley-water")
+        // for newer uploads or the numeric id ("12345") for older uploads — query both
+        // so every product gets its image regardless of which format was used.
         if (active && pageProducts.length > 0) {
-          const keys = pageProducts.map(p => p.static_key).filter(Boolean)
-          if (keys.length > 0) {
+          const staticKeys = pageProducts.map(p => p.static_key).filter(Boolean)
+          const numericIds = pageProducts.filter(p => !p.image_url).map(p => p.id).filter(Boolean)
+          const allKeys = [...new Set([...staticKeys, ...numericIds])]
+          if (allKeys.length > 0) {
             supabase
               .from('product_photos')
               .select('product_id, image_url')
-              .in('product_id', keys)
+              .in('product_id', allKeys)
               .order('created_at')
               .then(({ data: photos }) => {
                 if (!active || !photos?.length) return
                 const photoMap = {}
                 photos.forEach(ph => { if (!photoMap[ph.product_id]) photoMap[ph.product_id] = ph.image_url })
-                setProducts(prev => prev.map(p =>
-                  (p.static_key && photoMap[p.static_key]) ? { ...p, image_url: photoMap[p.static_key] } : p
-                ))
+                setProducts(prev => prev.map(p => {
+                  if (p.image_url) return p
+                  const url = (p.static_key && photoMap[p.static_key]) || photoMap[p.id]
+                  return url ? { ...p, image_url: url } : p
+                }))
               })
               .catch(() => {})
           }
