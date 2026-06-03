@@ -440,11 +440,25 @@ function Result() {
     return () => document.removeEventListener('visibilitychange', onVisibility)
   }, [productName])
 
-  const fetchDbPhotos = async (productId) => {
+  const fetchDbPhotos = async (productId, staticKey) => {
     try {
-      const { data } = await supabase.from('product_photos')
-        .select('*').eq('product_id', productId).order('created_at')
-      setDbPhotos(data || [])
+      // Query by both numeric id and static_key — old uploads used numeric id,
+      // newer uploads use static_key. Merge results and deduplicate.
+      const queries = [
+        supabase.from('product_photos').select('*').eq('product_id', productId).order('created_at'),
+      ]
+      if (staticKey && staticKey !== productId) {
+        queries.push(
+          supabase.from('product_photos').select('*').eq('product_id', staticKey).order('created_at')
+        )
+      }
+      const results = await Promise.all(queries)
+      const seen = new Set()
+      const photos = []
+      results.forEach(({ data }) => {
+        (data || []).forEach(p => { if (!seen.has(p.id)) { seen.add(p.id); photos.push(p) } })
+      })
+      setDbPhotos(photos)
     } catch { /* silent */ }
   }
 
@@ -472,7 +486,7 @@ function Result() {
   const handlePhotoSuccess = (msg, isAdminAdd, firstUploadedUrl) => {
     setPhotoToast(msg)
     if (isAdminAdd && product?.id) {
-      fetchDbPhotos(product.id)
+      fetchDbPhotos(product.id, product.static_key)
       // Update local product state + cache so the gallery shows the new primary image immediately
       if (firstUploadedUrl) {
         const updated = { ...product, image_url: firstUploadedUrl }
@@ -552,7 +566,7 @@ function Result() {
         cacheSet(cacheKey, response.data)
         setProduct(response.data)
         // Kick off photo fetch immediately without blocking product display
-        if (response.data?.id) fetchDbPhotos(response.data.id)
+        if (response.data?.id) fetchDbPhotos(response.data.id, response.data.static_key)
         return
       } catch (backendErr) {
         if (backendErr.response?.status && backendErr.response.status !== 404 && backendErr.response.status !== 500) {
@@ -592,7 +606,7 @@ function Result() {
         }
         cacheSet(cacheKey, productData)
         setProduct(productData)
-        if (p.id) fetchDbPhotos(String(p.id))
+        if (p.id) fetchDbPhotos(String(p.id), p.static_key)
         return
       }
 
