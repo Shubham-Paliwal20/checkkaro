@@ -371,7 +371,7 @@ export default function Products() {
             Product Directory
           </h1>
           <p className="text-gray-500 text-sm mb-5">
-            <span className="font-semibold text-gray-700">{total || '570+'}</span> products
+            <span className="font-semibold text-gray-700">{total || '…'}</span> products
             {category ? ` in ${category}` : ''} · click any to see full ingredient breakdown
           </p>
 
