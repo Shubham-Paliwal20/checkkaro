@@ -131,7 +131,7 @@ app.include_router(admin_extract.router,  prefix="/api/admin",       tags=["Admi
 app.include_router(reports.router,        prefix="/api/admin",       tags=["Reports"])
 
 
-@app.get("/health")
+@app.api_route("/health", methods=["GET", "HEAD"])
 async def health_check():
     return {"status": "ok", "service": "Parkho API"}
 
