@@ -3,6 +3,29 @@ import { Link } from 'react-router-dom'
 function Footer() {
   return (
     <footer className="bg-navy text-white">
+
+      {/* Social Banner */}
+      <div className="border-b border-white/10 py-12 sm:py-16">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+          <p className="font-poppins text-2xl sm:text-4xl font-bold text-white mb-6">
+            Get Connected with us on social network
+          </p>
+          <a
+            href="https://instagram.com/parkho.in"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-flex items-center gap-3 bg-white/10 hover:bg-orange transition-colors rounded-full px-6 py-3 group"
+          >
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" className="text-white">
+              <rect x="2" y="2" width="20" height="20" rx="5.5" stroke="currentColor" strokeWidth="1.8"/>
+              <circle cx="12" cy="12" r="4.5" stroke="currentColor" strokeWidth="1.8"/>
+              <circle cx="17.5" cy="6.5" r="1" fill="currentColor"/>
+            </svg>
+            <span className="text-white font-semibold text-base">@parkho.in</span>
+          </a>
+        </div>
+      </div>
+
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
           {/* Left - Logo and Tagline */}
