@@ -2,66 +2,77 @@ import { useState, useRef } from 'react'
 import { supabase } from '../lib/supabaseClient'
 
 const MAX_SIZE_MB = 8
+const MAX_PHOTOS  = 5
+const LABELS      = ['FRONT', 'BACK', 'IMG 3', 'IMG 4', 'IMG 5']
 
 export default function AddProductModal({ user, onClose, onSuccess }) {
-  const [productName, setProductName]     = useState('')
-  const [imageFile, setImageFile]         = useState(null)
-  const [imagePreview, setImagePreview]   = useState(null)
-  const [upiOrMobile, setUpiOrMobile]     = useState('')
-  const [ingredients, setIngredients]     = useState('')
-  const [uploading, setUploading]         = useState(false)
-  const [error, setError]                 = useState(null)
-  const [dragOver, setDragOver]           = useState(false)
+  const [productName, setProductName] = useState('')
+  const [files, setFiles]             = useState([])
+  const [previews, setPreviews]       = useState([])
+  const [upiOrMobile, setUpiOrMobile] = useState('')
+  const [ingredients, setIngredients] = useState('')
+  const [uploading, setUploading]     = useState(false)
+  const [error, setError]             = useState(null)
+  const [dragOver, setDragOver]       = useState(false)
   const inputRef = useRef()
 
-  const handleImageSelect = (files) => {
-    const file = Array.from(files).find(f => f.type.startsWith('image/'))
-    if (!file) return
-    if (file.size > MAX_SIZE_MB * 1024 * 1024) {
-      setError(`Image must be under ${MAX_SIZE_MB}MB`)
-      return
-    }
+  const remaining = MAX_PHOTOS - files.length
+
+  const addFiles = (selected) => {
+    const newFiles = Array.from(selected).filter(f => f.type.startsWith('image/'))
+    if (!newFiles.length) return
+    const oversized = newFiles.find(f => f.size > MAX_SIZE_MB * 1024 * 1024)
+    if (oversized) { setError(`Each image must be under ${MAX_SIZE_MB}MB`); return }
     setError(null)
-    if (imagePreview) URL.revokeObjectURL(imagePreview)
-    setImageFile(file)
-    setImagePreview(URL.createObjectURL(file))
+    const toAdd = newFiles.slice(0, remaining)
+    setFiles(prev => [...prev, ...toAdd])
+    setPreviews(prev => [...prev, ...toAdd.map(f => URL.createObjectURL(f))])
     if (inputRef.current) inputRef.current.value = ''
+  }
+
+  const removeFile = (i) => {
+    URL.revokeObjectURL(previews[i])
+    setFiles(f => f.filter((_, j) => j !== i))
+    setPreviews(p => p.filter((_, j) => j !== i))
   }
 
   const handleDrop = (e) => {
     e.preventDefault()
     setDragOver(false)
-    handleImageSelect(e.dataTransfer.files)
+    addFiles(e.dataTransfer.files)
   }
 
   const handleSubmit = async () => {
     const name = productName.trim()
     const upi  = upiOrMobile.trim()
 
-    if (!name)      { setError('Product name is required'); return }
-    if (!imageFile) { setError('Product image is required'); return }
-    if (!upi)       { setError('UPI ID or mobile number is required'); return }
+    if (!name)         { setError('Product name is required'); return }
+    if (!files.length) { setError('At least one product image is required'); return }
+    if (!upi)          { setError('UPI ID or mobile number is required'); return }
 
     setUploading(true)
     setError(null)
 
     try {
-      // Upload image to Supabase storage
-      const ext  = imageFile.name.split('.').pop()?.toLowerCase() || 'jpg'
-      const path = `new-submissions/${user.id}/${Date.now()}_${Math.random().toString(36).slice(2)}.${ext}`
-      const { error: upErr } = await supabase.storage
-        .from('product-images')
-        .upload(path, imageFile, { contentType: imageFile.type, upsert: false })
-      if (upErr) throw new Error(`Image upload failed: ${upErr.message}`)
+      // Upload all images and collect public URLs
+      const uploadedUrls = []
+      for (const file of files) {
+        const ext  = file.name.split('.').pop()?.toLowerCase() || 'jpg'
+        const path = `new-submissions/${user.id}/${Date.now()}_${Math.random().toString(36).slice(2)}.${ext}`
+        const { error: upErr } = await supabase.storage
+          .from('product-images')
+          .upload(path, file, { contentType: file.type, upsert: false })
+        if (upErr) throw new Error(`Image upload failed: ${upErr.message}`)
+        const { data: { publicUrl } } = supabase.storage.from('product-images').getPublicUrl(path)
+        uploadedUrls.push(publicUrl)
+      }
 
-      const { data: { publicUrl } } = supabase.storage.from('product-images').getPublicUrl(path)
-
-      // Insert into product_submissions — same table the Admin panel reads
       const { error: dbErr } = await supabase.from('product_submissions').insert({
         product_name_searched: name,
-        images:                [publicUrl],
+        images:                uploadedUrls,
         contact:               upi,
         email:                 user.email || null,
+        ingredients_raw:       ingredients.trim() || null,
         user_id:               user.id,
         status:                'pending',
       })
@@ -76,7 +87,7 @@ export default function AddProductModal({ user, onClose, onSuccess }) {
     }
   }
 
-  const canSubmit = productName.trim() && imageFile && upiOrMobile.trim() && !uploading
+  const canSubmit = productName.trim() && files.length > 0 && upiOrMobile.trim() && !uploading
 
   return (
     <div
@@ -100,9 +111,9 @@ export default function AddProductModal({ user, onClose, onSuccess }) {
 
         <div style={{ padding: '16px 20px 20px' }}>
 
-          {/* How it works banner */}
+          {/* How it works */}
           <div style={{ marginBottom: 16, padding: '10px 14px', background: '#f0f9ff', border: '1px solid #bae6fd', borderRadius: 10, fontSize: 12, color: '#0369a1' }}>
-            <strong>How it works:</strong> Submit the product name, a photo of the packaging, and your UPI/mobile.
+            <strong>How it works:</strong> Submit the product name and at least one photo of the packaging.
             Admin will review and credit <strong>₹1 to your UPI/mobile</strong> within 24 hours.
           </div>
 
@@ -120,22 +131,17 @@ export default function AddProductModal({ user, onClose, onSuccess }) {
             />
           </div>
 
-          {/* Product Image */}
+          {/* Product Images */}
           <div style={{ marginBottom: 14 }}>
             <label style={{ display: 'block', fontSize: 12, fontWeight: 700, color: '#374151', marginBottom: 6 }}>
-              Product Image <span style={{ color: '#dc2626' }}>*</span>
+              Product Photos <span style={{ color: '#dc2626' }}>*</span>
+              <span style={{ fontSize: 11, fontWeight: 400, color: '#9ca3af', marginLeft: 6 }}>
+                min 1 · max {MAX_PHOTOS} · {files.length}/{MAX_PHOTOS} added
+              </span>
             </label>
 
-            {imagePreview ? (
-              <div style={{ position: 'relative', width: 100, height: 100, borderRadius: 12, overflow: 'hidden', border: '2px solid #86efac', background: '#f9fafb', marginBottom: 8 }}>
-                <img src={imagePreview} alt="preview" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
-                <button
-                  onClick={() => { URL.revokeObjectURL(imagePreview); setImageFile(null); setImagePreview(null) }}
-                  style={{ position: 'absolute', top: 4, right: 4, width: 20, height: 20, borderRadius: '50%', background: 'rgba(0,0,0,0.65)', border: 'none', color: '#fff', fontSize: 12, cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', lineHeight: 1 }}
-                >×</button>
-                <div style={{ position: 'absolute', bottom: 0, left: 0, right: 0, background: 'rgba(0,0,0,0.5)', color: '#fff', fontSize: 9, textAlign: 'center', padding: '2px 0', fontWeight: 700 }}>FRONT</div>
-              </div>
-            ) : (
+            {/* Drop zone — hide once 5 photos added */}
+            {remaining > 0 && (
               <div
                 onClick={() => inputRef.current?.click()}
                 onDrop={handleDrop}
@@ -143,16 +149,34 @@ export default function AddProductModal({ user, onClose, onSuccess }) {
                 onDragLeave={() => setDragOver(false)}
                 style={{
                   border: `2px dashed ${dragOver ? '#FF9933' : '#e5e7eb'}`,
-                  borderRadius: 12, padding: '20px 16px', textAlign: 'center', cursor: 'pointer',
-                  background: dragOver ? '#fff7ed' : '#fafafa', transition: 'all 0.15s', marginBottom: 8,
+                  borderRadius: 12, padding: '16px', textAlign: 'center', cursor: 'pointer',
+                  background: dragOver ? '#fff7ed' : '#fafafa', transition: 'all 0.15s', marginBottom: 10,
                 }}
               >
-                <div style={{ fontSize: 28, marginBottom: 4 }}>📷</div>
-                <p style={{ margin: 0, fontSize: 13, fontWeight: 600, color: '#374151' }}>Click to upload or drag & drop</p>
-                <p style={{ margin: '4px 0 0', fontSize: 11, color: '#9ca3af' }}>JPG, PNG, WEBP · max {MAX_SIZE_MB}MB</p>
+                <div style={{ fontSize: 26, marginBottom: 4 }}>📷</div>
+                <p style={{ margin: 0, fontSize: 13, fontWeight: 600, color: '#374151' }}>
+                  {files.length === 0 ? 'Click to upload or drag & drop' : `Add more photos (${remaining} slot${remaining !== 1 ? 's' : ''} left)`}
+                </p>
+                <p style={{ margin: '4px 0 0', fontSize: 11, color: '#9ca3af' }}>JPG, PNG, WEBP · max {MAX_SIZE_MB}MB each</p>
               </div>
             )}
-            <input ref={inputRef} type="file" accept="image/*" style={{ display: 'none' }} onChange={e => handleImageSelect(e.target.files)} />
+            <input ref={inputRef} type="file" accept="image/*" multiple style={{ display: 'none' }} onChange={e => addFiles(e.target.files)} />
+
+            {/* Thumbnails */}
+            {previews.length > 0 && (
+              <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap' }}>
+                {previews.map((src, i) => (
+                  <div key={i} style={{ position: 'relative', width: 76, height: 76, borderRadius: 10, overflow: 'hidden', border: `1.5px solid ${i === 0 ? '#86efac' : i === 1 ? '#93c5fd' : '#e5e7eb'}`, background: '#f9fafb', flexShrink: 0 }}>
+                    <img src={src} alt="" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                    <div style={{ position: 'absolute', bottom: 0, left: 0, right: 0, background: 'rgba(0,0,0,0.5)', color: '#fff', fontSize: 9, textAlign: 'center', padding: '2px 0', fontWeight: 700 }}>
+                      {LABELS[i]}
+                    </div>
+                    <button onClick={() => removeFile(i)}
+                      style={{ position: 'absolute', top: 3, right: 3, width: 18, height: 18, borderRadius: '50%', background: 'rgba(0,0,0,0.65)', border: 'none', color: '#fff', fontSize: 11, cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', lineHeight: 1 }}>×</button>
+                  </div>
+                ))}
+              </div>
+            )}
           </div>
 
           {/* UPI / Mobile */}
@@ -209,7 +233,9 @@ export default function AddProductModal({ user, onClose, onSuccess }) {
               fontFamily: 'inherit', transition: 'background 0.15s',
             }}
           >
-            {uploading ? 'Submitting…' : 'Submit for Review · Earn ₹1'}
+            {uploading
+              ? `Uploading ${files.length} photo${files.length !== 1 ? 's' : ''}…`
+              : 'Submit for Review · Earn ₹1'}
           </button>
         </div>
       </div>
