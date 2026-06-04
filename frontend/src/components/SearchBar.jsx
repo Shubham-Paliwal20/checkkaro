@@ -75,37 +75,40 @@ function SearchBar({ placeholder = 'Search any product...', onSearch }) {
     const abortController = new AbortController()
     timerRef.current = setTimeout(async () => {
       try {
-        // Run backend + direct Supabase in parallel.
-        // Supabase is the reliable source; backend enriches when warm.
-        const [backendRes, dbRes] = await Promise.allSettled([
+        // Three parallel requests: backend API + name-db + brand-db.
+        // Name-db and brand-db are separate so brand-matched products always appear
+        // even when the product name doesn't contain the query.
+        const [backendRes, nameDbRes, brandDbRes] = await Promise.allSettled([
           axios.get(`${API_BASE_URL}/api/product/suggestions`, { params: { q: query }, timeout: 5000, signal: abortController.signal }),
           supabase.from('ai_extracted_products')
             .select('name, brand, category, static_key')
             .ilike('name', `%${query}%`)
             .order('static_key', { nullsFirst: false })
-            .limit(12)
+            .limit(30)
+            .abortSignal(abortController.signal),
+          supabase.from('ai_extracted_products')
+            .select('name, brand, category, static_key')
+            .ilike('brand', `%${query}%`)
+            .order('static_key', { nullsFirst: false })
+            .limit(30)
             .abortSignal(abortController.signal),
         ])
 
-        const backendResults = backendRes.status === 'fulfilled'
-          ? (backendRes.value.data.suggestions || [])
-          : []
+        const backendResults  = backendRes.status  === 'fulfilled' ? (backendRes.value.data.suggestions || []) : []
+        const nameDbResults   = nameDbRes.status   === 'fulfilled' ? (nameDbRes.value.data  || []).map(p => ({ name: p.name, brand: p.brand || '', category: p.category || 'General' })) : []
+        const brandDbResults  = brandDbRes.status  === 'fulfilled' ? (brandDbRes.value.data || []).map(p => ({ name: p.name, brand: p.brand || '', category: p.category || 'General' })) : []
 
-        const dbResults = dbRes.status === 'fulfilled'
-          ? (dbRes.value.data || []).map(p => ({ name: p.name, brand: p.brand || '', category: p.category || 'General' }))
-          : []
+        // Merge preserving priority: backend → name-db → brand-db; deduplicate by name
+        const seen = new Set()
+        const final = [...backendResults, ...nameDbResults, ...brandDbResults].filter(s => {
+          const k = s.name.toLowerCase()
+          if (seen.has(k)) return false
+          seen.add(k)
+          return true
+        }).slice(0, 30)
 
-        // Prefer backend; fill gaps with db results; fallback to db-only if backend empty
-        const seen = new Set(backendResults.map(s => s.name.toLowerCase()))
-        const merged = [
-          ...backendResults,
-          ...dbResults.filter(s => !seen.has(s.name.toLowerCase())),
-        ].slice(0, 8)
-
-        const final = merged.length > 0 ? merged : dbResults.slice(0, 8)
-
-        // Cap cache at 150 entries to prevent unbounded memory growth
-        if (suggestionsCache.size >= 150) {
+        // Cap cache at 100 entries (each entry now holds up to 30 results)
+        if (suggestionsCache.size >= 100) {
           suggestionsCache.delete(suggestionsCache.keys().next().value)
         }
         suggestionsCache.set(query, final)
@@ -275,7 +278,12 @@ function SearchBar({ placeholder = 'Search any product...', onSearch }) {
                   </div>
                   <div className="flex-1 min-w-0">
                     <div className="font-medium text-gray-900 text-sm truncate">{s.name}</div>
-                    <div className="text-xs text-gray-400 truncate">{s.brand} · {s.category}</div>
+                    <div className="flex items-center gap-1 text-xs text-gray-400 min-w-0">
+                      {!isPopular && query && s.brand && s.brand.toLowerCase().includes(query.toLowerCase()) && (
+                        <span className="bg-orange/10 text-orange px-1.5 py-0.5 rounded-full text-[10px] font-semibold flex-shrink-0">brand</span>
+                      )}
+                      <span className="truncate">{s.brand} · {s.category}</span>
+                    </div>
                   </div>
                   <svg className="w-4 h-4 text-gray-300 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
