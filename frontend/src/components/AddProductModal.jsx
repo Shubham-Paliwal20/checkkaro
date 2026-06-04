@@ -56,16 +56,15 @@ export default function AddProductModal({ user, onClose, onSuccess }) {
 
       const { data: { publicUrl } } = supabase.storage.from('product-images').getPublicUrl(path)
 
-      // Insert submission record
-      const { error: dbErr } = await supabase.from('product_new_submissions').insert({
-        product_name:    name,
-        image_url:       publicUrl,
-        storage_path:    path,
-        upi_or_mobile:   upi,
-        ingredients_raw: ingredients.trim() || null,
-        user_id:         user.id,
-        user_email:      user.email || null,
-        status:          'pending',
+      // Insert into product_submissions — same table the Admin panel reads
+      const { error: dbErr } = await supabase.from('product_submissions').insert({
+        product_name_searched: name,
+        images:                [publicUrl],
+        contact:               upi,
+        email:                 user.email || null,
+        ingredients_raw:       ingredients.trim() || null,
+        user_id:               user.id,
+        status:                'pending',
       })
       if (dbErr) throw new Error(dbErr.message)
 
