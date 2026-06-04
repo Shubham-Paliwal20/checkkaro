@@ -34,19 +34,23 @@ function Footer() {
               </div>
             </div>
             <p className="text-gray-400 text-sm">Be informed. Be aware.</p>
-            <a
-              href="https://instagram.com/parkho.in"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-flex items-center gap-2 mt-4 text-gray-400 hover:text-orange transition-colors group"
-            >
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" className="group-hover:text-orange transition-colors">
-                <rect x="2" y="2" width="20" height="20" rx="5.5" stroke="currentColor" strokeWidth="1.8"/>
-                <circle cx="12" cy="12" r="4.5" stroke="currentColor" strokeWidth="1.8"/>
-                <circle cx="17.5" cy="6.5" r="1" fill="currentColor"/>
-              </svg>
-              <span className="text-sm">@parkho.in</span>
-            </a>
+
+            <div className="mt-8">
+              <p className="text-xs font-semibold uppercase tracking-widest text-gray-500 mb-4">Get connected on social</p>
+              <a
+                href="https://instagram.com/parkho.in"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-3 text-gray-300 hover:text-orange transition-colors group"
+              >
+                <svg width="26" height="26" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <rect x="2" y="2" width="20" height="20" rx="5.5" stroke="currentColor" strokeWidth="1.8"/>
+                  <circle cx="12" cy="12" r="4.5" stroke="currentColor" strokeWidth="1.8"/>
+                  <circle cx="17.5" cy="6.5" r="1" fill="currentColor"/>
+                </svg>
+                <span className="text-base font-semibold">@parkho.in</span>
+              </a>
+            </div>
           </div>
 
           {/* Center - Navigation */}
