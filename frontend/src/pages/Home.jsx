@@ -146,7 +146,6 @@ function Home() {
       {/* Add Product CTA */}
       <section className="py-10 sm:py-14 bg-gradient-to-r from-orange-light via-white to-primary-light border-y border-gray-100">
         <div className="max-w-2xl mx-auto px-4 text-center">
-          <p className="text-xs font-semibold uppercase tracking-widest text-orange mb-3">Grow our database</p>
           <h2 className="font-poppins text-xl sm:text-2xl font-bold text-navy mb-3">
             Know a product we don't have?
           </h2>
