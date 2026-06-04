@@ -62,7 +62,6 @@ export default function AddProductModal({ user, onClose, onSuccess }) {
         images:                [publicUrl],
         contact:               upi,
         email:                 user.email || null,
-        ingredients_raw:       ingredients.trim() || null,
         user_id:               user.id,
         status:                'pending',
       })
