@@ -701,16 +701,26 @@ async def get_search_suggestions(q: str = Query(..., min_length=1, max_length=80
             return {"suggestions": cached}
 
     try:
-        result = supabase.from_("ai_extracted_products") \
+        # Two queries: name-match first (more precise), brand-match fills remaining slots.
+        # This ensures "amul" returns Amul products even when the product name doesn't contain "amul".
+        name_result = supabase.from_("ai_extracted_products") \
             .select("name, brand, category, static_key") \
             .ilike("name", f"%{q}%") \
             .order("static_key", nullsfirst=False) \
-            .limit(12) \
+            .limit(30) \
+            .execute()
+
+        brand_result = supabase.from_("ai_extracted_products") \
+            .select("name, brand, category, static_key") \
+            .ilike("brand", f"%{q}%") \
+            .order("static_key", nullsfirst=False) \
+            .limit(30) \
             .execute()
 
         seen_names = set()
         suggestions = []
-        for p in (result.data or []):
+
+        for p in (name_result.data or []):
             if not p.get("name"):
                 continue
             nn = normalize_name(p["name"])
@@ -722,8 +732,19 @@ async def get_search_suggestions(q: str = Query(..., min_length=1, max_length=80
                 "brand":    p.get("brand") or "",
                 "category": p.get("category") or "General",
             })
-            if len(suggestions) >= 8:
-                break
+
+        for p in (brand_result.data or []):
+            if not p.get("name"):
+                continue
+            nn = normalize_name(p["name"])
+            if nn in seen_names:
+                continue
+            seen_names.add(nn)
+            suggestions.append({
+                "name":     p["name"],
+                "brand":    p.get("brand") or "",
+                "category": p.get("category") or "General",
+            })
     except Exception as e:
         print(f"[SUGGESTIONS ERROR] {e}")
         suggestions = []

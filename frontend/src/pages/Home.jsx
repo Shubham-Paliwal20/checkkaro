@@ -1,11 +1,22 @@
+import { useState } from 'react'
 import { motion } from 'framer-motion'
 import { useNavigate, Link } from 'react-router-dom'
 import SearchBar from '../components/SearchBar'
 import ReviewsSection from '../components/ReviewsSection'
 import SEO from '../components/SEO'
+import AddProductModal from '../components/AddProductModal'
+import { useAuth } from '../context/AuthContext'
 
 function Home() {
   const navigate = useNavigate()
+  const { user, openAuthModal } = useAuth()
+  const [showAddProduct, setShowAddProduct] = useState(false)
+  const [successMsg, setSuccessMsg]         = useState(null)
+
+  const handleAddProductClick = () => {
+    if (!user) { openAuthModal(); return }
+    setShowAddProduct(true)
+  }
 
   const quickSearchItems = [
     { label: '🍜 Maggi Masala', query: 'Maggi 2-Minute Masala Noodles', cat: 'Instant Noodles' },
@@ -129,6 +140,34 @@ function Home() {
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 14l-7 7m0 0l-7-7m7 7V3" />
             </svg>
           </motion.div>
+        </div>
+      </section>
+
+      {/* Add Product CTA */}
+      <section className="py-10 sm:py-14 bg-gradient-to-r from-orange-light via-white to-primary-light border-y border-gray-100">
+        <div className="max-w-2xl mx-auto px-4 text-center">
+          <h2 className="font-poppins text-xl sm:text-2xl font-bold text-navy mb-3">
+            Know a product we don't have?
+          </h2>
+          <p className="text-gray-500 text-sm mb-6 leading-relaxed">
+            Submit any Indian product — just a photo and the product name. Admin reviews it and we add it to the database.
+            You earn <strong className="text-orange">₹1</strong> for every approved submission.
+          </p>
+          {successMsg && (
+            <div className="mb-4 px-4 py-3 bg-green-50 border border-green-200 rounded-xl text-green-700 text-sm font-medium">
+              ✓ {successMsg}
+            </div>
+          )}
+          <button
+            onClick={handleAddProductClick}
+            className="inline-flex items-center gap-2 bg-orange text-white px-7 py-3 rounded-full font-semibold text-sm hover:bg-orange-dark transition-colors shadow-md"
+          >
+            <span>📦</span>
+            Add Product and Earn ₹1
+          </button>
+          {!user && (
+            <p className="mt-3 text-xs text-gray-400">Login required to submit a product</p>
+          )}
         </div>
       </section>
 
@@ -273,6 +312,14 @@ function Home() {
         </div>
       </section>
     </motion.div>
+
+    {showAddProduct && (
+      <AddProductModal
+        user={user}
+        onClose={() => setShowAddProduct(false)}
+        onSuccess={(msg) => { setSuccessMsg(msg); setTimeout(() => setSuccessMsg(null), 6000) }}
+      />
+    )}
     </>
   )
 }
