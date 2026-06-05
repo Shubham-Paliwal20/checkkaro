@@ -3439,6 +3439,85 @@ def get_commonly_found_in(ingredient_name):
         'cocamide dea':            'Shampoos, body wash, bubble bath, car wash soap — foam booster; less common now due to nitrosamine concerns',
         'potassium bromate':       'Bread and bakery products in countries where still permitted — banned in India, EU, UK, Canada; may still appear in imported products',
         'azodicarbonamide':        'Bread and baked goods where still permitted (some US manufacturers); banned in EU, UK, India — "yoga mat chemical"',
+
+        # ── Packaged food / ice cream ─────────────────────────────────────────
+        'mono and diglycerides':   'Ice cream (almost universal), bread, margarine, peanut butter, chocolate, instant mashed potato, chewing gum, packaged cakes — the most widely used food emulsifier globally',
+        'e471':                    'Ice cream, bread, margarine, coffee whitener, chocolate, packaged baked goods — extremely common in ultra-processed foods',
+        'datem':                   'Bread (Britannia, Harvest Gold), bakery products, croissants, pizza dough, Danish pastry — dough strengthener used in most commercial bread',
+        'e472e':                   'Commercial bread, croissants, Danish pastries, pizza dough, bakery products',
+        'sodium stearoyl lactylate': 'Bread (Britannia, Modern Bread), cake mixes, non-dairy coffee creamers, dehydrated potato products, packaged snack foods',
+        'e481':                    'Commercial bread, cake mixes, coffee creamers — dough conditioner and emulsifier',
+        'carboxymethyl cellulose': 'Ice cream (prevents ice crystal growth), jelly, cream cheese, canned fish, pharmaceuticals, diet foods, gluten-free products',
+        'cmc':                     'Ice cream, cream cheese, jelly, pharmaceuticals — prevents ice crystal formation',
+        'e466':                    'Ice cream, processed cheese, baked goods, salad dressings, gluten-free bread',
+        'microcrystalline cellulose': 'Shredded cheese (anti-caking), protein powder, tablet coatings (pharmaceutical), low-fat ice cream, fibre-enriched products',
+        'e460':                    'Shredded/grated cheese, protein bars, tablet coatings, low-fat dairy products',
+        'locust bean gum':         'Ice cream (thickener and stabiliser with carrageenan), cream cheese, infant formula (anti-reflux), jelly, chocolate',
+        'carob bean gum':          'Ice cream, cream cheese, infant anti-reflux formula, chocolate',
+        'e410':                    'Ice cream, cream cheese, infant formula — natural carob gum stabiliser',
+        'pectin':                  'Jam (almost all brands), jelly, marmalade, yoghurt, fruit preparations, confectionery, low-fat spreads',
+        'e440':                    'Jam (Kissan, Mapro), jelly, marmalade, fruit juice drinks, confectionery',
+        'gellan gum':              'Jelly desserts, low-acid beverages, some dairy products, structured plant-based foods, jam',
+        'e418':                    'Dairy desserts, jelly, some plant-based beverages, jam',
+        'hydroxypropyl methylcellulose': 'Gluten-free bread (replaces gluten structure), vegetarian capsules, ice cream (fat replacer), processed meat, fried foods (barrier coating)',
+        'e464':                    'Gluten-free products, vegetarian capsules, ice cream, processed meat',
+        'glycerol':                'Cake icing, marzipan, soft sweets (Turkish delight, marshmallow), chocolate fondant, baked goods (moisture retention), soap, cosmetics',
+        'glycerin':                'Soft sweets, cake decoration, marzipan, chocolate coatings, bakery products, mouthwash, skin care',
+        'e422':                    'Soft sweets, confectionery, icing, marzipan, cosmetics',
+        'vanillin':                'Almost all vanilla-flavoured products: ice cream, biscuits (Bourbon, Nice), chocolate (Kit Kat, Dairy Milk), cake mixes, custard powder, flavoured milk — 99% of vanilla flavour in processed food is synthetic vanillin',
+        'ethyl vanillin':          'Premium ice cream, chocolate, confectionery, bakery products — stronger vanilla flavour than vanillin',
+        'vanilla':                 'Premium ice cream (Kwality Walls, Amul vanilla), baked goods, real vanilla extract in premium products',
+        'natural flavour':         'Almost all packaged foods — chips, biscuits, instant noodles, flavoured milk, juices, snacks — covers thousands of possible compounds',
+        'natural flavor':          'Packaged snacks, beverages, baked goods, ice cream, sauces — used in virtually all flavoured packaged foods',
+        'artificial flavor':       'Most flavoured packaged foods, beverages, ice cream, sweets, instant powders — synthetic flavour compounds',
+        'whey':                    'Protein powder supplements (Optimum Nutrition, MuscleBlaze), bread, biscuits, processed cheese, chocolate, protein bars, infant formula',
+        'casein':                  'Protein supplements, coffee creamers, processed cheese (casein gives stretch and melt), infant formula, some protein bars',
+        'lactose':                 'Tablets (pharmaceutical filler), instant coffee, confectionery, bread, processed foods as a mild sweetener',
+        'skim milk':               'Ice cream (Kwality Walls, Amul, Baskin-Robbins), chocolate, biscuits, instant noodles, coffee whitener, protein drinks',
+        'milk solids':             'Ice cream, chocolate (Cadbury Dairy Milk, KitKat), biscuits, instant coffee, bread, condensed milk, kheer mixes',
+        'cocoa powder':            'Chocolate biscuits (Bourbon, Hide & Seek), cake mixes, hot chocolate drinks (Bournvita, Horlicks), chocolate ice cream, brownies, chocolate-flavoured snacks',
+        'cocoa butter':            'Chocolate (Cadbury, Amul, Nestlé), premium ice cream, some cosmetics (lip balm, moisturisers)',
+        'glucose syrup':           'Ice cream (prevents crystallisation), confectionery (boiled sweets, toffee), jams, soft drinks, baked goods, ketchup, energy drinks',
+        'dextrose':                'Bread (browning agent), sausages and processed meats, sports drinks, confectionery, biscuits, packaged cereals',
+        'maltitol':                'Sugar-free chocolates, sugar-free sweets, diet biscuits, diabetic confectionery, low-calorie ice cream',
+        'e965':                    'Sugar-free chocolates, sugar-free sweets, diabetic confectionery — common in "no added sugar" products',
+        'mannitol':                'Sugar-free chewing gum, sugar-free sweets, pharmaceutical tablet coatings, diabetic confectionery, medicated lozenges',
+        'e421':                    'Sugar-free gum, medicated lozenges, pharmaceutical tablets, diabetic sweets',
+        'lactitol':                'Sugar-free chocolates, sugar-free baked goods, diabetic confectionery, some laxative preparations (Importal)',
+        'e966':                    'Sugar-free chocolate, sugar-free confectionery, laxative products',
+        'sodium bicarbonate':      'Biscuits (Parle-G, Marie), baking powder, cake mixes, soda bread, self-raising flour, antacid tablets (Eno), fizzy drinks buffer',
+        'e500':                    'Biscuits, baking powder, cake mixes, self-raising flour, soda bread, antacid preparations',
+        'potassium bicarbonate':   'Low-sodium biscuits, baking powder blends, mineral water (added for taste), some fizzy drinks',
+        'e501':                    'Low-sodium baking products, baking powder blends',
+        'ammonium bicarbonate':    'Traditional biscuits (digestives, certain shortbreads), some flat breads — gives characteristic light texture without baking soda taste',
+        'e503':                    'Digestive biscuits, gingerbread, traditional European biscuits, some Indian snacks',
+        'diphosphate':             'Processed cheese (Amul, Britannia slices), instant potato powder, canned fish, sausages, some baking powders',
+        'e450':                    'Processed cheese slices, instant mash, sausages, baking powder — phosphate salts',
+        'triphosphate':            'Processed cheese, seafood products (water retention in prawns, fish fillets), processed meats, some canned goods',
+        'e451':                    'Processed cheese, seafood, processed meats — tripolyphosphate',
+        'polyphosphate':           'Seafood (prawns, fish fillets — water retention), deli meats, canned seafood, some processed meats',
+        'e452':                    'Prawns, processed seafood, deli meats — polyphosphate water-retention agent',
+        'beta carotene':           'Orange juice (for colour), margarine, butter (colour standardisation), cheese, ice cream (yellow colour), breakfast cereals, Vitamin A supplements',
+        'e160a':                   'Margarine, orange juice, ice cream, breakfast cereals, cheese — orange/yellow colouring',
+        'beetroot red':            'Red velvet products (some brands), strawberry-flavoured products, cranberry drinks, some yoghurts, red fruit confectionery',
+        'e162':                    'Natural red-coloured foods, yoghurt, beverages, some confectionery',
+        'anthocyanin':             'Natural red/purple/blue colour in berry beverages, grape juice, red cabbage products, some yoghurts and confectionery',
+        'e163':                    'Berry-flavoured beverages, grape products, natural red/purple food colouring applications',
+        'riboflavin':              'Fortified breakfast cereals (Kellogg\'s, Nestle), energy drinks, some pasta (fortified), multivitamin supplements, yellow food colouring in beverages',
+        'e101':                    'Fortified cereals, energy drinks, some beverages — yellow vitamin B2 colouring',
+        'tartaric acid':           'Wine (natural), cream of tartar (baking), grape-flavoured products, some carbonated drinks, jelly crystals',
+        'e334':                    'Wine, cream of tartar, grape-flavoured confectionery, carbonated drinks',
+        'sodium citrate':          'Processed cheese (fondue, cheese spreads), carbonated drinks (buffer), jelly, flavoured water, sports rehydration drinks (Gatorade)',
+        'e331':                    'Processed cheese, carbonated drinks, sports drinks, jelly products',
+        'calcium phosphate':       'Self-raising flour, baking powder, some cereals (calcium fortification), dental products (toothpaste), processed cheese',
+        'e341':                    'Baking powder, self-raising flour, calcium-fortified cereals, processed cheese',
+        'yeast extract':           'Marmite, Vegemite, Maggi seasoning, some instant noodle flavour sachets, savoury biscuits, crisps/chips, soups, stock cubes, ready meals',
+        'hydrolysed':              'Instant noodle seasoning sachets, crisps flavouring (Lay\'s, Kurkure), savoury snacks, soy sauce substitutes, ready meals, soups',
+        'gum arabic':              'Fizzy sweets (sugar coating), confectionery glazing, soft drink emulsifiers, wine (fining agent), some edible inks, pharmaceutical tablet coatings',
+        'acacia':                  'Confectionery coatings, soft drink emulsification, pharmaceutical excipients, dietary fibre supplements',
+        'modified starch':         'Instant soups, instant noodles (texture), ready meals, baby food, ketchup, sauces, mayonnaise, ice cream',
+        'e1422':                   'Frozen desserts, canned foods, instant soups, sauce thickeners — heat-and-freeze-stable modified starch',
+        'e1442':                   'Instant soups, sauces, frozen ready meals, canned baby food — stable to heating and freezing',
     }
 
     for key, found_in in specific.items():
@@ -4503,6 +4582,422 @@ def get_health_effects(ingredient_name, classification):
             'short_term': 'Rare but documented severe allergic reactions in wheat/gluten-intolerant individuals — particularly hydrolysed wheat protein in shampoos has been linked to wheat allergy induction in Japan (major outbreak, 2011)',
             'long_term': 'The Japanese "Cha no Shizuku" soap incident (2011) demonstrated that topically applied hydrolysed wheat protein induced wheat allergy in thousands of people who then suffered anaphylaxis upon eating wheat — this led to WHO review of hydrolysed protein safety; currently EU requires specific labelling; the degree of hydrolysis affects allergenicity — smaller peptides are more likely to sensitise',
             'vulnerable_groups': 'People with coeliac disease or wheat/gluten allergy — AVOID; people who consume wheat regularly and use hydrolysed wheat protein topically (sensitisation risk); people with multiple food allergies'
+        },
+
+        # ════════════════════════════════════════════════════════════════════
+        # PACKAGED FOOD AND ICE CREAM INGREDIENTS
+        # ════════════════════════════════════════════════════════════════════
+
+        # ── Emulsifiers ───────────────────────────────────────────────────────
+        'mono and diglycerides': {
+            'short_term': 'Generally well tolerated at food-additive levels; no significant immediate effects in most people; some individuals report mild GI discomfort with high intake',
+            'long_term': 'Mono and diglycerides of fatty acids (E471) are partial glycerides — the body treats them like dietary fats; the critical concern is their SOURCE: if derived from partially hydrogenated oils, they may contain trans fats which are NOT required to be declared on the trans fat label (a regulatory loophole in the USA and many countries); trans fat-derived E471 raises LDL cholesterol and increases cardiovascular disease risk; animal studies suggest that, like other emulsifiers, they may alter gut microbiome composition with chronic high intake; most modern food-grade E471 is derived from palm or sunflower oil (not hydrogenated)',
+            'vulnerable_groups': 'People with cardiovascular disease or high cholesterol (if trans-fat-derived); people seeking to avoid trans fats (labelling loophole means hidden trans fats are possible); people with inflammatory bowel disease (chronic emulsifier intake concern)'
+        },
+        'e471': {
+            'short_term': 'Generally well tolerated; no significant short-term effects at food-additive concentrations',
+            'long_term': 'Same as mono and diglycerides — trans fat labelling loophole concern; chronic emulsifier gut microbiome alteration; safe from non-hydrogenated sources',
+            'vulnerable_groups': 'People with cardiovascular disease; people avoiding trans fats; people with IBD'
+        },
+        'datem': {
+            'short_term': 'Generally well tolerated; no significant short-term adverse effects at food-additive levels',
+            'long_term': 'DATEM (Diacetyl Tartaric Acid Ester of Mono/Diglycerides, E472e) is a bread dough emulsifier; breaks down in the body to diacetyl, tartaric acid and fatty acids; diacetyl at high occupational INHALATION exposure causes bronchiolitis obliterans ("popcorn lung") — at food ingestion levels this concern is not applicable; FDA GRAS; EFSA found it safe at current food use levels; chronic high intake studies in animals show liver effects at extremely high doses not achievable through normal diet',
+            'vulnerable_groups': 'Bakery workers (occupational diacetyl inhalation — not the food additive itself); people with tartrate kidney stones (precautionary); otherwise safe for general population'
+        },
+        'e472e': {
+            'short_term': 'No significant short-term effects; well tolerated at food-additive levels',
+            'long_term': 'Same as DATEM — diacetyl inhalation concern for bakery workers (occupational only); FDA GRAS and EFSA approved for food use; liver effects only at extreme doses in animals',
+            'vulnerable_groups': 'Bakery workers (occupational diacetyl); people with tartrate sensitivity'
+        },
+        'sodium stearoyl lactylate': {
+            'short_term': 'Excellent tolerability — one of the most widely studied and safest food emulsifiers; no known short-term adverse effects',
+            'long_term': 'SSL (E481) is derived from stearic acid (saturated fatty acid) and lactic acid — both naturally present in food; FDA GRAS with long use history; JECFA established ADI of 0–20 mg/kg body weight; no significant carcinogenicity, teratogenicity or reproductive toxicity in studies; breaks down to stearic acid and lactic acid which are normal metabolic intermediates',
+            'vulnerable_groups': 'People with milk allergy (lactic acid is not dairy-derived but check formulation); people with very strict low-fat diets; generally safe for all populations including children'
+        },
+        'e481': {
+            'short_term': 'No known adverse effects at food-additive concentrations; excellent tolerability',
+            'long_term': 'Same as sodium stearoyl lactylate — FDA GRAS, JECFA ADI established; metabolised to stearic acid and lactic acid; no significant long-term concerns',
+            'vulnerable_groups': 'Safe for general population; see sodium stearoyl lactylate'
+        },
+        'calcium stearoyl lactylate': {
+            'short_term': 'Well tolerated at food-additive levels; no significant short-term adverse effects',
+            'long_term': 'E482 — same profile as SSL (E481); metabolised to calcium, stearic acid and lactic acid; FDA GRAS; JECFA approved; no significant long-term concerns at food-additive intake',
+            'vulnerable_groups': 'Safe for general population; same precautions as E481'
+        },
+        'carboxymethyl cellulose': {
+            'short_term': 'Mild GI effects (bloating, altered stool consistency) with high intake; generally well tolerated at typical food concentrations',
+            'long_term': 'CMC (E466) was one of two emulsifiers in the landmark Chassaing et al. (2015, Nature) mouse study showing dietary emulsifiers disrupted the intestinal mucosal barrier, altered gut microbiome composition and promoted metabolic syndrome, obesity and colitis — at concentrations "relevant to human food use"; a subsequent FRESH Cohort human study (2022) found positive association between CMC intake and increased Crohn\'s disease risk; EFSA reviewed the evidence (2020) and found it insufficient to change ADI but noted uncertainty; ongoing human studies; the traditional safety record is long but recent microbiome evidence has raised concern',
+            'vulnerable_groups': 'People with Crohn\'s disease and ulcerative colitis — strongest concern; people with IBS; people with gut dysbiosis; infants and children (developing gut microbiome); people consuming large amounts of ultra-processed foods with multiple emulsifiers'
+        },
+        'cmc': {
+            'short_term': 'Bloating, altered stool consistency at high intake; generally tolerated at food concentrations',
+            'long_term': 'Same as carboxymethyl cellulose (E466) — Chassaing 2015 gut barrier disruption study; FRESH Cohort 2022 Crohn\'s association; ongoing human studies; EFSA uncertainty noted',
+            'vulnerable_groups': 'People with IBD (Crohn\'s, ulcerative colitis), IBS, gut dysbiosis'
+        },
+        'e466': {
+            'short_term': 'Mild GI bloating and altered stool consistency at high doses',
+            'long_term': 'Carboxymethyl cellulose — Chassaing 2015 mouse study (gut barrier disruption); 2022 human cohort Crohn\'s disease association; EFSA review noted uncertainty; further human studies underway',
+            'vulnerable_groups': 'People with Crohn\'s disease, ulcerative colitis, IBS, gut dysbiosis'
+        },
+        'microcrystalline cellulose': {
+            'short_term': 'No significant short-term effects; insoluble fibre — adds bulk; safe',
+            'long_term': 'MCC (E460) is highly purified, partially depolymerised cellulose derived from plant pulp; chemically inert and not digested or absorbed; passes through the gut unchanged; FDA GRAS with extensive use history; no bioaccumulation; no significant long-term health concerns established in humans or animals at food-additive levels',
+            'vulnerable_groups': 'People with swallowing difficulties (MCC in tablet form can cause obstruction — not relevant to food use); safe for all populations at food-additive levels'
+        },
+        'e460': {
+            'short_term': 'No adverse effects; inert bulking agent',
+            'long_term': 'Microcrystalline cellulose — chemically inert, not absorbed; FDA GRAS; no long-term concerns',
+            'vulnerable_groups': 'Safe for general population'
+        },
+        'locust bean gum': {
+            'short_term': 'Generally well tolerated; mild bloating or flatulence at very high intake as undigested fibre',
+            'long_term': 'Carob bean gum (E410) is a natural galactomannan polysaccharide from carob tree seeds; prebiotic — selectively feeds beneficial Bifidobacterium species; FDA GRAS; JECFA found no ADI necessary (safe at any food-use level); lowers LDL cholesterol and improves glycaemic control; used as infant formula thickener for reflux management — safe at appropriate doses',
+            'vulnerable_groups': 'People with carob allergy (rare — cross-reactivity with legumes possible); people with very severe IBS (any dietary fibre may worsen symptoms during flares); generally very safe'
+        },
+        'carob bean gum': {
+            'short_term': 'Well tolerated; mild flatulence at high intake',
+            'long_term': 'Same as locust bean gum (E410) — prebiotic galactomannan; FDA GRAS; lowers cholesterol; safe in infant formula',
+            'vulnerable_groups': 'People with carob or legume allergy (rare)'
+        },
+        'e410': {
+            'short_term': 'Mild bloating at very high intake; otherwise well tolerated',
+            'long_term': 'Locust bean gum — prebiotic, cholesterol-lowering; FDA GRAS; no ADI necessary',
+            'vulnerable_groups': 'People with carob allergy (rare)'
+        },
+        'pectin': {
+            'short_term': 'Very well tolerated; mild GI effects (increased stool bulk, mild flatulence) at high intake due to fibre content',
+            'long_term': 'Natural polysaccharide found in cell walls of all fruits and vegetables; excellent safety profile; FDA GRAS; no ADI necessary according to JECFA; lowers LDL cholesterol (soluble fibre binding bile acids); improves glycaemic control; prebiotic for gut microbiome; fruit-derived pectin reduces post-meal blood glucose spikes; no significant long-term concerns',
+            'vulnerable_groups': 'People with very severe GI sensitivity (excess fibre); people with latex allergy (very rare cross-reactivity with fruit pectin); generally one of the safest food additives'
+        },
+        'e440': {
+            'short_term': 'Well tolerated; mild fibre effects at high intake',
+            'long_term': 'Pectin — natural fruit fibre; FDA GRAS; cholesterol and glucose control benefits; prebiotic; no long-term concerns',
+            'vulnerable_groups': 'People with latex allergy (rare cross-reactivity); very safe generally'
+        },
+        'gellan gum': {
+            'short_term': 'Generally well tolerated; bloating and flatulence at high intake; very small amounts used in food',
+            'long_term': 'E418 — fermentation-derived polysaccharide from Sphingomonas elodea bacteria; FDA GRAS; JECFA approved; not digested or absorbed; passes through gut unchanged; no established carcinogenicity, teratogenicity or toxicity in long-term animal studies at relevant food-use doses',
+            'vulnerable_groups': 'Safe for general population; mild fibre-related GI effects at high intake only'
+        },
+        'e418': {
+            'short_term': 'Well tolerated; minimal GI effects at food concentrations',
+            'long_term': 'Gellan gum — fermentation-derived; FDA GRAS; JECFA approved; not absorbed; no long-term concerns',
+            'vulnerable_groups': 'Safe for general population'
+        },
+        'hydroxypropyl methylcellulose': {
+            'short_term': 'Well tolerated; mild laxative effect at high oral doses; used as a pharmaceutical film coating',
+            'long_term': 'HPMC (E464) is a semi-synthetic cellulose derivative; not digested or absorbed; FDA GRAS; used as a viscosity modifier, fat replacer and in capsule shells (veggie capsules); no significant long-term toxicity established; inert and excreted unchanged',
+            'vulnerable_groups': 'Safe for general population; celiac patients note: HPMC is gluten-free despite wheat-like coating appearance'
+        },
+        'e464': {
+            'short_term': 'Well tolerated at food-additive concentrations; mild laxative at high doses',
+            'long_term': 'Hydroxypropyl methylcellulose — not absorbed; FDA GRAS; inert; no long-term concerns',
+            'vulnerable_groups': 'Safe for general population'
+        },
+
+        # ── Glycerol / Glycerin ───────────────────────────────────────────────
+        'glycerol': {
+            'short_term': 'Very well tolerated; safe as food additive and cosmetic ingredient; very high oral intake (>1g/kg body weight) causes headache and nausea — not achievable through food additive levels; very mild osmotic laxative at very high doses',
+            'long_term': 'E422 — a natural trihydric alcohol and metabolic intermediate in the human body; formed from triglyceride (fat) metabolism; FDA GRAS; JECFA found no ADI necessary; used as sweetener, humectant, solvent and preservative; metabolised to glucose and glycerol-3-phosphate (normal metabolic intermediates); no long-term concerns at food-additive levels',
+            'vulnerable_groups': 'Diabetics at very high supplemental doses (converted to glucose); people with very rare glycerol intolerance; safe for general population at food-additive levels'
+        },
+        'glycerin': {
+            'short_term': 'Same as glycerol — excellent tolerability in food and cosmetics; no known short-term adverse effects at use concentrations',
+            'long_term': 'Same as glycerol (E422) — natural metabolic intermediate; FDA GRAS; JECFA no ADI necessary; no long-term concerns',
+            'vulnerable_groups': 'Diabetics at high supplemental intake; safe for general population'
+        },
+        'e422': {
+            'short_term': 'No adverse effects at food-additive levels; excellent tolerability',
+            'long_term': 'Glycerol/glycerin — natural metabolic intermediate; FDA GRAS; no ADI necessary',
+            'vulnerable_groups': 'Diabetics at high doses; safe generally'
+        },
+
+        # ── Flavourings ───────────────────────────────────────────────────────
+        'vanillin': {
+            'short_term': 'Well tolerated at food flavouring levels; rare contact dermatitis and skin sensitisation; migraine trigger in sensitive individuals (contains phenolic compounds); very rare allergic reactions',
+            'long_term': 'Synthetic vanillin (4-hydroxy-3-methoxybenzaldehyde) is the most widely used flavour compound in the world; 99% of vanillin used in food is synthetic (petroleum or wood lignin-derived) rather than from vanilla beans; FDA GRAS; no established carcinogenicity or serious long-term toxicity at food-use levels; animal studies at very high doses show liver effects — not relevant to food additive use; some animal studies suggest vanillin may have protective antioxidant properties',
+            'vulnerable_groups': 'People with vanilla or phenolic compound allergy; migraine sufferers (phenolic trigger); people with contact dermatitis to fragrances (cross-reactivity with vanilla fragrance)'
+        },
+        'ethyl vanillin': {
+            'short_term': 'Well tolerated at food-flavouring levels; 2–4× stronger flavour than vanillin; rare allergic reactions; migraine trigger possibility',
+            'long_term': 'Ethyl vanillin is entirely synthetic — not found naturally; FDA GRAS at food-use levels; some studies suggest higher acute toxicity than vanillin in animals — but at doses far exceeding any food exposure; no established long-term concern in humans at flavouring levels; EU permits its use with concentration limits in certain baby foods',
+            'vulnerable_groups': 'Infants and young children (EU restricts in baby food); people with vanilla/phenolic allergy; migraine sufferers'
+        },
+        'vanilla': {
+            'short_term': 'Genuine vanilla extract: very well tolerated; contains vanillin plus 200+ other flavour compounds; rare contact allergy to vanilla oleoresin',
+            'long_term': 'Natural vanilla from Vanilla planifolia bean has excellent safety record; contains antioxidants; FDA GRAS for vanilla extract; vanillin and other phenolics provide antioxidant properties; very low toxicity profile with centuries of safe food use; no significant long-term health concerns',
+            'vulnerable_groups': 'People with vanilla bean allergy (rare); people with sensitivity to phenolic compounds; people purchasing products labelled "vanilla flavour" — this is likely synthetic vanillin, not real vanilla bean extract'
+        },
+        'natural flavour': {
+            'short_term': 'Reactions vary widely — "natural flavour" is a legally defined term covering thousands of compounds derived from natural sources; allergens (including the 14 major EU allergens) can be hidden within natural flavour declarations',
+            'long_term': 'The major concern is lack of transparency: "natural flavours" and "natural flavoring" require NO disclosure of the specific compound used; a "natural flavour" derived from shellfish is not required to be declared as such in all jurisdictions; monosodium glutamate, yeast extract and other flavour-active compounds are sometimes listed as "natural flavour"; processing aids and carrier solvents (propylene glycol, glycerol, benzyl alcohol) do not need to be declared; people with specific food allergies cannot make informed decisions',
+            'vulnerable_groups': 'People with any food allergy — natural flavours can hide allergens; people avoiding specific ingredients (MSG-sensitive, vegans, halal/kosher consumers); people with migraine triggered by phenolic compounds or glutamates'
+        },
+        'natural flavor': {
+            'short_term': 'Same as natural flavour — allergens can be hidden; no way to assess without full disclosure',
+            'long_term': 'Same concerns as natural flavour — lack of transparency; potential for hidden MSG, allergens, or solvents',
+            'vulnerable_groups': 'People with food allergies; people avoiding MSG; vegans; halal/kosher consumers'
+        },
+        'artificial flavor': {
+            'short_term': 'Reactions vary by specific compound; most artificial flavours are FDA GRAS at use concentrations; rare hypersensitivity reactions',
+            'long_term': 'Artificial flavours are synthetic compounds; FDA requires each compound to be individually GRAS-approved before use; the term "artificial flavour" on a label covers thousands of possible compounds without disclosure; animal studies are conducted on each compound but cumulative effects of multiple synthetic flavours together are rarely studied; some artificial flavours (diacetyl in butter flavouring) have been linked to serious health problems in occupational settings',
+            'vulnerable_groups': 'People with chemical sensitivities; people who react to specific artificial flavouring compounds; children (precautionary — some artificial flavours not studied in developing populations); people who prefer transparency in food labelling'
+        },
+
+        # ── Dairy and Protein Ingredients ────────────────────────────────────
+        'whey': {
+            'short_term': 'Well tolerated in most people; milk allergy (IgE-mediated) can cause severe reactions including anaphylaxis; lactose intolerance can cause bloating, gas, diarrhoea from residual lactose in whey concentrate (whey isolate is mostly lactose-free)',
+            'long_term': 'Whey protein is a high-quality complete protein (all essential amino acids); excellent digestibility; strongly supported by clinical evidence for muscle protein synthesis; high leucine content triggers maximal muscle protein synthesis; no significant long-term health concerns in healthy adults at supplemental levels; very high protein intake (>2.2g/kg/day from all sources combined) may increase kidney workload in those with existing kidney disease',
+            'vulnerable_groups': 'People with cow\'s milk allergy (IgE-mediated — AVOID; anaphylaxis risk); people with lactose intolerance (whey concentrate only — whey isolate is largely lactose-free); people with pre-existing kidney disease (monitor total protein intake)'
+        },
+        'casein': {
+            'short_term': 'Well tolerated in most people; milk allergy causes reactions including anaphylaxis; lactose-free but still a milk protein',
+            'long_term': 'Casein is the dominant milk protein (80% of total); slow-digesting due to gel formation in stomach (compared to fast-digesting whey); provides sustained amino acid release over 5–7 hours; complete protein; no significant long-term health concerns at normal dietary levels; some observational studies link high casein intake to increased IGF-1 (insulin-like growth factor) levels — clinical significance debated; casein allergy is distinct from lactose intolerance',
+            'vulnerable_groups': 'People with cow\'s milk allergy (casein is the primary allergen in milk — AVOID); infants with cow\'s milk protein intolerance; people on dairy-free diets (casein is dairy-derived)'
+        },
+        'lactose': {
+            'short_term': 'Bloating, flatulence, abdominal cramping, diarrhoea in lactose-intolerant individuals; severity depends on dose and degree of intolerance; symptoms onset 30–120 minutes after ingestion; well tolerated in lactase-sufficient individuals',
+            'long_term': 'Lactose (milk sugar) is digested by lactase (small intestinal enzyme) to glucose and galactose; 65–70% of the global adult population has some degree of lactase deficiency post-weaning (primary lactase deficiency); higher prevalence in East Asian, African, Middle Eastern populations; secondary lactase deficiency can occur after gastroenteritis; no direct long-term toxicity — it is the fermentation by colonic bacteria causing the GI symptoms',
+            'vulnerable_groups': 'Lactose-intolerant individuals (most of the global adult population to some degree); infants with congenital lactase deficiency (rare but severe); people with irritable bowel syndrome (FODMAP trigger); people after gastroenteritis or chemotherapy (secondary lactase deficiency)'
+        },
+        'skim milk': {
+            'short_term': 'Well tolerated in those without milk allergy or lactose intolerance; same allergy concerns as whole milk',
+            'long_term': 'Skim milk powder / non-fat dry milk provides milk proteins (casein and whey), lactose, and minerals; nutritious and well-studied; contains all milk allergens (casein, whey, lactalbumin, lactoferrin); used extensively in packaged foods, ice cream, and chocolates as a cost-effective dairy ingredient',
+            'vulnerable_groups': 'People with cow\'s milk allergy (all milk proteins present); people with lactose intolerance (lactose content is significant in skim milk); vegans'
+        },
+        'milk solids': {
+            'short_term': 'Same as skim milk — well tolerated except in milk allergy and lactose intolerance',
+            'long_term': 'Concentrated dairy ingredient containing milk proteins, lactose and minerals; same nutritional and allergen profile as dairy; used extensively in ice cream, chocolates and baked goods for flavour and texture',
+            'vulnerable_groups': 'People with cow\'s milk allergy; people with lactose intolerance; vegans; people on dairy-restricted diets'
+        },
+
+        # ── Cocoa Products ────────────────────────────────────────────────────
+        'cocoa powder': {
+            'short_term': 'Generally well tolerated; cocoa contains caffeine and theobromine — mild stimulant effects at high intake; migraine trigger for some (tyramine, phenylethylamine content); rare cocoa allergy; heartburn/GERD aggravation',
+            'long_term': 'Rich source of flavanols (epicatechin, catechin) — strong antioxidant activity; multiple RCTs show cocoa flavanols improve endothelial function, lower blood pressure and improve insulin sensitivity; EFSA approved health claim for cocoa flavanols and normal blood flow; however, processed cocoa powder has highly variable flavanol content (Dutch/alkali processing destroys 60–90% of flavanols); contains oxalates (kidney stone concern at very high intake); small amount of cadmium naturally present in cocoa — WHO and EU have limits',
+            'vulnerable_groups': 'Migraine sufferers (phenylethylamine, tyramine triggers); people with GERD (relaxes lower oesophageal sphincter); people prone to kidney stones (high oxalate); pregnant women (caffeine + theobromine — limit total caffeine intake); people with cocoa allergy (rare); dogs and cats (theobromine is toxic to pets)'
+        },
+        'cocoa butter': {
+            'short_term': 'Excellent tolerability in topical cosmetic use; well tolerated orally; no significant short-term adverse effects',
+            'long_term': 'Primarily stearic acid (35%) and oleic acid (35%) with palmitic acid (25%); stearic acid is unusual among saturated fats — it does not raise LDL cholesterol (converted to oleic acid in the liver); neutral effect on cardiovascular risk unlike other saturated fats; solid fat at room temperature (melts at body temperature — characteristic chocolate melt); excellent cosmetic moisturiser; no significant long-term concerns',
+            'vulnerable_groups': 'People with cocoa allergy (very rare but documented); people with very high saturated fat intake already; acne-prone individuals using topical cocoa butter (comedogenic in some people)'
+        },
+
+        # ── Sugars and Sugar Syrups ───────────────────────────────────────────
+        'glucose syrup': {
+            'short_term': 'Rapid blood glucose spike — high glycaemic index; energy rush followed by crash; no direct short-term effects beyond elevated blood glucose in most people',
+            'long_term': 'Glucose syrup is a highly refined starch hydrolysate consisting of glucose oligomers and maltose; very high GI (similar to pure glucose); regular high intake contributes to insulin resistance, obesity, Type 2 diabetes and dental caries; used extensively in confectionery, ice cream, beverages and processed foods; less concerning than high-fructose corn syrup for liver fat accumulation (glucose is distributed to all tissues unlike fructose which is predominantly hepatic)',
+            'vulnerable_groups': 'Diabetics and pre-diabetics (extreme glucose spike); children (obesity and dental caries risk); people with hypoglycaemia (rebound sugar crash); people with insulin resistance'
+        },
+        'dextrose': {
+            'short_term': 'Pure glucose — most rapid blood glucose spike of any sugar; immediate energy; can cause reactive hypoglycaemia (blood sugar crash) after initial spike',
+            'long_term': 'Dextrose is pharmaceutical-grade glucose; at food-additive levels in packaged products, same metabolic concerns as glucose syrup; used for sweetening, browning (Maillard reaction) and as a fermentation substrate; excessive intake contributes to weight gain, diabetes risk and dental cavities',
+            'vulnerable_groups': 'Diabetics and pre-diabetics (highest glycaemic response of all sugars); children; people with reactive hypoglycaemia'
+        },
+
+        # ── Sugar Alcohols ────────────────────────────────────────────────────
+        'maltitol': {
+            'short_term': 'Osmotic laxative effect at lower doses than most other sugar alcohols — bloating, flatulence and diarrhoea onset from approximately 25–30g in adults (varies individually); products must carry "excessive consumption may have laxative effects" warning in EU',
+            'long_term': 'Maltitol has a glycaemic index of 35 (vs 65 for sucrose) — still significantly raises blood glucose and insulin, making it less suitable for diabetics than other sugar alcohols like erythritol or xylitol; the marketing of "sugar-free" products containing maltitol as "diabetic-friendly" is misleading; no significant long-term toxicity; dental-friendly (not fermented by Streptococcus mutans); prebiotic-like effects on gut bacteria',
+            'vulnerable_groups': 'Diabetics — maltitol still raises blood glucose significantly (GI of 35); people with IBS or functional gut disorders (laxative threshold is low); children (lower body weight means lower laxative threshold per unit consumed)'
+        },
+        'e965': {
+            'short_term': 'Osmotic diarrhoea and bloating onset at ~25g; laxative threshold lower than for sorbitol in some individuals',
+            'long_term': 'Maltitol — GI of 35 (not truly "diabetic safe"); EU laxative warning required; dental-friendly; no significant long-term toxicity',
+            'vulnerable_groups': 'Diabetics, people with IBS, children'
+        },
+        'mannitol': {
+            'short_term': 'Strong osmotic laxative effect at low doses (10–20g) — bloating, flatulence, abdominal pain, diarrhoea; IV mannitol is used as an osmotic diuretic and brain oedema treatment — at those doses causes dangerous electrolyte disturbances',
+            'long_term': 'Very poorly absorbed from the gut (compared to sorbitol which is partially absorbed); almost completely reaches the colon where bacteria ferment it; very dental-friendly; very low glycaemic index; FDA GRAS with "laxative effect" warning; no significant long-term toxicity from food additive use; commonly used as a pharmaceutical excipient',
+            'vulnerable_groups': 'People with IBS or functional gut disorders (very strong laxative effect at low dose); children (low laxative threshold); people with kidney disease (renal excretion of absorbed mannitol); diabetics (safe sugar alcohol — very low GI)'
+        },
+        'e421': {
+            'short_term': 'Strong osmotic laxative at low doses (10–20g); significant GI symptoms',
+            'long_term': 'Mannitol — very low GI, dental-friendly; strong laxative action; FDA GRAS with warning',
+            'vulnerable_groups': 'IBS sufferers, children, people with kidney disease'
+        },
+        'lactitol': {
+            'short_term': 'Osmotic laxative effect similar to lactulose (used medically as laxative); bloating, flatulence; bowel movements increased',
+            'long_term': 'E966 — disaccharide sugar alcohol derived from lactose; poorly absorbed, fermented by colonic bacteria to produce beneficial SCFAs (short-chain fatty acids); prebiotic effects; very low GI (<5); dental-friendly; clinically used as a laxative for constipation; long-term safety excellent; EU-approved with laxative effect warning',
+            'vulnerable_groups': 'People with lactose intolerance (some residual lactose sensitivity possible); people with IBS who are sensitive to polyols; people taking other laxatives'
+        },
+        'e966': {
+            'short_term': 'Osmotic laxative effects — used as a prescription laxative; bloating and flatulence',
+            'long_term': 'Lactitol — prebiotic, very low GI, dental-friendly; long-term safety excellent',
+            'vulnerable_groups': 'Lactose-sensitive individuals, IBS sufferers'
+        },
+
+        # ── Leavening / Raising Agents ────────────────────────────────────────
+        'sodium bicarbonate': {
+            'short_term': 'Well tolerated at baking use levels; as an antacid: rapid CO₂ gas release causes belching; alkaline nature can temporarily neutralise stomach acid; excessive intake (as antacid) causes milk-alkali syndrome',
+            'long_term': 'E500 — common baking soda; reacts with acids to produce CO₂ (leavening action); at baking residue levels, the sodium content contributes to dietary sodium intake (concerns for hypertension); no direct long-term toxicity at food-additive amounts; excessive use as a DIY antacid causes metabolic alkalosis and milk-alkali syndrome (hypercalcaemia, renal failure)',
+            'vulnerable_groups': 'People on sodium-restricted diets (hypertension, heart failure, kidney disease) — significant sodium contribution at high baking use; people self-treating with large amounts as antacid (milk-alkali syndrome risk)'
+        },
+        'e500': {
+            'short_term': 'Well tolerated at baking levels; excess causes alkalosis',
+            'long_term': 'Sodium bicarbonate — contributes dietary sodium; no direct toxicity at food-additive levels',
+            'vulnerable_groups': 'People on low-sodium diets (hypertension, heart/kidney disease)'
+        },
+        'potassium bicarbonate': {
+            'short_term': 'Well tolerated at food-additive levels; same CO₂-generating leavening mechanism as sodium bicarbonate; less sodium than equivalent sodium bicarbonate',
+            'long_term': 'E501 — used in low-sodium baking products; provides potassium (beneficial for blood pressure); at food-additive levels no significant concerns; excessive supplemental potassium intake can cause hyperkalaemia in people with kidney disease',
+            'vulnerable_groups': 'People with kidney disease (potassium accumulation — hyperkalaemia risk with large amounts); otherwise safe and beneficial (potassium vs sodium)'
+        },
+        'e501': {
+            'short_term': 'Well tolerated at baking levels; same mechanism as baking soda',
+            'long_term': 'Potassium bicarbonate — beneficial potassium source; low-sodium alternative to E500',
+            'vulnerable_groups': 'People with kidney disease (potassium restriction needed)'
+        },
+        'ammonium bicarbonate': {
+            'short_term': 'Strong ammoniacal odour during baking that dissipates with heat; if improperly baked, residual ammonia can cause irritation; well tolerated in properly baked products',
+            'long_term': 'E503 — decomposes completely to NH₃, CO₂ and H₂O at baking temperatures; if completely decomposed, no residual compound remains in the baked product; formerly called "hartshorn" or "baker\'s ammonia"; concern only if product not properly baked and ammonia residue remains; FDA GRAS for appropriate baking use',
+            'vulnerable_groups': 'People with ammonia metabolism disorders (urea cycle disorders — extremely rare); otherwise safe in properly baked products; concern if under-baked (raw dough consumption)'
+        },
+        'e503': {
+            'short_term': 'Ammonia odour if under-baked; well tolerated in fully baked products',
+            'long_term': 'Ammonium bicarbonate — completely decomposes during baking; no residue if properly baked',
+            'vulnerable_groups': 'People with urea cycle disorders (rare); ensure product is properly baked'
+        },
+        'diphosphate': {
+            'short_term': 'Well tolerated at food-additive levels; no significant short-term adverse effects',
+            'long_term': 'E450 (pyrophosphates) — used as leavening agents, emulsifying salts in processed cheese, and meat binders; contributes to dietary phosphate intake; high total dietary phosphate intake associated with increased cardiovascular mortality in people with chronic kidney disease (CKD); phosphate from food additives has higher bioavailability (~80–100%) than organic phosphate from natural foods (~40–60%); WHO/IARC note that vascular calcification worsens with excess phosphate in CKD patients',
+            'vulnerable_groups': 'People with chronic kidney disease (impaired phosphate excretion — hyperphosphataemia risk); people with hyperparathyroidism; people with cardiovascular disease (vascular calcification concern); people consuming large amounts of ultra-processed food containing multiple phosphate additives'
+        },
+        'e450': {
+            'short_term': 'Well tolerated at food-additive levels; no immediate adverse effects',
+            'long_term': 'Diphosphates — high bioavailability phosphate additive; cardiovascular and kidney concerns with high total intake; CKD patients most vulnerable',
+            'vulnerable_groups': 'CKD patients, people with hyperparathyroidism, people with cardiovascular disease'
+        },
+        'triphosphate': {
+            'short_term': 'Well tolerated at food-additive levels; same profile as diphosphates',
+            'long_term': 'E451 (triphosphates/sodium tripolyphosphate) — same high-bioavailability phosphate concerns as E450; used in meat, seafood and processed cheese; EFSA has raised concern about cumulative phosphate intake from multiple food additives in the modern diet',
+            'vulnerable_groups': 'CKD patients, people on phosphate-restricted diets, people with cardiovascular disease'
+        },
+        'e451': {
+            'short_term': 'Well tolerated at food-additive levels',
+            'long_term': 'Triphosphates — same phosphate overload concerns as E450 for CKD patients; EFSA cumulative intake concern',
+            'vulnerable_groups': 'CKD patients, people with cardiovascular disease'
+        },
+        'polyphosphate': {
+            'short_term': 'Well tolerated; no significant short-term effects',
+            'long_term': 'E452 (polyphosphates) — used as stabilisers, water-retention agents in seafood and meat; contributes to dietary phosphate load; same kidney/cardiovascular concerns as other phosphate additives at high cumulative intake; EFSA reviewed and found current use safe but noted inadequate data on cumulative phosphate intake from all food additives',
+            'vulnerable_groups': 'CKD patients, people with hyperparathyroidism, people with CVD'
+        },
+        'e452': {
+            'short_term': 'Well tolerated at food-additive levels',
+            'long_term': 'Polyphosphates — cumulative phosphate intake concern; EFSA note on inadequate data',
+            'vulnerable_groups': 'CKD patients, people on phosphate-restricted diets'
+        },
+
+        # ── Natural Colours ───────────────────────────────────────────────────
+        'beta carotene': {
+            'short_term': 'Well tolerated; very high intake causes carotenodermia (harmless yellow-orange skin colouration — fully reversible); no acute toxicity',
+            'long_term': 'E160a — provitamin A (converts to Vitamin A as needed); powerful antioxidant; major clinical trial (CARET, ATBC) found that high-dose beta-carotene SUPPLEMENTS (20–30mg/day — far above food colouring levels) INCREASED lung cancer risk and overall mortality in smokers and asbestos workers; this finding applies to synthetic supplements, NOT to dietary beta-carotene from food or food colouring amounts; at food-additive concentrations (typically 1–25mg/day), beta-carotene is safe and beneficial; FDA approved for food colouring',
+            'vulnerable_groups': 'Current and former smokers — DO NOT take high-dose beta-carotene supplements (CARET trial evidence); asbestos workers; people with liver disease (impaired Vitamin A conversion); at FOOD levels, safe for all populations including pregnant women'
+        },
+        'e160a': {
+            'short_term': 'Well tolerated; carotenodermia at very high intake (harmless)',
+            'long_term': 'Beta-carotene — safe at food levels; high-dose supplement risk in smokers (CARET trial); antioxidant at food concentrations',
+            'vulnerable_groups': 'Smokers taking supplements (increased lung cancer risk in trials); safe at food colouring levels'
+        },
+        'beetroot red': {
+            'short_term': 'Harmless reddish-pink urine and stools (beeturia) in sensitive individuals — alarming appearance but completely safe; very rare allergic reactions',
+            'long_term': 'E162 (betanin) — natural pigment from red beetroot; FDA GRAS; excellent safety profile; some studies show antioxidant and anti-inflammatory properties; betalain pigments may have cancer-protective properties in cell studies; no significant long-term health concerns; instability to heat and light means it may degrade in stored products',
+            'vulnerable_groups': 'People with beeturia (benign — up to 14% of population excrete red urine after beetroot — alarming but harmless); very rare allergic reactions to beetroot; people with kidney stones (beetroot is high in oxalates — relevant only to very large beetroot consumption, not food colouring levels)'
+        },
+        'e162': {
+            'short_term': 'Possible harmless beeturia (red urine/stools); very rare allergy',
+            'long_term': 'Betanin — natural beetroot pigment; FDA GRAS; antioxidant; excellent safety',
+            'vulnerable_groups': 'Safe; beeturia is harmless; very rare allergy to beetroot'
+        },
+        'anthocyanin': {
+            'short_term': 'Excellent tolerability; natural pigments from berries, red cabbage, purple sweet potato; very rare allergy; stools may show slight colour change at high intake',
+            'long_term': 'E163 — water-soluble flavonoid pigments with potent antioxidant activity; extensive research shows cardiovascular protection, anti-inflammatory, anti-cancer and neuroprotective properties in epidemiological and cell studies; FDA approved natural food colouring; no ADI necessary (JECFA); one of the most beneficial food additives with positive health associations',
+            'vulnerable_groups': 'Very rare allergy to specific anthocyanin sources (berries, red cabbage etc); safe for all populations; one of the healthiest food colourants available'
+        },
+        'e163': {
+            'short_term': 'Excellent tolerability; natural berry/vegetable pigment',
+            'long_term': 'Anthocyanins — potent antioxidant; cardiovascular and anti-cancer associations; FDA approved; no ADI necessary',
+            'vulnerable_groups': 'Very rare allergy to source ingredient; otherwise very safe and beneficial'
+        },
+        'riboflavin': {
+            'short_term': 'Excellent tolerability; harmless bright yellow urine from excess riboflavin excretion (water-soluble B vitamin); very rare photosensitivity',
+            'long_term': 'E101 — Vitamin B2; essential nutrient; used as both a nutrient and a yellow food colouring; water-soluble — excess excreted in urine (gives characteristic bright yellow colour); no toxicity from food or moderate supplemental amounts; extensive research confirms safety; FDA GRAS; beneficial as a nutrient source in fortified foods',
+            'vulnerable_groups': 'Safe for all populations; higher doses may cause photosensitivity in rare individuals; bright yellow urine is harmless and expected'
+        },
+        'e101': {
+            'short_term': 'Harmless bright yellow urine from riboflavin excretion; excellent tolerability',
+            'long_term': 'Riboflavin/Vitamin B2 — essential nutrient colouring; FDA GRAS; water-soluble; no toxicity',
+            'vulnerable_groups': 'Safe for general population; very rare photosensitivity'
+        },
+
+        # ── Acidity Regulators ────────────────────────────────────────────────
+        'tartaric acid': {
+            'short_term': 'Well tolerated at food-use levels; very high intake (rare) causes GI irritation, muscle weakness and kidney damage (tartrate toxicity documented only at extreme doses)',
+            'long_term': 'E334 — natural acid found in grapes, tamarind and bananas; used as an acidulant and leavening acid (cream of tartar); FDA GRAS; JECFA no ADI necessary; metabolised to tartrate, CO₂ and water; no significant long-term health concerns at food-additive intake; cream of tartar (potassium bitartrate) is widely used in baking',
+            'vulnerable_groups': 'People with kidney disease (tartrate is renally excreted — risk of accumulation at very high intake); people with hyperoxaluria (tartrate can complex with calcium); safe for general population at food-additive levels'
+        },
+        'e334': {
+            'short_term': 'Well tolerated at food levels; extreme intake causes kidney issues (not relevant to food additive use)',
+            'long_term': 'Tartaric acid — natural grape/tamarind acid; FDA GRAS; no ADI necessary; no long-term concerns',
+            'vulnerable_groups': 'People with kidney disease at very high intake'
+        },
+        'sodium citrate': {
+            'short_term': 'Well tolerated; used as an acidity regulator and flavour modifier; large oral doses can cause GI discomfort (alkalising effect); IV sodium citrate used as anticoagulant in blood transfusions',
+            'long_term': 'E331 — sodium salt of citric acid; FDA GRAS; metabolised to bicarbonate (alkalising); contributes to dietary sodium intake; no direct long-term toxicity at food-additive levels; used in sports drinks for rapid rehydration and as a buffer in pharmaceutical preparations',
+            'vulnerable_groups': 'People on sodium-restricted diets; people with kidney disease (citrate can increase urinary calcium oxalate stone formation at very high intake, though it also has stone-preventing properties at moderate intake)'
+        },
+        'e331': {
+            'short_term': 'Well tolerated; contributes dietary sodium at food-additive levels',
+            'long_term': 'Sodium citrates — FDA GRAS; metabolised to bicarbonate; no long-term concerns at food levels',
+            'vulnerable_groups': 'People on low-sodium diets; people with kidney stone history'
+        },
+        'calcium phosphate': {
+            'short_term': 'Well tolerated at food-additive levels; provides calcium and phosphorus; no significant short-term adverse effects',
+            'long_term': 'E341 (mono/di/tricalcium phosphate) — used as raising agents, anti-caking agents, nutrient supplements and mineral salts; provides highly bioavailable calcium; same phosphate additive concerns apply (see E450/451/452) for people with CKD — high bioavailability phosphate can worsen hyperphosphataemia; calcium supplement benefit must be weighed against phosphate load in CKD',
+            'vulnerable_groups': 'CKD patients (hyperphosphataemia risk from highly bioavailable phosphate); people with hypercalcaemia (milk-alkali syndrome risk); otherwise beneficial calcium source for general population'
+        },
+        'e341': {
+            'short_term': 'Well tolerated; provides calcium and phosphorus',
+            'long_term': 'Calcium phosphates — beneficial calcium source; high-bioavailability phosphate CKD concern',
+            'vulnerable_groups': 'CKD patients (phosphate restriction); people with hypercalcaemia'
+        },
+
+        # ── Yeast Extract / HVP ───────────────────────────────────────────────
+        'yeast extract': {
+            'short_term': 'Well tolerated in most people; naturally contains high levels of free glutamates (approximately 5% by weight) — people sensitive to MSG may react; contains tyramine — migraine trigger; high sodium content in some formulations',
+            'long_term': 'Yeast extract (Marmite, Vegemite, Maggi seasoning) provides B vitamins (especially B12 and folate), zinc, selenium; the glutamate content (technically "naturally occurring") gives it deep umami flavour; used to label products as "no added MSG" while achieving the same flavour — the free glutamate is physiologically identical to MSG; high purine content raises uric acid — concern for gout sufferers; no established long-term toxicity',
+            'vulnerable_groups': 'People sensitive to MSG/glutamate; migraine sufferers (tyramine content); people with gout or hyperuricaemia (high purines); people on low-sodium diets; people with Crohn\'s disease (some intolerance reported)'
+        },
+        'hydrolysed': {
+            'short_term': 'Hydrolysed vegetable/plant/wheat protein (HVP/HWP/HPP) is high in free glutamates — same MSG-like reactions possible; may contain residual allergens from source protein (soy, wheat, milk)',
+            'long_term': 'Acid or enzyme hydrolysis of proteins creates free amino acids including glutamate; used to label products as "no added MSG" while providing equivalent flavour-enhancing effect; HVP may contain 3-MCPD (3-monochloropropane-1,2-diol — a probable carcinogen) as a by-product of acid hydrolysis at elevated temperatures; EU has strict limits on 3-MCPD in HVP; enzymatically produced HVP has much lower 3-MCPD levels',
+            'vulnerable_groups': 'People with MSG sensitivity; people with allergies to source protein (soy HVP for soy allergic, wheat HVP for coeliac); people avoiding MSG-like compounds'
+        },
+        'gum arabic': {
+            'short_term': 'Generally well tolerated; occasional GI effects (bloating, flatulence) at high intake as it is a dietary fibre; rare occupational allergy in pharmaceutical manufacturing',
+            'long_term': 'E414 (Acacia) — natural exudate from Acacia senegal and Acacia seyal trees; one of the safest food additives; FDA GRAS with no ADI necessary; prebiotic fibre selectively feeding Bifidobacterium and Lactobacillus; clinical studies show it lowers total cholesterol and reduces abdominal fat at high doses; safe in pregnancy and childhood; no carcinogenicity, mutagenicity or reproductive toxicity in extensive animal studies',
+            'vulnerable_groups': 'People with gum arabic occupational allergy (pharmaceutical/food industry workers); people with very sensitive gut (high-fibre effects); otherwise one of the safest food additives'
+        },
+        'acacia': {
+            'short_term': 'Same as gum arabic — well tolerated; mild fibre-related GI effects at high intake',
+            'long_term': 'Same as gum arabic (E414) — FDA GRAS; prebiotic; cholesterol-lowering; no ADI necessary',
+            'vulnerable_groups': 'Occupational allergy risk; generally very safe'
+        },
+        'modified starch': {
+            'short_term': 'Generally well tolerated; some individuals with IBS report sensitivity; provides glucose rapidly on digestion (higher GI than unmodified starch)',
+            'long_term': 'Modified food starches (E1400–E1450 series) are physically, enzymatically or chemically treated starches; most are safe and FDA GRAS; however, octenyl succinic anhydride-modified starch (E1450) is restricted in infant formula in EU; acetylated distarch adipate (E1422) and hydroxypropyl distarch phosphate (E1442) are the most common; phosphate-modified starches add to total dietary phosphate (CKD concern); chemical treatments are minimal and mostly removed in processing',
+            'vulnerable_groups': 'CKD patients (phosphate-modified starches); infants (EU restricts some modified starches in infant formula); people with coeliac disease (if wheat-starch derived — gluten-free modified starches are available)'
+        },
+        'e1422': {
+            'short_term': 'Well tolerated at food-additive levels; same as other modified starches',
+            'long_term': 'Acetylated distarch adipate — a chemically modified corn/tapioca starch; FDA GRAS; EU permitted; no significant long-term health concerns at food-additive levels; widely used in frozen foods for freeze-thaw stability',
+            'vulnerable_groups': 'CKD patients (phosphate content); people with corn or tapioca allergy (rare)'
+        },
+        'e1442': {
+            'short_term': 'Well tolerated; same as modified starch general profile',
+            'long_term': 'Hydroxypropyl distarch phosphate — stable under heat, acid and freezing; FDA GRAS; EU permitted; phosphate content is a concern for CKD patients at high cumulative intake from multiple modified starch additives',
+            'vulnerable_groups': 'CKD patients; people with corn or potato allergy (rare, source-dependent)'
         },
     }
 
