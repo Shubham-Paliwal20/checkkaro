@@ -2672,6 +2672,36 @@ def classify_ingredient(ingredient_name, category=None):
         'ci 77492': ('Yellow Iron Oxide mineral pigment', 'Natural inorganic mineral pigment; chemically inert; safe; approved globally'),
         'sphingosine': ('Natural ceramide component', 'A sphingoid base naturally present in human skin; precursor to ceramide synthesis; safe at cosmetic concentrations'),
 
+        # ── Additional Cosmetic Waxes and Polymers ───────────────────────────────
+        'polybutene': ('Synthetic polyolefin polymer (gloss and slip agent)', 'High-molecular-weight polyisobutylene used in lipsticks and balms to provide gloss, slip and adhesion; not absorbed through skin; no skin penetration; approved by FDA and EU Cosmetics Regulation; safe'),
+        'cera microcristallina': ('Microcrystalline wax (refined petroleum wax)', 'A highly refined, odourless petroleum-derived wax used in lipsticks and creams as a thickener, binder and texture modifier; different from paraffin wax — has finer crystal structure; FDA GRAS; EU approved; safe'),
+        'microcrystalline wax': ('Refined petroleum wax (thickener / binder)', 'Same as Cera Microcristallina; highly refined petroleum wax with no impurities; widely used in lip products and stick cosmetics; FDA GRAS and EU-approved; safe'),
+
+        # ── Additional Cosmetic Natural Oils and Butters ─────────────────────────
+        'theobroma grandiflorum seed butter': ('Cupuaçu butter (natural Amazonian seed butter)', 'Butter extracted from the seeds of Theobroma grandiflorum (cupuaçu fruit, related to cacao); rich in fatty acids (oleic, stearic, arachidic, palmitic); emollient and moisture-sealing; absorbs faster than shea butter; safe and well tolerated; sustainably sourced from Brazil'),
+        'cupuacu butter': ('Cupuaçu butter (Theobroma grandiflorum)', 'Natural Amazonian seed butter; rich emollient with unique fatty acid profile; excellent moisturising and skin-conditioning properties; safe'),
+        'helianthus annuus seed oil': ('Sunflower seed oil (emollient plant oil)', 'Cold-pressed oil from sunflower (Helianthus annuus) seeds; very high in linoleic acid (omega-6) and Vitamin E; non-comedogenic; helps restore skin barrier; safe and very well tolerated; one of the most skin-compatible plant oils'),
+        'sunflower seed oil': ('Sunflower seed oil (Helianthus annuus)', 'Same as Helianthus Annuus Seed Oil; lightweight emollient; rich in linoleic acid; barrier-supportive; safe'),
+        'carthamus tinctorius seed oil': ('Safflower seed oil (emollient plant oil)', 'Cold-pressed oil from safflower (Carthamus tinctorius) seeds; one of the highest natural sources of linoleic acid; lightweight, non-greasy emollient; non-comedogenic; safe'),
+        'safflower seed oil': ('Safflower seed oil (Carthamus tinctorius)', 'Lightweight plant oil very high in linoleic acid; non-comedogenic and non-irritating; safe for all skin types'),
+
+        # ── Additional Cosmetic Actives ───────────────────────────────────────────
+        'sodium ascorbyl phosphate': ('Stable Vitamin C derivative (antioxidant / brightener)', 'A water-soluble, stable phosphate ester of ascorbic acid (Vitamin C); converted to active ascorbic acid by skin phosphatases; antioxidant, collagen-stimulating and skin-brightening; non-irritating even at higher concentrations unlike pure ascorbic acid; safe and well tolerated'),
+        'magnesium aspartate': ('Magnesium amino acid chelate (skin conditioning mineral)', 'A chelated form of magnesium combined with aspartic acid; used in cosmetics as a skin conditioning agent and mineral active; supports skin enzyme activity; safe at cosmetic concentrations'),
+
+        # ── Additional Cosmetic Minerals and Pigments ────────────────────────────
+        'synthetic fluorphlogopite': ('Synthetic fluorine-mica (lab-created mica)', 'A laboratory-synthesised fluorophlogopite mica where hydroxyl groups in the crystal structure are replaced by fluorine; produces more uniform, brighter shimmer than mined natural mica; free of heavy-metal impurities common in natural mica; no child-labour mining concerns; approved by EU Cosmetics Regulation and FDA; safe'),
+        'fluorphlogopite': ('Synthetic fluorine-mica (lab-created mica)', 'Same as Synthetic Fluorphlogopite; a fluorine-substituted synthetic mica; uniform optical properties; no natural mining concerns; safe'),
+        'tin oxide': ('Tin(IV) oxide mineral pigment (luminosity agent)', 'An inorganic stannic oxide (SnO₂) used in colour cosmetics and nail products to produce a pearl-like, luminous shimmer effect; chemically inert; not absorbed through skin; approved by EU Cosmetics Regulation (Annex IV) and FDA for cosmetic use; safe'),
+        'ci 77007': ('Ultramarine Blue / CI 77007 (inorganic pigment)', 'A complex inorganic sodium aluminium silicosulphate pigment; originally from lapis lazuli but cosmetic-grade is synthetically produced for purity; used in eyeshadows, eyeliners and nail products; approved by EU and FDA for cosmetic use including eye area; safe'),
+        'ultramarines': ('Ultramarine pigments (CI 77007 / CI 77013)', 'Synthetic complex inorganic pigments used in colour cosmetics for blue/violet shades; chemically inert and stable; FDA and EU approved for eye-area use; safe'),
+        'ci 77288': ('Chromium Oxide Greens / CI 77288 (inorganic pigment)', 'Chromium(III) oxide (Cr₂O₃) mineral pigment; an inorganic green pigment used in eyeshadows, eyeliners and colour cosmetics; highly stable, non-soluble and chemically inert; FDA and EU approved for use in eye-area cosmetics; safe — only trivalent chromium is used (not the toxic hexavalent form)'),
+        'chromium oxide greens': ('Chromium Oxide Greens (Cr₂O₃) pigment', 'Same as CI 77288; inorganic green mineral pigment; approved for all cosmetic use including eye area by FDA and EU; safe'),
+
+        # ── Additional Cosmetic Botanicals ───────────────────────────────────────
+        'chamomilla recutita extract': ('German chamomile flower extract (soothing botanical)', 'Hydroalcoholic extract from Matricaria chamomilla (German chamomile) flowers; contains bisabolol, apigenin and chamazulene; clinically studied anti-inflammatory, soothing and skin-calming properties; safe for most skin types; patch test recommended for those with composite/daisy-family allergies'),
+        'matricaria flower extract': ('German chamomile extract (Chamomilla recutita)', 'Same as Chamomilla Recutita Extract; rich in bisabolol and apigenin; anti-inflammatory and soothing for sensitive, irritated skin; safe; widely used in baby-friendly and sensitive-skin formulations'),
+
         # ── Silicones (additional safe/common types) ─────────────────────────────
         'caprylyl methicone': ('Volatile silicone (non-cyclic)', 'A lightweight volatile silicone used for smooth application and non-greasy feel; non-cyclic — does not share the D4/D5 environmental concerns; safe for cosmetic use'),
         'stearoxy dimethicone': ('Silicone emollient (non-cyclic)', 'A silicone wax used in conditioners and creams for smooth texture; non-cyclic silicone; safe'),
@@ -2749,6 +2779,10 @@ def classify_ingredient(ingredient_name, category=None):
         'zinc sulfate': ('Zinc salt (mineral supplement)', 'Bioavailable zinc salt; safe at approved levels in food and cosmetics'),
         'ferrous gluconate': ('Iron salt (mineral supplement / colorant)', 'An iron supplement with good bioavailability; also used as a food colouring (E579) in olives; safe at approved levels'),
         'copper gluconate': ('Copper salt (skin conditioning mineral)', 'Bioavailable copper salt; used in cosmetics for skin conditioning and as a dietary supplement; safe at low concentrations'),
+        'ci 77510': ('Ferric Ferrocyanide / Prussian Blue (CI 77510) pigment', 'An inorganic iron-cyanide complex pigment (iron(III) hexacyanoferrate(II)) used as a blue or black colourant in makeup; the cyanide is firmly bound in a stable complex and is not bioavailable — it is chemically inert and non-toxic; EU Cosmetics Regulation permits it for all cosmetics including eye area; FDA however restricts it to external-use cosmetics only and does not permit it in cosmetics applied near the eye or mucous membranes — check formulation purpose; safe for external lip and skin use'),
+        'ferric ferrocyanide': ('Prussian Blue pigment (CI 77510)', 'Same as CI 77510; inorganic iron-cyanide blue pigment; non-toxic at cosmetic concentrations despite containing cyanide (chemically bound, non-bioavailable); FDA-restricted from eye-area use; EU approved for all cosmetic applications; safe for external use'),
+        'ci 77266': ('Carbon Black / Black 2 (CI 77266) pigment', 'A synthetic carbon black pigment used to produce deep black shades in eyeliners, mascaras and lip products; the EU Scientific Committee on Consumer Safety (SCCS) has found nano-form carbon black (particle size < 100nm) may penetrate damaged skin; EU restricts nano CI 77266 in spray cosmetics due to inhalation risk; permitted in non-spray formulations such as lipsticks and pencils; FDA permits it for cosmetic use; generally safe in solid and non-spray formats — nano status should be declared on EU labels'),
+        'black 2': ('Carbon Black pigment (CI 77266)', 'Same as CI 77266 Carbon Black; deep black inorganic pigment; EU nano-form restrictions apply to spray formats; safe in solid cosmetics such as lip liners, eyeliners and pressed shadows'),
         'sodium pca': ('Natural humectant (Sodium 2-Pyrrolidone-5-Carboxylate)', 'Naturally present in human skin as part of the Natural Moisturising Factor (NMF); one of the most effective humectants; safe and very skin-compatible'),
         'urea': ('Natural humectant and keratolytic (at high levels)', 'Naturally present in the skin as part of NMF; at low concentrations (3–10%) acts as a humectant; at higher concentrations (20–40%) acts as a gentle keratolytic (softens thick skin); safe at cosmetic levels'),
         'urocanic acid': ('Natural NMF component (UV absorber)', 'Naturally present in skin and sweat; a UV-absorbing component of the skin Natural Moisturising Factor; safe'),
@@ -3034,18 +3068,77 @@ def get_fssai_position(ingredient_name):
     ingredient_lower = ingredient_name.lower()
 
     positions = {
-        'tartrazine': 'Permitted as E102 under FSSAI with concentration limits. Advisory to watch for sensitivity.',
-        'sunset yellow': 'Permitted as E110 under FSSAI. Quantity limits apply in food products.',
-        'sodium benzoate': 'Permitted as E211 preservative under FSSAI Food Safety and Standards Regulations.',
-        'monosodium glutamate': 'Permitted under FSSAI as a flavour enhancer with usage guidelines.',
-        'sodium nitrite': 'Permitted in meat products under FSSAI with strict quantity limits.',
-        'phosphoric acid': 'Permitted as acidulant E338 under FSSAI in non-alcoholic beverages.',
-        'sodium metabisulphite': 'Permitted preservative under FSSAI with mandatory declaration for sulphite content above 10ppm.',
-        'methylparaben': 'Permitted in cosmetics under India BIS/CDSCO guidelines with concentration limits.',
-        'propylparaben': 'Permitted in cosmetics under India BIS/CDSCO guidelines with concentration limits.',
-        'triclosan': 'Permitted in cosmetics and personal care products under Indian regulations.',
-        'caramel colour': 'Permitted under FSSAI as colour E150. Class III and IV have usage restrictions.',
-        'tbhq': 'Permitted antioxidant under FSSAI with concentration limits in edible oils.',
+        # ── Colours ───────────────────────────────────────────────────────────
+        'tartrazine':         'Permitted as food colour E102/INS 102 under FSSAI FSS (Food Products Standards and Food Additives) Regulations. Maximum limit: 100 mg/kg in soft drinks and confectionery. Must be declared by name on label per FSSAI labelling rules.',
+        'e102':               'Tartrazine (E102/INS 102) is permitted under FSSAI with concentration limits. Must be declared by name.',
+        'sunset yellow':      'Permitted as food colour E110/INS 110 under FSSAI. Quantity limits: up to 200 mg/kg depending on product category. Mandatory name declaration on label.',
+        'e110':               'Sunset Yellow FCF (E110/INS 110) permitted under FSSAI with quantity limits and mandatory label declaration.',
+        'allura red':         'Permitted as food colour E129/INS 129 under FSSAI with concentration limits. Mandatory name declaration on label.',
+        'red 40':             'Allura Red AC (E129) permitted under FSSAI; concentration limits apply; must be declared by name.',
+        'ponceau':            'Ponceau 4R (E124/INS 124) permitted as food colour under FSSAI with quantity limits and label declaration requirement.',
+        'carmoisine':         'Carmoisine/Azorubine (E122/INS 122) permitted under FSSAI with limits. Mandatory name declaration.',
+        'brilliant blue':     'Brilliant Blue FCF (E133/INS 133) permitted as food colour under FSSAI with concentration limits.',
+        'erythrosine':        'Erythrosine (E127/INS 127) has restricted use under FSSAI — permitted only in specific products such as cocktail cherries.',
+        'indigo carmine':     'Indigotine (E132/INS 132) permitted as food colour under FSSAI with concentration limits.',
+        'quinoline yellow':   'Quinoline Yellow (E104/INS 104) permitted under FSSAI in limited applications with concentration limits.',
+        'caramel colour':     'Caramel colour (E150a–E150d/INS 150a–150d) permitted under FSSAI. Class III (E150c) and Class IV (E150d) have restrictions in some beverage categories.',
+        'caramel color':      'Caramel colour (E150 series) permitted under FSSAI; Class III/IV variants have beverage category restrictions.',
+        'titanium dioxide':   'Titanium dioxide (E171/INS 171) is still permitted as a food additive under FSSAI (India has not adopted the EU 2022 ban). As a cosmetic ingredient, it remains approved. Situation under review.',
+        'beta-carotene':      'Beta-carotene (E160a/INS 160a) is permitted as a natural food colour and nutritional supplement under FSSAI without restriction limits as it is a provitamin.',
+        'curcumin':           'Curcumin (E100/INS 100) derived from turmeric is fully permitted under FSSAI as a natural food colour and flavouring agent.',
+        # ── Preservatives ─────────────────────────────────────────────────────
+        'sodium benzoate':    'Permitted as preservative E211/INS 211 under FSSAI FSS Regulations. Max limit: 150 mg/kg in soft drinks, 250 mg/kg in fruit products. Mandatory declaration on label.',
+        'potassium sorbate':  'Permitted as preservative E202/INS 202 under FSSAI. Concentration limits apply depending on product category. Generally considered one of the safest preservatives.',
+        'sorbic acid':        'Permitted as preservative E200/INS 200 under FSSAI with concentration limits. Safe and widely used in cheese and baked goods.',
+        'sodium nitrite':     'Permitted under FSSAI in cured and processed meat products only (INS 250). Maximum limit: 125 mg/kg in cured meats. Strictly controlled due to nitrosamine formation risk.',
+        'sodium nitrate':     'Permitted under FSSAI as a curing salt (INS 251) in processed meats. Maximum limit: 300 mg/kg. Acts as a slow-release nitrite source.',
+        'sodium metabisulphite': 'Permitted as preservative/antioxidant E223/INS 223 under FSSAI. Mandatory declaration required on labels when sulphite content exceeds 10 mg/kg (ppm). Must declare "Contains sulphites".',
+        'sulfur dioxide':     'Permitted as E220/INS 220 under FSSAI with concentration limits by product. Mandatory "contains sulphites" declaration. Sulphite-sensitive consumers (especially asthmatics) must be warned.',
+        'sodium metabisulfite': 'Same as sodium metabisulphite (E223/INS 223). Permitted under FSSAI with sulphite declaration requirement.',
+        'tbhq':               'TBHQ (Tert-Butylhydroquinone / E319/INS 319) is permitted as an antioxidant under FSSAI in edible oils at maximum 0.02% (200 mg/kg). Combined BHA+BHT+TBHQ limit is 0.02%.',
+        'bha':                'BHA (Butylated Hydroxyanisole / E320/INS 320) permitted as antioxidant under FSSAI in edible oils and fats up to 0.02%. Combined limit with other antioxidants applies.',
+        'butylated hydroxyanisole': 'BHA (E320/INS 320) permitted in edible oils under FSSAI up to 0.02%. Combined antioxidant limit applies.',
+        'bht':                'BHT (Butylated Hydroxytoluene / E321/INS 321) permitted under FSSAI as antioxidant in edible oils up to 0.02%.',
+        # ── Sweeteners ────────────────────────────────────────────────────────
+        'aspartame':          'Aspartame (E951/INS 951) is permitted under FSSAI as a non-nutritive sweetener in specified food categories. Mandatory label warning required: "Contains Phenylalanine" for phenylketonuric (PKU) consumers. ADI: 40 mg/kg body weight/day.',
+        'saccharin':          'Saccharin (E954/INS 954) is permitted under FSSAI in specified food categories with concentration limits and mandatory label declaration. Products must state "Not recommended for children" per Indian regulations.',
+        'acesulfame':         'Acesulfame-K (E950/INS 950) is permitted as non-nutritive sweetener under FSSAI with ADI limits. Must be declared on label.',
+        'sucralose':          'Sucralose (E955/INS 955) is permitted under FSSAI as a non-caloric sweetener. Must be declared on label with "contains sweetener" notation.',
+        'stevia':             'Steviol glycosides (E960/INS 960) from stevia plant are permitted under FSSAI as natural non-caloric sweeteners. FSSAI has approved their use following global trend.',
+        'xylitol':            'Xylitol (E967/INS 967) is permitted under FSSAI as a sugar alcohol in confectionery and diabetic foods. "Excessive consumption may have a laxative effect" declaration required above certain levels.',
+        # ── Flavour Enhancers ─────────────────────────────────────────────────
+        'monosodium glutamate': 'MSG (E621/INS 621) is permitted under FSSAI as a flavour enhancer. However, FSSAI prohibits MSG in foods intended for infants and young children. India also requires that products manufactured and sold in India declare MSG clearly on label.',
+        'disodium guanylate':   'Disodium guanylate (E627/INS 627) is permitted under FSSAI as a flavour enhancer, typically used in combination with MSG. Not permitted in foods for infants.',
+        'disodium inosinate':   'Disodium inosinate (E631/INS 631) is permitted under FSSAI as a flavour enhancer. Restricted in infant foods.',
+        # ── Antioxidants ──────────────────────────────────────────────────────
+        'ascorbic acid':      'Ascorbic acid/Vitamin C (E300/INS 300) is fully permitted under FSSAI as both an antioxidant and a nutritional supplement, with no concentration restrictions in most categories.',
+        'tocopherol':         'Tocopherols (E306–E309/INS 306–309) are permitted under FSSAI as natural antioxidants in edible oils, fats and cosmetics. No ADI established by WHO/FAO due to safety.',
+        'ascorbyl palmitate':  'Ascorbyl palmitate (E304/INS 304) permitted as antioxidant under FSSAI in fats, oils and fat-based products.',
+        # ── Thickeners and Stabilisers ────────────────────────────────────────
+        'carrageenan':        'Carrageenan (E407/INS 407) is permitted under FSSAI as a thickener and gelling agent. However, FSSAI prohibits carrageenan in infant formula. Degraded "poligeenan" is the form with health concerns — food-grade carrageenan is high molecular weight and different.',
+        'xanthan gum':        'Xanthan gum (E415/INS 415) is permitted under FSSAI as a stabiliser and thickener. No ADI established due to safety; quantum satis (as needed) use permitted in most categories.',
+        'guar gum':           'Guar gum (E412/INS 412) is permitted under FSSAI as a thickener and stabiliser. India is one of the world\'s largest guar producers. Quantum satis use permitted.',
+        'lecithin':           'Lecithin (E322/INS 322) is permitted under FSSAI as an emulsifier in chocolate, margarine and other foods. No ADI established due to safety profile.',
+        # ── Acidulants ────────────────────────────────────────────────────────
+        'citric acid':        'Citric acid (E330/INS 330) is fully permitted under FSSAI as an acidulant, antioxidant and flavouring agent. No concentration limits in most categories. GRAS status.',
+        'phosphoric acid':    'Phosphoric acid (E338/INS 338) is permitted under FSSAI as an acidulant in non-alcoholic beverages (e.g. colas). Concentration limits apply.',
+        'lactic acid':        'Lactic acid (E270/INS 270) is fully permitted under FSSAI as an acidulant and flavouring agent. No concentration limits. Produced naturally in fermentation.',
+        'acetic acid':        'Acetic acid (E260/INS 260) / vinegar is fully permitted under FSSAI as an acidulant and preservative. No concentration restrictions in normal food use.',
+        'malic acid':         'Malic acid (E296/INS 296) is permitted under FSSAI as an acidulant and flavouring. No ADI established due to safety.',
+        # ── Fats and Oils ─────────────────────────────────────────────────────
+        'palm oil':           'Palm oil is regulated under FSSAI as an edible vegetable oil. FSSAI mandates that hydrogenated (vanaspati) versions must be labelled accordingly. Trans fat content in partially hydrogenated palm oil is restricted to max 2% under FSSAI 2022 amendment.',
+        'hydrogenated vegetable oil': 'Hydrogenated vegetable oil (vanaspati) is regulated under FSSAI with strict trans fat limits. FSSAI has progressively reduced the maximum trans fat limit to 2% (2022). Products must declare trans fat content.',
+        'brominated vegetable oil': 'Brominated Vegetable Oil (BVO/INS 443) is NOT permitted as a food additive under FSSAI. It has also been banned by the FDA (USA, 2024) and EU. Any product containing BVO should not be sold in India.',
+        # ── Miscellaneous ──────────────────────────────────────────────────────
+        'potassium bromate':  'Potassium bromate is BANNED as a food additive in India by FSSAI. It is prohibited in bread and bakery products under the Prevention of Food Adulteration Act. FSSAI enforces strict penalties for violation.',
+        'azodicarbonamide':   'Azodicarbonamide (ADA/INS 927a) is NOT permitted as a food additive under FSSAI regulations. It is banned as a food additive in the EU and India.',
+        'talc':               'Talc is listed as a food additive (INS 553iii) under FSSAI as an anti-caking agent in limited applications (e.g. rice polishing). FSSAI is reviewing its use in food in light of contamination concerns. As a cosmetic ingredient, it is regulated under CDSCO.',
+        'sodium hyaluronate':  'Hyaluronic acid and its salts are not regulated as food additives under FSSAI but are permitted in cosmetics under CDSCO (Central Drugs Standard Control Organisation) guidelines.',
+        # ── Cosmetic-specific ─────────────────────────────────────────────────
+        'triclosan':          'Triclosan is permitted in cosmetics and personal care products under India\'s IS 4011 (BIS) cosmetic regulations. However, the Ministry of Health has not implemented restrictions matching EU/FDA bans. Usage concentration typically limited to 0.3% in rinse-off products.',
+        'methylparaben':      'Parabens including methylparaben are permitted in cosmetics under India\'s IS 4011 (BIS/CDSCO) guidelines. Combined paraben limit is 0.8% total in cosmetics. India has not adopted the EU\'s ban on isobutylparaben and isopropylparaben.',
+        'propylparaben':      'Propylparaben is permitted in cosmetics under India BIS/CDSCO guidelines. Maximum 0.4% for individual paraben or 0.8% for combinations.',
+        'sodium lauryl sulfate': 'SLS is permitted in cosmetics and personal care products under Indian regulations. No specific concentration limit mandated, though industry guidelines recommend <1% in rinse-off products for sensitive skin.',
     }
 
     for key, pos in positions.items():
@@ -3053,13 +3146,25 @@ def get_fssai_position(ingredient_name):
             return pos
 
     if 'paraben' in ingredient_lower:
-        return 'Permitted in cosmetics under India BIS/CDSCO guidelines with concentration limits.'
-    if 'color' in ingredient_lower or 'colour' in ingredient_lower:
-        return 'Artificial colours must be declared on labels under FSSAI regulations.'
-    if 'preservative' in ingredient_lower or 'benzoate' in ingredient_lower or 'sorbate' in ingredient_lower:
-        return 'Permitted preservative under FSSAI with quantity limits.'
+        return 'Parabens are permitted in cosmetics under India BIS/CDSCO guidelines. Combined paraben limit is 0.8% total. India has not adopted all EU paraben restrictions.'
+    if 'sulphite' in ingredient_lower or 'sulfite' in ingredient_lower:
+        return 'Sulphite preservatives are permitted under FSSAI. Mandatory "Contains sulphites" label declaration required when sulphite content exceeds 10 mg/kg (10 ppm).'
+    if 'isothiazolinone' in ingredient_lower:
+        return 'Methylisothiazolinone (MIT) and CMIT are permitted in cosmetics in India at low concentrations, though India has not matched the EU\'s near-ban on MIT in leave-on products.'
+    if any(x in ingredient_lower for x in ['color', 'colour', 'dye', 'ci 1', 'ci 4', 'ci 7']):
+        return 'Colouring agents in food must be declared by name under FSSAI labelling regulations. Cosmetic colorants are regulated under CDSCO and BIS standards.'
+    if any(x in ingredient_lower for x in ['preservative', 'benzoate', 'sorbate', 'propionate']):
+        return 'Permitted preservative under FSSAI Food Safety and Standards (Food Products Standards and Food Additives) Regulations with applicable quantity limits.'
+    if any(x in ingredient_lower for x in ['vitamin', 'ascorbic', 'tocopherol', 'riboflavin', 'niacin', 'folic']):
+        return 'Vitamins and their derivatives are permitted under FSSAI as nutritional supplements and functional food ingredients, subject to the FSS (Health Supplements, Nutraceuticals, Food for Special Dietary Uses, Functional Foods, Novel Food and Organic Foods) Regulations.'
+    if any(x in ingredient_lower for x in ['oil', 'fat', 'butter', 'wax']):
+        return 'Natural oils, fats and waxes are regulated under FSSAI Standards for Edible Oils (if used as food) or under CDSCO/BIS for cosmetic applications. No specific restrictions for most natural plant-derived oils and waxes.'
+    if any(x in ingredient_lower for x in ['extract', 'powder', 'herb', 'botanical']):
+        return 'Plant extracts used as food ingredients are regulated under FSSAI FSS (Food Products Standards) Regulations. Botanical extracts in cosmetics are regulated under CDSCO guidelines.'
+    if any(x in ingredient_lower for x in ['silicone', 'dimethicone', 'methicone']):
+        return 'Silicone polymers used in cosmetics are regulated under CDSCO (Central Drugs Standard Control Organisation) guidelines for cosmetics in India. They are not food additives and are not listed under FSSAI.'
 
-    return 'Regulated under FSSAI Food Safety and Standards Act, 2006.'
+    return 'Regulated under the Food Safety and Standards Act, 2006 (FSSAI) for food applications, and under the Drugs and Cosmetics Act, 1940 / CDSCO guidelines for cosmetic applications in India.'
 
 
 def get_ingredient_details(ingredient_name):
@@ -3094,129 +3199,1932 @@ def get_ingredient_details(ingredient_name):
 def get_commonly_found_in(ingredient_name):
     """Return common products containing this ingredient"""
     ingredient_lower = ingredient_name.lower()
-    
-    # Preservatives
-    if any(x in ingredient_lower for x in ['benzoate', 'sorbate', 'sulfite', 'metabisulphite']):
-        return 'Soft drinks, pickles, dried fruits, processed foods'
-    
-    # Colors
-    if any(x in ingredient_lower for x in ['tartrazine', 'sunset', 'allura', 'brilliant', 'color', 'colour']):
-        return 'Candies, soft drinks, desserts, processed foods'
-    
-    # Flavor enhancers
-    if any(x in ingredient_lower for x in ['guanylate', 'inosinate', 'glutamate']):
-        return 'Chips, instant noodles, savory snacks, processed foods'
-    
-    # Sweeteners
-    if any(x in ingredient_lower for x in ['sugar', 'syrup', 'sweetener']):
-        return 'Beverages, desserts, baked goods, processed foods'
-    
-    # Oils
-    if any(x in ingredient_lower for x in ['oil', 'fat']):
-        return 'Fried foods, baked goods, processed snacks'
-    
-    # Personal care surfactants
-    if any(x in ingredient_lower for x in ['sulfate', 'betaine']):
-        return 'Shampoos, body washes, cleansers, soaps'
-    
-    # Emulsifiers
-    if any(x in ingredient_lower for x in ['lecithin', 'glyceride', 'emulsifier']):
-        return 'Chocolates, baked goods, margarine, processed foods'
-    
+
+    specific = {
+        # ── Preservatives ─────────────────────────────────────────────────────
+        'sodium benzoate':         'Soft drinks (Pepsi, Coca-Cola, fruit juices), pickles, ketchup, soy sauce, vinegar dressings, pharmaceutical syrups',
+        'potassium sorbate':       'Cheese, baked goods, wine, dried fruits, fruit juices, margarine, yoghurt',
+        'sodium nitrite':          'Bacon, ham, hot dogs, salami, pepperoni, canned meats, processed luncheon meats',
+        'sodium nitrate':          'Cured and smoked meats, dry-cured ham, salami, hard cheese rinds',
+        'sodium metabisulphite':   'Dried fruits (apricots, raisins), wine, beer, fresh seafood, packaged coconut water, fruit juices',
+        'sulfur dioxide':          'Wine, dried fruits, fresh fruit salads, packaged fruit juice, lemon squash, beer',
+        'tbhq':                    'Instant noodles, crackers, potato chips, fried snacks, edible oils, microwave popcorn, fast food',
+        'bha':                     'Breakfast cereals, edible oils, potato chips, chewing gum, butter, lard, packaged snack foods',
+        'bht':                     'Cereal, snack foods, edible oils, chewing gum, beer',
+        # ── Colours ───────────────────────────────────────────────────────────
+        'tartrazine':              'Yellow soft drinks (Mountain Dew, Mirinda Orange), lemon-flavoured candies, chips, pickles, instant noodles seasoning, medicines, fruit squash',
+        'sunset yellow':           'Orange soft drinks (Fanta, Mirinda), Tang powder, orange-coloured sweets, marmalade, packaged snacks, ice lollies',
+        'allura red':              'Red-coloured soft drinks, strawberry-flavoured sweets, lollipops, gelatine desserts, maraschino cherries, chewing gum, packaged fruit punch',
+        'carmoisine':              'Red/pink-coloured sweets, jellies, jam, tinned fruits, medicines, raspberry-flavoured drinks',
+        'brilliant blue':          'Blue-coloured sweets, ice cream, sports drinks, breakfast cereals, cake frosting, tinned peas',
+        'quinoline yellow':        'Smoked fish, some drinks, sweets in EU; limited use in India',
+        'indigo carmine':          'Some confectionery, ice cream, tablets, capsule coatings',
+        'erythrosine':             'Cocktail and maraschino cherries, some fruit-flavoured products, medicines',
+        'caramel colour':          'Cola drinks (Coca-Cola, Pepsi), dark soy sauce, beer, coffee, processed meats, bakery products, vinegar',
+        'titanium dioxide':        'White-coated tablets, chewing gum, toothpaste, white icing, sunscreen, white cosmetics (foundation, concealer)',
+        # ── Flavour Enhancers ─────────────────────────────────────────────────
+        'monosodium glutamate':    'Instant noodles (Maggi), chips (Lay\'s, Kurkure), Chinese restaurant food, ready-to-eat meals, soups, savoury sauces, seasonings',
+        'disodium guanylate':      'Chips, instant noodles, packaged soups, savoury snacks, flavour sachets — almost always alongside MSG',
+        'disodium inosinate':      'Chips, instant noodles, savoury seasonings, processed meats — synergistic with MSG to amplify umami',
+        # ── Sweeteners ────────────────────────────────────────────────────────
+        'aspartame':               'Diet soft drinks (Diet Coke, Pepsi Max, Diet Pepsi), sugar-free chewing gum, low-calorie yoghurt, sugar-free sweets, medicines, tabletop sweeteners (Equal, NutraSweet)',
+        'saccharin':               'Diet drinks, tabletop sweeteners (Sweet & Low), some toothpastes, medicines, pickle products',
+        'acesulfame':              'Diet drinks, sugar-free chewing gum, sugar-free baked goods, protein shakes, tabletop sweeteners (Sunett, Sweet One)',
+        'sucralose':               'Diet drinks, tabletop sweeteners (Splenda), sugar-free baked goods, protein bars, diet yoghurt',
+        'stevia':                  'Stevia-sweetened drinks (Sprite Stevia), low-sugar dairy products, tabletop sweeteners, health food products',
+        'xylitol':                 'Sugar-free chewing gum (Orbit, Extra), mints, dental care products, diabetic sweets',
+        # ── Thickeners/Stabilisers ────────────────────────────────────────────
+        'carrageenan':             'Chocolate milk, ice cream, infant formula (restricted), processed deli meats, canned pet food, almond milk, coconut milk',
+        'xanthan gum':             'Salad dressings, sauces, gluten-free bread, ice cream, yoghurt, tomato sauces, cosmetic creams',
+        'guar gum':                'Ice cream, sauces, instant oatmeal, gluten-free products, salad dressings, frozen desserts',
+        'lecithin':                'Chocolate (almost all brands), margarine, baked goods, cooking sprays, protein supplements, baby formula',
+        'gelatin':                 'Gummy sweets, marshmallows, jelly desserts (Jell-O), yoghurt, frosted cereals, pill capsules, aspic',
+        # ── Cosmetic Surfactants ───────────────────────────────────────────────
+        'sodium lauryl sulfate':   'Shampoos, toothpaste, body wash, bubble bath, hand soap, dishwashing liquids',
+        'sodium laureth sulfate':  'Shampoos, conditioners, body wash, face wash, bubble bath, hair colour products',
+        'cocamidopropyl betaine':  'Shampoos, conditioners, body wash, baby shampoo, facial cleansers',
+        # ── Cosmetic Preservatives ────────────────────────────────────────────
+        'methylparaben':           'Moisturisers, foundations, shampoos, conditioners, body lotion, pharmaceutical creams',
+        'propylparaben':           'Moisturisers, body lotion, hair products, makeup, pharmaceutical ointments',
+        'butylparaben':            'Cosmetics, hair care products, pharmaceutical preparations',
+        'phenoxyethanol':          'Moisturisers, serums, baby wipes, face wash, sunscreen, makeup — one of the most common cosmetic preservatives',
+        'triclosan':               'Antibacterial hand soaps (increasingly banned), toothpaste (e.g. Colgate Total), some deodorants, some mouthwashes',
+        'methylisothiazolinone':   'Rinse-off products (shampoos, conditioners, body wash), household cleaning products, wipes',
+        # ── Cosmetic Emollients ────────────────────────────────────────────────
+        'dimethicone':             'Moisturisers, primers, foundations, sunscreen, hair serums, anti-frizz products, hand creams',
+        'petrolatum':              'Lip balms (Vaseline), healing ointments, moisturisers, baby products, wound care',
+        'glycerin':                'Almost all moisturisers, cleansers, toners, serums, soap, toothpaste, mouthwash, eye drops',
+        'hyaluronic acid':         'Anti-ageing serums, moisturisers, eye creams, sheet masks, injectable fillers, wound care products',
+        'sodium hyaluronate':      'Anti-ageing serums, moisturisers, eye creams, sheet masks, injectable dermal fillers',
+        'niacinamide':             'Moisturisers, serums, toners, BB/CC creams, eye creams — one of the most popular skincare actives',
+        'retinol':                 'Anti-ageing creams, serums, eye creams, prescription-strength tretinoin products',
+        'salicylic acid':          'Acne treatments, exfoliating toners, anti-dandruff shampoos, medicated face washes',
+        'benzoyl peroxide':        'Acne spot treatments, acne face washes, medicated cleansing bars',
+        'zinc oxide':              'Mineral sunscreens, nappy rash cream, calamine lotion, anti-dandruff shampoo, wound care',
+        'titanium dioxide cosmetic': 'Mineral sunscreens, BB creams, foundations, tinted moisturisers, setting powder',
+        # ── Antimicrobials ────────────────────────────────────────────────────
+        'benzalkonium chloride':   'Eye drops, nasal sprays, hand sanitisers, disinfectant wipes, some mouthwashes, preserved contact lens solutions',
+        # ── Vitamins ──────────────────────────────────────────────────────────
+        'ascorbic acid':           'Vitamin C supplements, fruit drinks, breakfast cereals, bread (as improver), fruit preserves, baby food',
+        'tocopherol':              'Vitamin E supplements, cooking oils, bread, cereals, cosmetics (moisturisers, serums), sunscreen',
+        'vitamin d':               'Fortified milk, breakfast cereals, vitamin D supplements, fortified orange juice',
+        'folic acid':              'Fortified breakfast cereals, prenatal vitamins, bread, fortified flour, supplements',
+        # ── Oils and Fats ─────────────────────────────────────────────────────
+        'palm oil':                'Instant noodles (Maggi, Top Ramen), biscuits (Parle-G, Good Day), margarine, vanaspati, Nutella, most packaged snacks, chocolates, cooking oil blends',
+        'hydrogenated vegetable oil': 'Vanaspati ghee, biscuits, pastries, fried fast food, shortenings, some margarines',
+        'sunflower oil':           'Cooking oil, margarine, salad dressing, chips, crackers, cosmetic moisturisers',
+        'coconut oil':             'Cooking (South Indian, Sri Lankan cuisines), hair oils (Parachute), cosmetics, chocolate fillings',
+        'shea butter':             'Moisturisers, body butter, lip balm, hair conditioners, baby creams',
+        'jojoba oil':              'Moisturisers, hair serums, cleansing oils, massage oils, lip products',
+        # ── Minerals/Pigments ─────────────────────────────────────────────────
+        'mica':                    'Eyeshadow, highlighter, blush, bronzer, nail polish, lip gloss, bath bombs',
+        'iron oxides':             'Foundation, concealer, blush, eyeshadow, lip products, mineral makeup',
+        'ci 77491':                'Foundation, concealer, blush, lip products — red iron oxide provides warm tones',
+        'ci 77492':                'Foundation, concealer, bronzer — yellow iron oxide provides warm/golden tones',
+        'ci 77499':                'Eyeliner, mascara, eyeshadow — black iron oxide',
+        'ci 77891':                'Mineral sunscreen, foundation, white/light-coloured makeup',
+        'ci 77007':                'Blue and violet eyeshadows, eyeliner',
+        'ci 77288':                'Green eyeshadows, eye liners',
+        # ── Fragrance/Allergens ───────────────────────────────────────────────
+        'fragrance':               'Perfumes, deodorants, moisturisers, shampoos, fabric softener, cleaning products — found in 90%+ of rinse-off cosmetics',
+        'parfum':                  'Perfumes, deodorants, moisturisers, shampoos — the EU INCI term for fragrance blend',
+        'limonene':                'Citrus-scented perfumes, cleaning products, cosmetics, aromatherapy oils',
+        'linalool':                'Lavender-scented cosmetics, shampoos, perfumes, fabric softeners',
+        'eugenol':                 'Clove-based perfumes, dental products (clove oil), spice-scented cosmetics',
+        'cinnamaldehyde':          'Cinnamon-flavoured products, perfumes, dental products',
+        'geraniol':                'Rose-scented cosmetics, perfumes, insect repellents',
+        # ── Waxes / Polymers ──────────────────────────────────────────────────
+        'polyethylene glycol':     'Skin creams, laxatives (Movicol, MiraLax), toothpaste, wound care products, suppository bases, tablet coatings',
+        'peg-':                    'Moisturisers, shampoos, conditioners, body wash — PEG series emulsifiers and solubilisers in almost all emulsion cosmetics',
+        'propylene glycol':        'Moisturisers, foundations, hair dyes, deodorants, shaving cream, packaged baked goods, salad dressings, pharmaceutical oral syrups, asthma inhalers',
+        'cyclomethicone':          'Hair serums, leave-on conditioners, facial primers, antiperspirants — used for its volatile, light, silky texture',
+        'cyclopentasiloxane':      'Hair serums, styling products, skin primers, antiperspirants, sunscreens',
+        'cyclohexasiloxane':       'Similar to cyclopentasiloxane — hair and skin leave-on products',
+        'mineral oil':             'Baby oil, cold cream, makeup removers, laxatives (liquid paraffin), pharmaceutical preparations, industrial lubricants',
+        'petrolatum':              'Vaseline/petroleum jelly, lip balms, wound ointments, heel balm, baby products (Johnsons), dry skin treatments',
+        'paraffinum liquidum':     'Baby oil (Johnson\'s), cold creams, makeup removers, hair oil sprays',
+        'polybutene':              'Lipsticks and lip glosses (provides gloss and body), mascara, eyeliner sticks',
+        'microcrystalline wax':    'Lipsticks (structure and texture), lip balms, mascara, skin creams, paste products',
+        'cera microcristallina':   'Lipsticks, lip pencils, eyebrow pencils, solid foundations, body butter sticks',
+        # ── Retinoids ─────────────────────────────────────────────────────────
+        'retinol':                 'Anti-ageing serums (L\'Oréal, Olay, RoC), retinol moisturisers, prescription tretinoin (Retin-A), anti-wrinkle eye creams',
+        'retinyl palmitate':       'Anti-ageing creams, sunscreen lotions (in some formulas), vitamin A skin creams, multivitamin supplements',
+        'tretinoin':               'Prescription acne treatment (Retin-A, Refissa), anti-ageing prescription creams — not available OTC',
+        # ── Formaldehyde Releasers ────────────────────────────────────────────
+        'dmdm hydantoin':          'Shampoos, conditioners, body wash, moisturisers, baby products — a very common preservative in rinse-off products',
+        'imidazolidinyl urea':     'Moisturisers, sunscreens, hair care products, hand creams — common in leave-on cosmetics',
+        'diazolidinyl urea':       'Moisturisers, sunscreens, hair products — second most common formaldehyde-releasing preservative in cosmetics',
+        'quaternium-15':           'Shampoos, conditioners, body wash, baby products — a potent preservative and formaldehyde releaser',
+        # ── Surfactants ───────────────────────────────────────────────────────
+        'cocamide dea':            'Shampoos, bubble bath, body wash, car wash soaps — foam booster and thickener',
+        'cocamide mea':            'Shampoos, conditioners, body wash — milder foam booster than DEA',
+        # ── UV Filters ────────────────────────────────────────────────────────
+        'oxybenzone':              'Chemical sunscreens (Coppertone, Banana Boat, La Roche-Posay Anthelios in older formulas), tinted moisturisers with SPF, daily moisturisers with SPF',
+        'benzophenone-3':          'Chemical sunscreen products, SPF moisturisers — same chemical as oxybenzone (INCI name)',
+        # ── Sweeteners ────────────────────────────────────────────────────_─────
+        'cyclamate':               'Tabletop sweeteners, diet drinks (in EU, India and many other countries; banned in USA), sugar-free medicines, diabetic food products',
+        'sodium cyclamate':        'Diet soft drinks, tabletop sweeteners (in India and EU), sugar-free sweets and baked goods',
+        # ── Additives ─────────────────────────────────────────────────────────
+        'maltodextrin':            'Protein powders, sports drinks, instant soups, infant formula, packaged baked goods, instant noodle flavour sachets, weight-gain supplements',
+        'high fructose corn syrup': 'Soft drinks (especially in the USA), ketchup, salad dressing, bread, cereals, packaged sweets, flavoured yoghurt',
+        'annatto':                 'Cheese (especially Cheddar and Red Leicester), butter, margarine, smoked fish, packaged rice dishes, cereals, ice cream',
+        'potassium iodate':        'Iodised salt (India, many developing countries), some bread products (as dough improver in some countries)',
+        'amaranth dye':            'Some jams, fruit-flavoured products, fish roe products — limited permitted use; banned in the USA and several countries',
+        'carrageenan':             'Chocolate milk (Hershey\'s, Cadbury), deli meats, infant formula (now restricted in EU), almond/soy milk, ice cream, processed cheese',
+        'carnauba wax':            'Confectionery coatings (M&Ms, Skittles), pharmaceutical tablet coatings, car wax, floor polish, shoe polish, candy glaze',
+        'shellac':                 'Confectionery glaze (jelly beans, some chocolates), pharmaceutical tablet coatings, fruit coating (fresh produce shine), nail polish base',
+        # ── Preservatives additional ──────────────────────────────────────────
+        'benzyl alcohol':          'Cosmetic preservative in shampoos, hair dyes, creams; pharmaceutical injectable preservative; some baby product lines',
+        'chlorhexidine':           'Surgical scrubs (Hibiscrub), antiseptic mouthwash (Corsodyl), wound wipes, medical device coatings, antibacterial hand wash, contact lens solutions',
+        'chlorhexidine digluconate': 'Mouthwash (Corsodyl), wound antiseptics, surgical skin prep, hospital hand hygiene',
+        # ── Emollients / Conditioners ─────────────────────────────────────────
+        'lanolin':                 'Nipple cream (Lansinoh), lip balm, hand cream, hair conditioners, leather conditioners, pharmaceutical ointments',
+        'polysorbate 80':          'Pharmaceutical injections (paclitaxel, erythropoietin), ice cream (as emulsifier), condiment sauces, pickles, cosmetic emulsifiers, oral care products',
+        'polysorbate 20':          'Cosmetic emulsifiers, ice cream, dietary supplements, pharmaceutical preparations, shampoo and conditioner formulations',
+        'gelatin':                 'Gummy bears and worms (Haribo), marshmallows, jelly desserts, yoghurt, pharmaceutical capsule shells, broths, cheesecake',
+        'sorbitol':                'Sugar-free chewing gum, mints, toothpaste, diabetic sweets, diet foods, pharmaceutical oral syrups, dried fruit products',
+        'maltodextrin':            'Protein powders, sports drinks, instant soups, infant formula, packaged baked goods, instant noodle seasoning',
+        # ── Botanicals ────────────────────────────────────────────────────────
+        'neem':                    'Neem soaps (Himalaya, Patanjali), neem face wash, neem oil for hair, Ayurvedic supplements, pesticide formulations, neem toothpaste',
+        'tulsi':                   'Herbal teas (Organic India Tulsi tea), Ayurvedic supplements, tulsi face wash and toners, stress-relief capsules',
+        'turmeric':                'Curries and Indian cooking (ubiquitous), turmeric latte (golden milk), Curcumin supplements, face masks (DIY and commercial), Himalaya and Patanjali skincare',
+        'aloe vera':               'Aloe vera gel (Patanjali, Mamaearth, WOW), after-sun products, face wash, wound gels, Aloe Vera drinks, moisturisers (Cetaphil, Aveeno)',
+        'ashwagandha':             'Ayurvedic supplements (Patanjali, Himalaya Ashvagandha), stress-relief capsules, protein powders with adaptogen blends, herbal teas',
+        # ── Active cosmetic ingredients ───────────────────────────────────────
+        'niacinamide':             'Ordinary Niacinamide 10% + Zinc, Minimalist Niacinamide, CeraVe PM, Olay Regenerist, The INKEY List Niacinamide — almost all modern skincare serums and moisturisers',
+        'panthenol':               'Shampoos and conditioners (nearly all brands), body lotion, wound cream, baby products, Bepanthen antiseptic cream, hair masks',
+        'squalane':                'The Ordinary Squalane, Biossance products, luxury face oils, lip products, hair serums — increasingly popular minimalist skincare',
+        'bakuchiol':               'Bakuchiol serums (Herbivore Bakuchiol, The INKEY List), retinol-alternative night creams, pregnancy-safe anti-ageing products',
+        'centella asiatica':       'Cicaplast Baume B5 (La Roche-Posay), Dr Jart+ Cicapair products, Korean skincare essentials, healing creams for eczema-prone skin',
+        'allantoin':               'Aquaphor, healing creams, lip balm, baby products, shaving cream, post-procedure skin care, soothing face wash',
+        'bisabolol':               'Sensitive skin moisturisers, anti-irritant serums, chamomile-based products, baby skincare, post-sun products, eye creams',
+        'ferulic acid':            'SkinCeuticals CE Ferulic (iconic Vitamin C+E+Ferulic serum), anti-ageing serums with Vitamin C and E, sunscreens with antioxidant boosting',
+        'resveratrol':             'Anti-ageing serums (SkinCeuticals Resveratrol BE), red wine-based cosmetics, grape-seed cosmetics, dietary supplements',
+        'tranexamic acid':         'Melasma treatment serums (Murad Rapid Dark Spot Correcting Serum), skin brightening toners, hyperpigmentation creams',
+        'mandelic acid':           'Exfoliating toners, anti-acne serums, AHA/BHA peel products, dark spot treatments — common in South Asian skincare for pigmentation',
+        'kojic acid':              'Skin brightening creams and serums, fade creams, anti-pigmentation soaps (in some Indian markets), Kojic acid soap bars',
+        'glycolic acid':           'Chemical exfoliant toners (Pixi Glow Tonic), AHA serums, peel pads, anti-ageing creams — one of the most widely used cosmetic acids',
+        'azelaic acid':            'Prescription and OTC anti-acne/anti-rosacea treatments (Aziderm, Paula\'s Choice Azelaic Acid Booster), brightening serums',
+        'zinc pyrithione':         'Anti-dandruff shampoos (Head & Shoulders, Nizoral), medicated body wash for seborrhoeic dermatitis, anti-fungal preparations',
+        # ── Cosmetic pigments additional ──────────────────────────────────────
+        'ci 77510':                'Eyeliner pencils, eye shadow palettes, lip liner, nail polish — blue/black cosmetic pigment',
+        'ferric ferrocyanide':     'Eye and lip cosmetics requiring blue or grey shades — eyeliner, mascara, lip liner',
+        'ci 77266':                'Eyeliner pencils, mascara, eyebrow products, black lipsticks — deep black carbon pigment',
+        'carbon black':            'Eyeliner, mascara, eyeshadow, nail polish — jet-black pigment for colour cosmetics',
+        'tin oxide':               'Highlighters, eyeshadow, loose mineral powder, BB creams — provides luminosity and shimmer',
+        'synthetic fluorphlogopite': 'Eyeshadow palettes, highlighter powders, blush, lip gloss — synthetic mica for shimmer effects',
+        'ci 77288':                'Green eyeshadows, eyeliners, nail polish — chromium oxide green pigment',
+        'ci 77007':                'Blue and violet eyeshadows, eyeliner — ultramarine pigment',
+        'sodium ascorbyl phosphate': 'Brightening serums (Paula\'s Choice, The Inkey List), vitamin C moisturisers, acne-fighting formulations',
+        'theobroma grandiflorum':  'Luxury body butters, lip balms, moisturising creams, hair masks — high-end skincare ingredient',
+        'helianthus annuus':       'Moisturisers, body oils, hair serums, facial oils, massage oils, baby products, salad dressings',
+        'carthamus tinctorius':    'Lightweight face oils, hair oils, massage products, salad dressings, cosmetic emollient in serums',
+        'chamomilla recutita':     'Soothing serums, sensitive-skin toners, baby skincare, anti-redness creams, chamomile tea products',
+        'matricaria flower':       'Calming creams, sensitive skin serums, eye creams for puffiness, herbal face mists',
+
+        # ── Additional entries ─────────────────────────────────────────────────
+        'butylated hydroxytoluene': 'Breakfast cereals (Kellogg\'s), edible oils, chewing gum, beer, potato chips — antioxidant preservative',
+        'bht':                     'Breakfast cereals, edible oils, chewing gum, beer, snack foods — antioxidant preservative to prevent rancidity',
+        'propyl gallate':          'Edible oils, fat-containing products, chewing gum, dried meat products, margarine — antioxidant preservative',
+        'e310':                    'Edible oils, fat-based products, chewing gum — propyl gallate antioxidant',
+        'tetrasodium edta':        'Shampoos, conditioners, body wash, moisturisers, canned foods — chelating agent/preservative booster',
+        'disodium edta':           'Canned beans (stabiliser), mayonnaise, salad dressings, personal care products, eye drops',
+        'benzyl salicylate':       'Perfumes, floral-scented body lotions, deodorants, cosmetic fragrances — UV absorber and fragrance fixative',
+        'benzyl benzoate':         'Perfumes, aftershave, anti-scabies cream (Scabisan), some insect repellents, cosmetic fragrances',
+        'farnesol':                'Floral perfumes, deodorants, moisturisers, antiperspirants — rose/muguet fragrance note',
+        'hydroxycitronellal':      'Lily and muguet-scented perfumes, floral fine fragrances, some cosmetic products',
+        'isoeugenol':              'Rose and carnation perfumes, clove-based fragrances, cosmetic fragrance blends',
+        'cinnamyl alcohol':        'Cinnamon and spice-themed perfumes, personal care fragrances, some food flavouring',
+        'citronellol':             'Rose-scented perfumes, geranium-scented cosmetics, insect repellents, fabric softeners',
+        'alpha-isomethyl ionone':  'Violet and iris-scented perfumes, cosmetic fragrances (Dior, Chanel and many luxury brands)',
+        'amyl cinnamal':           'Jasmine-scented perfumes and cosmetics, floral fragrance blends',
+        'benzyl cinnamate':        'Oriental and balsamic perfumes, perfume fixatives, cosmetic fragrance blends',
+        'cetyl alcohol':           'Moisturisers (Cetaphil, CeraVe), hair conditioners, creams, body lotions — emollient and emulsifier',
+        'cetearyl alcohol':        'Almost all emulsion-based moisturisers, hair conditioners, body creams, sunscreens — common emollient',
+        'stearyl alcohol':         'Hair conditioners, moisturisers, skin creams — emollient, viscosity modifier',
+        'behenyl alcohol':         'Hair conditioners, moisturisers, emollients — long-chain fatty alcohol',
+        'behentrimonium chloride': 'Hair conditioners (Tresemmé, Pantene, Matrix), leave-in conditioners, detangling treatments',
+        'behentrimonium methosulfate': 'Natural/organic hair conditioners, shea butter formulations, natural detangling products',
+        'cetrimonium chloride':    'Hair conditioners, hair dyes, scalp treatments, quaternary ammonium antimicrobial',
+        'cetrimonium bromide':     'Hair conditioners, antiseptic preparations, some shampoos',
+        'isopropyl alcohol':       'Hand sanitisers, wound-cleaning wipes (IPA swabs), toners, astringents, hair sprays, nail polish removers',
+        'polydextrose':            'Protein bars, sugar-free sweets, diet ice cream, low-calorie baked goods, meal replacement bars',
+        'inulin':                  'Chicory root products, prebiotic supplements, high-fibre yoghurt (Yakult), protein bars, some fortified cereals',
+        'avobenzone':              'Chemical sunscreens (Banana Boat, Neutrogena, Coppertone, La Roche-Posay), SPF moisturisers, tinted SPF products',
+        'octinoxate':              'Chemical sunscreens, daily SPF moisturisers, BB creams with SPF — one of the most widely used UVB filters globally',
+        'octocrylene':             'Sunscreens (alongside avobenzone as photostabiliser), SPF sprays, waterproof sunscreen, sport sunscreens',
+        'ethylhexyl salicylate':   'UVB sunscreens, SPF moisturisers, sunscreen sprays — EU-approved UVB filter',
+        'benzoyl peroxide':        'Clearasil, PanOxyl, Proactiv, Epiduo (with adapalene), anti-acne face wash and spot treatments, prescription acne creams',
+        'zinc pyrithione':         'Head & Shoulders, Selsun, Nizoral shampoos, medicated scalp treatments, anti-dandruff conditioners',
+        'alpha arbutin':           'Brightening serums (The Ordinary, Minimalist, COSRX), spot-correcting creams, hyperpigmentation treatments',
+        'arbutin':                 'Skin brightening products, fade creams, Asian skincare brightening serums',
+        'kojic acid':              'Skin brightening soaps (popular in South and South-East Asia), fade creams, hyperpigmentation serums, kojic acid soap bars',
+        'glycolic acid':           'Pixi Glow Tonic, Paula\'s Choice AHA toners, NeoStrata glycolic acid, The Ordinary Glycolic Acid 7%, AHA exfoliant pads, chemical peels',
+        'azelaic acid':            'Aziderm cream (Cipla), Finacea gel, Paula\'s Choice Azelaic Acid Booster, prescription and OTC rosacea treatments',
+        'l-cysteine':              'Bread and bakery products (dough conditioner E920), some croissants and pastries, hair perm solutions',
+        'potassium nitrite':       'Some cured and preserved meats, salamis, some pickled products',
+        'charcoal':                'Charcoal face masks (Himalaya, Biotique), charcoal toothpaste, activated charcoal capsules (supplements), trendy charcoal-coloured foods and drinks',
+        'green s':                 'Some canned peas, tinned vegetables with green colouring, some sweets — limited use; banned in many countries',
+        'brilliant black':         'Some confectionery, blackcurrant products, some sauces and condiments — limited use; banned in many countries',
+        'ceramide':                'CeraVe moisturisers, SkinCeuticals Triple Lipid Restore, Elizabeth Arden Ceramide Capsules, Kiehl\'s Ultra Facial Cream, barrier-repair moisturisers',
+        'sodium pca':              'Moisturisers, hyaluronic acid serums, humectant-rich toners, NMF-based skincare products',
+        'urea':                    'Eucerin Urea creams (5%, 10%), Flexitol heel balm, Ureadin (Isdin), diabetic foot care creams, psoriasis and eczema creams, nail softening treatments',
+        'dimethiconol':            'Hair serums, conditioners, smoothing treatments — provides high-shine conditioning and detangling',
+        'benzalkonium chloride':   'Mouthwash (Listerine antiseptic), nasal sprays, antiseptic throat lozenges, contact lens solutions, hospital disinfectants, skin antiseptic wipes',
+        'hydrolyzed keratin':      'Hair strengthening shampoos and conditioners, salon bond treatments (Olaplex-like), hair masks for damaged hair, nail strengtheners',
+        'hydrolyzed collagen':     'Anti-ageing serums, collagen supplements (Vital Proteins, HUM), joint supplements, hair masks, skin plumping creams',
+        'hydrolyzed wheat protein': 'Hair strengthening shampoos, volumising conditioners, some skincare products — ingredient flagged in wheat allergy',
+        'propylene glycol':        'Moisturisers, hair products, deodorant sticks, pharmaceutical oral syrups, hospital IV preparations, e-cigarette liquid, fog machine fluid',
+        'isopropyl myristate':     'Moisturisers, sunscreens, foundations, massage oils, pharmaceutical creams — lightweight emollient',
+        'cocamide dea':            'Shampoos, body wash, bubble bath, car wash soap — foam booster; less common now due to nitrosamine concerns',
+        'potassium bromate':       'Bread and bakery products in countries where still permitted — banned in India, EU, UK, Canada; may still appear in imported products',
+        'azodicarbonamide':        'Bread and baked goods where still permitted (some US manufacturers); banned in EU, UK, India — "yoga mat chemical"',
+
+        # ── Packaged food / ice cream ─────────────────────────────────────────
+        'mono and diglycerides':   'Ice cream (almost universal), bread, margarine, peanut butter, chocolate, instant mashed potato, chewing gum, packaged cakes — the most widely used food emulsifier globally',
+        'e471':                    'Ice cream, bread, margarine, coffee whitener, chocolate, packaged baked goods — extremely common in ultra-processed foods',
+        'datem':                   'Bread (Britannia, Harvest Gold), bakery products, croissants, pizza dough, Danish pastry — dough strengthener used in most commercial bread',
+        'e472e':                   'Commercial bread, croissants, Danish pastries, pizza dough, bakery products',
+        'sodium stearoyl lactylate': 'Bread (Britannia, Modern Bread), cake mixes, non-dairy coffee creamers, dehydrated potato products, packaged snack foods',
+        'e481':                    'Commercial bread, cake mixes, coffee creamers — dough conditioner and emulsifier',
+        'carboxymethyl cellulose': 'Ice cream (prevents ice crystal growth), jelly, cream cheese, canned fish, pharmaceuticals, diet foods, gluten-free products',
+        'cmc':                     'Ice cream, cream cheese, jelly, pharmaceuticals — prevents ice crystal formation',
+        'e466':                    'Ice cream, processed cheese, baked goods, salad dressings, gluten-free bread',
+        'microcrystalline cellulose': 'Shredded cheese (anti-caking), protein powder, tablet coatings (pharmaceutical), low-fat ice cream, fibre-enriched products',
+        'e460':                    'Shredded/grated cheese, protein bars, tablet coatings, low-fat dairy products',
+        'locust bean gum':         'Ice cream (thickener and stabiliser with carrageenan), cream cheese, infant formula (anti-reflux), jelly, chocolate',
+        'carob bean gum':          'Ice cream, cream cheese, infant anti-reflux formula, chocolate',
+        'e410':                    'Ice cream, cream cheese, infant formula — natural carob gum stabiliser',
+        'pectin':                  'Jam (almost all brands), jelly, marmalade, yoghurt, fruit preparations, confectionery, low-fat spreads',
+        'e440':                    'Jam (Kissan, Mapro), jelly, marmalade, fruit juice drinks, confectionery',
+        'gellan gum':              'Jelly desserts, low-acid beverages, some dairy products, structured plant-based foods, jam',
+        'e418':                    'Dairy desserts, jelly, some plant-based beverages, jam',
+        'hydroxypropyl methylcellulose': 'Gluten-free bread (replaces gluten structure), vegetarian capsules, ice cream (fat replacer), processed meat, fried foods (barrier coating)',
+        'e464':                    'Gluten-free products, vegetarian capsules, ice cream, processed meat',
+        'glycerol':                'Cake icing, marzipan, soft sweets (Turkish delight, marshmallow), chocolate fondant, baked goods (moisture retention), soap, cosmetics',
+        'glycerin':                'Soft sweets, cake decoration, marzipan, chocolate coatings, bakery products, mouthwash, skin care',
+        'e422':                    'Soft sweets, confectionery, icing, marzipan, cosmetics',
+        'vanillin':                'Almost all vanilla-flavoured products: ice cream, biscuits (Bourbon, Nice), chocolate (Kit Kat, Dairy Milk), cake mixes, custard powder, flavoured milk — 99% of vanilla flavour in processed food is synthetic vanillin',
+        'ethyl vanillin':          'Premium ice cream, chocolate, confectionery, bakery products — stronger vanilla flavour than vanillin',
+        'vanilla':                 'Premium ice cream (Kwality Walls, Amul vanilla), baked goods, real vanilla extract in premium products',
+        'natural flavour':         'Almost all packaged foods — chips, biscuits, instant noodles, flavoured milk, juices, snacks — covers thousands of possible compounds',
+        'natural flavor':          'Packaged snacks, beverages, baked goods, ice cream, sauces — used in virtually all flavoured packaged foods',
+        'artificial flavor':       'Most flavoured packaged foods, beverages, ice cream, sweets, instant powders — synthetic flavour compounds',
+        'whey':                    'Protein powder supplements (Optimum Nutrition, MuscleBlaze), bread, biscuits, processed cheese, chocolate, protein bars, infant formula',
+        'casein':                  'Protein supplements, coffee creamers, processed cheese (casein gives stretch and melt), infant formula, some protein bars',
+        'lactose':                 'Tablets (pharmaceutical filler), instant coffee, confectionery, bread, processed foods as a mild sweetener',
+        'skim milk':               'Ice cream (Kwality Walls, Amul, Baskin-Robbins), chocolate, biscuits, instant noodles, coffee whitener, protein drinks',
+        'milk solids':             'Ice cream, chocolate (Cadbury Dairy Milk, KitKat), biscuits, instant coffee, bread, condensed milk, kheer mixes',
+        'cocoa powder':            'Chocolate biscuits (Bourbon, Hide & Seek), cake mixes, hot chocolate drinks (Bournvita, Horlicks), chocolate ice cream, brownies, chocolate-flavoured snacks',
+        'cocoa butter':            'Chocolate (Cadbury, Amul, Nestlé), premium ice cream, some cosmetics (lip balm, moisturisers)',
+        'glucose syrup':           'Ice cream (prevents crystallisation), confectionery (boiled sweets, toffee), jams, soft drinks, baked goods, ketchup, energy drinks',
+        'dextrose':                'Bread (browning agent), sausages and processed meats, sports drinks, confectionery, biscuits, packaged cereals',
+        'maltitol':                'Sugar-free chocolates, sugar-free sweets, diet biscuits, diabetic confectionery, low-calorie ice cream',
+        'e965':                    'Sugar-free chocolates, sugar-free sweets, diabetic confectionery — common in "no added sugar" products',
+        'mannitol':                'Sugar-free chewing gum, sugar-free sweets, pharmaceutical tablet coatings, diabetic confectionery, medicated lozenges',
+        'e421':                    'Sugar-free gum, medicated lozenges, pharmaceutical tablets, diabetic sweets',
+        'lactitol':                'Sugar-free chocolates, sugar-free baked goods, diabetic confectionery, some laxative preparations (Importal)',
+        'e966':                    'Sugar-free chocolate, sugar-free confectionery, laxative products',
+        'sodium bicarbonate':      'Biscuits (Parle-G, Marie), baking powder, cake mixes, soda bread, self-raising flour, antacid tablets (Eno), fizzy drinks buffer',
+        'e500':                    'Biscuits, baking powder, cake mixes, self-raising flour, soda bread, antacid preparations',
+        'potassium bicarbonate':   'Low-sodium biscuits, baking powder blends, mineral water (added for taste), some fizzy drinks',
+        'e501':                    'Low-sodium baking products, baking powder blends',
+        'ammonium bicarbonate':    'Traditional biscuits (digestives, certain shortbreads), some flat breads — gives characteristic light texture without baking soda taste',
+        'e503':                    'Digestive biscuits, gingerbread, traditional European biscuits, some Indian snacks',
+        'diphosphate':             'Processed cheese (Amul, Britannia slices), instant potato powder, canned fish, sausages, some baking powders',
+        'e450':                    'Processed cheese slices, instant mash, sausages, baking powder — phosphate salts',
+        'triphosphate':            'Processed cheese, seafood products (water retention in prawns, fish fillets), processed meats, some canned goods',
+        'e451':                    'Processed cheese, seafood, processed meats — tripolyphosphate',
+        'polyphosphate':           'Seafood (prawns, fish fillets — water retention), deli meats, canned seafood, some processed meats',
+        'e452':                    'Prawns, processed seafood, deli meats — polyphosphate water-retention agent',
+        'beta carotene':           'Orange juice (for colour), margarine, butter (colour standardisation), cheese, ice cream (yellow colour), breakfast cereals, Vitamin A supplements',
+        'e160a':                   'Margarine, orange juice, ice cream, breakfast cereals, cheese — orange/yellow colouring',
+        'beetroot red':            'Red velvet products (some brands), strawberry-flavoured products, cranberry drinks, some yoghurts, red fruit confectionery',
+        'e162':                    'Natural red-coloured foods, yoghurt, beverages, some confectionery',
+        'anthocyanin':             'Natural red/purple/blue colour in berry beverages, grape juice, red cabbage products, some yoghurts and confectionery',
+        'e163':                    'Berry-flavoured beverages, grape products, natural red/purple food colouring applications',
+        'riboflavin':              'Fortified breakfast cereals (Kellogg\'s, Nestle), energy drinks, some pasta (fortified), multivitamin supplements, yellow food colouring in beverages',
+        'e101':                    'Fortified cereals, energy drinks, some beverages — yellow vitamin B2 colouring',
+        'tartaric acid':           'Wine (natural), cream of tartar (baking), grape-flavoured products, some carbonated drinks, jelly crystals',
+        'e334':                    'Wine, cream of tartar, grape-flavoured confectionery, carbonated drinks',
+        'sodium citrate':          'Processed cheese (fondue, cheese spreads), carbonated drinks (buffer), jelly, flavoured water, sports rehydration drinks (Gatorade)',
+        'e331':                    'Processed cheese, carbonated drinks, sports drinks, jelly products',
+        'calcium phosphate':       'Self-raising flour, baking powder, some cereals (calcium fortification), dental products (toothpaste), processed cheese',
+        'e341':                    'Baking powder, self-raising flour, calcium-fortified cereals, processed cheese',
+        'yeast extract':           'Marmite, Vegemite, Maggi seasoning, some instant noodle flavour sachets, savoury biscuits, crisps/chips, soups, stock cubes, ready meals',
+        'hydrolysed':              'Instant noodle seasoning sachets, crisps flavouring (Lay\'s, Kurkure), savoury snacks, soy sauce substitutes, ready meals, soups',
+        'gum arabic':              'Fizzy sweets (sugar coating), confectionery glazing, soft drink emulsifiers, wine (fining agent), some edible inks, pharmaceutical tablet coatings',
+        'acacia':                  'Confectionery coatings, soft drink emulsification, pharmaceutical excipients, dietary fibre supplements',
+        'modified starch':         'Instant soups, instant noodles (texture), ready meals, baby food, ketchup, sauces, mayonnaise, ice cream',
+        'e1422':                   'Frozen desserts, canned foods, instant soups, sauce thickeners — heat-and-freeze-stable modified starch',
+        'e1442':                   'Instant soups, sauces, frozen ready meals, canned baby food — stable to heating and freezing',
+    }
+
+    for key, found_in in specific.items():
+        if key in ingredient_lower:
+            return found_in
+
+    # Smart fallbacks by ingredient type
+    if any(x in ingredient_lower for x in ['benzoate', 'sorbate']):
+        return 'Soft drinks, pickles, fruit juices, sauces, processed foods, pharmaceutical syrups'
+    if any(x in ingredient_lower for x in ['sulphite', 'sulfite', 'metabisulph']):
+        return 'Wine, beer, dried fruits, fresh seafood, packaged juices, preserved vegetables'
+    if any(x in ingredient_lower for x in ['nitrite', 'nitrate']) and any(x in ingredient_lower for x in ['sodium', 'potassium']):
+        return 'Bacon, ham, hot dogs, salami, canned meats, processed deli meats'
+    if any(x in ingredient_lower for x in ['tartrazine', 'e102', 'ins 102']):
+        return 'Yellow-coloured soft drinks, candies, pickles, instant noodle seasoning'
+    if any(x in ingredient_lower for x in ['glutamate', 'guanylate', 'inosinate']):
+        return 'Chips, instant noodles, savoury snacks, seasoning powders, fast food'
+    if any(x in ingredient_lower for x in ['aspartame', 'sucralose', 'saccharin', 'acesulfame']):
+        return 'Diet soft drinks, sugar-free chewing gum, tabletop sweeteners, diet dairy products'
+    if any(x in ingredient_lower for x in ['paraben']):
+        return 'Moisturisers, shampoos, conditioners, body lotion, foundations, pharmaceutical creams'
+    if any(x in ingredient_lower for x in ['isothiazolinone']):
+        return 'Shampoos, conditioners, body wash, household cleaning products, moist wipes'
+    if any(x in ingredient_lower for x in ['sulfate', 'sulphate']) and any(x in ingredient_lower for x in ['lauryl', 'laureth']):
+        return 'Shampoos, body wash, face wash, bubble bath, toothpaste, hand soap'
+    if any(x in ingredient_lower for x in ['oil', 'seed oil', 'fruit oil', 'kernel oil']):
+        return 'Cooking oils, moisturisers, hair oils, body serums, massage products, salad dressings'
+    if any(x in ingredient_lower for x in ['extract', 'flower extract', 'leaf extract', 'root extract']):
+        return 'Serums, toners, moisturisers, herbal supplements, natural skincare'
+    if any(x in ingredient_lower for x in ['dimethicone', 'silicone', 'methicone']):
+        return 'Hair serums, moisturisers, makeup primers, foundations, sunscreens'
+    if any(x in ingredient_lower for x in ['acid']) and any(x in ingredient_lower for x in ['hyaluronic', 'glycolic', 'lactic', 'salicylic', 'ascorbic', 'citric']):
+        return 'Skincare serums, toners, exfoliants, moisturisers, anti-ageing products'
+    if any(x in ingredient_lower for x in ['gum', 'starch', 'cellulose', 'pectin']):
+        return 'Sauces, dressings, ice cream, processed foods, gluten-free products'
+    if any(x in ingredient_lower for x in ['color', 'colour', 'dye', 'pigment', 'ci 7']):
+        return 'Colour cosmetics (eyeshadow, lipstick, foundation), food products (sweets, drinks)'
+    if any(x in ingredient_lower for x in ['vitamin', 'ascorbic', 'tocopherol', 'retinol', 'niacin']):
+        return 'Vitamin supplements, fortified foods, skincare serums, anti-ageing creams'
+    if any(x in ingredient_lower for x in ['fragrance', 'parfum', 'perfume', 'scent']):
+        return 'Perfumes, deodorants, moisturisers, shampoos, cleaning products, candles'
+    if any(x in ingredient_lower for x in ['wax', 'cera']):
+        return 'Lipsticks, lip balms, mascara, eyeliner, hair wax, body creams'
+
     return 'Various food and cosmetic products'
 
 
 def get_health_effects(ingredient_name, classification):
     """Return health effects based on ingredient and classification"""
     ingredient_lower = ingredient_name.lower()
-    
-    if classification == 'commonly_questioned':
-        # Specific health effects for commonly questioned ingredients
-        if 'triclosan' in ingredient_lower:
-            return {
-                'short_term': 'Skin irritation, allergic reactions',
-                'long_term': 'Hormone disruption, antibiotic resistance, thyroid issues',
-                'vulnerable_groups': 'Pregnant women, children, people with thyroid conditions'
-            }
-        elif any(x in ingredient_lower for x in ['tartrazine', 'sunset', 'allura', 'ponceau', 'carmoisine']):
-            return {
-                'short_term': 'Allergic reactions, hives, asthma attacks',
-                'long_term': 'Hyperactivity in children, ADHD symptoms, potential carcinogenicity',
-                'vulnerable_groups': 'Children, people with asthma, aspirin-sensitive individuals'
-            }
-        elif 'phosphoric acid' in ingredient_lower:
-            return {
-                'short_term': 'Tooth enamel erosion, digestive discomfort',
-                'long_term': 'Reduced bone density, kidney issues, calcium depletion',
-                'vulnerable_groups': 'Children, elderly, people with osteoporosis or kidney disease'
-            }
-        elif any(x in ingredient_lower for x in ['benzoate', 'metabisulphite', 'sulfite']):
-            return {
-                'short_term': 'Allergic reactions, asthma attacks, hives',
-                'long_term': 'Chronic allergic sensitization, vitamin B1 depletion',
-                'vulnerable_groups': 'Asthmatics, people with sulfite sensitivity'
-            }
-        elif any(x in ingredient_lower for x in ['guanylate', 'inosinate', 'glutamate']):
-            return {
-                'short_term': 'Headaches, flushing, sweating, numbness',
-                'long_term': 'Potential neurotoxicity at high doses',
-                'vulnerable_groups': 'MSG-sensitive individuals, children'
-            }
-        elif 'paraben' in ingredient_lower:
-            return {
-                'short_term': 'Skin irritation, allergic reactions',
-                'long_term': 'Endocrine disruption, reproductive concerns, bioaccumulation',
-                'vulnerable_groups': 'Pregnant women, children, people with hormone-sensitive conditions'
-            }
-        elif any(x in ingredient_lower for x in ['methylchloroisothiazolinone', 'methylisothiazolinone']):
-            return {
-                'short_term': 'Severe contact dermatitis, skin irritation',
-                'long_term': 'Chronic skin sensitization, allergic reactions',
-                'vulnerable_groups': 'People with sensitive skin, eczema sufferers'
-            }
-        else:
-            return {
-                'short_term': 'May cause allergic reactions or sensitivity',
-                'long_term': 'Regulatory concerns or usage restrictions apply',
-                'vulnerable_groups': 'Sensitive individuals, children, pregnant women'
-            }
-    
-    elif classification == 'worth_knowing':
-        # General health effects for worth knowing ingredients
-        if 'sugar' in ingredient_lower or 'syrup' in ingredient_lower:
-            return {
-                'short_term': 'Blood sugar spikes, energy crashes',
-                'long_term': 'Weight gain, diabetes risk, dental cavities',
-                'vulnerable_groups': 'Diabetics, children, people with metabolic syndrome'
-            }
-        elif 'palm oil' in ingredient_lower or 'palmolein' in ingredient_lower:
-            return {
-                'short_term': 'High calorie content',
-                'long_term': 'High saturated fat may increase cholesterol',
-                'vulnerable_groups': 'People with heart disease, high cholesterol'
-            }
-        elif 'sulfate' in ingredient_lower:
-            return {
-                'short_term': 'Skin and scalp dryness, irritation',
-                'long_term': 'Chronic dryness, potential hair damage',
-                'vulnerable_groups': 'People with sensitive skin, dry skin, eczema'
-            }
-        elif 'caffeine' in ingredient_lower:
-            return {
-                'short_term': 'Jitters, increased heart rate, sleep disruption',
-                'long_term': 'Dependency, tolerance, sleep disorders',
-                'vulnerable_groups': 'Pregnant women, children, people with anxiety or heart conditions'
-            }
-        else:
-            return {
-                'short_term': 'Generally safe with minimal immediate effects',
-                'long_term': 'Safe in moderation, consider cumulative exposure',
-                'vulnerable_groups': 'May affect sensitive individuals'
-            }
-    
-    else:  # generally_recognised
-        return {
-            'short_term': 'No known adverse effects',
-            'long_term': 'Generally recognised as safe',
+
+    # ── Specific entries (checked first regardless of classification) ─────────
+    specific = {
+        # Antimicrobials
+        'triclosan': {
+            'short_term': 'Skin and eye irritation, allergic contact dermatitis; may disrupt oral microbiome when used in toothpaste',
+            'long_term': 'Endocrine disruption — acts as a weak oestrogen and thyroid hormone disrupter in animal studies; contributes to antibiotic-resistant bacteria (cross-resistance); possible thyroid function impairment with chronic exposure; accumulates in breast milk, plasma and urine',
+            'vulnerable_groups': 'Pregnant and breastfeeding women, infants, children, people with thyroid conditions, healthcare workers with repeated hand-washing exposure'
+        },
+        'triclocarban': {
+            'short_term': 'Skin sensitisation, contact dermatitis',
+            'long_term': 'Hormone disruption (androgenic activity); bioaccumulation in fatty tissues; environmental persistence; potential development toxicity at high doses',
+            'vulnerable_groups': 'Pregnant women, foetuses, infants, people with hormone-sensitive conditions'
+        },
+        # Preservatives
+        'sodium benzoate': {
+            'short_term': 'Urticaria (hives), angioedema, aggravation of asthma; when combined with Vitamin C forms benzene (a carcinogen)',
+            'long_term': 'Benzene formation in acidic drinks containing Vitamin C is the primary long-term concern; hyperactivity link in the McCann et al. (2007) study (Southampton Study) when combined with artificial dyes',
+            'vulnerable_groups': 'Asthmatics, children (hyperactivity), aspirin-sensitive individuals, people with urticaria'
+        },
+        'sodium nitrite': {
+            'short_term': 'Methaemoglobinaemia at very high doses (rare with food levels); nausea and headache in sensitive individuals',
+            'long_term': 'Reacts with amines in meat to form N-nitrosamines — several are classified IARC Group 1 carcinogens; associated with increased colorectal, stomach and oesophageal cancer risk in epidemiological studies (WHO/IARC 2015); preserving meats at high temperatures increases nitrosamine formation',
+            'vulnerable_groups': 'Infants (methaemoglobinaemia risk), people who regularly consume processed meats, people with GERD'
+        },
+        'sodium nitrate': {
+            'short_term': 'Minimal at food-level doses; excessive intake can cause methaemoglobinaemia',
+            'long_term': 'Converted to nitrite in the body; same nitrosamine concerns as sodium nitrite; risk significantly elevated by high consumption of processed/cured meats',
+            'vulnerable_groups': 'Infants under 6 months (highest risk for methaemoglobinaemia), regular processed meat consumers'
+        },
+        'sodium metabisulphite': {
+            'short_term': 'Bronchospasm and asthma attacks (even trace amounts); hives, angioedema; anaphylaxis in highly sensitive individuals',
+            'long_term': 'Destroys thiamine (Vitamin B1) in foods it contacts — a concern in thiamine-dependent diets; chronic sensitisation with repeated exposure',
+            'vulnerable_groups': 'Asthmatics (15–20% are sulphite-sensitive), people on thiamine-restricted diets, people with sulphite allergy'
+        },
+        'sulfur dioxide': {
+            'short_term': 'Triggers asthma attacks, coughing, wheezing and bronchoconstriction in asthmatics; skin, eye and mucous membrane irritation',
+            'long_term': 'Destroys thiamine (Vitamin B1); chronic low-level exposure may sensitise the respiratory tract',
+            'vulnerable_groups': 'Asthmatics, COPD patients, people with sulphite sensitivity, children'
+        },
+        'tbhq': {
+            'short_term': 'Nausea, vomiting, ringing in ears at high doses; very rare at typical food-level exposure',
+            'long_term': 'IARC classified TBHQ as "possibly carcinogenic" based on animal studies showing precancerous stomach lesions at high doses; may act as a tumour promoter at elevated doses; Japan has banned it due to carcinogenicity concerns',
+            'vulnerable_groups': 'Heavy consumers of fried snacks and instant noodles; people with liver conditions'
+        },
+        'bha': {
+            'short_term': 'Allergic reactions in sensitive individuals; skin irritation',
+            'long_term': 'IARC Group 2B (possibly carcinogenic to humans); California Prop 65 listed; weak hormonal activity; some animal studies show thyroid effects; banned in Japan',
+            'vulnerable_groups': 'Children with high snack food consumption, people with liver conditions, pregnant women'
+        },
+        # Synthetic dyes
+        'tartrazine': {
+            'short_term': 'Urticaria (hives), rhinitis, skin rash, asthma attacks; classic cross-reactivity with aspirin-sensitive individuals (aspirin-induced asthma/urticaria)',
+            'long_term': 'Southampton Study (2007) linked tartrazine in combination with benzoate to increased hyperactivity in 3-year-olds and 8/9-year-olds; EU requires warning label "may have an adverse effect on activity and attention in children"',
+            'vulnerable_groups': 'Children (hyperactivity), aspirin-sensitive individuals, asthmatics, people with atopic eczema'
+        },
+        'sunset yellow': {
+            'short_term': 'Urticaria, nasal congestion, vomiting; hypersensitivity reactions in aspirin-sensitive individuals',
+            'long_term': 'Included in the Southampton cocktail study showing hyperactivity effects; genotoxicity found in some in vitro studies; EU hyperactivity warning required',
+            'vulnerable_groups': 'Children (hyperactivity/ADHD), aspirin-sensitive people, asthmatics'
+        },
+        'allura red': {
+            'short_term': 'Allergic reactions, urticaria, hyperactivity in children; cross-reactivity with aspirin',
+            'long_term': 'Part of the Southampton cocktail mixture linked to ADHD-like behaviour; some genotoxicity in vitro data; concerns about colon inflammation in animal studies',
+            'vulnerable_groups': 'Children, asthmatics, aspirin-sensitive individuals'
+        },
+        'carmoisine': {
+            'short_term': 'Urticaria, contact dermatitis, hypersensitivity reactions',
+            'long_term': 'EU hyperactivity warning label required; aspirin cross-sensitivity noted',
+            'vulnerable_groups': 'Children, aspirin-sensitive individuals, people with food colour sensitivities'
+        },
+        'brilliant blue': {
+            'short_term': 'Rarely causes reactions; potential mild hypersensitivity in sensitive individuals',
+            'long_term': 'Relatively less concerning than azo dyes; not part of the Southampton cocktail; limited long-term human data',
+            'vulnerable_groups': 'People with known synthetic dye hypersensitivity'
+        },
+        'erythrosine': {
+            'short_term': 'Photosensitivity reactions; rare allergic reactions',
+            'long_term': 'Contains iodine (77% by weight); chronic intake may affect thyroid function; banned in cosmetics by FDA and in several countries due to carcinogenicity concerns in high-dose animal studies',
+            'vulnerable_groups': 'People with thyroid conditions, iodine sensitivity, individuals on iodine-restricted diets'
+        },
+        # Phosphoric acid
+        'phosphoric acid': {
+            'short_term': 'Tooth enamel erosion on direct and repeated contact; mild gastric discomfort',
+            'long_term': 'High intake from cola drinks associated with reduced bone mineral density (osteoporosis risk); impairs calcium absorption; kidney stone risk with very high intakes; can leach calcium from bones over time',
+            'vulnerable_groups': 'Children (developing bones), adolescents, post-menopausal women, people with osteoporosis, individuals with kidney disease'
+        },
+        # Flavour enhancers
+        'monosodium glutamate': {
+            'short_term': '"Chinese Restaurant Syndrome" (CRS) — headache, flushing, sweating, pressure in the face — reported anecdotally but NOT confirmed in double-blind placebo-controlled trials; very large doses (>3g on empty stomach) may cause transient symptoms in a minority',
+            'long_term': 'No confirmed long-term health effects in humans at normal dietary exposure; WHO, FDA and EU classify it as safe; some animal studies at extreme doses show hypothalamic damage — doses irrelevant to human food use',
+            'vulnerable_groups': 'MSG-sensitive individuals (a small minority); some people report sensitivity to doses above 3g; asthmatic patients with possible bronchospasm at very high doses'
+        },
+        'disodium guanylate': {
+            'short_term': 'Usually well tolerated; may trigger gout attacks in susceptible individuals (guanylate breaks down to purines)',
+            'long_term': 'Purine content can elevate uric acid levels with very high consumption',
+            'vulnerable_groups': 'People with gout, hyperuricaemia, or kidney disease; should not be used in foods for infants'
+        },
+        'disodium inosinate': {
+            'short_term': 'Usually well tolerated; raises uric acid — may worsen gout',
+            'long_term': 'Elevated uric acid at high intakes; same purine concerns as guanylate',
+            'vulnerable_groups': 'People with gout, hyperuricaemia, kidney disease; infants'
+        },
+        # Sweeteners
+        'aspartame': {
+            'short_term': 'Headache, dizziness and GI discomfort reported anecdotally in sensitive individuals; phenylketonurics (PKU) cannot metabolise phenylalanine (one of its components) — mandatory label warning required',
+            'long_term': 'IARC classified aspartame as Group 2B "possibly carcinogenic" in 2023 based on limited evidence from human studies on hepatocellular carcinoma — classified as inadequate evidence at normal intake levels; WHO JECFA maintained ADI of 40 mg/kg/day as still safe; conflicting studies on gut microbiome disruption; glucose intolerance in some studies',
+            'vulnerable_groups': 'Phenylketonurics (PKU) — mandatory avoidance; pregnant women (precautionary); people with migraines'
+        },
+        'saccharin': {
+            'short_term': 'Bitter metallic aftertaste; rare allergic reactions (cross-reactivity with sulfonamide antibiotics)',
+            'long_term': 'Bladder cancer risk in rats at very high doses (not relevant to human dietary intake levels); removed from IARC carcinogen list in 1999; studies show potential gut microbiome disruption and impaired glucose tolerance at regular intake',
+            'vulnerable_groups': 'People with sulfonamide drug allergy; pregnant women (precautionary; crosses placenta); infants'
+        },
+        'acesulfame': {
+            'short_term': 'Generally well tolerated; rare hypersensitivity reactions',
+            'long_term': 'Animal studies show potential effects on mitochondrial function and insulin signalling at high doses; some studies link to altered gut microbiome; limited long-term human data; considered safe within ADI (15 mg/kg/day)',
+            'vulnerable_groups': 'Pregnant women (limited safety data in humans); infants'
+        },
+        # Parabens
+        'methylparaben': {
+            'short_term': 'Contact dermatitis and allergic sensitisation, especially in people with compromised skin barrier; immediate hypersensitivity reactions are rare',
+            'long_term': 'Weak oestrogenic activity (100,000-fold less than oestradiol) — clinical significance at cosmetic exposure levels debated; found in breast tumour tissue (correlation, not causation established); accumulates in human adipose tissue; EU has banned propyl and butyl parabens in baby cosmetics',
+            'vulnerable_groups': 'Infants and children (higher surface area to body weight; developing endocrine system), people with eczema or broken skin barrier, pregnant and breastfeeding women'
+        },
+        'propylparaben': {
+            'short_term': 'Contact dermatitis, skin sensitisation',
+            'long_term': 'Stronger oestrogenic activity than methylparaben; detected in human urine, blood and breast milk; EU restricts propylparaben in cosmetics to ≤0.14% and bans it in products for children under 3 on the nappy area',
+            'vulnerable_groups': 'Infants under 3, pregnant women, people with hormone-sensitive conditions (e.g. oestrogen-receptor positive breast cancer)'
+        },
+        'butylparaben': {
+            'short_term': 'Skin sensitisation, contact dermatitis',
+            'long_term': 'Strongest oestrogenic activity among common parabens; EU has restricted butylparaben in leave-on face products for children under 3; studies show testicular toxicity and reduced sperm count in male rodents at high doses',
+            'vulnerable_groups': 'Children, men and women with hormone-sensitive conditions, pregnant and breastfeeding women'
+        },
+        # Isothiazolinones
+        'methylisothiazolinone': {
+            'short_term': 'Severe allergic contact dermatitis — one of the top-10 contact allergens in the EU; cytotoxic at high concentrations; rare anaphylaxis',
+            'long_term': 'Sensitisation is permanent — once sensitised, even trace amounts cause reactions; EU has banned MIT in leave-on products and restricted it to 0.0015% in rinse-off products; pandemic of contact dermatitis described in Europe due to its widespread adoption in the 2000s',
+            'vulnerable_groups': 'People with eczema, atopic dermatitis, hand dermatitis, healthcare workers (glove-wearing); anyone who has been sensitised'
+        },
+        'methylchloroisothiazolinone': {
+            'short_term': 'Severe contact dermatitis, chemical burns at high concentrations, extreme skin sensitiser',
+            'long_term': 'Permanent sensitisation; EU banned in leave-on cosmetics; cross-reacts with methylisothiazolinone; one of the most potent skin sensitisers in cosmetics',
+            'vulnerable_groups': 'People with existing skin conditions, all previously sensitised individuals'
+        },
+        # SLS / SLES
+        'sodium lauryl sulfate': {
+            'short_term': 'Disrupts skin barrier by denaturing epidermal proteins; causes irritation, redness, dryness and scaling with regular use; aggravates mouth ulcers (aphthous stomatitis) in toothpaste',
+            'long_term': 'Chronic exposure damages the skin barrier leading to transepidermal water loss (TEWL); increases skin permeability, allowing other chemicals to penetrate more deeply; long-term scalp dryness and irritation',
+            'vulnerable_groups': 'People with eczema, psoriasis, rosacea, sensitive skin; individuals prone to mouth ulcers; people with seborrhoeic dermatitis'
+        },
+        'sodium laureth sulfate': {
+            'short_term': 'Milder than SLS; skin and scalp dryness in some users; mild irritation',
+            'long_term': '1,4-dioxane contamination from ethoxylation process — 1,4-dioxane is a probable human carcinogen (IARC 2B); manufacturers should remove it via vacuum stripping (most do but it is not mandatory)',
+            'vulnerable_groups': 'People with sensitive skin, dry scalp conditions; infants if used in baby products'
+        },
+        # Caramel
+        'caramel colour': {
+            'short_term': 'No significant immediate effects at typical food levels; Class III and IV caramel contains 4-methylimidazole (4-MEI)',
+            'long_term': 'Class III (E150c) and Class IV (E150d) caramel contain 4-methylimidazole (4-MEI) as a by-product of manufacture; California Prop 65 lists 4-MEI as a possible carcinogen; Consumer Reports (2012) found elevated 4-MEI levels in major cola brands; EFSA re-evaluated caramel colours in 2011 and found no concern at current intakes',
+            'vulnerable_groups': 'Heavy cola drinkers; people with inflammatory bowel disease (IBD) — animal studies show exacerbation; people sensitive to ammonia compounds'
+        },
+        # Titanium dioxide
+        'titanium dioxide': {
+            'short_term': 'Generally inert; nano-sized particles in spray or powder form may be inhaled — lung irritation possible with occupational exposure',
+            'long_term': 'EU banned as food additive (E171) in 2022 — EFSA concluded genotoxicity cannot be ruled out based on particle studies; topical cosmetic use (sunscreen) is considered safe — particles do not penetrate intact skin; IARC classifies inhaled TiO₂ as Group 2B (possibly carcinogenic) — occupational inhalation risk',
+            'vulnerable_groups': 'People who inhale nano-TiO₂ dust (occupational); concerns about food use particularly for children and pregnant women; intact skin exposure in cosmetics considered safe'
+        },
+        # Potassium bromate
+        'potassium bromate': {
+            'short_term': 'Acute toxicity: nausea, vomiting, abdominal pain at high doses; rare acute kidney failure',
+            'long_term': 'IARC Group 2B (possibly carcinogenic to humans); causes DNA damage (genotoxic); linked to kidney tumours, thyroid cancer and mesothelioma in animal studies; bromate residues have been found in baked goods where it was not fully converted; BANNED in India, EU, UK, Canada, Brazil, China',
+            'vulnerable_groups': 'Everyone — no safe level established; children and adolescents consuming large amounts of bread at highest exposure risk'
+        },
+        # Azodicarbonamide
+        'azodicarbonamide': {
+            'short_term': 'Occupational exposure causes asthma and skin sensitisation; WHO has classified workplace exposure as causing skin/respiratory problems',
+            'long_term': 'Decomposes during baking to semicarbazide and urethane — both potential carcinogens; banned as food additive in EU, UK, Australia; the "yoga mat chemical" controversy (Subway, 2014)',
+            'vulnerable_groups': 'Bakery workers (occupational asthma); children eating bread from countries where still permitted'
+        },
+        # BVO
+        'brominated vegetable oil': {
+            'short_term': 'Rare; very high consumption has caused bromoderma (skin lesions) and neurological symptoms (case reports)',
+            'long_term': 'Bromine bioaccumulates in fatty tissues and competes with iodine; thyroid disruption with long-term high intake; FDA banned it in 2024; EU and India do not permit it',
+            'vulnerable_groups': 'Heavy drinkers of BVO-containing citrus soft drinks; people with thyroid conditions; pregnant women'
+        },
+        # Aspartame components
+        'phenylalanine': {
+            'short_term': 'At normal dietary levels: no adverse effects; in phenylketonuria (PKU): immediate brain damage if dietary phenylalanine is not controlled',
+            'long_term': 'In PKU: severe intellectual disability, seizures, behavioural problems if phenylalanine is not restricted from birth; for the general population: no adverse effects',
+            'vulnerable_groups': 'People with phenylketonuria (PKU) — a genetic metabolic disorder; mandatory Aspartame warning "Contains Phenylalanine"'
+        },
+        # Carrageenan
+        'carrageenan': {
+            'short_term': 'Bloating, loose stools, increased intestinal permeability in some individuals',
+            'long_term': 'Degraded carrageenan (poligeenan) — produced by acidic conditions and heating — is a proven carcinogen and proinflammatory agent; food-grade carrageenan is high-molecular-weight and different, but some researchers argue it partially degrades in the acidic stomach; animal studies show worsening of IBD and colon lesions; IARC classifies degraded carrageenan Group 2B',
+            'vulnerable_groups': 'People with irritable bowel syndrome (IBS), Crohn\'s disease, ulcerative colitis, infants (removed from EU infant formula in 2018), people with gastrointestinal sensitivity'
+        },
+        # Talc
+        'talc': {
+            'short_term': 'Inhalation of loose powder: lung irritation, respiratory distress; topical use: generally well tolerated',
+            'long_term': 'Talc contaminated with asbestos fibres poses a serious carcinogenic risk (mesothelioma, lung cancer); even "asbestos-free" talc is associated in multiple studies with ovarian cancer risk when applied to the genital area; Johnson & Johnson settled lawsuits worth billions; IARC classifies perineal talc use as "possibly carcinogenic" (Group 2B)',
+            'vulnerable_groups': 'Women using talc in the perineal area (ovarian cancer risk); infants exposed to baby powder inhalation; people with asthma or respiratory conditions'
+        },
+        # Fragrance / Parfum
+        'fragrance': {
+            'short_term': 'Allergic contact dermatitis (fragrance is the #1 cause of cosmetic allergy); respiratory irritation in asthmatics; headaches, nausea in fragrance-sensitive individuals; aggravation of eczema',
+            'long_term': 'Chronic sensitisation — once sensitised, cross-reactions to multiple fragrance ingredients; some fragrance components (musk ambrette, hydroxycitronellal) are endocrine disruptors; certain fragrance chemicals penetrate skin and accumulate in blood',
+            'vulnerable_groups': 'People with eczema, asthma, contact dermatitis; people with fragrance allergy (estimated 1–4% of the population); chemically sensitive individuals; children'
+        },
+        'parfum': {
+            'short_term': 'Same as fragrance — allergic contact dermatitis, respiratory irritation, asthma aggravation',
+            'long_term': 'EU Cosmetics Regulation requires declaration of 26 known fragrance allergens on packaging when present above threshold; some fragrances are probable reproductive toxins',
+            'vulnerable_groups': 'Eczema and asthma sufferers, fragrance-allergic individuals, pregnant women'
+        },
+        # Palm oil
+        'palm oil': {
+            'short_term': 'No acute effects; provides calorie-dense saturated fat',
+            'long_term': 'High in saturated fat (palmitic acid at ~44%) which may raise LDL ("bad") cholesterol; processed at high temperatures produces glycidyl esters (a probable carcinogen — EFSA concern 2016); environmental issues (deforestation) — not a health concern but a sustainability one',
+            'vulnerable_groups': 'People with hypercholesterolaemia (high cholesterol), cardiovascular disease risk; people relying heavily on ultra-processed foods using palm oil'
+        },
+        'hydrogenated vegetable oil': {
+            'short_term': 'No immediate effects; very high calorie density',
+            'long_term': 'Partially hydrogenated oils contain trans fats — strongly associated with increased LDL cholesterol, decreased HDL cholesterol, systemic inflammation, and a 2–3× increased risk of coronary heart disease (Harvard School of Public Health); WHO advocates eliminating trans fats globally by 2023',
+            'vulnerable_groups': 'People with cardiovascular disease, high cholesterol, diabetes; children (developing cardiovascular system)'
+        },
+        # Carmine
+        'carmine': {
+            'short_term': 'Rare but severe allergic reactions including anaphylaxis; occupational asthma in carmine manufacturing workers; urticaria and angioedema in sensitised individuals',
+            'long_term': 'Not a veganism/vegetarian concern from a health perspective; the main health concern is IgE-mediated hypersensitivity reactions which can intensify with repeated exposure; not linked to chronic toxicity',
+            'vulnerable_groups': 'People with known carmine allergy; asthmatics (cross-reactivity); people allergic to cochineals; those with food-additive hypersensitivity'
+        },
+        'ci 75470': {
+            'short_term': 'Rare IgE-mediated allergic reactions; anaphylaxis in highly sensitised individuals',
+            'long_term': 'Same as carmine — allergy/sensitisation is the primary concern',
+            'vulnerable_groups': 'People with carmine or cochineal allergy; asthmatics'
+        },
+        # CI 42090 / Blue 1
+        'ci 42090': {
+            'short_term': 'Rare hypersensitivity reactions; when injected intravenously as a marker dye: serious cardiovascular toxicity (FDA warning)',
+            'long_term': 'Some evidence of absorption through damaged skin (wounds) and mucous membranes; metabolic acidosis and cardiovascular instability with IV use (not relevant to food use); some studies suggest possible carcinogenicity',
+            'vulnerable_groups': 'People with known dye hypersensitivity; individuals with IBD or compromised gut integrity (potentially higher absorption)'
+        },
+        # Sodium Hyaluronate
+        'sodium hyaluronate': {
+            'short_term': 'Topical use: no known adverse effects — exceptionally well tolerated; injectable use: possible bruising, redness, swelling at injection site',
+            'long_term': 'Topical: generally recognised as safe with no documented long-term concerns; injectable fillers: rare complications include granuloma formation, vascular occlusion (very rare), Tyndall effect (bluish discolouration)',
+            'vulnerable_groups': 'Injectable HA: people with bleeding disorders, immunocompromised individuals, pregnant women (limited data); topical: safe for all skin types including sensitive and infant skin'
+        },
+        # Mica
+        'mica': {
+            'short_term': 'Topical application: safe and non-irritating; inhalation of mica dust (occupational): lung fibrosis (pneumoconiosis) at high concentrations',
+            'long_term': 'Cosmetic-grade topical use is safe; occupational inhalation exposure causes muscovite pneumoconiosis; ethical concern: significant child labour in mica mining in India (Jharkhand, Rajasthan) — a supply chain issue, not a toxicological one',
+            'vulnerable_groups': 'Workers in mica mining and processing (lung disease risk); spray cosmetics with mica particles may pose inhalation risk for those with respiratory conditions'
+        },
+        # Ascorbic acid / Vitamin C
+        'ascorbic acid': {
+            'short_term': 'Gastric discomfort, diarrhoea at high supplemental doses (>1g at once); acidic nature can worsen tooth enamel erosion if consumed in acidic drinks',
+            'long_term': 'Generally one of the safest vitamins — water-soluble and any excess is excreted in urine; very high doses (>2g/day) may increase kidney stone risk (calcium oxalate) in predisposed individuals; no UL concerns at food additive levels',
+            'vulnerable_groups': 'People with haemochromatosis (iron overload — Vitamin C enhances iron absorption); people prone to kidney stones; infants receiving formula (over-fortification risk)'
+        },
+        # Tocopherol
+        'tocopherol': {
+            'short_term': 'Topical: rare contact allergy; oral food-level intake: no known adverse effects',
+            'long_term': 'Topical cosmetics: safe; supplemental Vitamin E at high doses (>400 IU/day) has been associated with increased all-cause mortality and haemorrhagic stroke risk in meta-analyses — not relevant to food additive use',
+            'vulnerable_groups': 'People on anticoagulant therapy (Vitamin E potentiates blood thinning at supplemental doses); people with clotting disorders'
+        },
+        # Lecithin
+        'lecithin': {
+            'short_term': 'Topical or food use: generally well tolerated; very rare allergic reactions in individuals with soy or egg allergy (most lecithin is from soy)',
+            'long_term': 'Phospholipid naturally found in every cell; generally recognised as safe; the compound phosphatidylcholine in lecithin is converted by gut bacteria to TMAO (trimethylamine N-oxide) — a compound linked to cardiovascular disease in large amounts; typical food-use quantities are far below concerning levels',
+            'vulnerable_groups': 'People with severe soy allergy (soy-derived lecithin); egg-allergic individuals (egg lecithin); people with trimethylaminuria (fish odour syndrome)'
+        },
+        # Caffeine
+        'caffeine': {
+            'short_term': 'Jitteriness, anxiety, palpitations, insomnia, increased blood pressure, headache (withdrawal), stomach acid increase, diuresis',
+            'long_term': 'Physical dependence (withdrawal: headaches, fatigue, irritability); no solid evidence for serious long-term health damage at moderate intake (≤400 mg/day); some cardiovascular benefit reported in moderate coffee consumption epidemiological studies',
+            'vulnerable_groups': 'Pregnant women (>200mg/day linked to foetal growth restriction — NHS and ACOG guidance); infants and children (no safe level); people with anxiety disorders, arrhythmia, hypertension, GERD; people on MAOI medications'
+        },
+        # Sugar
+        'sugar': {
+            'short_term': 'Blood glucose spike and subsequent crash (reactive hypoglycaemia); dental caries with repeated exposure; energy rush followed by lethargy',
+            'long_term': 'Weight gain and obesity at excess intake; Type 2 diabetes mellitus risk (strong epidemiological evidence); dental cavities (Streptococcus mutans feed on sucrose); non-alcoholic fatty liver disease; increased triglycerides and reduced HDL cholesterol',
+            'vulnerable_groups': 'Diabetics and pre-diabetics, people with insulin resistance, obese individuals, children (dental caries, obesity), people with NAFLD (non-alcoholic fatty liver disease)'
+        },
+        # Retinol
+        'retinol': {
+            'short_term': 'Retinol reaction: skin redness, peeling, dryness and photosensitivity — especially in the first 2–4 weeks of use; purging breakouts',
+            'long_term': 'Highly effective anti-ageing active with strong evidence for collagen production and cell turnover; teratogenic when used in high concentrations during pregnancy (Category C risk); high-dose oral Vitamin A is toxic to the liver; topical retinol at cosmetic concentrations has a good long-term safety record',
+            'vulnerable_groups': 'Pregnant women (MUST avoid — even topical retinol is cautioned); breastfeeding women; people with rosacea or extremely sensitive skin; people on isotretinoin (Accutane)'
+        },
+        # Hyaluronic acid
+        'hyaluronic acid': {
+            'short_term': 'Topical: excellent tolerability — no known short-term adverse effects; injectable: bruising, swelling, redness at injection site (resolves in days)',
+            'long_term': 'Topical use: excellent long-term safety profile; naturally occurring in human joints, eyes and skin — no systemic accumulation concerns; injectable filler: very rare complications include granuloma, vascular occlusion, migration over time',
+            'vulnerable_groups': 'Injectable HA: pregnant and breastfeeding women (precautionary), immunocompromised individuals; topical: safe for all, including sensitive and baby skin'
+        },
+        # Salicylic acid
+        'salicylic acid': {
+            'short_term': 'Skin dryness, peeling, stinging and irritation at higher concentrations (>2%); very large body application areas may cause salicylate toxicity (rare)',
+            'long_term': 'Extensive topical use over large body areas: salicylism (tinnitus, headache, nausea) — concern with systemic absorption; photosensitivity increases with regular use',
+            'vulnerable_groups': 'Pregnant women (Category C — salicylates cross the placenta); infants and young children (higher surface area to body weight — risk of systemic absorption); people with aspirin sensitivity; individuals with kidney disease'
+        },
+        # Zinc oxide
+        'zinc oxide': {
+            'short_term': 'Topical: well tolerated; nano ZnO in sunscreens: minimal skin penetration on intact skin; slight white cast cosmetically',
+            'long_term': 'Non-nano particles (used in most sunscreens): excellent safety record; nano-particle ZnO: some in vitro cytotoxicity shown but clinical significance on intact skin is low as nanoparticles do not penetrate beyond the stratum corneum in vivo according to TGA and SCCS reviews',
+            'vulnerable_groups': 'People with zinc allergy (rare); concern about nano-ZnO inhalation from spray sunscreens; infants with damaged skin barrier (nappy rash applications)'
+        },
+        # Phenoxyethanol
+        'phenoxyethanol': {
+            'short_term': 'Mild skin and eye irritation at high concentrations; rare contact dermatitis; FDA warned against its use in nipple cream in 2008 (depression in nursing infants)',
+            'long_term': 'Considered one of the safer preservatives at ≤1% in cosmetics; some rodent studies show reproductive and developmental toxicity at oral high doses — not relevant to cosmetic dermal exposure; EU permits up to 1%',
+            'vulnerable_groups': 'Infants (avoid in nipple cream and products applied to infant skin); people with sensitive or eczema-prone skin; people with known phenoxyethanol allergy'
+        },
+
+        # ── PEGs / Polyethylene Glycols ───────────────────────────────────────
+        'polyethylene glycol': {
+            'short_term': 'Generally well tolerated topically; mild transient skin irritation in high concentrations; low-molecular-weight PEGs may irritate broken or damaged skin',
+            'long_term': '1,4-dioxane — a probable human carcinogen (IARC Group 2B) — is a by-product of the ethoxylation manufacturing process; responsible manufacturers vacuum-strip it but the process is not mandatory; PEGs act as penetration enhancers, potentially increasing absorption of other ingredients through the skin; accumulate in wound tissue',
+            'vulnerable_groups': 'People with damaged or broken skin barrier; people with eczema or wounds; infants (higher skin permeability); consumers seeking clean-label cosmetics'
+        },
+        'peg-': {
+            'short_term': 'Topical application: generally well tolerated on intact skin; irritation on broken skin',
+            'long_term': '1,4-dioxane contamination risk (IARC Group 2B probable carcinogen); PEGs increase dermal penetration of co-formulated ingredients; oral PEG used in laxatives and colonoscopy preps is safe due to non-absorption',
+            'vulnerable_groups': 'People with compromised skin barrier; eczema, psoriasis, wound patients; infants and children; people seeking EWG "clean" cosmetics'
+        },
+
+        # ── Cyclosiloxanes (D4, D5, D6) ───────────────────────────────────────
+        'cyclomethicone': {
+            'short_term': 'Low immediate toxicity; minimal skin irritation',
+            'long_term': 'D4 (cyclotetrasiloxane) classified as a persistent bioaccumulative and toxic (PBT) substance in the EU; D5 (cyclopentasiloxane) and D6 (cyclohexasiloxane) restricted in EU wash-off cosmetics (>0.1%) due to environmental persistence and aquatic toxicity; D4 shown to have uterotrophic (oestrogenic) activity in animals; FDA is reviewing cyclosiloxanes',
+            'vulnerable_groups': 'Pregnant women (precautionary — endocrine activity in animal studies); people with regular occupational inhalation exposure to cyclosiloxane vapours; aquatic ecosystems (environmental concern)'
+        },
+        'cyclopentasiloxane': {
+            'short_term': 'No significant short-term skin effects; inhalation of vapours at high concentrations causes respiratory irritation',
+            'long_term': 'D5 is EU-restricted in wash-off cosmetics due to environmental PBT status; accumulates in aquatic organisms; some studies show endocrine disruption and liver effects in rodents; SCCS assessed D5 as safe in leave-on cosmetics at current use levels',
+            'vulnerable_groups': 'Aquatic environment (PBT bioaccumulation); occupational inhalation workers; pregnant women (precautionary)'
+        },
+        'cyclohexasiloxane': {
+            'short_term': 'Low acute toxicity; minimal skin irritation',
+            'long_term': 'D6 is also EU-restricted in rinse-off cosmetics; similar environmental persistence concerns to D4/D5 though less studied; SCCS review ongoing',
+            'vulnerable_groups': 'Environmental and occupational concerns primarily; precautionary avoidance in pregnancy'
+        },
+
+        # ── Mineral Oil / Petrolatum ──────────────────────────────────────────
+        'mineral oil': {
+            'short_term': 'Topical: occlusive barrier — may worsen acne in acne-prone individuals; generally well tolerated on intact skin; ingestion of food-grade mineral oil: minimal direct effects but inhibits fat-soluble vitamin absorption',
+            'long_term': 'Highly refined (food and pharmaceutical grade) mineral oils are considered safe; inadequately refined mineral oils contain polycyclic aromatic hydrocarbons (PAHs) — IARC Group 1 carcinogens; EFSA raised concerns about mineral oil aromatic hydrocarbons (MOAH) migrating from packaging into food; occupational exposure to cutting/mist mineral oils is associated with bladder cancer',
+            'vulnerable_groups': 'Acne-prone individuals (comedogenicity risk); people with fat-soluble vitamin deficiencies; workers exposed to untreated mineral oil mist; consumers of foods in mineral-oil-lined packaging'
+        },
+        'petrolatum': {
+            'short_term': 'Topical: occlusive; may cause comedones in acne-prone skin; generally non-irritating',
+            'long_term': 'Pharmaceutical/food-grade petrolatum (e.g. Vaseline) is fully refined and safe; EU requires petrolatum in cosmetics to have full refining history to show freedom from PAHs; PAH-contaminated petrolatum is carcinogenic; EU lists semi-solid petroleum-derived substances as restricted unless refining history establishes safety',
+            'vulnerable_groups': 'Acne-prone individuals; people seeking petroleum-free cosmetics; workers exposed to unrefined petroleum products'
+        },
+        'paraffinum liquidum': {
+            'short_term': 'Topical: well tolerated; occlusive; some comedogenicity',
+            'long_term': 'Same PAH contamination concerns as mineral oil; liquid paraffin taken orally as a laxative can cause lipoid pneumonia if aspirated; impairs absorption of fat-soluble vitamins with prolonged oral use; EU cosmetic use requires refining certification',
+            'vulnerable_groups': 'Acne-prone individuals; elderly patients using it as a laxative (aspiration risk); patients with swallowing difficulties'
+        },
+
+        # ── Retinoids ─────────────────────────────────────────────────────────
+        'retinyl palmitate': {
+            'short_term': 'Skin dryness, peeling, photosensitivity; milder than retinol',
+            'long_term': 'The EWG and NTP (National Toxicology Program) flagged that retinyl palmitate may accelerate skin tumour development when applied to sun-exposed skin (animal study); the FDA has been reviewing it for use in sunscreens since 2010 — no conclusive human evidence of harm but precautionary concern exists; at non-sun-exposed sites, long-term topical use is generally accepted as safe',
+            'vulnerable_groups': 'Pregnant women (all retinoids are teratogenic — caution with any form); people using it in sun-exposed areas (daytime use); people with sensitive skin'
+        },
+        'tretinoin': {
+            'short_term': 'Significant skin irritation, dryness, peeling, photosensitivity, erythema — especially in the first 4–8 weeks; "retinoid reaction" is expected and part of the treatment',
+            'long_term': 'FDA Category X in pregnancy — proven teratogen causing retinoic acid embryopathy (craniofacial, cardiac, thymic, CNS malformations); highly effective anti-acne and anti-ageing medication with 50+ years of clinical evidence; long-term use (years) well tolerated by most; increases susceptibility to UV damage so SPF use is mandatory',
+            'vulnerable_groups': 'Pregnant women and those trying to conceive (MUST avoid — Category X); breastfeeding women; people with sensitive or rosacea skin; those without adequate sun protection'
+        },
+
+        # ── Benzyl Alcohol ────────────────────────────────────────────────────
+        'benzyl alcohol': {
+            'short_term': 'Skin and eye irritation; headache and dizziness from inhalation of vapours at high concentrations; "gasping syndrome" — metabolic acidosis and CNS depression in neonates given benzyl alcohol-preserved IV medications',
+            'long_term': 'At cosmetic-use concentrations (≤1%), generally safe for adults; an EU fragrance allergen requiring declaration at >0.001% in leave-on and >0.01% in rinse-off products; the neonatal gasping syndrome was due to intravenous exposure, not topical cosmetic use',
+            'vulnerable_groups': 'Newborns and premature infants (IV exposure causes gasping syndrome — cosmetic exposure is different but caution advised); people with benzyl alcohol contact allergy; people with fragrance sensitivity'
+        },
+
+        # ── DMDM Hydantoin and Formaldehyde Releasers ─────────────────────────
+        'dmdm hydantoin': {
+            'short_term': 'Releases formaldehyde — skin irritation, contact dermatitis, allergic sensitisation; formaldehyde odour at high concentrations',
+            'long_term': 'Formaldehyde (IARC Group 1 carcinogen) is continuously released; at cosmetic use concentrations the release is low but contributes to cumulative formaldehyde exposure; sensitised individuals react to trace amounts; EU restricts formaldehyde releasers and requires "contains formaldehyde" label when released levels exceed 0.05%',
+            'vulnerable_groups': 'People with formaldehyde allergy (an increasingly common contact allergen); eczema-prone individuals; salon and spa workers; people using multiple formaldehyde-releasing preservatives simultaneously'
+        },
+        'imidazolidinyl urea': {
+            'short_term': 'Formaldehyde release causes skin irritation and contact dermatitis; among the more potent formaldehyde releasers',
+            'long_term': 'Same formaldehyde-related carcinogenicity concerns; the highest formaldehyde-releasing preservative in common use; EU mandates formaldehyde label warning at defined release levels',
+            'vulnerable_groups': 'People with formaldehyde allergy, eczema patients, salon workers, immunocompromised individuals'
+        },
+        'diazolidinyl urea': {
+            'short_term': 'Contact dermatitis, sensitisation through formaldehyde release',
+            'long_term': 'Significant formaldehyde releaser; cumulative formaldehyde exposure concern across multiple products; EU label warning required',
+            'vulnerable_groups': 'Formaldehyde-allergic individuals, people with sensitive skin, eczema sufferers'
+        },
+        'quaternium-15': {
+            'short_term': 'One of the most potent formaldehyde releasers — significant contact sensitiser; skin irritation, allergic dermatitis',
+            'long_term': 'Classified as a known human contact allergen; EU has extremely restricted its use; persistent sensitisation once developed; cumulative formaldehyde release is highest among cosmetic preservatives',
+            'vulnerable_groups': 'People with formaldehyde allergy, anyone with contact dermatitis history, eczema patients, salon workers'
+        },
+
+        # ── Cocamide DEA ──────────────────────────────────────────────────────
+        'cocamide dea': {
+            'short_term': 'Mild skin and scalp irritation at high concentrations; contact dermatitis in sensitised individuals',
+            'long_term': 'Reacts with nitrites (often present as contaminants) to form diethanolamine nitrosamines (DEA-NO) — potent animal carcinogens; California Prop 65 lists cocamide DEA as a carcinogen based on this; IARC Group 2B for diethanolamine; the EU has restricted cocamide DEA in cosmetics as a precaution',
+            'vulnerable_groups': 'All consumers — nitrosamine formation is a product quality issue; workers occupationally exposed to higher concentrations; people with scalp conditions using repeated high-concentration shampoos'
+        },
+        'cocamide mea': {
+            'short_term': 'Milder than DEA; mild skin irritation',
+            'long_term': 'Similar but lower nitrosamine formation potential than cocamide DEA; EU has also restricted it as part of the same concern',
+            'vulnerable_groups': 'Same precautionary concerns as cocamide DEA; less acute risk but precautionary avoidance recommended'
+        },
+
+        # ── Oxybenzone / Chemical UV Filters ──────────────────────────────────
+        'oxybenzone': {
+            'short_term': 'Allergic contact dermatitis and photoallergic reactions (estimated 1–2% of users); skin sensitisation',
+            'long_term': 'Significant dermal absorption — detected in blood, urine and breast milk; FDA classifies oxybenzone as "not generally recognised as safe" due to insufficient data; animal studies show oestrogenic and anti-androgenic activity; environmental toxicity — damages coral reefs (Hawaii and Palau have banned oxybenzone sunscreens); disrupts thyroid hormone in animal studies',
+            'vulnerable_groups': 'Pregnant women and foetuses; infants (high surface area absorption); people with hormone-sensitive conditions; frequent whole-body sunscreen applicators; marine ecosystems'
+        },
+        'benzophenone-3': {
+            'short_term': 'Photoallergic contact dermatitis; skin irritation in sensitised individuals',
+            'long_term': 'Same as oxybenzone (benzophenone-3 is the INCI name); FDA "not generally recognised as safe" due to systemic absorption; EU allows up to 6% but recommends not using on large body surface areas in infants; coral reef toxicity',
+            'vulnerable_groups': 'Pregnant women, infants, people with oestrogen-sensitive conditions, frequent sunscreen users, marine environments'
+        },
+
+        # ── Cyclamate ─────────────────────────────────────────────────────────
+        'cyclamate': {
+            'short_term': 'Generally well tolerated at low doses; some people metabolise it to cyclohexylamine — which can cause nausea',
+            'long_term': 'Banned in the USA (FDA) in 1969 after animal studies linked it to bladder cancer (in combination with saccharin); the ban is under ongoing review — some scientific bodies consider current evidence insufficient for human risk; permitted in EU, India and 130+ countries; cyclohexylamine (gut metabolite in some individuals) has testicular atrophy effects in animals at high doses',
+            'vulnerable_groups': 'People who are high metabolisers of cyclamate to cyclohexylamine (genetically variable); pregnant women (precautionary); people with bladder conditions'
+        },
+        'sodium cyclamate': {
+            'short_term': 'Same as cyclamate — generally well tolerated; cyclohexylamine production varies by individual gut flora',
+            'long_term': 'Same concerns as cyclamate; banned in USA, permitted in India and EU; ongoing FDA review',
+            'vulnerable_groups': 'High cyclamate metabolisers, pregnant women, children'
+        },
+
+        # ── Propylene Glycol ──────────────────────────────────────────────────
+        'propylene glycol': {
+            'short_term': 'Skin irritation and contact dermatitis in sensitive individuals — particularly in leave-on products at concentrations >2%; eyes: irritation at high concentrations; ingestion: generally recognised as safe (FDA GRAS as a food additive)',
+            'long_term': 'Accumulates in the body with very large oral doses (pharmaceutical IV use cases); topical cosmetic exposure: low systemic exposure; some individuals develop propylene glycol contact allergy — affects an estimated 2–4% of dermatology patients; metabolised to lactic acid and pyruvic acid (normal metabolic intermediates)',
+            'vulnerable_groups': 'People with propylene glycol contact allergy; eczema-prone individuals; neonates and infants (limited liver metabolism capacity for high IV doses — not relevant to cosmetic use); people with kidney disease (impaired elimination at high doses)'
+        },
+
+        # ── Lilial / Butylphenyl Methylpropional ──────────────────────────────
+        'lilial': {
+            'short_term': 'Contact sensitisation and allergic dermatitis; a recognised fragrance allergen',
+            'long_term': 'EU banned lilial (butylphenyl methylpropional) in cosmetics in March 2022 due to reproductive toxicity concerns — specifically classified as Category 1B reprotoxicant (may damage fertility); detected in human breast milk; endocrine disruption evidence',
+            'vulnerable_groups': 'Pregnant women and those planning pregnancy (reproductive toxicity — EU banned); breastfeeding women; people with fragrance allergies'
+        },
+        'butylphenyl methylpropional': {
+            'short_term': 'Fragrance allergen; skin sensitisation and contact dermatitis',
+            'long_term': 'EU banned in cosmetics in 2022 due to Category 1B reproductive toxicity classification; detected in human breast milk; must not be present in cosmetics sold in the EU',
+            'vulnerable_groups': 'All cosmetic users (now banned in EU cosmetics); pregnant women; breastfeeding women'
+        },
+
+        # ── Chlorhexidine ─────────────────────────────────────────────────────
+        'chlorhexidine': {
+            'short_term': 'Skin and mucous membrane irritation; bitter taste; rare but severe anaphylaxis (IgE-mediated) including fatal cases; brown staining of teeth and tongue with oral use; altered taste sensation',
+            'long_term': 'Antimicrobial resistance — chlorhexidine tolerance in bacteria has been linked to cross-resistance to colistin (last-resort antibiotic) in some studies; ototoxicity if used in the ear canal; contact allergy develops in some individuals',
+            'vulnerable_groups': 'People with known chlorhexidine allergy (anaphylaxis risk — allergy tests recommended before elective procedures); patients with perforated tympanic membranes (ear canal use prohibited); people with sensitive oral mucosa'
+        },
+        'chlorhexidine digluconate': {
+            'short_term': 'Same as chlorhexidine — skin, eye and mucous membrane irritation; rare severe anaphylaxis',
+            'long_term': 'Antimicrobial resistance cross-selection concerns; tooth staining with mouthwash use; contact sensitisation',
+            'vulnerable_groups': 'Chlorhexidine-allergic individuals (severe anaphylaxis risk); patients with ear perforations; oral mucosa sensitivity'
+        },
+
+        # ── Annatto / E160b ───────────────────────────────────────────────────
+        'annatto': {
+            'short_term': 'Urticaria, hives and angioedema in sensitive individuals — annatto is one of the few "natural" food colourings associated with pseudoallergic reactions; very rare anaphylaxis reported',
+            'long_term': 'Generally considered safe; no significant long-term toxicity established; the pseudoallergic reactions (not IgE-mediated) can still be severe and recurrent; WHO/FAO JECFA evaluates annatto as acceptable at current food-use levels',
+            'vulnerable_groups': 'People with urticaria (hives), atopic individuals, people with aspirin or NSAID sensitivity (cross-reactivity pattern similar to other pseudoallergens)'
+        },
+
+        # ── Potassium Iodate ──────────────────────────────────────────────────
+        'potassium iodate': {
+            'short_term': 'Excess iodine causes hyperthyroidism symptoms: palpitations, tremor, weight loss, heat intolerance',
+            'long_term': 'WHO recommends potassium iodide over potassium iodate for salt iodisation due to stability concerns; iodate is an oxidising agent — excess iodate intake (from high bread consumption in countries using it as a flour improver) may cause thyrotoxicosis in iodine-replete individuals; India uses potassium iodate for salt iodisation to combat iodine deficiency',
+            'vulnerable_groups': 'People with thyroid conditions (hyperthyroidism, Graves\' disease, toxic nodular goitre); people on thyroid medications; iodine-replete individuals consuming high amounts of iodised bread'
+        },
+
+        # ── Amaranth Dye / E123 ───────────────────────────────────────────────
+        'amaranth dye': {
+            'short_term': 'Urticaria, skin rash, hyperactivity; aspirin cross-sensitivity',
+            'long_term': 'BANNED in the USA (FDA) since 1976 due to carcinogenicity concerns (malignant tumours in animal studies); banned in several other countries; still permitted in EU and India in limited applications (e.g. fish roe); genotoxicity concerns in some studies',
+            'vulnerable_groups': 'Children (hyperactivity), aspirin-sensitive individuals, asthmatics, people with food colour sensitivity'
+        },
+        'e123': {
+            'short_term': 'Urticaria, hyperactivity in children; aspirin cross-reactivity',
+            'long_term': 'Banned in USA since 1976; potential carcinogenicity; limited permitted use in EU and India',
+            'vulnerable_groups': 'Children, aspirin-sensitive individuals, asthmatics'
+        },
+
+        # ── Cocamidopropyl Betaine ────────────────────────────────────────────
+        'cocamidopropyl betaine': {
+            'short_term': 'Contact dermatitis in sensitised individuals; mild skin and eye irritation in high concentrations; the American Contact Dermatitis Society named it "allergen of the year" in 2004',
+            'long_term': 'Sensitisation is permanent; impurities in manufacturing (3-dimethylaminopropylamine and amidoamine) are the likely allergens rather than CAPB itself; considered one of the milder surfactants overall — reactions occur in a small but significant minority',
+            'vulnerable_groups': 'People with existing contact dermatitis or eczema; hairdressers and cosmetologists (occupational sensitisation); people with known CAPB allergy — must avoid all products containing it once sensitised'
+        },
+
+        # ── Maltodextrin ──────────────────────────────────────────────────────
+        'maltodextrin': {
+            'short_term': 'Rapid blood glucose spike — very high glycaemic index (GI of 85–105, higher than table sugar); energy crash; potential bloating in large amounts',
+            'long_term': 'Regular high intake contributes to the same metabolic risks as excess sugar (Type 2 diabetes, obesity, insulin resistance); some studies suggest maltodextrin may negatively alter the gut microbiome — promoting growth of E. coli strains associated with IBD; may mask the flavour of low-quality food by adding bulk',
+            'vulnerable_groups': 'Diabetics and pre-diabetics (extreme blood glucose spike); people with IBD (gut microbiome disruption); people with coeliac disease if derived from wheat (though usually highly processed and gluten-free)'
+        },
+
+        # ── High Fructose Corn Syrup ──────────────────────────────────────────
+        'high fructose corn syrup': {
+            'short_term': 'Rapid blood glucose/fructose spike; fructose bypasses normal satiety signalling; may increase appetite',
+            'long_term': 'Fructose is metabolised almost entirely in the liver — high intake causes non-alcoholic fatty liver disease (NAFLD), de novo lipogenesis (fat synthesis), elevated triglycerides and uric acid; epidemiological links to obesity, metabolic syndrome and Type 2 diabetes; does not stimulate insulin or leptin (satiety hormones) like glucose does',
+            'vulnerable_groups': 'Obese individuals, people with NAFLD, diabetics, people with hyperuricaemia or gout (fructose raises uric acid), children and adolescents (high soft drink consumption)'
+        },
+
+        # ── Lanolin ───────────────────────────────────────────────────────────
+        'lanolin': {
+            'short_term': 'Contact dermatitis and lanolin allergy is one of the top 10 cosmetic contact allergens; affects an estimated 5% of eczema patients; skin rash, itching, redness',
+            'long_term': 'Sensitisation is permanent; lanolin may be contaminated with pesticide residues (organochlorines) from sheep dip chemicals — highly purified pharmaceutical-grade lanolin is considered safe; environmental persistence of organochlorine contaminants is a concern with lower-grade lanolin',
+            'vulnerable_groups': 'People with eczema (high sensitisation rate of ~5–10%); people with lanolin or wool allergy; consumers using lanolin-containing nipple creams while breastfeeding (infants ingest it)'
+        },
+
+        # ── Polysorbates ──────────────────────────────────────────────────────
+        'polysorbate 80': {
+            'short_term': 'Rare anaphylaxis and hypersensitivity reactions (particularly with IV pharmaceutical formulations); topical and oral food-use: generally well tolerated',
+            'long_term': 'Animal studies (2015, Chassaing et al. in Nature) showed that polysorbate 80 and polysorbate 20 at concentrations found in food disrupted the intestinal mucosal barrier, promoted gut inflammation and triggered metabolic syndrome and colitis in mice; human evidence is limited but has raised concern about chronic dietary emulsifier exposure and gut permeability',
+            'vulnerable_groups': 'People with IBD, Crohn\'s disease, or leaky gut; people with anaphylaxis to polysorbate 80 (documented rare but serious reactions especially with IV drugs like paclitaxel, erythropoietin); people with inflammatory gut conditions'
+        },
+        'polysorbate 20': {
+            'short_term': 'Generally well tolerated; rare hypersensitivity reactions with IV use',
+            'long_term': 'Same intestinal barrier disruption concerns as polysorbate 80 from the 2015 animal studies; human evidence lacking but precautionary concern for daily emulsifier intake across multiple food and cosmetic products',
+            'vulnerable_groups': 'People with IBD, gut sensitivity, polysorbate hypersensitivity'
+        },
+
+        # ── Gelatin ───────────────────────────────────────────────────────────
+        'gelatin': {
+            'short_term': 'Generally well tolerated; not suitable for vegetarians, vegans, and people following halal/kosher diets (porcine gelatin); rare allergic reactions',
+            'long_term': 'Food-grade gelatin is considered safe; historical concern about bovine spongiform encephalopathy (BSE/mad cow disease) transmission via bovine gelatin — risk managed by strict sourcing regulations; provides glycine and proline which are collagen precursors',
+            'vulnerable_groups': 'People with allergy to source animal (bovine or porcine gelatin); people adhering to halal, kosher or vegetarian/vegan dietary restrictions; people with phenylketonuria (gelatin contains phenylalanine)'
+        },
+
+        # ── Sorbitol ──────────────────────────────────────────────────────────
+        'sorbitol': {
+            'short_term': 'Osmotic laxative effect at doses >10–50g — bloating, flatulence, abdominal cramping, diarrhoea; onset at doses lower than other sugar alcohols',
+            'long_term': 'Safe at food additive use levels; diabetic-friendly sweetener as it has a lower glycaemic index than sucrose; products with >10g/100g sorbitol must carry "excessive consumption may have a laxative effect" warning (EU); no significant long-term concerns',
+            'vulnerable_groups': 'People with IBS or functional gut disorders (sorbitol is a well-documented FODMAP trigger); people with fructose malabsorption; children eating large amounts of sugar-free sweets (higher risk of diarrhoea per kg body weight)'
+        },
+
+        # ── Fragrance EU Allergens ────────────────────────────────────────────
+        'limonene': {
+            'short_term': 'Skin sensitisation and contact dermatitis — particularly when oxidised (autooxidation products are the main allergens); slight mucosal irritation with undiluted application',
+            'long_term': 'EU declared allergen — must be declared at >0.001% (leave-on) and >0.01% (rinse-off) on labels; sensitisation is permanent; autooxidised limonene is significantly more allergenic than fresh limonene; IFRA restricts its use in perfumery based on sensitisation potential',
+            'vulnerable_groups': 'People with existing fragrance allergy; people with eczema; atopic individuals; those using citrus-scented products daily'
+        },
+        'linalool': {
+            'short_term': 'Skin sensitisation — particularly the oxidised (linalool oxide) form is the primary allergen; mild skin irritation in undiluted form',
+            'long_term': 'EU declared fragrance allergen requiring label declaration; sensitisation is permanent and cross-reacts with other fragrance components; IFRA guidelines restrict concentration in leave-on products',
+            'vulnerable_groups': 'People with fragrance allergy; eczema and atopic dermatitis patients; consumers using lavender-scented products daily'
+        },
+        'eugenol': {
+            'short_term': 'Mucous membrane irritation; skin sensitisation and contact dermatitis; dental pulp irritation when used in tooth care products at high concentrations',
+            'long_term': 'EU declared allergen; cytotoxic to dental pulp cells at high concentrations (relevant to dental paste, clove oil); sensitisation is permanent; autooxidation products are more allergenic',
+            'vulnerable_groups': 'People with clove or dental product allergy; dentistry patients; people with fragrance allergies; eczema sufferers'
+        },
+        'geraniol': {
+            'short_term': 'Skin sensitisation and allergic contact dermatitis; eye irritant; oxidised geraniol is more allergenic',
+            'long_term': 'EU declared fragrance allergen requiring declaration; sensitisation is permanent; IFRA restricts its maximum use in leave-on products',
+            'vulnerable_groups': 'People with rose-fragrance allergy; fragrance-sensitive individuals; eczema patients'
+        },
+        'cinnamaldehyde': {
+            'short_term': 'A potent skin sensitiser and contact allergen — one of the most common causes of contact dermatitis; oral mucosa reactions (perioral dermatitis, cheilitis) with cinnamon-flavoured products; can cause asthma exacerbation',
+            'long_term': 'EU declared allergen; sensitisation to cinnamaldehyde is one of the most common fragrance allergies globally; permanent sensitisation; IFRA strictly limits its concentration in products',
+            'vulnerable_groups': 'People with cinnamon allergy; those with oral mucosa sensitivity; asthmatics; eczema patients; people who use cinnamon-flavoured dental products'
+        },
+        'coumarin': {
+            'short_term': 'Skin sensitisation and allergic contact dermatitis; photosensitisation',
+            'long_term': 'EU declared allergen; large oral doses show hepatotoxicity in animal studies — not relevant to food-flavouring levels; EFSA raised concern about coumarin in cinnamon-flavoured products (cassia contains high coumarin); EU limits coumarin in food and cosmetics; IARC Group 3 (not classifiable as carcinogenic to humans)',
+            'vulnerable_groups': 'People with cinnamon/cassia allergy; fragrance-sensitive individuals; people with liver disease; children eating large amounts of cinnamon-flavoured food (cassia cinnamon)'
+        },
+        'hexyl cinnamal': {
+            'short_term': 'Skin sensitisation and allergic contact dermatitis; a jasmine-scented fragrance allergen',
+            'long_term': 'EU declared fragrance allergen; permanent sensitisation; frequently found in combination with other fragrance allergens',
+            'vulnerable_groups': 'People with fragrance allergy; eczema patients; people using jasmine/floral-scented cosmetics daily'
+        },
+
+        # ── Alcohol / Ethanol ─────────────────────────────────────────────────
+        'alcohol denat': {
+            'short_term': 'Skin dryness and irritation with regular use — disrupts the skin\'s lipid barrier; astringent feel; cold sensation on skin; aggravates eczema, rosacea and sensitive skin',
+            'long_term': 'Chronic skin barrier disruption leading to increased transepidermal water loss (TEWL); decreases ceramide levels in skin with habitual use; scalp damage in high-alcohol hair products; denatured with bitter agents or methanol to prevent drinking — denaturing agents may be irritating',
+            'vulnerable_groups': 'People with eczema, rosacea, dry or sensitive skin; people with alcohol sensitivity; individuals with seborrhoeic dermatitis'
+        },
+        'sd alcohol': {
+            'short_term': 'Same as alcohol denat — skin dryness, irritation, barrier disruption; short-lived antimicrobial effect',
+            'long_term': 'Same long-term barrier disruption as alcohol denat; the SD (specially denatured) designation refers to specific denaturing agent used',
+            'vulnerable_groups': 'Same as alcohol denat — sensitive, dry and eczema-prone skin types'
+        },
+
+        # ── Niacinamide ───────────────────────────────────────────────────────
+        'niacinamide': {
+            'short_term': 'Occasional transient flushing, itching or redness, especially at high concentrations (>5%) — particularly in the first weeks of use; may cause irritation when combined with acidic Vitamin C (lowers skin pH); generally very well tolerated',
+            'long_term': 'One of the best-studied and safest cosmetic actives; clinical evidence for skin brightening, pore minimisation, barrier strengthening and sebum reduction; no known long-term adverse effects at topical cosmetic concentrations',
+            'vulnerable_groups': 'People with niacin allergy (rare); people prone to flushing who find initial application uncomfortable; people who combine it with high-concentration Vitamin C products simultaneously'
+        },
+
+        # ── Panthenol ─────────────────────────────────────────────────────────
+        'panthenol': {
+            'short_term': 'Exceptional tolerability; no known short-term adverse effects; rare contact allergy (extremely uncommon)',
+            'long_term': 'Excellent long-term safety record; widely used in baby products; provitamin B5 converts to pantothenic acid (Vitamin B5) in the body; wound-healing, anti-inflammatory and moisturising properties are well evidenced',
+            'vulnerable_groups': 'Safe for virtually all populations including infants; very rare hypersensitivity reactions are the only documented concern'
+        },
+
+        # ── Indian Botanicals ─────────────────────────────────────────────────
+        'neem': {
+            'short_term': 'Topical: well tolerated on skin; distinctive smell; occasional skin sensitisation; oral neem oil: TOXIC — severe metabolic acidosis, seizures and coma reported in infants given neem oil orally; should never be taken internally',
+            'long_term': 'Topical use: generally safe; antimicrobial, anti-inflammatory and wound-healing properties; oral neem oil: documented cases of fatal toxicity in children — NOT safe for oral use; neem seed oil contains azadirachtin which can cause liver and kidney damage with oral ingestion',
+            'vulnerable_groups': 'Infants and children (oral neem oil is dangerous — has caused deaths); pregnant women (abortifacient effects reported); people with plant/Meliaceae family allergy'
+        },
+        'tulsi': {
+            'short_term': 'Topical and food use: generally well tolerated; mild anticoagulant properties',
+            'long_term': 'Traditional Ayurvedic herb (holy basil / Ocimum sanctum); adaptogenic and antioxidant properties; long-term use as food is safe; very high supplemental doses may affect blood clotting and blood sugar; possible uterine contractions at medicinal doses',
+            'vulnerable_groups': 'Pregnant women (avoid medicinal doses — may stimulate uterine contractions); people on anticoagulants (mild blood-thinning effect); people undergoing surgery (discontinue 2 weeks before)'
+        },
+        'turmeric': {
+            'short_term': 'Generally safe; yellow staining of skin and surfaces; very high supplemental curcumin doses: nausea, diarrhoea, liver stress in sensitive individuals; gallbladder contraction with large doses',
+            'long_term': 'Excellent safety profile as food spice and cosmetic ingredient; high-dose curcumin supplements may cause hepatotoxicity in rare cases (case reports); curcumin has very poor bioavailability unless combined with piperine (black pepper); potential drug interactions with anticoagulants and diabetes medications at medicinal doses',
+            'vulnerable_groups': 'People with gallstones or bile duct obstruction (promotes bile secretion); people on anticoagulants or diabetes medication at high supplemental doses; people with oxalate kidney stones (turmeric is high in oxalates)'
+        },
+        'aloe vera': {
+            'short_term': 'Topical gel: well tolerated; rare contact allergy; occasional skin irritation in sensitive individuals; oral aloe vera: may cause diarrhoea and cramping from anthraquinone laxatives (mainly from the latex, not gel)',
+            'long_term': 'Topical use: excellent safety record; soothing, anti-inflammatory and wound-healing properties; IARC classified whole-leaf aloe vera extract (containing anthraquinones) as Group 2B (possibly carcinogenic) — this refers to oral non-decolourised whole-leaf extract, NOT the commonly used decolourised gel; FDA withdrew OTC laxative status for aloe in 2002',
+            'vulnerable_groups': 'People with known aloe allergy; people taking diuretics or digoxin (electrolyte interaction with oral aloe); pregnant women (oral aloe latex has uterine stimulant properties — topical gel is safe); people with IBD (oral latex form)'
+        },
+        'ashwagandha': {
+            'short_term': 'Generally well tolerated; mild GI discomfort, drowsiness at high doses; possible thyroid hormone increase',
+            'long_term': 'Adaptogenic herb (Withania somnifera) with clinical evidence for stress reduction and cortisol lowering; rare but documented cases of hepatotoxicity at high supplemental doses (case reports, 2021–2023); potential thyroid stimulation — use caution in hyperthyroidism; may enhance thyroid medication effects',
+            'vulnerable_groups': 'Pregnant women (avoid — may induce abortion at medicinal doses); people with thyroid conditions; people with autoimmune diseases (immunostimulant effects); people with liver disease; people on immunosuppressants'
+        },
+
+        # ── Key Emulsifiers ───────────────────────────────────────────────────
+        'polyglycerol polyricinoleate': {
+            'short_term': 'Generally well tolerated; rarely associated with adverse effects at food-additive concentrations',
+            'long_term': 'PGPR (E476) is used in chocolate to reduce fat content and improve flow; JECFA and EFSA have evaluated it as safe at food-additive use levels; ADI established by JECFA at 7.5 mg/kg/day; no significant long-term concerns established',
+            'vulnerable_groups': 'People with known castor oil hypersensitivity (PGPR is derived from ricinoleic acid from castor oil); people with multiple food emulsifier sensitivities'
+        },
+        'carnauba wax': {
+            'short_term': 'Generally well tolerated; food-grade and cosmetic-grade are considered safe; potential rare allergy in hypersensitive individuals',
+            'long_term': 'Natural wax from Copernicia prunifera palm leaves; no significant long-term toxicity established; GRAS status (FDA); EU approved as E903; widely used in tablet coatings, sweets and cosmetics',
+            'vulnerable_groups': 'People with palm or wax allergy (very rare); generally safe for all populations'
+        },
+        'shellac': {
+            'short_term': 'Generally well tolerated; not suitable for vegans (insect-derived); rare allergic reactions',
+            'long_term': 'Natural resin secreted by lac insects (Laccifer lacca); approved as food glaze E904; generally recognised as safe; no significant long-term toxicity concerns',
+            'vulnerable_groups': 'Vegans and some religious groups (insect-derived); people with insect-product allergy'
+        },
+
+        # ── Key Vitamins and Minerals ─────────────────────────────────────────
+        'zinc gluconate': {
+            'short_term': 'Mild nausea at higher doses; metallic taste; generally well tolerated at food/cosmetic concentrations',
+            'long_term': 'Anti-acne mineral with good evidence at concentrations used in cosmetics; safe within food ADI; excessive supplemental zinc (>40mg/day) causes copper deficiency, impairs immune function and reduces HDL cholesterol; topical use at cosmetic levels is safe',
+            'vulnerable_groups': 'People taking zinc supplements above UL (40 mg/day); people with Wilson\'s disease (copper accumulation); kidney disease patients'
+        },
+        'zinc sulfate': {
+            'short_term': 'Nausea and gastric irritation in higher oral doses; eye irritation if used in eye drops without proper dilution',
+            'long_term': 'Same long-term concerns as excess zinc supplementation; used as a nutritional supplement; copper deficiency with chronic excess intake',
+            'vulnerable_groups': 'People already taking zinc supplements; Wilson\'s disease patients; kidney disease patients'
+        },
+        'copper gluconate': {
+            'short_term': 'Generally well tolerated at food and cosmetic concentrations; excess oral copper causes nausea, vomiting, liver pain',
+            'long_term': 'Copper is an essential trace mineral but toxic in excess — liver cirrhosis and neurological damage with chronic copper overload (Wilson\'s disease genetic model); cosmetic use is safe at typical concentrations; copper peptides in skincare are well-researched wound-healing agents',
+            'vulnerable_groups': 'People with Wilson\'s disease (impaired copper excretion); people with liver disease; infants under 12 months (immature copper excretion mechanisms)'
+        },
+        'magnesium aspartate': {
+            'short_term': 'Generally well tolerated; high oral magnesium doses cause diarrhoea (osmotic effect) — not relevant to cosmetic use',
+            'long_term': 'Magnesium is an essential mineral; deficiency is common in modern diets; supplemental magnesium at high doses (>350mg/day from supplements) may cause loose stools; topical cosmetic use is safe and may support skin enzyme function',
+            'vulnerable_groups': 'People with kidney disease (impaired magnesium excretion — risk of hypermagnesaemia with high doses); people on medications that interact with magnesium (antibiotics, muscle relaxants)'
+        },
+        'ferulic acid': {
+            'short_term': 'Generally well tolerated topically and orally; very rare allergic reactions; mild photosensitisation possible',
+            'long_term': 'Potent antioxidant with strong evidence for synergistic activity with Vitamins C and E in sunscreens; stabilises Vitamin C formulations; anti-cancer properties shown in cell studies; excellent long-term safety profile both as food antioxidant and cosmetic ingredient',
+            'vulnerable_groups': 'People with bran (wheat, rice, oat) allergy — ferulic acid is found in bran; generally safe for all populations'
+        },
+        'resveratrol': {
+            'short_term': 'Topical: generally well tolerated; oral supplements: mild GI side effects at high doses; blood-thinning effect at high doses (antiplatelet activity)',
+            'long_term': 'Potent polyphenol antioxidant; oral supplements have poor bioavailability (rapid metabolism); topical application delivers directly to skin — good anti-ageing evidence; very high supplemental doses (>1g/day) may interfere with oestrogen metabolism; anti-inflammatory, anti-carcinogenic properties in cell studies',
+            'vulnerable_groups': 'People on anticoagulants (antiplatelet activity); people on oestrogen therapy or with oestrogen-sensitive conditions at high supplemental doses; people scheduled for surgery (blood-thinning effect)'
+        },
+        'bakuchiol': {
+            'short_term': 'Excellent tolerability — much milder than retinol; minimal irritation, dryness or photosensitivity; rare contact sensitisation',
+            'long_term': 'Plant-based retinol alternative from babchi (Psoralea corylifolia) seeds; clinical studies show comparable anti-ageing efficacy to 0.5% retinol with significantly less irritation; considered safe in pregnancy as a retinol substitute (though human data is limited); good long-term skin tolerability',
+            'vulnerable_groups': 'Pregnant women (considered a retinol alternative but human pregnancy safety data is still limited); people with Psoralea/legume allergy (very rare)'
+        },
+        'squalane': {
+            'short_term': 'Exceptional tolerability — non-comedogenic, non-irritating, non-sensitising; one of the most universally tolerated cosmetic emollients',
+            'long_term': 'Naturally found in human sebum; stable, plant-derived (typically from olive, sugarcane or amaranth) or shark-liver-derived squalane (avoid shark-sourced for ethical reasons); excellent long-term safety record; antioxidant and emollient properties; no significant concerns established',
+            'vulnerable_groups': 'Shark-liver-derived squalane raises ethical concerns; olive-derived squalane is safe for all; virtually no adverse effects reported'
+        },
+        'sodium ascorbyl phosphate': {
+            'short_term': 'Excellent tolerability — significantly less irritating than L-ascorbic acid; rare contact dermatitis; stable in formulations',
+            'long_term': 'Well-studied stable Vitamin C derivative; antioxidant, collagen-stimulating and antimicrobial properties; converts to active ascorbic acid in the skin; good long-term safety record; anti-acne properties shown in several studies',
+            'vulnerable_groups': 'People with ascorbic acid or ascorbyl derivative allergy (very rare); generally safe for all skin types including sensitive'
+        },
+        'centella asiatica': {
+            'short_term': 'Generally well tolerated; rare contact allergy; mild photosensitisation possible',
+            'long_term': 'Traditional medicinal plant (gotu kola); strong evidence for wound healing, collagen synthesis stimulation and anti-inflammatory effects; madecassoside (a key active) has good safety data; long-term safety well established in traditional use',
+            'vulnerable_groups': 'People with allergy to Centella asiatica or Apiaceae plant family; people on sedative medications (mild sedative properties with oral use)'
+        },
+        'allantoin': {
+            'short_term': 'Exceptional tolerability — widely used in products for sensitive and damaged skin; no known short-term adverse effects at cosmetic concentrations',
+            'long_term': 'Naturally occurring metabolite of uric acid; excellent wound-healing, anti-irritant and cell-proliferating properties; long history of safe use in dermatology; no significant long-term concerns',
+            'vulnerable_groups': 'Safe for virtually all populations including infants; people with allantoin hypersensitivity (extremely rare)'
+        },
+        'bisabolol': {
+            'short_term': 'Exceptional tolerability — anti-inflammatory and soothing properties reduce, rather than cause, irritation; very rare allergy in people with composite (daisy) family hypersensitivity',
+            'long_term': 'Naturally derived from chamomile or synthetically produced; potent anti-irritant and anti-inflammatory; clinical evidence for reducing skin sensitivity and enhancing wound healing; excellent long-term safety record',
+            'vulnerable_groups': 'People with chamomile or daisy family allergy (Asteraceae/Compositae) — rare but documented cross-reactivity'
+        },
+
+        # ── BHT ───────────────────────────────────────────────────────────────
+        'butylated hydroxytoluene': {
+            'short_term': 'Skin and eye irritation at high concentrations; rare contact dermatitis; very low acute toxicity at food-additive levels',
+            'long_term': 'IARC Group 3 (not classifiable as carcinogenic to humans — insufficient evidence); animal studies at high doses show liver enlargement, thyroid tumour promotion and hormonal disruption; Japan has banned it in food; California Prop 65 does not list it (unlike BHA) but regulatory reviews are ongoing; at food-additive levels human risk is considered low',
+            'vulnerable_groups': 'People with thyroid conditions (thyroid promoter effects in animal studies); heavy consumers of highly processed foods containing multiple antioxidant preservatives; people with known BHT contact allergy'
+        },
+        'bht': {
+            'short_term': 'Generally well tolerated at food-additive concentrations; rare contact allergy',
+            'long_term': 'Liver and thyroid effects in high-dose animal studies; hormonal disruption debate; banned in Japan; IARC Group 3; combined BHA+BHT intake should be within ADI limits',
+            'vulnerable_groups': 'People with thyroid conditions; people with liver disease; those consuming high amounts of preserved processed foods daily'
+        },
+
+        # ── Propyl Gallate ────────────────────────────────────────────────────
+        'propyl gallate': {
+            'short_term': 'Skin and mucous membrane irritation; gastric irritation; occasional allergic reactions; contact dermatitis in sensitive individuals',
+            'long_term': 'Weak oestrogenic activity in some in vitro studies; IARC Group 3 (not classifiable); banned in Japan; EU has placed it on the "Substances of Very High Concern" watch list; some animal studies show thyroid and reproductive effects at high doses; suspected endocrine disruptor at higher concentrations',
+            'vulnerable_groups': 'People with known gallate hypersensitivity; people with aspirin/salicylate sensitivity (cross-reactivity possible); people with hormone-sensitive conditions; pregnant women (precautionary)'
+        },
+        'e310': {
+            'short_term': 'Skin irritation; rare allergic reactions; gastric discomfort at high doses',
+            'long_term': 'Same as propyl gallate — weak endocrine disruption in vitro; banned Japan; EU watch list; animal thyroid effects at high doses',
+            'vulnerable_groups': 'Aspirin-sensitive individuals, people with hormone-sensitive conditions'
+        },
+
+        # ── EDTA ──────────────────────────────────────────────────────────────
+        'tetrasodium edta': {
+            'short_term': 'Topical: generally well tolerated; skin irritation at high concentrations; IV use in chelation therapy: hypocalcaemia (dangerously low calcium — fatal cases reported)',
+            'long_term': 'Acts as a penetration enhancer — increases skin absorption of other cosmetic ingredients including potentially harmful ones; strips essential trace minerals (calcium, zinc, iron, magnesium) with prolonged oral or IV use; environmental persistence — not biodegradable, accumulates in water systems and mobilises heavy metals from sediment',
+            'vulnerable_groups': 'People with mineral deficiencies; people with cardiovascular disease (calcium depletion risk with IV use); pregnant women; aquatic ecosystems (environmental concern); patients receiving chelation therapy (IV EDTA has caused deaths from hypocalcaemia)'
+        },
+        'disodium edta': {
+            'short_term': 'Topical: similar to tetrasodium EDTA — mild irritant at high concentrations; enhances penetration of co-formulated ingredients',
+            'long_term': 'Same penetration-enhancing and mineral-stripping concerns as tetrasodium EDTA; environmental persistence and heavy metal mobilisation; oral/IV use causes calcium depletion; approved as food additive (E385) at low concentrations with ADI',
+            'vulnerable_groups': 'People with mineral deficiencies; pregnant women; anyone using multiple products containing EDTA simultaneously; aquatic ecosystems'
+        },
+
+        # ── Fragrance EU 26 Allergens (remaining) ────────────────────────────
+        'benzyl salicylate': {
+            'short_term': 'Allergic contact dermatitis and photoallergic reactions (sun activates the allergen); skin rash and sensitisation',
+            'long_term': 'EU declared fragrance allergen — must be declared at >0.001% (leave-on) and >0.01% (rinse-off); photoallergic reactions (UV-triggered) are particularly problematic as they occur every time the sensitised person uses a UV-containing product; permanent sensitisation once acquired',
+            'vulnerable_groups': 'People with fragrance allergy; people who spend time in the sun after applying products containing it; people with atopic dermatitis or eczema'
+        },
+        'benzyl benzoate': {
+            'short_term': 'Skin irritation and contact sensitisation; a known topical irritant at higher concentrations; used as a scabicide/pediculicide at pharmaceutical doses which cause burning and itching',
+            'long_term': 'EU declared fragrance allergen; toxic to cats (important if pets lick treated skin); permanent sensitisation; at pharmaceutical scabicide doses (25% cream) — CNS toxicity if massaged into broken skin in large amounts',
+            'vulnerable_groups': 'Fragrance-allergic individuals; people with eczema or broken skin; households with cats (benzyl benzoate is highly toxic to cats even in cosmetic concentrations); children treated for scabies'
+        },
+        'farnesol': {
+            'short_term': 'Allergic contact dermatitis; skin sensitisation — one of the more potent fragrance sensitisers; floral/muguet aroma',
+            'long_term': 'EU declared fragrance allergen requiring declaration; animal studies show anti-androgenic activity at high doses; sensitisation is permanent; IFRA restricts maximum concentration',
+            'vulnerable_groups': 'People with fragrance allergy; men with hormone-sensitive conditions (anti-androgenic at high doses — not relevant to cosmetic use but noted); eczema patients'
+        },
+        'hydroxycitronellal': {
+            'short_term': 'Allergic contact dermatitis; skin sensitisation; photosensitisation possible',
+            'long_term': 'EU declared fragrance allergen; IFRA classification restricts use due to sensitisation potential; some endocrine disruption evidence in vitro at high concentrations; permanent sensitisation',
+            'vulnerable_groups': 'Fragrance-allergic individuals; people with eczema; people with hormone-sensitive conditions (precautionary at high exposures)'
+        },
+        'isoeugenol': {
+            'short_term': 'One of the most potent fragrance sensitisers — causes significant allergic contact dermatitis; skin and mucous membrane irritation; clove-like aroma',
+            'long_term': 'EU declared allergen and one of the most common causes of fragrance contact allergy globally; IFRA severely restricts its use due to high sensitisation potential; permanent sensitisation — cross-reacts with eugenol and other phenylpropanoids',
+            'vulnerable_groups': 'Anyone using fragrance products regularly — sensitisation rate is significant; people with eczema or atopic dermatitis; people with clove allergy'
+        },
+        'cinnamyl alcohol': {
+            'short_term': 'Allergic contact dermatitis; skin sensitisation; oxidises to cinnamaldehyde (an even stronger sensitiser) on skin',
+            'long_term': 'EU declared allergen; oxidation products on skin and in formulations are more allergenic than the parent compound; permanent sensitisation; cross-reacts with cinnamaldehyde and other cinnamic derivatives',
+            'vulnerable_groups': 'Fragrance-allergic individuals; people using cinnamon-scented products; eczema and atopic dermatitis patients'
+        },
+        'citronellol': {
+            'short_term': 'Skin sensitisation and allergic contact dermatitis — milder than most other EU declared allergens but still significant; rose-citrus aroma',
+            'long_term': 'EU declared fragrance allergen requiring label declaration; sensitisation is permanent; IFRA guidelines restrict concentration in leave-on products',
+            'vulnerable_groups': 'People with fragrance allergy; eczema sufferers; consumers using rose or citrus-scented cosmetics daily'
+        },
+        'alpha-isomethyl ionone': {
+            'short_term': 'Allergic contact dermatitis; skin sensitisation; violet/floral aroma',
+            'long_term': 'EU declared fragrance allergen; sensitisation permanent; IFRA restricts use concentration; sometimes causes cross-reactivity with other ionones',
+            'vulnerable_groups': 'Fragrance-allergic individuals; people with eczema; consumers using violet or iris-scented products'
+        },
+        'amyl cinnamal': {
+            'short_term': 'Allergic contact dermatitis; skin and eye sensitisation; jasmine-like fragrance',
+            'long_term': 'EU declared fragrance allergen; sensitisation permanent; IFRA restricts maximum use level in leave-on products; cross-reacts with cinnamaldehyde derivatives',
+            'vulnerable_groups': 'Fragrance-allergic individuals; people with eczema; eczema-prone individuals using jasmine-scented products'
+        },
+        'benzyl cinnamate': {
+            'short_term': 'Allergic contact dermatitis; mild skin sensitiser',
+            'long_term': 'EU declared fragrance allergen; one of the less potent of the 26 declared allergens; permanent sensitisation; found in balsam of Peru and related natural fragrance materials',
+            'vulnerable_groups': 'People with fragrance allergy; people with Peru balsam allergy (cross-reactivity is significant)'
+        },
+
+        # ── Fatty Alcohols ────────────────────────────────────────────────────
+        'cetyl alcohol': {
+            'short_term': 'Very well tolerated topically; rare contact dermatitis in sensitive individuals; despite the name "alcohol" it is a fatty alcohol (waxy solid), not a drying alcohol',
+            'long_term': 'Excellent long-term safety record; naturally derived from palm or coconut oil; emollient and emulsifier; no significant long-term concerns; the rare contact dermatitis cases are usually from impurities rather than the pure compound',
+            'vulnerable_groups': 'People with documented cetyl alcohol contact allergy; people with eczema using products containing it for the first time (patch test recommended for sensitive skin)'
+        },
+        'cetearyl alcohol': {
+            'short_term': 'Same as cetyl alcohol — well tolerated fatty wax; rare contact allergy; emollient and stabiliser',
+            'long_term': 'One of the most commonly used and well-tolerated cosmetic emollients; excellent safety record; naturally derived; very rare cases of contact allergy documented',
+            'vulnerable_groups': 'People with documented fatty alcohol sensitivity; eczema patients who have previously reacted to fatty alcohols (uncommon but documented)'
+        },
+        'stearyl alcohol': {
+            'short_term': 'Well tolerated; non-drying waxy emollient; very rare contact allergy',
+            'long_term': 'Excellent long-term safety record; derived from natural sources; emollient and viscosity modifier; rare documented contact allergy cases',
+            'vulnerable_groups': 'People with known fatty alcohol allergy (very rare); those with multiple cosmetic ingredient sensitivities'
+        },
+        'behenyl alcohol': {
+            'short_term': 'Excellent tolerability — one of the most inert fatty alcohols used in cosmetics; rare contact allergy',
+            'long_term': 'C22 fatty alcohol with no significant safety concerns; good hair-conditioning properties; no long-term toxicity concerns established',
+            'vulnerable_groups': 'Same precautionary note as other fatty alcohols — very rare allergy possible; safe for general use'
+        },
+
+        # ── Quaternary Ammonium Compounds ─────────────────────────────────────
+        'behentrimonium chloride': {
+            'short_term': 'Well tolerated in rinse-off hair conditioners at typical use concentrations; eye irritation if product enters eyes; skin irritation at high concentrations',
+            'long_term': 'A cationic quat (C22) used as a hair conditioner; lower irritation potential than shorter-chain quats; environmental concern — quats are persistent in water systems and have some antimicrobial toxicity to aquatic organisms; very rare contact allergy',
+            'vulnerable_groups': 'People with quat sensitivity; people with scalp conditions (occupational hairdresser exposure); sensitive eyes if conditioner not fully rinsed'
+        },
+        'behentrimonium methosulfate': {
+            'short_term': 'Well tolerated; milder than the chloride counterpart; conditioning agent for hair',
+            'long_term': 'Same environmental persistence concerns as other quats; generally good safety profile in rinse-off hair care; no significant long-term human health concerns at cosmetic concentrations',
+            'vulnerable_groups': 'People with quat allergy (rare); environmental concern for aquatic organisms'
+        },
+        'cetrimonium chloride': {
+            'short_term': 'Eye and skin irritation at higher concentrations; contact sensitisation in some individuals; cytotoxic at high concentrations',
+            'long_term': 'Strong quat preservative and conditioning agent; can disrupt skin and mucous membrane barrier at high concentrations; environmental persistence; moderate contact allergy potential; studies show cytotoxicity to hair follicle cells at high concentrations',
+            'vulnerable_groups': 'People with quat allergy; people using multiple quat-containing products; aquatic ecosystems; people with sensitive scalp'
+        },
+        'cetrimonium bromide': {
+            'short_term': 'More irritating than chloride counterpart; contact sensitisation; skin and eye irritant',
+            'long_term': 'Potent quat with antimicrobial and cytotoxic activity; environmental persistence; same concerns as cetrimonium chloride but generally higher irritation potential',
+            'vulnerable_groups': 'People with quat allergy; individuals with sensitive skin or scalp'
+        },
+
+        # ── Isopropyl Alcohol ──────────────────────────────────────────────────
+        'isopropyl alcohol': {
+            'short_term': 'Skin dryness and barrier disruption with regular topical use; burning sensation on broken skin; inhalation of high concentrations causes headache, dizziness, CNS depression; eye irritant',
+            'long_term': 'Chronic topical exposure damages the skin lipid barrier; repeated application leads to xerosis (skin dryness), increased skin permeability and potential for secondary infection; unlike ethanol, isopropyl alcohol is metabolised to acetone — not to toxic acetaldehyde; no significant long-term carcinogenicity concerns at cosmetic use levels',
+            'vulnerable_groups': 'People with eczema, psoriasis, dry skin; infants (higher skin permeability, limited metabolic capacity); people using it as a wound-cleaning agent on large areas (absorption concern); people with isopropanol inhalation exposure'
+        },
+
+        # ── Polydextrose / Inulin ─────────────────────────────────────────────
+        'polydextrose': {
+            'short_term': 'Osmotic laxative effect at high doses (>50g) — bloating, flatulence, loose stools; better tolerated than sorbitol or lactulose',
+            'long_term': 'Soluble dietary fibre with prebiotic properties; promotes beneficial gut bacteria; no significant long-term toxicity; EU and FDA approved; "excessive consumption may have a laxative effect" label required above certain doses',
+            'vulnerable_groups': 'People with IBS (may worsen symptoms at high doses); people with short bowel syndrome; children eating large amounts of fibre-enriched products'
+        },
+        'inulin': {
+            'short_term': 'Bloating, flatulence, abdominal cramping — particularly during first week of use as gut microbiome adapts; dose-dependent (typically >10g/day causes symptoms)',
+            'long_term': 'Highly beneficial prebiotic fibre — selectively feeds beneficial Bifidobacterium and Lactobacillus; reduces appetite hormones (ghrelin), increases satiety hormones (PYY); positive cardiovascular effects; safe with long-term use when dose is titrated gradually',
+            'vulnerable_groups': 'People with IBS or SIBO (small intestinal bacterial overgrowth) — inulin is a major FODMAP; people with fructan intolerance; people with Crohn\'s disease (during flares)'
+        },
+        'maltodextrin': {
+            'short_term': 'Very high glycaemic index (GI 85–105, exceeding table sugar) — causes rapid blood glucose spike; energy crash; bloating in some individuals',
+            'long_term': 'Regular high intake contributes to same metabolic risks as excess sugar; Chassaing et al. (2015, Nature) showed dietary emulsifiers including maltodextrin disrupted the gut mucosal barrier and promoted metabolic syndrome and colitis in mice — human implications under investigation; may promote adherent-invasive E. coli (associated with Crohn\'s disease)',
+            'vulnerable_groups': 'Diabetics and pre-diabetics (extreme glucose spike); people with IBD particularly Crohn\'s disease; people on low-FODMAP diets; people seeking "clean label" foods'
+        },
+
+        # ── UV Filters ────────────────────────────────────────────────────────
+        'avobenzone': {
+            'short_term': 'Generally well tolerated; rare allergic contact dermatitis and photoallergic reactions; mild skin sensitisation in some individuals',
+            'long_term': 'Photolabile — degrades rapidly (within 30 min) in sunlight to potentially harmful breakdown products; photodegradation products may be allergenic and more toxic than the parent compound; requires photostabilisers (Tinosorb S/M or octocrylene) to maintain efficacy; detected in blood, urine and breast milk with regular use; FDA classifies as "not generally recognised as safe" due to insufficient systemic absorption data',
+            'vulnerable_groups': 'Pregnant women and infants (systemic absorption/breast milk concern); people with sunscreen allergy; people with history of photoallergic reactions; people using sunscreen without photostabilisers'
+        },
+        'octinoxate': {
+            'short_term': 'Skin sensitisation and contact/photoallergic dermatitis in some users; mild hormonal activity',
+            'long_term': 'One of the most widely studied chemical sunscreens — significant dermal absorption detected; acts as a weak oestrogen and anti-androgen in animal and in vitro studies; FDA classifies as "not generally recognised as safe" due to systemic absorption and potential endocrine effects; Hawaii and Palau have banned it (coral reef toxicity); detected in human blood, urine and breast milk',
+            'vulnerable_groups': 'Pregnant women and foetuses (systemic absorption); infants (high surface area to body ratio); people with hormone-sensitive conditions; coral reef ecosystems; people with photoallergy history'
+        },
+        'octocrylene': {
+            'short_term': 'Allergic and photoallergic contact dermatitis; increasingly recognised as a significant allergen; skin sensitisation',
+            'long_term': 'A UV stabiliser for avobenzone as well as a UV absorber itself; accumulates in coral tissue (coral reef toxicity); degrades in sunscreen products to benzophenone — a potential carcinogen (FDA 2021 study found benzophenone contamination in products with octocrylene); FDA classifies as "not generally recognised as safe"; cross-reacts with ketoprofen (NSAID) causing severe photoallergic reactions in sensitised individuals',
+            'vulnerable_groups': 'People taking ketoprofen or other benzophenone-related medications (cross-photoallergy); people with photodermatitis; pregnant women; infants; coral reef ecosystems'
+        },
+        'ethylhexyl salicylate': {
+            'short_term': 'Generally well tolerated; mild skin sensitisation in some individuals; rare photoallergic reactions',
+            'long_term': 'EU-approved UVB filter; weak oestrogenic activity in some in vitro studies — clinical significance at cosmetic use levels not established; detected in human blood at low levels with regular use; considered safer than oxybenzone but under review',
+            'vulnerable_groups': 'Pregnant women (precautionary — weak oestrogenic activity); people with aspirin/salicylate sensitivity (may cross-react); infants'
+        },
+
+        # ── Anti-acne and Brightening Actives ────────────────────────────────
+        'benzoyl peroxide': {
+            'short_term': 'Skin dryness, peeling, redness and burning — especially in the first 2–4 weeks; significant skin bleaching effect (bleaches fabrics, hair, eyebrows); rare contact dermatitis; eye, nose and throat irritation if aerosolised',
+            'long_term': 'Highly effective acne treatment with 40+ years of evidence; free radical generator — theoretical oxidative stress concerns but no established carcinogenicity in topical use at approved concentrations; FDA-approved OTC at 2.5–10%; long-term use is well-tolerated; photosensitising — SPF use recommended',
+            'vulnerable_groups': 'Pregnant women (Category C — limited safety data, use under medical supervision); people with eczema or rosacea; people with sensitive skin; anyone wearing coloured clothing or fabrics (bleaching damage)'
+        },
+        'zinc pyrithione': {
+            'short_term': 'Generally well tolerated in anti-dandruff shampoos; scalp irritation in some users; eye irritation if product enters eyes; toxic to cats and fish',
+            'long_term': 'Effective anti-fungal (Malassezia) and anti-bacterial agent for seborrhoeic dermatitis and dandruff; systemic absorption is very low from rinse-off products; EU restricted in leave-on cosmetics (concern about aquatic toxicity and potential developmental toxicity); highly toxic to aquatic organisms — not biodegradable; some reproductive toxicity at high doses in animal studies',
+            'vulnerable_groups': 'Pregnant and breastfeeding women (use leave-on products with caution); people with sensitive scalp; households with fish or cats (never dispose of ZPT-containing products in aquatic environments)'
+        },
+        'alpha arbutin': {
+            'short_term': 'Very well tolerated — significantly gentler than hydroquinone; rare contact allergy; no significant short-term adverse effects at cosmetic concentrations',
+            'long_term': 'Alpha-arbutin inhibits tyrosinase but does not itself degrade to hydroquinone to the same extent as beta-arbutin; at very high concentrations some hydrolysis to hydroquinone is theoretically possible — EU limits alpha-arbutin to 2% in face products and 0.5% in body products; hydroquinone is a known skin depigmenting agent with ochronosis (skin darkening paradox) and carcinogenicity concerns at high doses',
+            'vulnerable_groups': 'Pregnant women (EU restricts use — hydroquinone concerns); people with known hydroquinone sensitivity; people using high-concentration arbutin products beyond EU limits'
+        },
+        'arbutin': {
+            'short_term': 'Beta-arbutin: slightly more irritating than alpha-arbutin; can hydrolyse to hydroquinone more readily than alpha form',
+            'long_term': 'Beta-arbutin more readily degrades to hydroquinone than alpha form; EU restricts beta-arbutin in body lotions and facial products to lower concentrations; hydroquinone at high topical concentrations can cause ochronosis (paradoxical skin darkening), a permanent condition',
+            'vulnerable_groups': 'Pregnant women; people using high-concentration beta-arbutin; people with sensitive skin; those who previously reacted to hydroquinone'
+        },
+        'kojic acid': {
+            'short_term': 'Skin irritation, contact dermatitis, and sensitisation — a more irritating brightener than niacinamide or arbutin; redness and stinging are common, especially >1%',
+            'long_term': 'Tyrosinase inhibitor for skin brightening; some animal studies show thyroid effects at very high oral doses — not relevant to topical cosmetic use; EU restricts kojic acid to 1% in face products; potential skin sensitisation with prolonged use; some in vitro mutagenicity data — EFSA found insufficient evidence of carcinogenicity in humans at cosmetic levels',
+            'vulnerable_groups': 'People with sensitive skin or eczema; people with known kojic acid hypersensitivity; pregnant women (precautionary — limited data); people using concentrations above EU limit (1%)'
+        },
+        'glycolic acid': {
+            'short_term': 'Stinging, burning, erythema and peeling proportional to concentration and pH; 10%+ concentrations can cause chemical burns; significant photosensitisation — must use SPF',
+            'long_term': 'Most well-studied AHA with excellent clinical evidence for exfoliation, anti-ageing and hyperpigmentation treatment; chronic sun exposure without SPF use can negate benefits and increase photo-ageing and skin cancer risk; FDA requires a "use sunscreen" warning on AHA-containing products; long-term use at appropriate concentrations has good safety record',
+            'vulnerable_groups': 'Pregnant women (use with caution — glycolic acid is largely safe but high-strength peels should be avoided); people with rosacea or eczema; people who cannot commit to daily SPF use; people with melanin-rich skin (higher risk of post-inflammatory hyperpigmentation from chemical burns)'
+        },
+        'azelaic acid': {
+            'short_term': 'Initial tingling, itching or mild burning — common in first 2–4 weeks; generally much less irritating than glycolic acid or retinol; rare contact allergy',
+            'long_term': 'Anti-acne (inhibits P. acnes), anti-rosacea (anti-inflammatory) and skin-brightening (tyrosinase inhibitor) with strong clinical evidence; FDA-approved OTC (15% for rosacea, 20% prescription); considered safe in pregnancy (Category B); excellent long-term tolerance; no established serious long-term concerns',
+            'vulnerable_groups': 'People with known azelaic acid allergy (rare); people with severe eczema (transient irritation at initiation); otherwise one of the safest brightening and anti-acne actives available'
+        },
+
+        # ── Food Additives (miscellaneous) ────────────────────────────────────
+        'l-cysteine': {
+            'short_term': 'Generally well tolerated at food additive levels; high oral supplemental doses (>7g/day) may cause CNS toxicity',
+            'long_term': 'Used as a dough conditioner (E920) in bread; sourced from human hair, duck feathers, hog hair or synthesised — raises religious, ethical and dietary (vegan/halal/kosher) concerns; the cysteine itself is a natural amino acid with no significant toxicity at food-additive use levels; at very high supplemental doses, promotes cystine kidney stone formation',
+            'vulnerable_groups': 'Vegans and vegetarians (non-synthetic L-cysteine is animal-derived); people adhering to halal or kosher dietary requirements (source matters); people prone to cystine kidney stones'
+        },
+        'potassium nitrite': {
+            'short_term': 'Same as sodium nitrite — methaemoglobinaemia risk at high doses; acute nausea and hypotension',
+            'long_term': 'Converts to nitrite in the body with same nitrosamine-forming and colorectal cancer concerns as sodium nitrite; used in some cured meats as an alternative curing salt; IARC classifies processed meat consumption (partly attributable to nitrites/nitrates) as Group 1 carcinogenic',
+            'vulnerable_groups': 'Infants under 6 months (methaemoglobinaemia), regular processed meat consumers, people with GERD'
+        },
+        'charcoal': {
+            'short_term': 'Topical use in skincare: generally well tolerated; theoretical adsorption of some beneficial topical actives; oral activated charcoal: binds medications and reduces their effectiveness; temporary black stools; nausea',
+            'long_term': 'Activated charcoal in food and beverages: FDA has not approved it as a food additive — trend in charcoal-coloured foods/drinks is unregulated; may adsorb nutrients and medications if consumed regularly; topical activated charcoal in cleansers has limited evidence for deep pore cleansing; potential for skin dryness with overuse',
+            'vulnerable_groups': 'People on any medications (activated charcoal binds and neutralises drugs — take medications 2 hours apart from activated charcoal); pregnant women; people with constipation or bowel obstruction'
+        },
+        'green s': {
+            'short_term': 'Urticaria, rhinitis, hypersensitivity reactions; cross-sensitivity with aspirin; skin rash',
+            'long_term': 'E142 — banned in USA, Canada, Australia, Norway, Japan; some evidence of hyperactivity in children like other azo dyes; limited long-term human data; IARC has not specifically evaluated it',
+            'vulnerable_groups': 'Children (hyperactivity risk), aspirin-sensitive individuals, asthmatics, people with food colour sensitivity'
+        },
+        'e142': {
+            'short_term': 'Urticaria, asthma, hypersensitivity reactions; aspirin cross-reactivity',
+            'long_term': 'Banned in USA, Canada, Australia, Norway, Japan — safety concerns; limited long-term data',
+            'vulnerable_groups': 'Children, aspirin-sensitive individuals, asthmatics'
+        },
+        'brilliant black': {
+            'short_term': 'Hypersensitivity reactions; urticaria; asthma attacks; aspirin cross-reactivity',
+            'long_term': 'E151 — banned in USA, Canada, Australia, Belgium, Denmark, France, Germany, Switzerland, Sweden — safety concerns; azo dye with hyperactivity concerns; limited long-term human safety data',
+            'vulnerable_groups': 'Children (hyperactivity), aspirin-sensitive individuals, asthmatics, people with azo dye intolerance'
+        },
+        'e151': {
+            'short_term': 'Urticaria, asthma, hypersensitivity; aspirin cross-reactivity',
+            'long_term': 'Brilliant Black BN — banned in multiple countries including USA, Canada, Australia; safety concerns; hyperactivity link',
+            'vulnerable_groups': 'Children, aspirin-sensitive individuals, asthmatics'
+        },
+
+        # ── Ceramides and Skin Barrier Ingredients ────────────────────────────
+        'ceramide': {
+            'short_term': 'Excellent tolerability — ceramides are naturally found in human skin and are essentially hypoallergenic; rare allergy to vehicle ingredients but not ceramide itself',
+            'long_term': 'Ceramides are essential structural lipids in the stratum corneum (skin barrier); depleted in eczema, ageing and barrier-damaged skin; topical ceramide supplementation has strong clinical evidence for barrier repair in atopic dermatitis; excellent long-term safety — CeraVe and other ceramide-rich products are widely recommended by dermatologists',
+            'vulnerable_groups': 'Safe for all populations including infants and people with eczema; one of the most universally tolerated skincare ingredients'
+        },
+        'sodium pca': {
+            'short_term': 'Exceptional tolerability — naturally present in human skin as part of the Natural Moisturising Factor (NMF); no known adverse effects at any cosmetic concentration',
+            'long_term': 'One of the most effective humectants available; identical to the body\'s own NMF component; draws moisture from the air and deeper skin layers to the stratum corneum; no long-term toxicity concerns; excellent compatibility with all skin types',
+            'vulnerable_groups': 'Safe for all populations including sensitive skin and infants; no restrictions'
+        },
+        'urea': {
+            'short_term': 'At cosmetic concentrations (3–10%): effective humectant with no adverse effects; at higher concentrations (>20%): mild initial stinging on application to cracked or eczematous skin; very rare contact allergy',
+            'long_term': 'Naturally found in human skin as an NMF component; at 3–10%: pure humectant; at 10–20%: mild exfoliating and anti-pruritic (anti-itch) properties; at 20–40%: keratolytic (dissolves thickened skin on calluses and nail conditions); excellent long-term safety record — well-documented in dermatology for decades; no established systemic concerns with topical use',
+            'vulnerable_groups': 'People with very sensitive skin (initial stinging at high concentrations); infants (use low concentrations only); people with formaldehyde allergy (rare cases of urea decomposition to formaldehyde — theoretical at very high temperatures)'
+        },
+        'dimethiconol': {
+            'short_term': 'Excellent tolerability — a non-volatile silicone polymer; no known short-term adverse effects; non-comedogenic; non-sensitising',
+            'long_term': 'A high-molecular-weight silicone used for hair conditioning and skin smoothing; does not penetrate skin due to large molecular size; no established long-term health concerns; not cyclic (unlike D4/D5) so no EU PBT restrictions; minimal environmental persistence compared to cyclosiloxanes',
+            'vulnerable_groups': 'No specific vulnerable groups for this ingredient; safe for all populations'
+        },
+        'benzalkonium chloride': {
+            'short_term': 'Skin and mucous membrane irritation — concentration dependent; eye irritation (avoid in eye drops without proper dilution); rare severe anaphylactic reactions; damages the nasal mucosal barrier in nasal sprays (paradoxical worsening of nasal symptoms)',
+            'long_term': 'One of the most used antiseptic preservatives; increasingly associated with contact allergy; contributes to antimicrobial resistance (quat resistance in bacteria linked to cross-resistance to antibiotics); long-term use in nasal sprays damages cilia and mucosal barrier; environmental persistence',
+            'vulnerable_groups': 'People with known benzalkonium chloride allergy; people using nasal sprays long-term (mucosal damage); contact lens wearers (not compatible — absorbed by soft lenses); people with reactive airway disease'
+        },
+
+        # ── Common Amino Acids and Proteins ────────────────────────────────────
+        'hydrolyzed keratin': {
+            'short_term': 'Excellent tolerability; very rare allergy to keratin protein; sometimes formulated with formaldehyde-based cross-linkers in salon keratin treatments — the cross-linker is the hazard, not keratin itself',
+            'long_term': 'Hydrolysed keratin (small peptides and amino acids from keratin) coats the hair shaft and reduces breakage; no significant long-term safety concerns for the ingredient itself; salon "keratin straightening treatments" may use formaldehyde as cross-linker — an entirely separate hazard',
+            'vulnerable_groups': 'People with keratin or egg/wool allergy (rare); salon workers using formaldehyde-based keratin straightening systems (not the hydrolysed keratin ingredient)'
+        },
+        'hydrolyzed collagen': {
+            'short_term': 'Generally very well tolerated topically; rare allergy in people with fish, bovine or porcine sensitivity (source-dependent); no known short-term adverse effects',
+            'long_term': 'Hydrolysed collagen (collagen peptides) form a film on skin and hair for temporary smoothing; oral collagen peptide supplements have clinical evidence for joint and skin benefits; no significant long-term safety concerns at cosmetic use levels; marine collagen allergy is more common than bovine in fish-allergic individuals',
+            'vulnerable_groups': 'People with fish or shellfish allergy (marine-derived collagen); people with bovine/porcine allergy (animal-derived collagen); vegans (all collagen is animal-derived)'
+        },
+        'hydrolyzed wheat protein': {
+            'short_term': 'Rare but documented severe allergic reactions in wheat/gluten-intolerant individuals — particularly hydrolysed wheat protein in shampoos has been linked to wheat allergy induction in Japan (major outbreak, 2011)',
+            'long_term': 'The Japanese "Cha no Shizuku" soap incident (2011) demonstrated that topically applied hydrolysed wheat protein induced wheat allergy in thousands of people who then suffered anaphylaxis upon eating wheat — this led to WHO review of hydrolysed protein safety; currently EU requires specific labelling; the degree of hydrolysis affects allergenicity — smaller peptides are more likely to sensitise',
+            'vulnerable_groups': 'People with coeliac disease or wheat/gluten allergy — AVOID; people who consume wheat regularly and use hydrolysed wheat protein topically (sensitisation risk); people with multiple food allergies'
+        },
+
+        # ════════════════════════════════════════════════════════════════════
+        # PACKAGED FOOD AND ICE CREAM INGREDIENTS
+        # ════════════════════════════════════════════════════════════════════
+
+        # ── Emulsifiers ───────────────────────────────────────────────────────
+        'mono and diglycerides': {
+            'short_term': 'Generally well tolerated at food-additive levels; no significant immediate effects in most people; some individuals report mild GI discomfort with high intake',
+            'long_term': 'Mono and diglycerides of fatty acids (E471) are partial glycerides — the body treats them like dietary fats; the critical concern is their SOURCE: if derived from partially hydrogenated oils, they may contain trans fats which are NOT required to be declared on the trans fat label (a regulatory loophole in the USA and many countries); trans fat-derived E471 raises LDL cholesterol and increases cardiovascular disease risk; animal studies suggest that, like other emulsifiers, they may alter gut microbiome composition with chronic high intake; most modern food-grade E471 is derived from palm or sunflower oil (not hydrogenated)',
+            'vulnerable_groups': 'People with cardiovascular disease or high cholesterol (if trans-fat-derived); people seeking to avoid trans fats (labelling loophole means hidden trans fats are possible); people with inflammatory bowel disease (chronic emulsifier intake concern)'
+        },
+        'e471': {
+            'short_term': 'Generally well tolerated; no significant short-term effects at food-additive concentrations',
+            'long_term': 'Same as mono and diglycerides — trans fat labelling loophole concern; chronic emulsifier gut microbiome alteration; safe from non-hydrogenated sources',
+            'vulnerable_groups': 'People with cardiovascular disease; people avoiding trans fats; people with IBD'
+        },
+        'datem': {
+            'short_term': 'Generally well tolerated; no significant short-term adverse effects at food-additive levels',
+            'long_term': 'DATEM (Diacetyl Tartaric Acid Ester of Mono/Diglycerides, E472e) is a bread dough emulsifier; breaks down in the body to diacetyl, tartaric acid and fatty acids; diacetyl at high occupational INHALATION exposure causes bronchiolitis obliterans ("popcorn lung") — at food ingestion levels this concern is not applicable; FDA GRAS; EFSA found it safe at current food use levels; chronic high intake studies in animals show liver effects at extremely high doses not achievable through normal diet',
+            'vulnerable_groups': 'Bakery workers (occupational diacetyl inhalation — not the food additive itself); people with tartrate kidney stones (precautionary); otherwise safe for general population'
+        },
+        'e472e': {
+            'short_term': 'No significant short-term effects; well tolerated at food-additive levels',
+            'long_term': 'Same as DATEM — diacetyl inhalation concern for bakery workers (occupational only); FDA GRAS and EFSA approved for food use; liver effects only at extreme doses in animals',
+            'vulnerable_groups': 'Bakery workers (occupational diacetyl); people with tartrate sensitivity'
+        },
+        'sodium stearoyl lactylate': {
+            'short_term': 'Excellent tolerability — one of the most widely studied and safest food emulsifiers; no known short-term adverse effects',
+            'long_term': 'SSL (E481) is derived from stearic acid (saturated fatty acid) and lactic acid — both naturally present in food; FDA GRAS with long use history; JECFA established ADI of 0–20 mg/kg body weight; no significant carcinogenicity, teratogenicity or reproductive toxicity in studies; breaks down to stearic acid and lactic acid which are normal metabolic intermediates',
+            'vulnerable_groups': 'People with milk allergy (lactic acid is not dairy-derived but check formulation); people with very strict low-fat diets; generally safe for all populations including children'
+        },
+        'e481': {
+            'short_term': 'No known adverse effects at food-additive concentrations; excellent tolerability',
+            'long_term': 'Same as sodium stearoyl lactylate — FDA GRAS, JECFA ADI established; metabolised to stearic acid and lactic acid; no significant long-term concerns',
+            'vulnerable_groups': 'Safe for general population; see sodium stearoyl lactylate'
+        },
+        'calcium stearoyl lactylate': {
+            'short_term': 'Well tolerated at food-additive levels; no significant short-term adverse effects',
+            'long_term': 'E482 — same profile as SSL (E481); metabolised to calcium, stearic acid and lactic acid; FDA GRAS; JECFA approved; no significant long-term concerns at food-additive intake',
+            'vulnerable_groups': 'Safe for general population; same precautions as E481'
+        },
+        'carboxymethyl cellulose': {
+            'short_term': 'Mild GI effects (bloating, altered stool consistency) with high intake; generally well tolerated at typical food concentrations',
+            'long_term': 'CMC (E466) was one of two emulsifiers in the landmark Chassaing et al. (2015, Nature) mouse study showing dietary emulsifiers disrupted the intestinal mucosal barrier, altered gut microbiome composition and promoted metabolic syndrome, obesity and colitis — at concentrations "relevant to human food use"; a subsequent FRESH Cohort human study (2022) found positive association between CMC intake and increased Crohn\'s disease risk; EFSA reviewed the evidence (2020) and found it insufficient to change ADI but noted uncertainty; ongoing human studies; the traditional safety record is long but recent microbiome evidence has raised concern',
+            'vulnerable_groups': 'People with Crohn\'s disease and ulcerative colitis — strongest concern; people with IBS; people with gut dysbiosis; infants and children (developing gut microbiome); people consuming large amounts of ultra-processed foods with multiple emulsifiers'
+        },
+        'cmc': {
+            'short_term': 'Bloating, altered stool consistency at high intake; generally tolerated at food concentrations',
+            'long_term': 'Same as carboxymethyl cellulose (E466) — Chassaing 2015 gut barrier disruption study; FRESH Cohort 2022 Crohn\'s association; ongoing human studies; EFSA uncertainty noted',
+            'vulnerable_groups': 'People with IBD (Crohn\'s, ulcerative colitis), IBS, gut dysbiosis'
+        },
+        'e466': {
+            'short_term': 'Mild GI bloating and altered stool consistency at high doses',
+            'long_term': 'Carboxymethyl cellulose — Chassaing 2015 mouse study (gut barrier disruption); 2022 human cohort Crohn\'s disease association; EFSA review noted uncertainty; further human studies underway',
+            'vulnerable_groups': 'People with Crohn\'s disease, ulcerative colitis, IBS, gut dysbiosis'
+        },
+        'microcrystalline cellulose': {
+            'short_term': 'No significant short-term effects; insoluble fibre — adds bulk; safe',
+            'long_term': 'MCC (E460) is highly purified, partially depolymerised cellulose derived from plant pulp; chemically inert and not digested or absorbed; passes through the gut unchanged; FDA GRAS with extensive use history; no bioaccumulation; no significant long-term health concerns established in humans or animals at food-additive levels',
+            'vulnerable_groups': 'People with swallowing difficulties (MCC in tablet form can cause obstruction — not relevant to food use); safe for all populations at food-additive levels'
+        },
+        'e460': {
+            'short_term': 'No adverse effects; inert bulking agent',
+            'long_term': 'Microcrystalline cellulose — chemically inert, not absorbed; FDA GRAS; no long-term concerns',
             'vulnerable_groups': 'Safe for general population'
+        },
+        'locust bean gum': {
+            'short_term': 'Generally well tolerated; mild bloating or flatulence at very high intake as undigested fibre',
+            'long_term': 'Carob bean gum (E410) is a natural galactomannan polysaccharide from carob tree seeds; prebiotic — selectively feeds beneficial Bifidobacterium species; FDA GRAS; JECFA found no ADI necessary (safe at any food-use level); lowers LDL cholesterol and improves glycaemic control; used as infant formula thickener for reflux management — safe at appropriate doses',
+            'vulnerable_groups': 'People with carob allergy (rare — cross-reactivity with legumes possible); people with very severe IBS (any dietary fibre may worsen symptoms during flares); generally very safe'
+        },
+        'carob bean gum': {
+            'short_term': 'Well tolerated; mild flatulence at high intake',
+            'long_term': 'Same as locust bean gum (E410) — prebiotic galactomannan; FDA GRAS; lowers cholesterol; safe in infant formula',
+            'vulnerable_groups': 'People with carob or legume allergy (rare)'
+        },
+        'e410': {
+            'short_term': 'Mild bloating at very high intake; otherwise well tolerated',
+            'long_term': 'Locust bean gum — prebiotic, cholesterol-lowering; FDA GRAS; no ADI necessary',
+            'vulnerable_groups': 'People with carob allergy (rare)'
+        },
+        'pectin': {
+            'short_term': 'Very well tolerated; mild GI effects (increased stool bulk, mild flatulence) at high intake due to fibre content',
+            'long_term': 'Natural polysaccharide found in cell walls of all fruits and vegetables; excellent safety profile; FDA GRAS; no ADI necessary according to JECFA; lowers LDL cholesterol (soluble fibre binding bile acids); improves glycaemic control; prebiotic for gut microbiome; fruit-derived pectin reduces post-meal blood glucose spikes; no significant long-term concerns',
+            'vulnerable_groups': 'People with very severe GI sensitivity (excess fibre); people with latex allergy (very rare cross-reactivity with fruit pectin); generally one of the safest food additives'
+        },
+        'e440': {
+            'short_term': 'Well tolerated; mild fibre effects at high intake',
+            'long_term': 'Pectin — natural fruit fibre; FDA GRAS; cholesterol and glucose control benefits; prebiotic; no long-term concerns',
+            'vulnerable_groups': 'People with latex allergy (rare cross-reactivity); very safe generally'
+        },
+        'gellan gum': {
+            'short_term': 'Generally well tolerated; bloating and flatulence at high intake; very small amounts used in food',
+            'long_term': 'E418 — fermentation-derived polysaccharide from Sphingomonas elodea bacteria; FDA GRAS; JECFA approved; not digested or absorbed; passes through gut unchanged; no established carcinogenicity, teratogenicity or toxicity in long-term animal studies at relevant food-use doses',
+            'vulnerable_groups': 'Safe for general population; mild fibre-related GI effects at high intake only'
+        },
+        'e418': {
+            'short_term': 'Well tolerated; minimal GI effects at food concentrations',
+            'long_term': 'Gellan gum — fermentation-derived; FDA GRAS; JECFA approved; not absorbed; no long-term concerns',
+            'vulnerable_groups': 'Safe for general population'
+        },
+        'hydroxypropyl methylcellulose': {
+            'short_term': 'Well tolerated; mild laxative effect at high oral doses; used as a pharmaceutical film coating',
+            'long_term': 'HPMC (E464) is a semi-synthetic cellulose derivative; not digested or absorbed; FDA GRAS; used as a viscosity modifier, fat replacer and in capsule shells (veggie capsules); no significant long-term toxicity established; inert and excreted unchanged',
+            'vulnerable_groups': 'Safe for general population; celiac patients note: HPMC is gluten-free despite wheat-like coating appearance'
+        },
+        'e464': {
+            'short_term': 'Well tolerated at food-additive concentrations; mild laxative at high doses',
+            'long_term': 'Hydroxypropyl methylcellulose — not absorbed; FDA GRAS; inert; no long-term concerns',
+            'vulnerable_groups': 'Safe for general population'
+        },
+
+        # ── Glycerol / Glycerin ───────────────────────────────────────────────
+        'glycerol': {
+            'short_term': 'Very well tolerated; safe as food additive and cosmetic ingredient; very high oral intake (>1g/kg body weight) causes headache and nausea — not achievable through food additive levels; very mild osmotic laxative at very high doses',
+            'long_term': 'E422 — a natural trihydric alcohol and metabolic intermediate in the human body; formed from triglyceride (fat) metabolism; FDA GRAS; JECFA found no ADI necessary; used as sweetener, humectant, solvent and preservative; metabolised to glucose and glycerol-3-phosphate (normal metabolic intermediates); no long-term concerns at food-additive levels',
+            'vulnerable_groups': 'Diabetics at very high supplemental doses (converted to glucose); people with very rare glycerol intolerance; safe for general population at food-additive levels'
+        },
+        'glycerin': {
+            'short_term': 'Same as glycerol — excellent tolerability in food and cosmetics; no known short-term adverse effects at use concentrations',
+            'long_term': 'Same as glycerol (E422) — natural metabolic intermediate; FDA GRAS; JECFA no ADI necessary; no long-term concerns',
+            'vulnerable_groups': 'Diabetics at high supplemental intake; safe for general population'
+        },
+        'e422': {
+            'short_term': 'No adverse effects at food-additive levels; excellent tolerability',
+            'long_term': 'Glycerol/glycerin — natural metabolic intermediate; FDA GRAS; no ADI necessary',
+            'vulnerable_groups': 'Diabetics at high doses; safe generally'
+        },
+
+        # ── Flavourings ───────────────────────────────────────────────────────
+        'vanillin': {
+            'short_term': 'Well tolerated at food flavouring levels; rare contact dermatitis and skin sensitisation; migraine trigger in sensitive individuals (contains phenolic compounds); very rare allergic reactions',
+            'long_term': 'Synthetic vanillin (4-hydroxy-3-methoxybenzaldehyde) is the most widely used flavour compound in the world; 99% of vanillin used in food is synthetic (petroleum or wood lignin-derived) rather than from vanilla beans; FDA GRAS; no established carcinogenicity or serious long-term toxicity at food-use levels; animal studies at very high doses show liver effects — not relevant to food additive use; some animal studies suggest vanillin may have protective antioxidant properties',
+            'vulnerable_groups': 'People with vanilla or phenolic compound allergy; migraine sufferers (phenolic trigger); people with contact dermatitis to fragrances (cross-reactivity with vanilla fragrance)'
+        },
+        'ethyl vanillin': {
+            'short_term': 'Well tolerated at food-flavouring levels; 2–4× stronger flavour than vanillin; rare allergic reactions; migraine trigger possibility',
+            'long_term': 'Ethyl vanillin is entirely synthetic — not found naturally; FDA GRAS at food-use levels; some studies suggest higher acute toxicity than vanillin in animals — but at doses far exceeding any food exposure; no established long-term concern in humans at flavouring levels; EU permits its use with concentration limits in certain baby foods',
+            'vulnerable_groups': 'Infants and young children (EU restricts in baby food); people with vanilla/phenolic allergy; migraine sufferers'
+        },
+        'vanilla': {
+            'short_term': 'Genuine vanilla extract: very well tolerated; contains vanillin plus 200+ other flavour compounds; rare contact allergy to vanilla oleoresin',
+            'long_term': 'Natural vanilla from Vanilla planifolia bean has excellent safety record; contains antioxidants; FDA GRAS for vanilla extract; vanillin and other phenolics provide antioxidant properties; very low toxicity profile with centuries of safe food use; no significant long-term health concerns',
+            'vulnerable_groups': 'People with vanilla bean allergy (rare); people with sensitivity to phenolic compounds; people purchasing products labelled "vanilla flavour" — this is likely synthetic vanillin, not real vanilla bean extract'
+        },
+        'natural flavour': {
+            'short_term': 'Reactions vary widely — "natural flavour" is a legally defined term covering thousands of compounds derived from natural sources; allergens (including the 14 major EU allergens) can be hidden within natural flavour declarations',
+            'long_term': 'The major concern is lack of transparency: "natural flavours" and "natural flavoring" require NO disclosure of the specific compound used; a "natural flavour" derived from shellfish is not required to be declared as such in all jurisdictions; monosodium glutamate, yeast extract and other flavour-active compounds are sometimes listed as "natural flavour"; processing aids and carrier solvents (propylene glycol, glycerol, benzyl alcohol) do not need to be declared; people with specific food allergies cannot make informed decisions',
+            'vulnerable_groups': 'People with any food allergy — natural flavours can hide allergens; people avoiding specific ingredients (MSG-sensitive, vegans, halal/kosher consumers); people with migraine triggered by phenolic compounds or glutamates'
+        },
+        'natural flavor': {
+            'short_term': 'Same as natural flavour — allergens can be hidden; no way to assess without full disclosure',
+            'long_term': 'Same concerns as natural flavour — lack of transparency; potential for hidden MSG, allergens, or solvents',
+            'vulnerable_groups': 'People with food allergies; people avoiding MSG; vegans; halal/kosher consumers'
+        },
+        'artificial flavor': {
+            'short_term': 'Reactions vary by specific compound; most artificial flavours are FDA GRAS at use concentrations; rare hypersensitivity reactions',
+            'long_term': 'Artificial flavours are synthetic compounds; FDA requires each compound to be individually GRAS-approved before use; the term "artificial flavour" on a label covers thousands of possible compounds without disclosure; animal studies are conducted on each compound but cumulative effects of multiple synthetic flavours together are rarely studied; some artificial flavours (diacetyl in butter flavouring) have been linked to serious health problems in occupational settings',
+            'vulnerable_groups': 'People with chemical sensitivities; people who react to specific artificial flavouring compounds; children (precautionary — some artificial flavours not studied in developing populations); people who prefer transparency in food labelling'
+        },
+
+        # ── Dairy and Protein Ingredients ────────────────────────────────────
+        'whey': {
+            'short_term': 'Well tolerated in most people; milk allergy (IgE-mediated) can cause severe reactions including anaphylaxis; lactose intolerance can cause bloating, gas, diarrhoea from residual lactose in whey concentrate (whey isolate is mostly lactose-free)',
+            'long_term': 'Whey protein is a high-quality complete protein (all essential amino acids); excellent digestibility; strongly supported by clinical evidence for muscle protein synthesis; high leucine content triggers maximal muscle protein synthesis; no significant long-term health concerns in healthy adults at supplemental levels; very high protein intake (>2.2g/kg/day from all sources combined) may increase kidney workload in those with existing kidney disease',
+            'vulnerable_groups': 'People with cow\'s milk allergy (IgE-mediated — AVOID; anaphylaxis risk); people with lactose intolerance (whey concentrate only — whey isolate is largely lactose-free); people with pre-existing kidney disease (monitor total protein intake)'
+        },
+        'casein': {
+            'short_term': 'Well tolerated in most people; milk allergy causes reactions including anaphylaxis; lactose-free but still a milk protein',
+            'long_term': 'Casein is the dominant milk protein (80% of total); slow-digesting due to gel formation in stomach (compared to fast-digesting whey); provides sustained amino acid release over 5–7 hours; complete protein; no significant long-term health concerns at normal dietary levels; some observational studies link high casein intake to increased IGF-1 (insulin-like growth factor) levels — clinical significance debated; casein allergy is distinct from lactose intolerance',
+            'vulnerable_groups': 'People with cow\'s milk allergy (casein is the primary allergen in milk — AVOID); infants with cow\'s milk protein intolerance; people on dairy-free diets (casein is dairy-derived)'
+        },
+        'lactose': {
+            'short_term': 'Bloating, flatulence, abdominal cramping, diarrhoea in lactose-intolerant individuals; severity depends on dose and degree of intolerance; symptoms onset 30–120 minutes after ingestion; well tolerated in lactase-sufficient individuals',
+            'long_term': 'Lactose (milk sugar) is digested by lactase (small intestinal enzyme) to glucose and galactose; 65–70% of the global adult population has some degree of lactase deficiency post-weaning (primary lactase deficiency); higher prevalence in East Asian, African, Middle Eastern populations; secondary lactase deficiency can occur after gastroenteritis; no direct long-term toxicity — it is the fermentation by colonic bacteria causing the GI symptoms',
+            'vulnerable_groups': 'Lactose-intolerant individuals (most of the global adult population to some degree); infants with congenital lactase deficiency (rare but severe); people with irritable bowel syndrome (FODMAP trigger); people after gastroenteritis or chemotherapy (secondary lactase deficiency)'
+        },
+        'skim milk': {
+            'short_term': 'Well tolerated in those without milk allergy or lactose intolerance; same allergy concerns as whole milk',
+            'long_term': 'Skim milk powder / non-fat dry milk provides milk proteins (casein and whey), lactose, and minerals; nutritious and well-studied; contains all milk allergens (casein, whey, lactalbumin, lactoferrin); used extensively in packaged foods, ice cream, and chocolates as a cost-effective dairy ingredient',
+            'vulnerable_groups': 'People with cow\'s milk allergy (all milk proteins present); people with lactose intolerance (lactose content is significant in skim milk); vegans'
+        },
+        'milk solids': {
+            'short_term': 'Same as skim milk — well tolerated except in milk allergy and lactose intolerance',
+            'long_term': 'Concentrated dairy ingredient containing milk proteins, lactose and minerals; same nutritional and allergen profile as dairy; used extensively in ice cream, chocolates and baked goods for flavour and texture',
+            'vulnerable_groups': 'People with cow\'s milk allergy; people with lactose intolerance; vegans; people on dairy-restricted diets'
+        },
+
+        # ── Cocoa Products ────────────────────────────────────────────────────
+        'cocoa powder': {
+            'short_term': 'Generally well tolerated; cocoa contains caffeine and theobromine — mild stimulant effects at high intake; migraine trigger for some (tyramine, phenylethylamine content); rare cocoa allergy; heartburn/GERD aggravation',
+            'long_term': 'Rich source of flavanols (epicatechin, catechin) — strong antioxidant activity; multiple RCTs show cocoa flavanols improve endothelial function, lower blood pressure and improve insulin sensitivity; EFSA approved health claim for cocoa flavanols and normal blood flow; however, processed cocoa powder has highly variable flavanol content (Dutch/alkali processing destroys 60–90% of flavanols); contains oxalates (kidney stone concern at very high intake); small amount of cadmium naturally present in cocoa — WHO and EU have limits',
+            'vulnerable_groups': 'Migraine sufferers (phenylethylamine, tyramine triggers); people with GERD (relaxes lower oesophageal sphincter); people prone to kidney stones (high oxalate); pregnant women (caffeine + theobromine — limit total caffeine intake); people with cocoa allergy (rare); dogs and cats (theobromine is toxic to pets)'
+        },
+        'cocoa butter': {
+            'short_term': 'Excellent tolerability in topical cosmetic use; well tolerated orally; no significant short-term adverse effects',
+            'long_term': 'Primarily stearic acid (35%) and oleic acid (35%) with palmitic acid (25%); stearic acid is unusual among saturated fats — it does not raise LDL cholesterol (converted to oleic acid in the liver); neutral effect on cardiovascular risk unlike other saturated fats; solid fat at room temperature (melts at body temperature — characteristic chocolate melt); excellent cosmetic moisturiser; no significant long-term concerns',
+            'vulnerable_groups': 'People with cocoa allergy (very rare but documented); people with very high saturated fat intake already; acne-prone individuals using topical cocoa butter (comedogenic in some people)'
+        },
+
+        # ── Sugars and Sugar Syrups ───────────────────────────────────────────
+        'glucose syrup': {
+            'short_term': 'Rapid blood glucose spike — high glycaemic index; energy rush followed by crash; no direct short-term effects beyond elevated blood glucose in most people',
+            'long_term': 'Glucose syrup is a highly refined starch hydrolysate consisting of glucose oligomers and maltose; very high GI (similar to pure glucose); regular high intake contributes to insulin resistance, obesity, Type 2 diabetes and dental caries; used extensively in confectionery, ice cream, beverages and processed foods; less concerning than high-fructose corn syrup for liver fat accumulation (glucose is distributed to all tissues unlike fructose which is predominantly hepatic)',
+            'vulnerable_groups': 'Diabetics and pre-diabetics (extreme glucose spike); children (obesity and dental caries risk); people with hypoglycaemia (rebound sugar crash); people with insulin resistance'
+        },
+        'dextrose': {
+            'short_term': 'Pure glucose — most rapid blood glucose spike of any sugar; immediate energy; can cause reactive hypoglycaemia (blood sugar crash) after initial spike',
+            'long_term': 'Dextrose is pharmaceutical-grade glucose; at food-additive levels in packaged products, same metabolic concerns as glucose syrup; used for sweetening, browning (Maillard reaction) and as a fermentation substrate; excessive intake contributes to weight gain, diabetes risk and dental cavities',
+            'vulnerable_groups': 'Diabetics and pre-diabetics (highest glycaemic response of all sugars); children; people with reactive hypoglycaemia'
+        },
+
+        # ── Sugar Alcohols ────────────────────────────────────────────────────
+        'maltitol': {
+            'short_term': 'Osmotic laxative effect at lower doses than most other sugar alcohols — bloating, flatulence and diarrhoea onset from approximately 25–30g in adults (varies individually); products must carry "excessive consumption may have laxative effects" warning in EU',
+            'long_term': 'Maltitol has a glycaemic index of 35 (vs 65 for sucrose) — still significantly raises blood glucose and insulin, making it less suitable for diabetics than other sugar alcohols like erythritol or xylitol; the marketing of "sugar-free" products containing maltitol as "diabetic-friendly" is misleading; no significant long-term toxicity; dental-friendly (not fermented by Streptococcus mutans); prebiotic-like effects on gut bacteria',
+            'vulnerable_groups': 'Diabetics — maltitol still raises blood glucose significantly (GI of 35); people with IBS or functional gut disorders (laxative threshold is low); children (lower body weight means lower laxative threshold per unit consumed)'
+        },
+        'e965': {
+            'short_term': 'Osmotic diarrhoea and bloating onset at ~25g; laxative threshold lower than for sorbitol in some individuals',
+            'long_term': 'Maltitol — GI of 35 (not truly "diabetic safe"); EU laxative warning required; dental-friendly; no significant long-term toxicity',
+            'vulnerable_groups': 'Diabetics, people with IBS, children'
+        },
+        'mannitol': {
+            'short_term': 'Strong osmotic laxative effect at low doses (10–20g) — bloating, flatulence, abdominal pain, diarrhoea; IV mannitol is used as an osmotic diuretic and brain oedema treatment — at those doses causes dangerous electrolyte disturbances',
+            'long_term': 'Very poorly absorbed from the gut (compared to sorbitol which is partially absorbed); almost completely reaches the colon where bacteria ferment it; very dental-friendly; very low glycaemic index; FDA GRAS with "laxative effect" warning; no significant long-term toxicity from food additive use; commonly used as a pharmaceutical excipient',
+            'vulnerable_groups': 'People with IBS or functional gut disorders (very strong laxative effect at low dose); children (low laxative threshold); people with kidney disease (renal excretion of absorbed mannitol); diabetics (safe sugar alcohol — very low GI)'
+        },
+        'e421': {
+            'short_term': 'Strong osmotic laxative at low doses (10–20g); significant GI symptoms',
+            'long_term': 'Mannitol — very low GI, dental-friendly; strong laxative action; FDA GRAS with warning',
+            'vulnerable_groups': 'IBS sufferers, children, people with kidney disease'
+        },
+        'lactitol': {
+            'short_term': 'Osmotic laxative effect similar to lactulose (used medically as laxative); bloating, flatulence; bowel movements increased',
+            'long_term': 'E966 — disaccharide sugar alcohol derived from lactose; poorly absorbed, fermented by colonic bacteria to produce beneficial SCFAs (short-chain fatty acids); prebiotic effects; very low GI (<5); dental-friendly; clinically used as a laxative for constipation; long-term safety excellent; EU-approved with laxative effect warning',
+            'vulnerable_groups': 'People with lactose intolerance (some residual lactose sensitivity possible); people with IBS who are sensitive to polyols; people taking other laxatives'
+        },
+        'e966': {
+            'short_term': 'Osmotic laxative effects — used as a prescription laxative; bloating and flatulence',
+            'long_term': 'Lactitol — prebiotic, very low GI, dental-friendly; long-term safety excellent',
+            'vulnerable_groups': 'Lactose-sensitive individuals, IBS sufferers'
+        },
+
+        # ── Leavening / Raising Agents ────────────────────────────────────────
+        'sodium bicarbonate': {
+            'short_term': 'Well tolerated at baking use levels; as an antacid: rapid CO₂ gas release causes belching; alkaline nature can temporarily neutralise stomach acid; excessive intake (as antacid) causes milk-alkali syndrome',
+            'long_term': 'E500 — common baking soda; reacts with acids to produce CO₂ (leavening action); at baking residue levels, the sodium content contributes to dietary sodium intake (concerns for hypertension); no direct long-term toxicity at food-additive amounts; excessive use as a DIY antacid causes metabolic alkalosis and milk-alkali syndrome (hypercalcaemia, renal failure)',
+            'vulnerable_groups': 'People on sodium-restricted diets (hypertension, heart failure, kidney disease) — significant sodium contribution at high baking use; people self-treating with large amounts as antacid (milk-alkali syndrome risk)'
+        },
+        'e500': {
+            'short_term': 'Well tolerated at baking levels; excess causes alkalosis',
+            'long_term': 'Sodium bicarbonate — contributes dietary sodium; no direct toxicity at food-additive levels',
+            'vulnerable_groups': 'People on low-sodium diets (hypertension, heart/kidney disease)'
+        },
+        'potassium bicarbonate': {
+            'short_term': 'Well tolerated at food-additive levels; same CO₂-generating leavening mechanism as sodium bicarbonate; less sodium than equivalent sodium bicarbonate',
+            'long_term': 'E501 — used in low-sodium baking products; provides potassium (beneficial for blood pressure); at food-additive levels no significant concerns; excessive supplemental potassium intake can cause hyperkalaemia in people with kidney disease',
+            'vulnerable_groups': 'People with kidney disease (potassium accumulation — hyperkalaemia risk with large amounts); otherwise safe and beneficial (potassium vs sodium)'
+        },
+        'e501': {
+            'short_term': 'Well tolerated at baking levels; same mechanism as baking soda',
+            'long_term': 'Potassium bicarbonate — beneficial potassium source; low-sodium alternative to E500',
+            'vulnerable_groups': 'People with kidney disease (potassium restriction needed)'
+        },
+        'ammonium bicarbonate': {
+            'short_term': 'Strong ammoniacal odour during baking that dissipates with heat; if improperly baked, residual ammonia can cause irritation; well tolerated in properly baked products',
+            'long_term': 'E503 — decomposes completely to NH₃, CO₂ and H₂O at baking temperatures; if completely decomposed, no residual compound remains in the baked product; formerly called "hartshorn" or "baker\'s ammonia"; concern only if product not properly baked and ammonia residue remains; FDA GRAS for appropriate baking use',
+            'vulnerable_groups': 'People with ammonia metabolism disorders (urea cycle disorders — extremely rare); otherwise safe in properly baked products; concern if under-baked (raw dough consumption)'
+        },
+        'e503': {
+            'short_term': 'Ammonia odour if under-baked; well tolerated in fully baked products',
+            'long_term': 'Ammonium bicarbonate — completely decomposes during baking; no residue if properly baked',
+            'vulnerable_groups': 'People with urea cycle disorders (rare); ensure product is properly baked'
+        },
+        'diphosphate': {
+            'short_term': 'Well tolerated at food-additive levels; no significant short-term adverse effects',
+            'long_term': 'E450 (pyrophosphates) — used as leavening agents, emulsifying salts in processed cheese, and meat binders; contributes to dietary phosphate intake; high total dietary phosphate intake associated with increased cardiovascular mortality in people with chronic kidney disease (CKD); phosphate from food additives has higher bioavailability (~80–100%) than organic phosphate from natural foods (~40–60%); WHO/IARC note that vascular calcification worsens with excess phosphate in CKD patients',
+            'vulnerable_groups': 'People with chronic kidney disease (impaired phosphate excretion — hyperphosphataemia risk); people with hyperparathyroidism; people with cardiovascular disease (vascular calcification concern); people consuming large amounts of ultra-processed food containing multiple phosphate additives'
+        },
+        'e450': {
+            'short_term': 'Well tolerated at food-additive levels; no immediate adverse effects',
+            'long_term': 'Diphosphates — high bioavailability phosphate additive; cardiovascular and kidney concerns with high total intake; CKD patients most vulnerable',
+            'vulnerable_groups': 'CKD patients, people with hyperparathyroidism, people with cardiovascular disease'
+        },
+        'triphosphate': {
+            'short_term': 'Well tolerated at food-additive levels; same profile as diphosphates',
+            'long_term': 'E451 (triphosphates/sodium tripolyphosphate) — same high-bioavailability phosphate concerns as E450; used in meat, seafood and processed cheese; EFSA has raised concern about cumulative phosphate intake from multiple food additives in the modern diet',
+            'vulnerable_groups': 'CKD patients, people on phosphate-restricted diets, people with cardiovascular disease'
+        },
+        'e451': {
+            'short_term': 'Well tolerated at food-additive levels',
+            'long_term': 'Triphosphates — same phosphate overload concerns as E450 for CKD patients; EFSA cumulative intake concern',
+            'vulnerable_groups': 'CKD patients, people with cardiovascular disease'
+        },
+        'polyphosphate': {
+            'short_term': 'Well tolerated; no significant short-term effects',
+            'long_term': 'E452 (polyphosphates) — used as stabilisers, water-retention agents in seafood and meat; contributes to dietary phosphate load; same kidney/cardiovascular concerns as other phosphate additives at high cumulative intake; EFSA reviewed and found current use safe but noted inadequate data on cumulative phosphate intake from all food additives',
+            'vulnerable_groups': 'CKD patients, people with hyperparathyroidism, people with CVD'
+        },
+        'e452': {
+            'short_term': 'Well tolerated at food-additive levels',
+            'long_term': 'Polyphosphates — cumulative phosphate intake concern; EFSA note on inadequate data',
+            'vulnerable_groups': 'CKD patients, people on phosphate-restricted diets'
+        },
+
+        # ── Natural Colours ───────────────────────────────────────────────────
+        'beta carotene': {
+            'short_term': 'Well tolerated; very high intake causes carotenodermia (harmless yellow-orange skin colouration — fully reversible); no acute toxicity',
+            'long_term': 'E160a — provitamin A (converts to Vitamin A as needed); powerful antioxidant; major clinical trial (CARET, ATBC) found that high-dose beta-carotene SUPPLEMENTS (20–30mg/day — far above food colouring levels) INCREASED lung cancer risk and overall mortality in smokers and asbestos workers; this finding applies to synthetic supplements, NOT to dietary beta-carotene from food or food colouring amounts; at food-additive concentrations (typically 1–25mg/day), beta-carotene is safe and beneficial; FDA approved for food colouring',
+            'vulnerable_groups': 'Current and former smokers — DO NOT take high-dose beta-carotene supplements (CARET trial evidence); asbestos workers; people with liver disease (impaired Vitamin A conversion); at FOOD levels, safe for all populations including pregnant women'
+        },
+        'e160a': {
+            'short_term': 'Well tolerated; carotenodermia at very high intake (harmless)',
+            'long_term': 'Beta-carotene — safe at food levels; high-dose supplement risk in smokers (CARET trial); antioxidant at food concentrations',
+            'vulnerable_groups': 'Smokers taking supplements (increased lung cancer risk in trials); safe at food colouring levels'
+        },
+        'beetroot red': {
+            'short_term': 'Harmless reddish-pink urine and stools (beeturia) in sensitive individuals — alarming appearance but completely safe; very rare allergic reactions',
+            'long_term': 'E162 (betanin) — natural pigment from red beetroot; FDA GRAS; excellent safety profile; some studies show antioxidant and anti-inflammatory properties; betalain pigments may have cancer-protective properties in cell studies; no significant long-term health concerns; instability to heat and light means it may degrade in stored products',
+            'vulnerable_groups': 'People with beeturia (benign — up to 14% of population excrete red urine after beetroot — alarming but harmless); very rare allergic reactions to beetroot; people with kidney stones (beetroot is high in oxalates — relevant only to very large beetroot consumption, not food colouring levels)'
+        },
+        'e162': {
+            'short_term': 'Possible harmless beeturia (red urine/stools); very rare allergy',
+            'long_term': 'Betanin — natural beetroot pigment; FDA GRAS; antioxidant; excellent safety',
+            'vulnerable_groups': 'Safe; beeturia is harmless; very rare allergy to beetroot'
+        },
+        'anthocyanin': {
+            'short_term': 'Excellent tolerability; natural pigments from berries, red cabbage, purple sweet potato; very rare allergy; stools may show slight colour change at high intake',
+            'long_term': 'E163 — water-soluble flavonoid pigments with potent antioxidant activity; extensive research shows cardiovascular protection, anti-inflammatory, anti-cancer and neuroprotective properties in epidemiological and cell studies; FDA approved natural food colouring; no ADI necessary (JECFA); one of the most beneficial food additives with positive health associations',
+            'vulnerable_groups': 'Very rare allergy to specific anthocyanin sources (berries, red cabbage etc); safe for all populations; one of the healthiest food colourants available'
+        },
+        'e163': {
+            'short_term': 'Excellent tolerability; natural berry/vegetable pigment',
+            'long_term': 'Anthocyanins — potent antioxidant; cardiovascular and anti-cancer associations; FDA approved; no ADI necessary',
+            'vulnerable_groups': 'Very rare allergy to source ingredient; otherwise very safe and beneficial'
+        },
+        'riboflavin': {
+            'short_term': 'Excellent tolerability; harmless bright yellow urine from excess riboflavin excretion (water-soluble B vitamin); very rare photosensitivity',
+            'long_term': 'E101 — Vitamin B2; essential nutrient; used as both a nutrient and a yellow food colouring; water-soluble — excess excreted in urine (gives characteristic bright yellow colour); no toxicity from food or moderate supplemental amounts; extensive research confirms safety; FDA GRAS; beneficial as a nutrient source in fortified foods',
+            'vulnerable_groups': 'Safe for all populations; higher doses may cause photosensitivity in rare individuals; bright yellow urine is harmless and expected'
+        },
+        'e101': {
+            'short_term': 'Harmless bright yellow urine from riboflavin excretion; excellent tolerability',
+            'long_term': 'Riboflavin/Vitamin B2 — essential nutrient colouring; FDA GRAS; water-soluble; no toxicity',
+            'vulnerable_groups': 'Safe for general population; very rare photosensitivity'
+        },
+
+        # ── Acidity Regulators ────────────────────────────────────────────────
+        'tartaric acid': {
+            'short_term': 'Well tolerated at food-use levels; very high intake (rare) causes GI irritation, muscle weakness and kidney damage (tartrate toxicity documented only at extreme doses)',
+            'long_term': 'E334 — natural acid found in grapes, tamarind and bananas; used as an acidulant and leavening acid (cream of tartar); FDA GRAS; JECFA no ADI necessary; metabolised to tartrate, CO₂ and water; no significant long-term health concerns at food-additive intake; cream of tartar (potassium bitartrate) is widely used in baking',
+            'vulnerable_groups': 'People with kidney disease (tartrate is renally excreted — risk of accumulation at very high intake); people with hyperoxaluria (tartrate can complex with calcium); safe for general population at food-additive levels'
+        },
+        'e334': {
+            'short_term': 'Well tolerated at food levels; extreme intake causes kidney issues (not relevant to food additive use)',
+            'long_term': 'Tartaric acid — natural grape/tamarind acid; FDA GRAS; no ADI necessary; no long-term concerns',
+            'vulnerable_groups': 'People with kidney disease at very high intake'
+        },
+        'sodium citrate': {
+            'short_term': 'Well tolerated; used as an acidity regulator and flavour modifier; large oral doses can cause GI discomfort (alkalising effect); IV sodium citrate used as anticoagulant in blood transfusions',
+            'long_term': 'E331 — sodium salt of citric acid; FDA GRAS; metabolised to bicarbonate (alkalising); contributes to dietary sodium intake; no direct long-term toxicity at food-additive levels; used in sports drinks for rapid rehydration and as a buffer in pharmaceutical preparations',
+            'vulnerable_groups': 'People on sodium-restricted diets; people with kidney disease (citrate can increase urinary calcium oxalate stone formation at very high intake, though it also has stone-preventing properties at moderate intake)'
+        },
+        'e331': {
+            'short_term': 'Well tolerated; contributes dietary sodium at food-additive levels',
+            'long_term': 'Sodium citrates — FDA GRAS; metabolised to bicarbonate; no long-term concerns at food levels',
+            'vulnerable_groups': 'People on low-sodium diets; people with kidney stone history'
+        },
+        'calcium phosphate': {
+            'short_term': 'Well tolerated at food-additive levels; provides calcium and phosphorus; no significant short-term adverse effects',
+            'long_term': 'E341 (mono/di/tricalcium phosphate) — used as raising agents, anti-caking agents, nutrient supplements and mineral salts; provides highly bioavailable calcium; same phosphate additive concerns apply (see E450/451/452) for people with CKD — high bioavailability phosphate can worsen hyperphosphataemia; calcium supplement benefit must be weighed against phosphate load in CKD',
+            'vulnerable_groups': 'CKD patients (hyperphosphataemia risk from highly bioavailable phosphate); people with hypercalcaemia (milk-alkali syndrome risk); otherwise beneficial calcium source for general population'
+        },
+        'e341': {
+            'short_term': 'Well tolerated; provides calcium and phosphorus',
+            'long_term': 'Calcium phosphates — beneficial calcium source; high-bioavailability phosphate CKD concern',
+            'vulnerable_groups': 'CKD patients (phosphate restriction); people with hypercalcaemia'
+        },
+
+        # ── Yeast Extract / HVP ───────────────────────────────────────────────
+        'yeast extract': {
+            'short_term': 'Well tolerated in most people; naturally contains high levels of free glutamates (approximately 5% by weight) — people sensitive to MSG may react; contains tyramine — migraine trigger; high sodium content in some formulations',
+            'long_term': 'Yeast extract (Marmite, Vegemite, Maggi seasoning) provides B vitamins (especially B12 and folate), zinc, selenium; the glutamate content (technically "naturally occurring") gives it deep umami flavour; used to label products as "no added MSG" while achieving the same flavour — the free glutamate is physiologically identical to MSG; high purine content raises uric acid — concern for gout sufferers; no established long-term toxicity',
+            'vulnerable_groups': 'People sensitive to MSG/glutamate; migraine sufferers (tyramine content); people with gout or hyperuricaemia (high purines); people on low-sodium diets; people with Crohn\'s disease (some intolerance reported)'
+        },
+        'hydrolysed': {
+            'short_term': 'Hydrolysed vegetable/plant/wheat protein (HVP/HWP/HPP) is high in free glutamates — same MSG-like reactions possible; may contain residual allergens from source protein (soy, wheat, milk)',
+            'long_term': 'Acid or enzyme hydrolysis of proteins creates free amino acids including glutamate; used to label products as "no added MSG" while providing equivalent flavour-enhancing effect; HVP may contain 3-MCPD (3-monochloropropane-1,2-diol — a probable carcinogen) as a by-product of acid hydrolysis at elevated temperatures; EU has strict limits on 3-MCPD in HVP; enzymatically produced HVP has much lower 3-MCPD levels',
+            'vulnerable_groups': 'People with MSG sensitivity; people with allergies to source protein (soy HVP for soy allergic, wheat HVP for coeliac); people avoiding MSG-like compounds'
+        },
+        'gum arabic': {
+            'short_term': 'Generally well tolerated; occasional GI effects (bloating, flatulence) at high intake as it is a dietary fibre; rare occupational allergy in pharmaceutical manufacturing',
+            'long_term': 'E414 (Acacia) — natural exudate from Acacia senegal and Acacia seyal trees; one of the safest food additives; FDA GRAS with no ADI necessary; prebiotic fibre selectively feeding Bifidobacterium and Lactobacillus; clinical studies show it lowers total cholesterol and reduces abdominal fat at high doses; safe in pregnancy and childhood; no carcinogenicity, mutagenicity or reproductive toxicity in extensive animal studies',
+            'vulnerable_groups': 'People with gum arabic occupational allergy (pharmaceutical/food industry workers); people with very sensitive gut (high-fibre effects); otherwise one of the safest food additives'
+        },
+        'acacia': {
+            'short_term': 'Same as gum arabic — well tolerated; mild fibre-related GI effects at high intake',
+            'long_term': 'Same as gum arabic (E414) — FDA GRAS; prebiotic; cholesterol-lowering; no ADI necessary',
+            'vulnerable_groups': 'Occupational allergy risk; generally very safe'
+        },
+        'modified starch': {
+            'short_term': 'Generally well tolerated; some individuals with IBS report sensitivity; provides glucose rapidly on digestion (higher GI than unmodified starch)',
+            'long_term': 'Modified food starches (E1400–E1450 series) are physically, enzymatically or chemically treated starches; most are safe and FDA GRAS; however, octenyl succinic anhydride-modified starch (E1450) is restricted in infant formula in EU; acetylated distarch adipate (E1422) and hydroxypropyl distarch phosphate (E1442) are the most common; phosphate-modified starches add to total dietary phosphate (CKD concern); chemical treatments are minimal and mostly removed in processing',
+            'vulnerable_groups': 'CKD patients (phosphate-modified starches); infants (EU restricts some modified starches in infant formula); people with coeliac disease (if wheat-starch derived — gluten-free modified starches are available)'
+        },
+        'e1422': {
+            'short_term': 'Well tolerated at food-additive levels; same as other modified starches',
+            'long_term': 'Acetylated distarch adipate — a chemically modified corn/tapioca starch; FDA GRAS; EU permitted; no significant long-term health concerns at food-additive levels; widely used in frozen foods for freeze-thaw stability',
+            'vulnerable_groups': 'CKD patients (phosphate content); people with corn or tapioca allergy (rare)'
+        },
+        'e1442': {
+            'short_term': 'Well tolerated; same as modified starch general profile',
+            'long_term': 'Hydroxypropyl distarch phosphate — stable under heat, acid and freezing; FDA GRAS; EU permitted; phosphate content is a concern for CKD patients at high cumulative intake from multiple modified starch additives',
+            'vulnerable_groups': 'CKD patients; people with corn or potato allergy (rare, source-dependent)'
+        },
+    }
+
+    for key, effects in specific.items():
+        if key in ingredient_lower:
+            return effects
+
+    # ── Classification-based fallbacks ────────────────────────────────────────
+    if classification == 'commonly_questioned':
+        if 'paraben' in ingredient_lower:
+            return {
+                'short_term': 'Contact dermatitis, skin sensitisation, allergic reactions with prolonged use',
+                'long_term': 'Weak oestrogenic and androgenic activity; detected in human breast tissue, blood, urine and adipose tissue; potential endocrine disruption with chronic exposure; bioaccumulation concern',
+                'vulnerable_groups': 'Pregnant and breastfeeding women, infants, children, people with hormone-sensitive conditions (ER+ breast cancer), people with damaged skin barrier'
+            }
+        if 'isothiazolinone' in ingredient_lower:
+            return {
+                'short_term': 'Severe allergic contact dermatitis, skin and scalp eczema, cytotoxic at high concentrations',
+                'long_term': 'Permanent sensitisation; cross-reactivity between MIT and CMIT; pandemic of contact allergy in Europe in the 2010s traced to their widespread adoption in cosmetics',
+                'vulnerable_groups': 'Anyone with eczema or atopic dermatitis; people previously sensitised; healthcare workers; all individuals — sensitisation risk is significant'
+            }
+        if any(x in ingredient_lower for x in ['nitrite', 'nitrate']):
+            return {
+                'short_term': 'Methaemoglobinaemia risk at high doses (especially in infants under 6 months)',
+                'long_term': 'N-nitrosamine formation linked to colorectal, stomach and oesophageal cancer; IARC classifies processed meat consumption as Group 1 carcinogenic (partly attributed to nitrite/nitrate)',
+                'vulnerable_groups': 'Infants under 6 months (highest methaemoglobinaemia risk), regular processed meat consumers, people with GERD'
+            }
+        if any(x in ingredient_lower for x in ['color', 'colour', 'dye', 'red', 'yellow', 'blue', 'green']) and any(x in ingredient_lower for x in ['artificial', 'synthetic', 'azo', 'allura', 'sunset', 'tartrazine']):
+            return {
+                'short_term': 'Urticaria, rhinitis, asthma attacks, hyperactivity in children; aspirin cross-sensitivity for azo dyes',
+                'long_term': 'EU mandatory hyperactivity warning label; possible carcinogenicity of some derivatives in animal studies; genotoxicity concerns in some in vitro data',
+                'vulnerable_groups': 'Children (hyperactivity/ADHD), asthmatics, aspirin-sensitive individuals, people with food colour hypersensitivity'
+            }
+        if 'formaldehyde' in ingredient_lower or 'dmdm' in ingredient_lower or 'imidazolidinyl' in ingredient_lower or 'diazolidinyl' in ingredient_lower or 'quaternium-15' in ingredient_lower:
+            return {
+                'short_term': 'Skin irritation, contact dermatitis, sensitisation; formaldehyde is a potent skin and mucous membrane irritant',
+                'long_term': 'Formaldehyde is IARC Group 1 (carcinogenic to humans — nasopharyngeal cancer, leukaemia at high occupational exposure); at cosmetic release levels, carcinogenicity evidence is limited but sensitisation is a confirmed concern',
+                'vulnerable_groups': 'People with formaldehyde or preservative allergy; eczema-prone individuals; salon workers (professional exposure to higher concentrations in keratin treatments)'
+            }
+        if any(x in ingredient_lower for x in ['phthalate', 'dibutyl', 'diethyl', 'dimethyl phthalate']):
+            return {
+                'short_term': 'Skin, eye and respiratory irritation; headache with heavy inhalation',
+                'long_term': 'Anti-androgenic endocrine disruptors; DEP, DBP and DEHP linked to reproductive toxicity in animal studies; DBP and DEHP banned in cosmetics in EU; detected in human urine, blood and amniotic fluid; possible contributors to male reproductive decline (reduced sperm count, testicular dysgenesis)',
+                'vulnerable_groups': 'Pregnant women and foetuses (reproductive development), infants, men of reproductive age, people with hormone-sensitive conditions'
+            }
+        return {
+            'short_term': 'Possible allergic reactions, skin or digestive sensitivity in some individuals',
+            'long_term': 'Regulatory restrictions or safety concerns documented; may have endocrine-disrupting, carcinogenic or toxic properties at relevant exposure levels',
+            'vulnerable_groups': 'Pregnant women, infants, children, people with allergies or sensitivities, immunocompromised individuals'
+        }
+
+    elif classification == 'worth_knowing':
+        if 'sugar' in ingredient_lower or 'syrup' in ingredient_lower or 'fructose' in ingredient_lower or 'glucose' in ingredient_lower:
+            return {
+                'short_term': 'Blood glucose spike and crash; dental caries with repeated oral exposure; rapid energy followed by lethargy',
+                'long_term': 'Obesity, Type 2 diabetes, cardiovascular disease risk at excess intake; non-alcoholic fatty liver disease (especially fructose); dental cavities',
+                'vulnerable_groups': 'Diabetics and pre-diabetics, children (dental cavities, obesity risk), people with metabolic syndrome, individuals with insulin resistance'
+            }
+        if 'palm oil' in ingredient_lower or 'palmolein' in ingredient_lower:
+            return {
+                'short_term': 'High calorie density — contributes to excess caloric intake',
+                'long_term': 'High palmitic acid (saturated fat) raises LDL cholesterol; processing-induced glycidyl esters are a carcinogenicity concern (EFSA); environmental impact from deforestation',
+                'vulnerable_groups': 'People with dyslipidaemia (high cholesterol), cardiovascular disease, those with high intake of ultra-processed foods containing palm oil'
+            }
+        if 'sodium lauryl' in ingredient_lower or 'sodium laureth' in ingredient_lower or ('sulfate' in ingredient_lower and 'lauryl' in ingredient_lower):
+            return {
+                'short_term': 'Skin barrier disruption, dryness, redness, scalp irritation; aggravates mouth ulcers in toothpaste',
+                'long_term': 'Chronic barrier disruption leading to transepidermal water loss and increased skin permeability; SLES has 1,4-dioxane contamination risk from ethoxylation',
+                'vulnerable_groups': 'People with eczema, psoriasis, rosacea, dry skin; individuals with recurrent aphthous ulcers (avoid SLS in toothpaste)'
+            }
+        if 'caffeine' in ingredient_lower:
+            return {
+                'short_term': 'Increased heart rate, jitteriness, anxiety, insomnia, headache on withdrawal, GERD aggravation',
+                'long_term': 'Physical dependence (caffeine use disorder); no established serious long-term toxicity at moderate doses; potential cardiovascular benefits in moderate coffee consumption',
+                'vulnerable_groups': 'Pregnant women (limit to <200 mg/day), infants and children (no safe limit), people with anxiety, arrhythmia, hypertension, GERD'
+            }
+        if 'carrageenan' in ingredient_lower:
+            return {
+                'short_term': 'Bloating, diarrhoea, increased gut permeability in sensitive individuals',
+                'long_term': 'Degraded carrageenan (poligeenan) is carcinogenic and proinflammatory; some studies suggest partial degradation in the stomach; animal studies show worsening of colitis',
+                'vulnerable_groups': 'People with IBS, Crohn\'s disease, ulcerative colitis, infants (removed from EU infant formula 2018)'
+            }
+        if 'mica' in ingredient_lower:
+            return {
+                'short_term': 'Topical use: safe and non-irritating; inhalation of loose powder: respiratory irritation',
+                'long_term': 'Occupational inhalation causes mica pneumoconiosis; spray products with mica pose inhalation risk; child labour in supply chain is an ethical issue',
+                'vulnerable_groups': 'People with respiratory conditions (avoid spray cosmetics with mica); workers in mica processing'
+            }
+        if any(x in ingredient_lower for x in ['zinc', 'copper', 'magnesium', 'iron', 'calcium']):
+            return {
+                'short_term': 'Generally well tolerated at food and cosmetic concentrations; high supplemental doses of zinc (>40 mg/day) can cause nausea and copper deficiency',
+                'long_term': 'At normal dietary and cosmetic concentrations: safe and beneficial; supplemental zinc at excessive doses reduces HDL cholesterol and impairs immune function over time',
+                'vulnerable_groups': 'People taking zinc supplements above tolerable upper intake level (40 mg/day); people with Wilson\'s disease (copper accumulation); kidney disease patients (impaired mineral excretion)'
+            }
+        if 'lecithin' in ingredient_lower:
+            return {
+                'short_term': 'Well tolerated; rare allergic reaction in people with severe soy allergy',
+                'long_term': 'Gut bacteria convert phosphatidylcholine to TMAO — high TMAO linked to cardiovascular disease risk; typically safe at food additive levels; provides beneficial phospholipids',
+                'vulnerable_groups': 'People with severe soy or egg allergy; people with trimethylaminuria (fish odour syndrome); people with very high dietary choline intake already'
+            }
+        return {
+            'short_term': 'Generally well tolerated at typical food or cosmetic concentrations; individual sensitivity may cause mild reactions',
+            'long_term': 'Safe in normal quantities; consider cumulative daily exposure from multiple products; some specific concerns at high or prolonged intake may apply',
+            'vulnerable_groups': 'Sensitive individuals, children, pregnant or breastfeeding women, people with specific food intolerances or allergies'
+        }
+
+    else:  # generally_recognised
+        if 'hyaluronic' in ingredient_lower or 'hyaluronate' in ingredient_lower:
+            return {
+                'short_term': 'Exceptional tolerability; no known short-term adverse effects for topical use',
+                'long_term': 'No long-term safety concerns; naturally occurring in the human body; injectable HA fillers have rare serious complications',
+                'vulnerable_groups': 'Injectable HA: pregnant women and immunocompromised individuals (precautionary); topical: safe for all skin types'
+            }
+        if 'tocopherol' in ingredient_lower or 'vitamin e' in ingredient_lower:
+            return {
+                'short_term': 'Topical: rarely causes contact sensitisation; food-level intake: no adverse effects',
+                'long_term': 'Food-additive and cosmetic levels are safe; high-dose supplementation (>400 IU/day) may increase haemorrhagic stroke risk — not relevant to food additive use',
+                'vulnerable_groups': 'People on blood thinners (Vitamin E potentiates anticoagulants at supplemental doses)'
+            }
+        if 'ascorbic' in ingredient_lower or 'vitamin c' in ingredient_lower:
+            return {
+                'short_term': 'Gastric discomfort and diarrhoea at high supplemental doses; food-level intake is well tolerated',
+                'long_term': 'One of the safest vitamins — water-soluble, excess excreted; very high doses (>2 g/day) increase kidney stone risk in predisposed individuals',
+                'vulnerable_groups': 'People with haemochromatosis (iron absorption is enhanced); people prone to calcium oxalate kidney stones; infants (over-fortification risk)'
+            }
+        return {
+            'short_term': 'No known adverse effects at typical use concentrations',
+            'long_term': 'Approved by major regulatory bodies (FDA, EU, WHO, FSSAI) as safe for intended use; long-term safety well established',
+            'vulnerable_groups': 'Safe for the general population; individuals with specific ingredient allergies should check labels as always'
         }
