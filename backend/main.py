@@ -183,6 +183,12 @@ async def sitemap_blogs():
         ("static-4", "2025-01-01"),
         ("static-5", "2025-01-01"),
         ("static-6", "2025-01-01"),
+        ("static-7", "2026-06-06"),
+        ("static-8", "2026-06-06"),
+        ("static-9", "2026-06-06"),
+        ("static-10", "2026-06-06"),
+        ("static-11", "2026-06-06"),
+        ("static-12", "2026-06-06"),
     ]
     urls = [f"""  <url>
     <loc>{SITE}/blog/{slug}</loc>
