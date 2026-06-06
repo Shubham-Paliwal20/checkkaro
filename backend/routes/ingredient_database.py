@@ -2958,6 +2958,62 @@ def classify_ingredient(ingredient_name, category=None):
         if parent != ingredient_lower:
             return classify_ingredient(parent, category)
 
+    # ── Generic undisclosed additive categories ──────────────────────────────
+    # When a label says only "emulsifier", "acidity regulator", "sweetener" etc.
+    # with no specific compound named, classify as worth_knowing — the consumer
+    # cannot assess safety without knowing the exact ingredient used.
+    _GENERIC_ADDITIVE_CATEGORIES = {
+        'emulsifier':         ('Undisclosed emulsifier', 'Brand has not specified which emulsifier is used. Emulsifiers range from safe (soy lecithin, sunflower lecithin) to more concerning ones (carrageenan — EU-banned in infant formula; mono and diglycerides — trans fat risk). Without the specific compound, safety cannot be assessed.'),
+        'emulsifiers':        ('Undisclosed emulsifier(s)', 'Brand has not specified which emulsifiers are used. Individual emulsifiers vary significantly in safety — some carry gut health concerns (carrageenan), trans fat risk (mono and diglycerides), or are poorly studied. Lack of disclosure prevents informed assessment.'),
+        'acidity regulator':  ('Undisclosed acidity regulator', 'The specific acidity regulator is not named. Common options range from safe citric acid (E330) to phosphoric acid (E338 — tooth enamel erosion, mineral leaching) and acetylated derivatives. Without disclosure, consumers cannot identify what is present.'),
+        'acidity regulators': ('Undisclosed acidity regulator(s)', 'The exact acidity regulators are not named. Safety varies widely — from benign citric acid to phosphoric acid (linked to bone mineral density concerns at high intake). Consumer cannot assess exposure without specifics.'),
+        'sweetener':          ('Undisclosed sweetener', 'The specific sweetener is not named. Sweeteners range from stevia (clean safety profile) to aspartame (IARC Group 2B 2023), sucralose (genotoxicity signal 2023, J. Toxicology), and saccharin (animal carcinogen concerns). Undisclosed use prevents informed dietary choices.'),
+        'sweeteners':         ('Undisclosed sweetener(s)', 'Specific sweeteners not named. Safety varies enormously — stevia and erythritol have relatively clean profiles; aspartame, sucralose, and saccharin each carry regulatory or research-based concerns. Without disclosure, consumers cannot assess their exposure.'),
+        'stabilizer':         ('Undisclosed stabilizer', 'The specific stabilizer is not named. Stabilizers range from safe seed gums (locust bean gum, guar gum) to carrageenan (banned in EU infant formula; gut inflammation research). Cannot assess safety without knowing the compound.'),
+        'stabilizers':        ('Undisclosed stabilizer(s)', 'Specific stabilizers not named. Safety varies by compound — carrageenan has gut health concerns while locust bean gum is benign. Cannot assess without disclosure.'),
+        'stabiliser':         ('Undisclosed stabiliser', 'The specific stabiliser is not named. Ranges from safe seed gums to carrageenan (EU infant formula ban). Cannot assess without compound disclosure.'),
+        'stabilisers':        ('Undisclosed stabiliser(s)', 'Specific stabilisers not named. Safety varies. Cannot assess without knowing which stabilisers are present.'),
+        'thickener':          ('Undisclosed thickening agent', 'The specific thickener is not named. Most food thickeners are safe (guar gum, xanthan gum, modified starch) but carrageenan and certain modified starches warrant attention. Without the specific compound, full assessment is not possible.'),
+        'thickeners':         ('Undisclosed thickening agent(s)', 'Specific thickeners not named. Safety varies. Cannot assess without knowing the exact compounds used.'),
+        'preservative':       ('Undisclosed preservative', 'The specific preservative is not named. Preservatives range from safe rosemary extract and citric acid to concerning sodium benzoate (benzene precursor with Vitamin C), sodium nitrite (carcinogen precursor), and parabens (endocrine disruptors). Without disclosure, safety cannot be assessed.'),
+        'preservatives':      ('Undisclosed preservative(s)', 'Specific preservatives not named. Safety varies enormously — from benign natural ones to synthetic preservatives with well-documented concerns (sodium benzoate, parabens, sulfites). Cannot assess without knowing which are used.'),
+        'raising agent':      ('Undisclosed raising/leavening agent', 'The specific leavening agent is not named. Most are safe (sodium bicarbonate, cream of tartar) but aluminium-containing raising agents (sodium aluminium phosphate, sodium aluminium sulfate) are linked to neurotoxicity at chronic high intake. Disclosure allows consumers to identify these.'),
+        'raising agents':     ('Undisclosed raising/leavening agent(s)', 'Specific leavening agents not named. Aluminium-containing variants (sodium aluminium phosphate, E541) warrant caution at high dietary intake. Cannot identify these without disclosure.'),
+        'leavening agent':    ('Undisclosed leavening agent', 'The specific leavening agent is not named. Most are safe but aluminium-based variants (e.g., sodium aluminium phosphate) carry neurotoxicity concerns at chronic high dietary intake.'),
+        'leavening agents':   ('Undisclosed leavening agent(s)', 'Specific leavening agents not named. Aluminium-containing variants warrant caution. Cannot assess without disclosure.'),
+        'anti caking agent':  ('Undisclosed anti-caking agent', 'The specific anti-caking agent is not named. Options include safe silicon dioxide (E551) and calcium silicate but also aluminium silicates (neurotoxicity concern) and sodium ferrocyanide (E535). Disclosure allows consumers to identify higher-risk variants.'),
+        'anticaking agent':   ('Undisclosed anti-caking agent', 'The specific anti-caking agent is not named. Cannot determine if aluminium-based or ferrocyanide variants are present without disclosure.'),
+        'anti-caking agent':  ('Undisclosed anti-caking agent', 'The specific anti-caking agent is not named. Cannot identify aluminium silicates or sodium ferrocyanide without compound disclosure.'),
+        'humectant':          ('Undisclosed humectant', 'The specific humectant is not named. Most are safe (glycerin, sorbitol) but propylene glycol (E1520) has penetration-enhancer concerns in cosmetics and high GI effect concerns in food. Cannot assess without knowing the specific compound.'),
+        'humectants':         ('Undisclosed humectant(s)', 'Specific humectants not named. Cannot assess without knowing which compounds are present.'),
+        'antioxidant':        ('Undisclosed antioxidant', 'The specific antioxidant is not named. Ranges from safe natural antioxidants (vitamin E, rosemary extract, ascorbic acid) to synthetic ones with regulatory concerns — BHA (E320, California Prop 65 carcinogen list), TBHQ (E319, banned in Japan), BHT (E321, possible carcinogen). Cannot assess without disclosure.'),
+        'antioxidants':       ('Undisclosed antioxidant(s)', 'Specific antioxidants not named. Synthetic antioxidants BHA (E320) and TBHQ (E319) have significant safety concerns and are banned or restricted in several countries. Without disclosure, consumers cannot determine which are present.'),
+        'flavouring':         ('Undisclosed flavouring', 'The specific flavouring compound(s) are not identified. "Flavouring" can refer to thousands of different natural or synthetic chemicals. Without specifics, allergenic potential and safety cannot be assessed.'),
+        'flavourings':        ('Undisclosed flavouring(s)', 'Specific flavouring compounds not named. EU regulations require individual declaration of the 26 most common fragrance/flavour allergens; bare "flavourings" bypasses this transparency. Cannot assess without disclosure.'),
+        'flavoring':          ('Undisclosed flavoring', 'The specific flavoring compound(s) are not named. Without specifics, allergenic potential and safety cannot be assessed.'),
+        'flavorings':         ('Undisclosed flavoring(s)', 'Specific flavoring compounds not named. Cannot assess safety or allergen potential without knowing which compounds are present.'),
+        'added flavour':      ('Undisclosed added flavouring', 'Flavouring is added but the compound(s) are not specified. "Added flavour" can represent hundreds of possible chemicals. Cannot assess safety or allergens without specific identification.'),
+        'added flavor':       ('Undisclosed added flavoring', 'Flavoring is added but the compound(s) are not specified. Cannot assess safety or allergen content without knowing the specific compounds.'),
+        'added flavouring':   ('Undisclosed added flavouring', 'Added flavouring with compound(s) unspecified. Cannot assess safety or allergen content without knowing the specific compounds used.'),
+        'added flavoring':    ('Undisclosed added flavoring', 'Added flavoring with compound(s) unspecified. Cannot assess safety or allergen content without knowing the specific compounds used.'),
+        'glazing agent':      ('Undisclosed glazing agent', 'The specific glazing agent is not named. Options range from safe natural waxes (carnauba E903, beeswax E901) to petroleum-derived mineral oil (E905) which carries potential MOAH (Mineral Oil Aromatic Hydrocarbons) carcinogen contamination risk. Cannot assess without disclosure.'),
+        'glazing agents':     ('Undisclosed glazing agent(s)', 'Specific glazing agents not named. Cannot determine if petroleum-derived mineral oil (potential MOAH contamination) is present without disclosure.'),
+        'bulking agent':      ('Undisclosed bulking agent', 'The specific bulking agent is not named. Most are safe but disclosure allows consumers to identify allergenic fillers or compounds that may affect nutrient absorption (e.g., polydextrose, inulin can cause digestive issues).'),
+        'bulking agents':     ('Undisclosed bulking agent(s)', 'Specific bulking agents not named. Cannot fully assess without knowing which compounds are present.'),
+        'firming agent':      ('Undisclosed firming agent', 'The specific firming agent is not named. Most common ones are calcium salts (generally safe) but without disclosure, consumers cannot assess potential interactions.'),
+        'firming agents':     ('Undisclosed firming agent(s)', 'Specific firming agents not named. Cannot assess without knowing which compounds are present.'),
+        'sequestrant':        ('Undisclosed sequestrant (chelating agent)', 'The specific sequestrant is not named. Some sequestrants like EDTA (E385) chelate essential minerals (calcium, zinc, iron) from the body at high dietary intake. Cannot assess without knowing the specific compound.'),
+        'sequestrants':       ('Undisclosed sequestrant(s)', 'Specific sequestrants not named. EDTA and similar chelating agents can reduce absorption of essential minerals. Cannot assess without disclosure.'),
+    }
+    if ingredient_lower in _GENERIC_ADDITIVE_CATEGORIES:
+        what_it_is, note = _GENERIC_ADDITIVE_CATEGORIES[ingredient_lower]
+        return {
+            'classification': 'worth_knowing',
+            'what_it_is': what_it_is,
+            'one_line_note': note,
+            'regulatory_note': 'Specific compound not disclosed by brand — individual safety cannot be assessed without knowing the exact ingredient'
+        }
+
         # Check commonly questioned first (highest priority — serious concerns)
     # Also check compact form so "Methyl Paraben" matches keyword "methylparaben"
     for pattern, (what_it_is, note) in commonly_questioned_patterns.items():
