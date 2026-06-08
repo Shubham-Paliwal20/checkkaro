@@ -72,6 +72,7 @@ _QUESTIONED = [
     'ponceau','erythrosine','quinoline yellow','brown ht','patent blue','azorubine','red 40',
     'e102','e110','e122','e124','e129','e131','e132','e133','e104','e127','e155',
     'ci 47000','ci 19140','ci 15985','ci 16035','ci 42090',
+    'ci 11680','ci 12120',
     # Flavour enhancers — neurotoxicity, MSG-like side effects (not MSG itself — see _WORTH)
     'disodium guanylate','disodium inosinate','e627','e631',
     # Parabens — endocrine disruption at high doses; EU restricted concentrations
@@ -114,7 +115,7 @@ _QUESTIONED = [
     # Cyclic silicones — EU banned in rinse-off; endocrine disruption; environmental persistence
     'cyclomethicone','cyclopentasiloxane','cyclohexasiloxane',
     # Petroleum-derived — PAH/MOAH carcinogens from refining contamination
-    'mineral oil','petrolatum','paraffinum liquidum','paraffin wax',
+    'mineral oil','petrolatum','paraffinum liquidum','paraffin wax','light liquid paraffin',
     # Undisclosed colorants behind Q.S — exact dye identity hidden by brand
     'colour q.s','color q.s','colour q.s.','color q.s.',
     # Undisclosed chemical mixtures — may hide allergens, phthalates, synthetic musks
@@ -150,8 +151,15 @@ _WORTH = [
     'citronellol','coumarin','isoeugenol','cinnamyl alcohol','cinnamal','farnesol',
     'hydroxycitronellal','amyl cinnamal','benzyl cinnamate','benzyl benzoate',
     'alpha-isomethyl ionone','methyl 2-octynoate','anise alcohol',
-    # Quaternary ammonium conditioners — EU concentration-restricted
+    # Quaternary ammonium conditioners — EU concentration-restricted; quat environmental persistence
     'behentrimonium chloride','cetrimonium chloride','quaternium-33',
+    'quaternium-98','polyquaternium-113','stearamidopropyl dimethylamine',
+    # Optical brightener — photoallergy; environmental persistence; no skin benefit
+    'disodium distyrylbiphenyl disulfonate',
+    # Saponified palm oil surfactants — alkaline pH disrupts acid mantle; palm deforestation concerns
+    'sodium palmate','sodium palm kernelate',
+    # Mild surfactant — theoretical nitrosamine formation potential
+    'sodium lauroyl sarcosinate',
     # Ethoxylated surfactant — trace 1,4-dioxane contamination risk
     'trideceth-6','trideceth',
     # IPA — very drying to skin; disrupts skin barrier with repeated use
