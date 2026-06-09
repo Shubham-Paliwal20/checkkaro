@@ -277,7 +277,7 @@ export default function Products() {
         // so every product gets its image regardless of which format was used.
         if (active && pageProducts.length > 0) {
           const staticKeys = pageProducts.map(p => p.static_key).filter(Boolean)
-          const numericIds = pageProducts.filter(p => !p.image_url).map(p => p.id).filter(Boolean)
+          const numericIds = pageProducts.map(p => p.id).filter(Boolean)
           const allKeys = [...new Set([...staticKeys, ...numericIds])]
           if (allKeys.length > 0) {
             supabase
@@ -288,11 +288,13 @@ export default function Products() {
               .then(({ data: photos }) => {
                 if (!active || !photos?.length) return
                 const photoMap = {}
-                photos.forEach(ph => { if (!photoMap[ph.product_id]) photoMap[ph.product_id] = ph.image_url })
+                photos.forEach(ph => {
+                  const key = String(ph.product_id)
+                  if (!photoMap[key]) photoMap[key] = ph.image_url
+                })
                 setProducts(prev => prev.map(p => {
-                  if (p.image_url) return p
-                  const url = (p.static_key && photoMap[p.static_key]) || photoMap[p.id]
-                  return url ? { ...p, image_url: url } : p
+                  const freshUrl = (p.static_key && photoMap[p.static_key]) || photoMap[String(p.id)]
+                  return freshUrl ? { ...p, image_url: freshUrl } : p
                 }))
               })
               .catch(() => {})
