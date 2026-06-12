@@ -1,3 +1,26 @@
+import { useState } from 'react'
+
+const PREVIEW_LEN = 130
+
+function ExpandableNote({ text }) {
+  const [expanded, setExpanded] = useState(false)
+  if (!text) return null
+  if (text.length <= PREVIEW_LEN) return <p className="text-xs text-gray-500 mt-1 leading-relaxed">{text}</p>
+  return (
+    <div className="mt-1">
+      <p className="text-xs text-gray-500 leading-relaxed">
+        {expanded ? text : text.slice(0, PREVIEW_LEN) + '…'}
+      </p>
+      <button
+        className="text-xs text-blue-500 hover:text-blue-700 mt-0.5 font-medium"
+        onClick={e => { e.stopPropagation(); setExpanded(v => !v) }}
+      >
+        {expanded ? 'Read less' : 'Read more'}
+      </button>
+    </div>
+  )
+}
+
 function IngredientColumns({ generally_recognised = [], worth_knowing = [], commonly_questioned = [] }) {
   const Column = ({ title, subtitle, description, bgColor, borderColor, icon, ingredients }) => (
     <div className="flex flex-col">
@@ -16,14 +39,12 @@ function IngredientColumns({ generally_recognised = [], worth_knowing = [], comm
           <p className="text-sm text-gray-400 italic">None found</p>
         ) : (
           ingredients.map((ing, idx) => (
-            <div 
-              key={idx} 
+            <div
+              key={idx}
               className="p-3 bg-gray-50 rounded-lg hover:shadow-sm transition-shadow cursor-pointer"
             >
               <p className="font-medium text-sm">{ing.name}</p>
-              {ing.one_line_note && (
-                <p className="text-xs text-gray-500 mt-1">{ing.one_line_note}</p>
-              )}
+              <ExpandableNote text={ing.one_line_note} />
             </div>
           ))
         )}

@@ -3400,18 +3400,21 @@ def classify_ingredient(ingredient_name, category=None):
     # Check generally recognised (natural/herbal ingredients — checked last to avoid overriding specific flags)
     for pattern, (what_it_is, note) in generally_recognised_patterns.items():
         if pattern in ingredient_lower:
+            # Prefer full-name description, then pattern-key description, then short note
+            full_desc = INGREDIENT_DESCRIPTIONS.get(ingredient_lower) or INGREDIENT_DESCRIPTIONS.get(pattern)
             return {
                 'classification': 'generally_recognised',
                 'what_it_is': what_it_is,
-                'one_line_note': INGREDIENT_DESCRIPTIONS.get(pattern, note),
+                'one_line_note': full_desc if full_desc else note,
                 'regulatory_note': 'No specific restrictions, widely used'
             }
 
-    # Default to generally recognised
+    # Default to generally recognised — use INGREDIENT_DESCRIPTIONS if available
+    full_desc = INGREDIENT_DESCRIPTIONS.get(ingredient_lower)
     return {
         'classification': 'generally_recognised',
         'what_it_is': 'Food or cosmetic ingredient',
-        'one_line_note': 'Generally recognised as safe for use in food and cosmetic products.',
+        'one_line_note': full_desc if full_desc else 'Generally recognised as safe for use in food and cosmetic products.',
         'regulatory_note': 'No specific restrictions'
     }
 

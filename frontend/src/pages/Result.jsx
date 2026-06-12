@@ -13,6 +13,24 @@ import SEO from '../components/SEO'
 
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'https://checkkaro.onrender.com'
 
+const PREVIEW_LEN = 140
+function ExpandableNote({ text, className = 'text-xs text-gray-600 mt-1' }) {
+  const [expanded, setExpanded] = useState(false)
+  if (!text) return null
+  if (text.length <= PREVIEW_LEN) return <p className={className}>{text}</p>
+  return (
+    <div className="mt-1">
+      <p className={className}>{expanded ? text : text.slice(0, PREVIEW_LEN) + '…'}</p>
+      <button
+        className="text-xs text-blue-500 hover:text-blue-700 mt-0.5 font-medium"
+        onClick={e => { e.stopPropagation(); setExpanded(v => !v) }}
+      >
+        {expanded ? 'Read less' : 'Read more'}
+      </button>
+    </div>
+  )
+}
+
 // Module-level cache — navigating back to a product is instant, no refetch
 const _productCache = new Map()  // productName.lower → { data, ts }
 const CACHE_MAX = 40
@@ -1242,9 +1260,7 @@ function Result() {
                       {ing.aliases && <span className="text-xs sm:text-sm text-gray-500 font-normal">({ing.aliases})</span>}
                     </h3>
                   </div>
-                  {ing.one_line_note && (
-                    <p className="text-sm text-gray-600 mb-2">{ing.one_line_note}</p>
-                  )}
+                  <ExpandableNote text={ing.one_line_note} className="text-sm text-gray-600 mb-2" />
                   {ing.detailed_effects && (
                     <div className="mt-3 pt-3 border-t border-red-300">
                       <p className="text-sm font-semibold text-navy mb-1">Detailed Information:</p>
@@ -1290,9 +1306,7 @@ function Result() {
                       {ing.aliases && <span className="text-xs sm:text-sm text-gray-500 font-normal">({ing.aliases})</span>}
                     </h3>
                   </div>
-                  {ing.one_line_note && (
-                    <p className="text-sm text-gray-600 mb-2">{ing.one_line_note}</p>
-                  )}
+                  <ExpandableNote text={ing.one_line_note} className="text-sm text-gray-600 mb-2" />
                   {ing.detailed_effects && (
                     <div className="mt-3 pt-3 border-t border-red-200">
                       <p className="text-sm font-semibold text-navy mb-1">Detailed Information:</p>
@@ -1327,9 +1341,7 @@ function Result() {
                     {ing.name}
                     {ing.aliases && <span className="text-xs text-gray-500 font-normal ml-2">({ing.aliases})</span>}
                   </h3>
-                  {ing.one_line_note && (
-                    <p className="text-xs text-gray-600 mt-1">{ing.one_line_note}</p>
-                  )}
+                  <ExpandableNote text={ing.one_line_note} />
                 </div>
               ))}
             </div>
