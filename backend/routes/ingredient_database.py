@@ -3348,6 +3348,8 @@ def classify_ingredient(ingredient_name, category=None):
         'humectants':         ('Undisclosed humectant(s)', 'Specific humectants not named. Cannot assess without knowing which compounds are present.'),
         'antioxidant':        ('Undisclosed antioxidant', 'The specific antioxidant is not named. Ranges from safe natural antioxidants (vitamin E, rosemary extract, ascorbic acid) to synthetic ones with regulatory concerns — BHA (E320, California Prop 65 carcinogen list), TBHQ (E319, banned in Japan), BHT (E321, possible carcinogen). Cannot assess without disclosure.'),
         'antioxidants':       ('Undisclosed antioxidant(s)', 'Specific antioxidants not named. Synthetic antioxidants BHA (E320) and TBHQ (E319) have significant safety concerns and are banned or restricted in several countries. Without disclosure, consumers cannot determine which are present.'),
+        'flavour':            ('Undisclosed flavour', 'The specific flavour compound(s) are not identified. "Flavour" can refer to thousands of different natural or synthetic chemicals. Without specifics, allergenic potential and safety cannot be assessed.'),
+        'flavor':             ('Undisclosed flavor', 'The specific flavor compound(s) are not named. Without specifics, allergenic potential and safety cannot be assessed.'),
         'flavouring':         ('Undisclosed flavouring', 'The specific flavouring compound(s) are not identified. "Flavouring" can refer to thousands of different natural or synthetic chemicals. Without specifics, allergenic potential and safety cannot be assessed.'),
         'flavourings':        ('Undisclosed flavouring(s)', 'Specific flavouring compounds not named. EU regulations require individual declaration of the 26 most common fragrance/flavour allergens; bare "flavourings" bypasses this transparency. Cannot assess without disclosure.'),
         'flavoring':          ('Undisclosed flavoring', 'The specific flavoring compound(s) are not named. Without specifics, allergenic potential and safety cannot be assessed.'),
@@ -3370,8 +3372,9 @@ def classify_ingredient(ingredient_name, category=None):
         return {
             'classification': 'worth_knowing',
             'what_it_is': what_it_is,
-            'one_line_note': note,
-            'regulatory_note': 'Specific compound not disclosed by brand — individual safety cannot be assessed without knowing the exact ingredient'
+            'one_line_note': INGREDIENT_DESCRIPTIONS.get(ingredient_lower, note),
+            'regulatory_note': 'Specific compound not disclosed by brand — individual safety cannot be assessed without knowing the exact ingredient',
+            'recommendation': 'Brand has not fully disclosed this ingredient. Specific compounds cannot be independently assessed — use with caution, especially if you have allergies or sensitivities.'
         }
 
         # Check commonly questioned first (highest priority — serious concerns)
@@ -3386,16 +3389,33 @@ def classify_ingredient(ingredient_name, category=None):
                 'regulatory_note': 'Check usage guidelines and restrictions'
             }
 
+    # Ingredients where the brand has not disclosed specific compounds
+    _UNDISCLOSED_PATTERNS = {
+        'sugandhit dravya', 'excipients', 'excipients q.s', 'excipients qs',
+        'emulsifiers', 'stabilizers', 'stabilisers', 'preservatives',
+        'flour treatment agent', 'flour improver',
+        'antioxidants', 'acidity regulators', 'humectants', 'thickeners',
+        'colours', 'colors', 'colour', 'color',
+        'flavours', 'flavors', 'flavouring', 'flavoring',
+        'sequestrants', 'bulking agents', 'firming agents',
+        'raising agents', 'leavening agents',
+        'minerals', 'vitamins', 'added vitamins', 'added minerals',
+    }
+
     # Check worth knowing second (specific ingredient concerns take priority over generic natural labels)
     for pattern, (what_it_is, note) in worth_knowing_patterns.items():
         pattern_compact = pattern.replace(' ', '').replace('-', '').replace('/', '')
         if pattern in ingredient_lower or pattern_compact in ingredient_compact:
-            return {
+            is_undisclosed = any(u in ingredient_lower for u in _UNDISCLOSED_PATTERNS)
+            result = {
                 'classification': 'worth_knowing',
                 'what_it_is': what_it_is,
-                'one_line_note': INGREDIENT_DESCRIPTIONS.get(pattern, note),
+                'one_line_note': INGREDIENT_DESCRIPTIONS.get(ingredient_lower) or INGREDIENT_DESCRIPTIONS.get(pattern, note),
                 'regulatory_note': 'FSSAI approved with usage guidelines'
             }
+            if is_undisclosed:
+                result['recommendation'] = 'Brand has not fully disclosed this ingredient. Specific compounds cannot be independently assessed — use with caution, especially if you have allergies or sensitivities.'
+            return result
 
     # Check generally recognised (natural/herbal ingredients — checked last to avoid overriding specific flags)
     for pattern, (what_it_is, note) in generally_recognised_patterns.items():
