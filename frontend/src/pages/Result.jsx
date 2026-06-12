@@ -437,8 +437,19 @@ function Result() {
     setProductNotFound(false)
     setDbPhotos([])
     setAdminDbId(null)
+    setRecommendations([])
     fetchProduct()
   }, [productName])
+
+  // Fetch better alternatives whenever a C/D grade product loads (any path)
+  useEffect(() => {
+    if (!product) return
+    if (!['C', 'D'].includes(product.grade)) return
+    if (!product.category) return
+    axios.get(`${API_BASE_URL}/api/product/recommendations`, {
+      params: { category: product.category, exclude_id: product.id, limit: 6 }
+    }).then(r => setRecommendations(r.data || [])).catch(() => {})
+  }, [product?.id, product?.grade])
 
   // Re-fetch when user returns to the tab after a long idle.
   // Render.com free tier spins down after ~15 min — if the user was away longer
@@ -586,11 +597,6 @@ function Result() {
         setProduct(response.data)
         // Kick off photo fetch immediately without blocking product display
         if (response.data?.id) fetchDbPhotos(response.data.id, response.data.static_key)
-        // Fetch better alternatives for C/D grade products
-        if (['C', 'D'].includes(response.data?.grade) && response.data?.category) {
-          axios.get(`${API_BASE_URL}/api/product/recommendations`, {
-            params: { category: response.data.category, exclude_id: response.data.id, limit: 6 }
-          }).then(r => setRecommendations(r.data || [])).catch(() => {})}
 
         return
       } catch (backendErr) {
