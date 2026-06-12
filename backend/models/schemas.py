@@ -41,9 +41,11 @@ class IngredientRuleResponse(BaseModel):
     commonly_found_in: Optional[str] = None
     one_line_note: Optional[str] = None
     regulatory_note: Optional[str] = None
+    recommendation: Optional[str] = None
     countries_restricted: List[str] = []
     fssai_position: Optional[str] = None
     health_effects: Optional[dict] = None
+    related_ingredients: List[dict] = []
 
 
 class SearchHistoryItem(BaseModel):

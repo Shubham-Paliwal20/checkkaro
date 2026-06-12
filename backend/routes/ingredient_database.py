@@ -3606,21 +3606,64 @@ def get_fssai_position(ingredient_name):
     return 'Regulated under the Food Safety and Standards Act, 2006 (FSSAI) for food applications, and under the Drugs and Cosmetics Act, 1940 / CDSCO guidelines for cosmetic applications in India.'
 
 
+def get_related_ingredients(ingredient_name, classification):
+    """Return 6 contextually relevant ingredients to check next, based on tier and category."""
+    ing_lower = ingredient_name.lower()
+
+    # Curated related sets by concern tier / topic
+    cq_preservatives   = ['Sodium Benzoate', 'TBHQ', 'BHA', 'BHT', 'Sodium Nitrite', 'Sulfur Dioxide']
+    cq_dyes            = ['Tartrazine', 'Sunset Yellow', 'Allura Red', 'Brilliant Blue', 'Ponceau 4R', 'Carmoisine']
+    cq_sweeteners      = ['Aspartame', 'Saccharin', 'Cyclamate', 'Acesulfame K', 'Sucralose', 'Neotame']
+    cq_misc            = ['Carrageenan', 'MSG', 'Phosphoric Acid', 'Potassium Bromate', 'Brominated Vegetable Oil', 'Acrylamide']
+    wk_emulsifiers     = ['Soy Lecithin', 'Carrageenan', 'Mono and Diglycerides', 'Polysorbate 80', 'Carboxymethylcellulose', 'Xanthan Gum']
+    wk_sweeteners      = ['High Fructose Corn Syrup', 'Liquid Glucose', 'Maltose', 'Dextrose', 'Refined Sugar', 'Fructose']
+    wk_cosmetic        = ['Fragrance', 'Methylparaben', 'Propylparaben', 'Sodium Lauryl Sulfate', 'Phenoxyethanol', 'Cyclopentasiloxane']
+    wk_refined         = ['Maida', 'Refined Wheat Flour', 'Palm Oil', 'Hydrogenated Oil', 'Refined Salt', 'White Rice']
+    gr_vitamins        = ['Vitamin C', 'Vitamin E', 'Niacinamide', 'D-Panthenol', 'Riboflavin', 'Folic Acid']
+    gr_naturals        = ['Turmeric', 'Ginger Extract', 'Aloe Vera', 'Neem Extract', 'Green Tea Extract', 'Rosehip Oil']
+
+    # Pick the most relevant set based on ingredient name and classification
+    if any(x in ing_lower for x in ['tartrazine', 'sunset yellow', 'allura', 'dye', 'ci 1', 'colour', 'color', 'e102', 'e110', 'e129']):
+        pool = cq_dyes
+    elif any(x in ing_lower for x in ['benzoate', 'nitrite', 'nitrate', 'tbhq', 'bha', 'bht', 'sulfite', 'sorbate', 'preserv']):
+        pool = cq_preservatives
+    elif any(x in ing_lower for x in ['aspartame', 'saccharin', 'cyclamate', 'acesulfame', 'sucralose', 'sweetener']):
+        pool = cq_sweeteners
+    elif any(x in ing_lower for x in ['emulsifier', 'lecithin', 'polysorbate', 'carrageenan', 'cellulose', 'gum', 'starch']):
+        pool = wk_emulsifiers
+    elif any(x in ing_lower for x in ['glucose', 'fructose', 'maida', 'refined', 'sugar', 'syrup', 'maltose', 'dextrose']):
+        pool = wk_sweeteners
+    elif any(x in ing_lower for x in ['paraben', 'fragrance', 'parfum', 'silicone', 'sls', 'sodium lauryl', 'phenoxy', 'dimethicone']):
+        pool = wk_cosmetic
+    elif any(x in ing_lower for x in ['vitamin', 'niacin', 'panthenol', 'riboflavin', 'folic', 'ascorbic', 'tocopherol']):
+        pool = gr_vitamins
+    elif any(x in ing_lower for x in ['turmeric', 'ginger', 'aloe', 'neem', 'green tea', 'extract', 'herb', 'botanical']):
+        pool = gr_naturals
+    elif classification == 'commonly_questioned':
+        pool = cq_misc
+    elif classification == 'worth_knowing':
+        pool = wk_emulsifiers
+    else:
+        pool = gr_vitamins
+
+    # Remove the searched ingredient itself and return up to 6
+    related = [n for n in pool if n.lower() != ing_lower][:6]
+    result = []
+    for name in related:
+        cls = classify_ingredient(name)
+        result.append({'name': name, 'classification': cls['classification'], 'what_it_is': cls['what_it_is']})
+    return result
+
+
 def get_ingredient_details(ingredient_name):
     """Get detailed information about an ingredient"""
     classification_data = classify_ingredient(ingredient_name)
 
-    # Add commonly found in based on ingredient type
     commonly_found_in = get_commonly_found_in(ingredient_name)
-
-    # Add health effects based on classification
     health_effects = get_health_effects(ingredient_name, classification_data['classification'])
-
-    # Countries where restricted/banned
     countries_restricted = get_countries_restricted(ingredient_name)
-
-    # FSSAI position
     fssai_position = get_fssai_position(ingredient_name)
+    related_ingredients = get_related_ingredients(ingredient_name, classification_data['classification'])
 
     return {
         'name': ingredient_name,
@@ -3629,9 +3672,11 @@ def get_ingredient_details(ingredient_name):
         'commonly_found_in': commonly_found_in,
         'one_line_note': classification_data['one_line_note'],
         'regulatory_note': classification_data['regulatory_note'],
+        'recommendation': classification_data.get('recommendation'),
         'health_effects': health_effects,
         'countries_restricted': countries_restricted,
         'fssai_position': fssai_position,
+        'related_ingredients': related_ingredients,
     }
 
 

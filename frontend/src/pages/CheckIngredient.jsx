@@ -7,6 +7,21 @@ import SEO from '../components/SEO'
 
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'https://checkkaro.onrender.com'
 
+const NOTE_PREVIEW = 200
+function IngNote({ text }) {
+  const [open, setOpen] = useState(false)
+  if (!text) return null
+  if (text.length <= NOTE_PREVIEW) return <p className="text-sm text-gray-700 leading-relaxed">{text}</p>
+  return (
+    <div>
+      <p className="text-sm text-gray-700 leading-relaxed">{open ? text : text.slice(0, NOTE_PREVIEW) + '…'}</p>
+      <button className="text-xs text-blue-500 hover:text-blue-700 mt-1 font-medium" onClick={() => setOpen(v => !v)}>
+        {open ? 'Read less' : 'Read more'}
+      </button>
+    </div>
+  )
+}
+
 // Module-level cache — survives re-mounts, never refetches during the session
 let _popularCache = null
 
@@ -331,157 +346,111 @@ function CheckIngredient() {
         <section ref={resultRef} className="py-12 bg-gray-soft">
           <div className="max-w-7xl mx-auto px-4">
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-              
+
               {/* Main Content - Left Side (2/3 width) */}
-              <div className="lg:col-span-2">
-                <div className={`card p-8 ${getCardStyle(ingredient.classification)}`}>
-                  
+              <div className="lg:col-span-2 space-y-4">
+                <div className={`card p-6 sm:p-8 ${getCardStyle(ingredient.classification)}`}>
+
                   {/* Header */}
-                  <div className="flex flex-wrap items-start justify-between gap-4 mb-6">
+                  <div className="flex flex-wrap items-start justify-between gap-4 mb-4">
                     <div>
-                      <h2 className="font-poppins font-bold text-2xl text-navy mb-2">{ingredient.name}</h2>
+                      <h2 className="font-poppins font-bold text-2xl text-navy mb-1">{ingredient.name}</h2>
                       {ingredient.aliases && ingredient.aliases.length > 0 && (
-                        <p className="text-sm text-gray-600">
-                          Also known as: {ingredient.aliases.join(', ')}
-                        </p>
+                        <p className="text-sm text-gray-500">Also known as: {ingredient.aliases.join(', ')}</p>
                       )}
                     </div>
                     {getClassificationBadge(ingredient.classification)}
                   </div>
 
-                  {/* What it is */}
-                  {ingredient.what_it_is && (
-                    <div className="mb-6">
-                      <h3 className="font-poppins font-semibold text-navy mb-3">What is it?</h3>
-                      <div className={`p-4 rounded-lg border-2 ${
-                        ingredient.classification === 'generally_recognised'
-                          ? 'bg-green-50 border-green-300'
-                          : ingredient.classification === 'worth_knowing'
-                          ? 'bg-yellow-50 border-yellow-400'
-                          : 'bg-red-50 border-red-400'
-                      }`}>
-                        <p className={`font-semibold text-base mb-2 ${
-                          ingredient.classification === 'generally_recognised' ? 'text-green-900' :
-                          ingredient.classification === 'worth_knowing' ? 'text-yellow-900' :
-                          'text-red-900'
-                        }`}>
-                          {ingredient.what_it_is}
-                        </p>
-                        {ingredient.one_line_note && (
-                          <p className={`text-sm leading-relaxed ${
-                            ingredient.classification === 'generally_recognised' ? 'text-green-800' :
-                            ingredient.classification === 'worth_knowing' ? 'text-yellow-800' :
-                            'text-red-800'
-                          }`}>
-                            {ingredient.one_line_note}
-                          </p>
-                        )}
-                      </div>
+                  {/* Undisclosed recommendation banner */}
+                  {ingredient.recommendation && (
+                    <div className="mb-4 flex items-start gap-2.5 bg-amber-50 border border-amber-400 rounded-lg px-4 py-3">
+                      <svg className="w-5 h-5 text-amber-600 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
+                        <path fillRule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clipRule="evenodd"/>
+                      </svg>
+                      <p className="text-sm text-amber-800 font-medium leading-snug">{ingredient.recommendation}</p>
                     </div>
                   )}
 
-                  {/* Health Effects Section */}
-                  <div className="mb-6">
+                  {/* What it is */}
+                  {ingredient.what_it_is && (
+                    <div className="mb-5">
+                      <h3 className="font-poppins font-semibold text-navy mb-2">What is it?</h3>
+                      <p className="font-semibold text-base text-gray-800 mb-2">{ingredient.what_it_is}</p>
+                      {ingredient.one_line_note && <IngNote text={ingredient.one_line_note} />}
+                    </div>
+                  )}
+
+                  {/* Health & Safety */}
+                  <div className="mb-5">
                     <h3 className="font-poppins font-semibold text-navy mb-3 flex items-center gap-2">
                       <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
                         <path d="M9 2a1 1 0 000 2h2a1 1 0 100-2H9z"/>
                         <path fillRule="evenodd" d="M4 5a2 2 0 012-2 3 3 0 003 3h2a3 3 0 003-3 2 2 0 012 2v11a2 2 0 01-2 2H6a2 2 0 01-2-2V5zm3 4a1 1 0 000 2h.01a1 1 0 100-2H7zm3 0a1 1 0 000 2h3a1 1 0 100-2h-3zm-3 4a1 1 0 100 2h.01a1 1 0 100-2H7zm3 0a1 1 0 100 2h3a1 1 0 100-2h-3z" clipRule="evenodd"/>
                       </svg>
-                      Health & Safety Information
+                      Health &amp; Safety
                     </h3>
-                    
+
                     {ingredient.classification === 'generally_recognised' ? (
-                      <div className="p-5 bg-green-50 border-l-4 border-green-500 rounded-r-lg">
+                      <div className="p-4 bg-green-50 border-l-4 border-green-500 rounded-r-lg">
                         <div className="flex items-start gap-3">
-                          <svg className="w-6 h-6 text-green-600 flex-shrink-0 mt-1" fill="currentColor" viewBox="0 0 20 20">
+                          <svg className="w-5 h-5 text-green-600 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
                             <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd"/>
                           </svg>
                           <div>
-                            <h4 className="font-semibold text-green-900 mb-2">Generally Recognised as Safe</h4>
+                            <p className="font-semibold text-green-900 text-sm mb-1">No significant safety concerns at normal use levels</p>
                             <p className="text-green-800 text-sm leading-relaxed">
-                              This ingredient has no known adverse health effects at levels found in foods. It is approved by major regulatory bodies (FSSAI, FDA, EU, WHO) without restrictions.
+                              Approved by FSSAI, FDA, EU and WHO without restrictions. No known adverse health effects at typical food or cosmetic use concentrations.
                             </p>
                           </div>
                         </div>
                       </div>
-                    ) : ingredient.classification === 'worth_knowing' ? (
-                      <div className="p-5 bg-yellow-50 border-l-4 border-yellow-500 rounded-r-lg">
-                        <div className="flex items-start gap-3">
-                          <svg className="w-6 h-6 text-yellow-600 flex-shrink-0 mt-1" fill="currentColor" viewBox="0 0 20 20">
-                            <path fillRule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clipRule="evenodd"/>
-                          </svg>
-                          <div className="w-full">
-                            <h4 className="font-semibold text-yellow-900 mb-3">Worth Knowing About</h4>
-                            {ingredient.health_effects ? (
-                              <div className="space-y-2">
-                                {ingredient.health_effects.short_term && (
-                                  <div className="bg-yellow-100 p-3 rounded border border-yellow-300">
-                                    <p className="text-yellow-900 text-sm"><strong>Short-term:</strong> {ingredient.health_effects.short_term}</p>
-                                  </div>
-                                )}
-                                {ingredient.health_effects.long_term && (
-                                  <div className="bg-yellow-100 p-3 rounded border border-yellow-300">
-                                    <p className="text-yellow-900 text-sm"><strong>Long-term:</strong> {ingredient.health_effects.long_term}</p>
-                                  </div>
-                                )}
-                                {ingredient.health_effects.vulnerable_groups && (
-                                  <div className="bg-orange-50 p-3 rounded border border-orange-300">
-                                    <p className="text-orange-900 text-sm"><strong>Most affected:</strong> {ingredient.health_effects.vulnerable_groups}</p>
-                                  </div>
-                                )}
-                              </div>
-                            ) : (
-                              <div className="bg-yellow-100 p-3 rounded border border-yellow-300">
-                                <p className="text-yellow-900 text-sm">May cause reactions in sensitive individuals or at high doses.</p>
-                              </div>
-                            )}
-                          </div>
+                    ) : ingredient.health_effects ? (
+                      <div className={`p-4 border-l-4 rounded-r-lg ${ingredient.classification === 'worth_knowing' ? 'bg-yellow-50 border-yellow-500' : 'bg-red-50 border-red-600'}`}>
+                        <div className="space-y-2">
+                          {ingredient.health_effects.short_term && (
+                            <div className={`p-3 rounded border text-sm ${ingredient.classification === 'worth_knowing' ? 'bg-yellow-100 border-yellow-300 text-yellow-900' : 'bg-red-100 border-red-300 text-red-900'}`}>
+                              <strong>Short-term:</strong> {ingredient.health_effects.short_term}
+                            </div>
+                          )}
+                          {ingredient.health_effects.long_term && (
+                            <div className={`p-3 rounded border text-sm ${ingredient.classification === 'worth_knowing' ? 'bg-yellow-100 border-yellow-300 text-yellow-900' : 'bg-red-100 border-red-300 text-red-900'}`}>
+                              <strong>Long-term:</strong> {ingredient.health_effects.long_term}
+                            </div>
+                          )}
+                          {ingredient.health_effects.vulnerable_groups && (
+                            <div className="p-3 rounded border text-sm bg-orange-50 border-orange-300 text-orange-900">
+                              <strong>Most affected:</strong> {ingredient.health_effects.vulnerable_groups}
+                            </div>
+                          )}
                         </div>
                       </div>
                     ) : (
-                      <div className="p-5 bg-red-50 border-l-4 border-red-600 rounded-r-lg">
-                        <div className="flex items-start gap-3">
-                          <svg className="w-6 h-6 text-red-600 flex-shrink-0 mt-1" fill="currentColor" viewBox="0 0 20 20">
-                            <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clipRule="evenodd"/>
-                          </svg>
-                          <div className="w-full">
-                            <h4 className="font-semibold text-red-900 mb-3">Commonly Questioned</h4>
-                            {ingredient.health_effects ? (
-                              <div className="space-y-2">
-                                {ingredient.health_effects.short_term && (
-                                  <div className="bg-red-100 p-3 rounded border border-red-300">
-                                    <p className="text-red-900 text-sm"><strong>Short-term:</strong> {ingredient.health_effects.short_term}</p>
-                                  </div>
-                                )}
-                                {ingredient.health_effects.long_term && (
-                                  <div className="bg-red-100 p-3 rounded border border-red-300">
-                                    <p className="text-red-900 text-sm"><strong>Long-term:</strong> {ingredient.health_effects.long_term}</p>
-                                  </div>
-                                )}
-                                {ingredient.health_effects.vulnerable_groups && (
-                                  <div className="bg-red-200 p-3 rounded border border-red-400">
-                                    <p className="text-red-900 text-sm"><strong>Most affected:</strong> {ingredient.health_effects.vulnerable_groups}</p>
-                                  </div>
-                                )}
-                              </div>
-                            ) : (
-                              <div className="bg-red-100 p-3 rounded border border-red-400">
-                                <p className="text-red-900 text-sm font-semibold">Linked to adverse health effects in scientific studies. May be restricted or banned in some countries.</p>
-                              </div>
-                            )}
-                          </div>
-                        </div>
+                      <div className={`p-4 border-l-4 rounded-r-lg text-sm ${ingredient.classification === 'worth_knowing' ? 'bg-yellow-50 border-yellow-500 text-yellow-900' : 'bg-red-50 border-red-600 text-red-900'}`}>
+                        {ingredient.classification === 'worth_knowing'
+                          ? 'May cause reactions in sensitive individuals or at high doses. Review the description above for specific concerns.'
+                          : 'Linked to adverse health effects in studies. May be restricted or banned in some countries — see countries list below.'}
                       </div>
                     )}
                   </div>
 
+                  {/* Regulatory note */}
+                  {ingredient.regulatory_note && (
+                    <div className="mb-5 p-3 bg-blue-50 border border-blue-200 rounded-lg flex items-start gap-2">
+                      <svg className="w-4 h-4 text-blue-500 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
+                        <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clipRule="evenodd"/>
+                      </svg>
+                      <p className="text-xs text-blue-800 leading-relaxed">{ingredient.regulatory_note}</p>
+                    </div>
+                  )}
+
                   {/* Commonly found in */}
                   {ingredient.commonly_found_in && (
-                    <div className="mb-6">
-                      <h3 className="font-poppins font-semibold text-navy mb-2">Commonly found in</h3>
+                    <div className="mb-5">
+                      <h3 className="font-poppins font-semibold text-navy mb-2 text-sm">Commonly found in</h3>
                       <div className="flex flex-wrap gap-2">
                         {ingredient.commonly_found_in.split(',').map((item, idx) => (
-                          <span key={idx} className="inline-block px-3 py-1 bg-white text-gray-700 rounded-full text-sm border border-gray-300">
+                          <span key={idx} className="inline-block px-3 py-1 bg-white text-gray-700 rounded-full text-xs border border-gray-300">
                             {item.trim()}
                           </span>
                         ))}
@@ -491,16 +460,16 @@ function CheckIngredient() {
 
                   {/* Countries Restricted */}
                   {ingredient.countries_restricted && ingredient.countries_restricted.length > 0 && (
-                    <div className="mb-6 p-4 bg-red-100 border-2 border-red-400 rounded-lg">
-                      <h3 className="font-poppins font-semibold text-red-900 mb-3 flex items-center gap-2">
-                        <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
-                          <path fillRule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clipRule="evenodd" />
+                    <div className="mb-5 p-4 bg-red-100 border-2 border-red-400 rounded-lg">
+                      <h3 className="font-poppins font-semibold text-red-900 mb-3 flex items-center gap-2 text-sm">
+                        <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                          <path fillRule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clipRule="evenodd"/>
                         </svg>
-                        Restricted/Banned in These Countries
+                        Restricted or Banned In
                       </h3>
                       <div className="flex flex-wrap gap-2">
                         {ingredient.countries_restricted.map((country, idx) => (
-                          <span key={idx} className="inline-block px-3 py-2 bg-red-200 text-red-900 rounded-lg text-sm font-semibold">
+                          <span key={idx} className="inline-block px-3 py-1.5 bg-red-200 text-red-900 rounded-lg text-xs font-semibold">
                             {country}
                           </span>
                         ))}
@@ -510,90 +479,95 @@ function CheckIngredient() {
 
                   {/* FSSAI Position */}
                   {ingredient.fssai_position && (
-                    <div className="mb-6 p-4 bg-white rounded-lg border-2 border-amber-300">
-                      <h3 className="font-poppins font-semibold text-navy mb-2 flex items-center gap-2">
-                        <svg className="w-5 h-5 text-amber-600" fill="currentColor" viewBox="0 0 20 20">
-                          <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clipRule="evenodd" />
+                    <div className="mb-5 p-4 bg-white rounded-lg border-2 border-amber-300">
+                      <h3 className="font-poppins font-semibold text-navy mb-2 flex items-center gap-2 text-sm">
+                        <svg className="w-4 h-4 text-amber-600" fill="currentColor" viewBox="0 0 20 20">
+                          <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clipRule="evenodd"/>
                         </svg>
                         FSSAI Position (India)
                       </h3>
-                      <p className="text-sm text-gray-800 font-medium">{ingredient.fssai_position}</p>
+                      <p className="text-sm text-gray-800">{ingredient.fssai_position}</p>
                     </div>
                   )}
 
-                  {/* Disclaimer */}
-                  <div className="mt-6 pt-6 border-t border-gray-300">
-                    <p className="text-xs text-gray-600 italic">
-                      This information is for general awareness based on publicly available regulatory data from FSSAI, WHO, EU, FDA, and peer-reviewed research.
+                  <div className="pt-4 border-t border-gray-200">
+                    <p className="text-xs text-gray-500 italic">
+                      Based on publicly available data from FSSAI, WHO, EU, FDA, and peer-reviewed research. For general awareness only.
                     </p>
                   </div>
-                  
                 </div>
               </div>
 
-              {/* Category Information - Right Side (1/3 width) */}
-              <div className="lg:col-span-1">
-                <div className="sticky top-4">
-                  <div className="card p-6 bg-white border-2 border-gray-200">
-                    <h3 className="font-poppins font-bold text-lg text-navy mb-4 flex items-center gap-2">
-                      <svg className="w-5 h-5 text-primary" fill="currentColor" viewBox="0 0 20 20">
-                        <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clipRule="evenodd" />
-                      </svg>
-                      Our Classification System
-                    </h3>
-                    
-                    <p className="text-sm text-gray-600 mb-4">
-                      We classify ingredients into three categories based on scientific research:
-                    </p>
+              {/* Right sidebar — contextual */}
+              <div className="lg:col-span-1 space-y-4">
+                <div className="sticky top-4 space-y-4">
 
-                    {/* Generally Recognised */}
-                    <div className="mb-4 p-4 bg-green-50 border-l-4 border-green-500 rounded-r-lg">
-                      <div className="flex items-start gap-2 mb-2">
-                        <svg className="w-5 h-5 text-green-600 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
-                          <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd"/>
+                  {/* Related ingredients */}
+                  {ingredient.related_ingredients && ingredient.related_ingredients.length > 0 && (
+                    <div className="card p-5 bg-white border border-gray-200">
+                      <h3 className="font-poppins font-bold text-base text-navy mb-3 flex items-center gap-2">
+                        <svg className="w-4 h-4 text-primary" fill="currentColor" viewBox="0 0 20 20">
+                          <path d="M9 9a2 2 0 114 0 2 2 0 01-4 0z"/>
+                          <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-13a4 4 0 00-3.446 6.032l-2.261 2.26a1 1 0 101.414 1.415l2.261-2.261A4 4 0 1011 5z" clipRule="evenodd"/>
                         </svg>
-                        <h4 className="font-semibold text-green-900 text-sm">Generally Recognised</h4>
+                        Also check these
+                      </h3>
+                      <div className="space-y-2">
+                        {ingredient.related_ingredients.map((rel, idx) => (
+                          <button
+                            key={idx}
+                            onClick={() => { setQuery(rel.name); handleSearch(rel.name) }}
+                            className="w-full text-left p-2.5 rounded-lg border border-gray-100 hover:border-primary hover:bg-primary-light transition-colors group"
+                          >
+                            <div className="flex items-center gap-2">
+                              <span className={`w-2.5 h-2.5 rounded-full flex-shrink-0 ${
+                                rel.classification === 'commonly_questioned' ? 'bg-red-600' :
+                                rel.classification === 'worth_knowing' ? 'bg-amber-500' :
+                                'bg-green-500'
+                              }`}/>
+                              <span className="text-sm font-medium text-gray-800 group-hover:text-primary">{rel.name}</span>
+                            </div>
+                            {rel.what_it_is && (
+                              <p className="text-xs text-gray-500 mt-0.5 ml-4.5 line-clamp-1">{rel.what_it_is}</p>
+                            )}
+                          </button>
+                        ))}
                       </div>
-                      <p className="text-xs text-green-800 leading-relaxed">
-                        Safe ingredients with no known adverse effects. Approved by major regulatory bodies.
-                      </p>
                     </div>
+                  )}
 
-                    {/* Worth Knowing */}
-                    <div className="mb-4 p-4 bg-yellow-50 border-l-4 border-yellow-500 rounded-r-lg">
-                      <div className="flex items-start gap-2 mb-2">
-                        <svg className="w-5 h-5 text-yellow-600 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
-                          <path fillRule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clipRule="evenodd"/>
-                        </svg>
-                        <h4 className="font-semibold text-yellow-900 text-sm">Worth Knowing</h4>
+                  {/* Quick tier reference */}
+                  <div className="card p-5 bg-white border border-gray-200">
+                    <h3 className="font-poppins font-bold text-base text-navy mb-3">Classification Guide</h3>
+                    <div className="space-y-2">
+                      <div className="flex items-start gap-2 p-2.5 bg-green-50 rounded-lg">
+                        <span className="w-2.5 h-2.5 rounded-full bg-green-500 flex-shrink-0 mt-1"/>
+                        <div>
+                          <p className="text-xs font-semibold text-green-900">Generally Recognised</p>
+                          <p className="text-xs text-green-800">No notable safety concerns. Approved globally.</p>
+                        </div>
                       </div>
-                      <p className="text-xs text-yellow-900 leading-relaxed">
-                        Ingredients with some concerns. May cause issues in sensitive individuals.
-                      </p>
-                    </div>
-
-                    {/* Commonly Questioned */}
-                    <div className="mb-4 p-4 bg-red-50 border-l-4 border-red-600 rounded-r-lg">
-                      <div className="flex items-start gap-2 mb-2">
-                        <svg className="w-5 h-5 text-red-600 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
-                          <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clipRule="evenodd"/>
-                        </svg>
-                        <h4 className="font-semibold text-red-900 text-sm">Commonly Questioned</h4>
+                      <div className="flex items-start gap-2 p-2.5 bg-amber-50 rounded-lg">
+                        <span className="w-2.5 h-2.5 rounded-full bg-amber-500 flex-shrink-0 mt-1"/>
+                        <div>
+                          <p className="text-xs font-semibold text-amber-900">Worth Knowing</p>
+                          <p className="text-xs text-amber-800">Some concerns. Fine for most, caution for sensitive individuals.</p>
+                        </div>
                       </div>
-                      <p className="text-xs text-red-900 leading-relaxed">
-                        Ingredients with significant health concerns. May be restricted or banned.
-                      </p>
+                      <div className="flex items-start gap-2 p-2.5 bg-red-50 rounded-lg">
+                        <span className="w-2.5 h-2.5 rounded-full bg-red-600 flex-shrink-0 mt-1"/>
+                        <div>
+                          <p className="text-xs font-semibold text-red-900">Commonly Questioned</p>
+                          <p className="text-xs text-red-800">Significant concerns. Restricted or banned in some countries.</p>
+                        </div>
+                      </div>
                     </div>
-
-                    <div className="mt-4 pt-4 border-t border-gray-200">
-                      <p className="text-xs text-gray-600 italic">
-                        Based on data from FSSAI, WHO, EU, FDA, and peer-reviewed research.
-                      </p>
-                    </div>
+                    <p className="text-xs text-gray-400 mt-3">Based on FSSAI, WHO, EU & FDA data.</p>
                   </div>
+
                 </div>
               </div>
-              
+
             </div>
           </div>
         </section>
