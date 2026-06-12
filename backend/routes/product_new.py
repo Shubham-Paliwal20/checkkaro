@@ -581,6 +581,100 @@ async def search_product(name: str = Query(..., description="Product name to sea
     )
 
 
+# ── Better Alternatives ───────────────────────────────────────────────────────
+
+@router.get("/recommendations")
+async def get_recommendations(
+    category: str = Query(..., description="Product category to match"),
+    exclude_id: str = Query(None, description="Product ID to exclude"),
+    limit: int = Query(6, ge=1, le=12),
+):
+    """
+    Return A/B grade products in the same category — shown as better alternatives
+    when the current product has a C or D grade.
+    """
+    try:
+        cat = category.strip()
+
+        # Broaden category matching: "Face Wash" → also match "Skincare", "Personal Care"
+        # Build a list of category terms to try in order (most specific first)
+        cat_lower = cat.lower()
+        _CATEGORY_GROUPS = {
+            'soap': ['soap', 'body wash', 'personal care'],
+            'face wash': ['face wash', 'skincare', 'personal care'],
+            'moisturizer': ['moisturizer', 'moisturiser', 'lotion', 'cream', 'skincare'],
+            'shampoo': ['shampoo', 'hair care', 'hair wash'],
+            'conditioner': ['conditioner', 'hair care'],
+            'sunscreen': ['sunscreen', 'sunblock', 'spf', 'skincare'],
+            'serum': ['serum', 'skincare'],
+            'biscuits': ['biscuits', 'cookies', 'bakery', 'snacks'],
+            'chocolate': ['chocolate', 'confectionery', 'snacks'],
+            'snacks': ['snacks', 'chips', 'crisps'],
+            'instant noodles': ['instant noodles', 'noodles', 'pasta'],
+            'soft drink': ['soft drink', 'beverage', 'carbonated'],
+            'juice': ['juice', 'fruit drink', 'beverage'],
+            'health drink': ['health drink', 'nutrition', 'beverage'],
+            'toothpaste': ['toothpaste', 'oral care'],
+            'deodorant': ['deodorant', 'antiperspirant', 'personal care'],
+            'hair oil': ['hair oil', 'hair care'],
+            'body lotion': ['body lotion', 'lotion', 'moisturiser', 'skincare'],
+        }
+
+        # Find a matching group or use the raw category
+        search_terms = None
+        for key, terms in _CATEGORY_GROUPS.items():
+            if key in cat_lower or any(t in cat_lower for t in terms):
+                search_terms = terms
+                break
+        if not search_terms:
+            search_terms = [cat_lower]
+
+        # Query Supabase — try each term until we get enough results
+        results = []
+        seen_ids = set()
+        if exclude_id:
+            seen_ids.add(str(exclude_id))
+
+        for term in search_terms:
+            if len(results) >= limit:
+                break
+            try:
+                rows = (
+                    supabase.from_("ai_extracted_products")
+                    .select("id, name, brand, category, grade, image_url, static_key")
+                    .ilike("category", f"%{term}%")
+                    .in_("grade", ["A", "B"])
+                    .order("grade")
+                    .limit(limit * 3)
+                    .execute()
+                ).data or []
+
+                for row in rows:
+                    rid = str(row.get("id", ""))
+                    if rid not in seen_ids and row.get("grade") in ("A", "B"):
+                        seen_ids.add(rid)
+                        results.append({
+                            "id": rid,
+                            "name": row["name"],
+                            "brand": row.get("brand") or "",
+                            "category": row.get("category") or "",
+                            "grade": row.get("grade") or "B",
+                            "image_url": row.get("image_url"),
+                            "static_key": row.get("static_key") or "",
+                        })
+                        if len(results) >= limit:
+                            break
+            except Exception as e:
+                print(f"[RECS] query error for term={term!r}: {e}")
+                continue
+
+        return results[:limit]
+
+    except Exception as e:
+        print(f"[RECS] error: {e}")
+        return []
+
+
 # ── Browse ────────────────────────────────────────────────────────────────────
 
 @router.get("/browse")
