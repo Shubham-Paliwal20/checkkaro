@@ -45,6 +45,31 @@ def _prune_suggest():
     for k, _ in sorted(_suggest_cache.items(), key=lambda x: x[1][0])[:_SUGGEST_MAX // 2]:
         del _suggest_cache[k]
 
+# ── Search result cache ───────────────────────────────────────────────────────
+# Caches full ProductResponse per product name for 5 minutes.
+# Eliminates repeated ingredient re-classification under concurrent load.
+_search_cache: dict = {}
+_SEARCH_TTL  = 300   # seconds
+_SEARCH_MAX  = 500   # max cached products
+
+def _search_cache_get(key: str):
+    entry = _search_cache.get(key)
+    if not entry:
+        return None
+    ts, val = entry
+    if time.monotonic() - ts > _SEARCH_TTL:
+        del _search_cache[key]
+        return None
+    return val
+
+def _search_cache_set(key: str, val):
+    if len(_search_cache) >= _SEARCH_MAX:
+        # evict oldest half
+        oldest = sorted(_search_cache.items(), key=lambda x: x[1][0])[:_SEARCH_MAX // 2]
+        for k, _ in oldest:
+            del _search_cache[k]
+    _search_cache[key] = (time.monotonic(), val)
+
 # ── Ingredient classification ─────────────────────────────────────────────────
 # Single source of truth — used for every grade computation across browse,
 # search/detail, and suggestions. ingredient_database.classify_ingredient()
@@ -494,6 +519,12 @@ def _search_query(term: str):
 async def search_product(name: str = Query(..., description="Product name to search", min_length=1, max_length=120)):
     print(f"[SEARCH] Querying: {name}")
 
+    cache_key = name.lower().strip()
+    cached = _search_cache_get(cache_key)
+    if cached:
+        print(f"[SEARCH] Cache hit: {name}")
+        return cached
+
     p = _search_query(name)
     if not p:
         raise HTTPException(status_code=404, detail=f"Product '{name}' not found.")
@@ -559,7 +590,7 @@ async def search_product(name: str = Query(..., description="Product name to sea
     if not raw_images and p.get("image_url"):
         raw_images = [p["image_url"]]
 
-    return ProductResponse(
+    response = ProductResponse(
         id=str(p.get("id", "")),
         name=p["name"],
         brand=p.get("brand") or "Unknown",
@@ -579,6 +610,8 @@ async def search_product(name: str = Query(..., description="Product name to sea
         confidence="high" if p.get("static_key") else "medium",
         is_complete=True,
     )
+    _search_cache_set(cache_key, response)
+    return response
 
 
 # ── Better Alternatives ───────────────────────────────────────────────────────
