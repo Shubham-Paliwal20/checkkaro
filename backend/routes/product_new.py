@@ -533,47 +533,37 @@ async def search_product(name: str = Query(..., description="Product name to sea
 
     raw = p.get("ingredients_raw") or ""
     cat = p.get("category") or ""
-    if raw:
+    stored_ings = p.get("ingredients") or []
+
+    # Fast path: use stored classified ingredients if available (avoids re-classifying
+    # all ingredients on every request which is CPU-heavy under concurrent load).
+    if stored_ings and p.get("grade"):
+        ingredients = [IngredientItem(
+            name=i.get("name", ""),
+            aliases=i.get("aliases", ""),
+            classification=i.get("classification", "generally_recognised"),
+            one_line_note=i.get("one_line_note", ""),
+            regulatory_note=i.get("regulatory_note", ""),
+            recommendation=i.get("recommendation"),
+            commonly_found_in=i.get("commonly_found_in"),
+            health_effects=i.get("health_effects"),
+            countries_restricted=i.get("countries_restricted", []),
+            fssai_position=i.get("fssai_position"),
+        ) for i in stored_ings]
+        grade = p["grade"]
+    elif raw:
+        # Slow path: classify from scratch and persist for next time
         raw_names = _parse_raw(raw)
         ingredients = [_build_ingredient_item(n, cat) for n in raw_names if n]
-        # Compute grade live from actual ingredients
         grade = calculate_grade([i.dict() for i in ingredients])
-
-        # Persist classified ingredients + grade so the Supabase fallback path
-        # (used when this server is cold/slow) always shows correct classifications
-        # instead of mapping everything to 'generally_recognised'.
-        stored_ings = p.get("ingredients") or []
-        grade_changed = grade != p.get("grade")
-        ings_missing  = not stored_ings or len(stored_ings) == 0
-
-        # Detect stale classifications — any ingredient whose stored classification
-        # differs from the freshly computed one (happens when new patterns are added
-        # to ingredient_database.py after a product was first saved).
-        def _ings_outdated():
-            if ings_missing:
-                return False
-            stored_map = {(i.get('name') or '').lower().strip(): i.get('classification', '')
-                          for i in stored_ings}
-            return any(
-                stored_map.get((fi.name or '').lower().strip(), fi.classification) != fi.classification
-                for fi in ingredients
-            )
-
-        ings_outdated = _ings_outdated()
-
-        if grade_changed or ings_missing or ings_outdated:
-            try:
-                update_payload: dict = {}
-                if grade_changed:
-                    update_payload["grade"] = grade
-                if ings_missing or ings_outdated:
-                    update_payload["ingredients"] = [i.dict() for i in ingredients]
-                supabase_admin.from_("ai_extracted_products") \
-                    .update(update_payload).eq("id", p["id"]).execute()
-                if grade_changed:
-                    invalidate_browse_cache()
-            except Exception:
-                pass
+        try:
+            supabase_admin.from_("ai_extracted_products").update({
+                "grade": grade,
+                "ingredients": [i.dict() for i in ingredients]
+            }).eq("id", p["id"]).execute()
+            invalidate_browse_cache()
+        except Exception:
+            pass
     else:
         ingredients = [IngredientItem(
             name="Standard Ingredients",
@@ -582,8 +572,6 @@ async def search_product(name: str = Query(..., description="Product name to sea
             one_line_note="Full ingredient list not yet available",
             regulatory_note="FSSAI approved"
         )]
-        # No ingredients to compute from — use whatever grade backfill stored.
-        # Defaulting to "C" matches browse page so both pages agree.
         grade = p.get("grade") or "C"
 
     raw_images = p.get("images") or []
