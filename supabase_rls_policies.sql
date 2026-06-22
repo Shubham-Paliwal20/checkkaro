@@ -173,19 +173,34 @@ CREATE POLICY "user_or_admin_manage_blog" ON blogs
   WITH CHECK (author_id::text = auth.uid()::text OR auth.email() = 'shubhampaliwal5@gmail.com');
 
 
--- ─── reviews (separate general reviews table) ─────────────────────────────────
--- Uncomment ONLY if you have a separate 'reviews' table (different from product_reviews):
--- ALTER TABLE reviews ENABLE ROW LEVEL SECURITY;
--- DROP POLICY IF EXISTS "public_read_reviews2"          ON reviews;
--- DROP POLICY IF EXISTS "authenticated_insert_review2"  ON reviews;
--- DROP POLICY IF EXISTS "user_manage_own_review2"       ON reviews;
--- CREATE POLICY "public_read_reviews2" ON reviews FOR SELECT USING (true);
--- CREATE POLICY "authenticated_insert_review2" ON reviews
---   FOR INSERT WITH CHECK (auth.uid() IS NOT NULL AND user_id::text = auth.uid()::text);
--- CREATE POLICY "user_manage_own_review2" ON reviews
---   FOR ALL
---   USING (user_id::text = auth.uid()::text OR auth.email() = 'shubhampaliwal5@gmail.com')
---   WITH CHECK (user_id::text = auth.uid()::text OR auth.email() = 'shubhampaliwal5@gmail.com');
+-- ─── reviews (homepage testimonials table — separate from product_reviews) ─────
+-- Column that stores the reviewer: user_id
+ALTER TABLE reviews ENABLE ROW LEVEL SECURITY;
+
+DROP POLICY IF EXISTS "public_read_approved_reviews"   ON reviews;
+DROP POLICY IF EXISTS "authenticated_insert_review_hp" ON reviews;
+DROP POLICY IF EXISTS "user_manage_own_review_hp"      ON reviews;
+DROP POLICY IF EXISTS "admin_manage_all_reviews"       ON reviews;
+
+-- Public: only approved reviews are readable; restrict columns via application layer
+CREATE POLICY "public_read_approved_reviews" ON reviews
+  FOR SELECT USING (is_approved = true OR auth.email() = 'shubhampaliwal5@gmail.com');
+
+-- Authenticated users can insert their own review
+CREATE POLICY "authenticated_insert_review_hp" ON reviews
+  FOR INSERT
+  WITH CHECK (auth.uid() IS NOT NULL AND user_id::text = auth.uid()::text);
+
+-- Users can update / delete only their own review; admin manages all
+CREATE POLICY "user_manage_own_review_hp" ON reviews
+  FOR UPDATE
+  USING (user_id::text = auth.uid()::text OR auth.email() = 'shubhampaliwal5@gmail.com')
+  WITH CHECK (user_id::text = auth.uid()::text OR auth.email() = 'shubhampaliwal5@gmail.com');
+
+-- Admin can delete any review
+CREATE POLICY "admin_manage_all_reviews" ON reviews
+  FOR DELETE
+  USING (auth.email() = 'shubhampaliwal5@gmail.com');
 
 
 -- ─── Storage: product-images bucket ───────────────────────────────────────────

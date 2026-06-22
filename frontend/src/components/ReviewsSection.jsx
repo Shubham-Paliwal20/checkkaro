@@ -160,7 +160,13 @@ export default function ReviewsSection() {
   const timerRef = useRef(null)
 
   const fetchReviews = async () => {
-    const { data } = await supabase.from('reviews').select('*').order('created_at', { ascending: false })
+    // Only fetch approved reviews; limit columns to what the UI displays (no user_id exposed)
+    const { data } = await supabase
+      .from('reviews')
+      .select('id, reviewer_name, review_text, rating')
+      .eq('is_approved', true)
+      .order('created_at', { ascending: false })
+      .limit(50)
     setReviews(data || [])
     return data || []
   }
@@ -168,11 +174,10 @@ export default function ReviewsSection() {
   // Load reviews on mount
   useEffect(() => { fetchReviews() }, [])
 
-  // When user logs in/out, find their review from the already-fetched list
+  // When user logs in/out, find their own review (minimal columns)
   useEffect(() => {
     if (!user) { setMyReview(null); return }
-    // Check DB for this user's review (not just from cached list, in case it's stale)
-    supabase.from('reviews').select('*').eq('user_id', user.id).maybeSingle()
+    supabase.from('reviews').select('id, reviewer_name, review_text, rating, user_id').eq('user_id', user.id).maybeSingle()
       .then(({ data }) => setMyReview(data || null))
   }, [user])
 
