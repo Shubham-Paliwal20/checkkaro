@@ -49,7 +49,7 @@ function SearchBar({ placeholder = 'Search any product...', onSearch }) {
     return () => ids.forEach(id => clearTimeout(id))
   }, [])
 
-  // ── Fetch suggestions with 80ms debounce ──
+  // ── Fetch suggestions with 250ms debounce ──
   useEffect(() => {
     clearTimeout(timerRef.current)
 

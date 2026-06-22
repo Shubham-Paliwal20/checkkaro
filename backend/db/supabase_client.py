@@ -17,6 +17,16 @@ if not SUPABASE_ANON_KEY:
 supabase: Client = create_client(SUPABASE_URL, SUPABASE_ANON_KEY)
 
 # Service client — bypasses RLS; used only for admin write operations
+# The service role key MUST be set in Render env vars. Missing it means admin ops
+# run as anon (subject to RLS) which will silently fail — check Render dashboard.
 if not SUPABASE_SERVICE_ROLE_KEY:
-    raise ValueError("SUPABASE_SERVICE_ROLE_KEY environment variable is not set.")
-supabase_admin: Client = create_client(SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY)
+    import warnings
+    warnings.warn(
+        "SUPABASE_SERVICE_ROLE_KEY is not set — admin DB operations will fail. "
+        "Set it in Render Environment Variables immediately.",
+        stacklevel=0,
+    )
+supabase_admin: Client = create_client(
+    SUPABASE_URL,
+    SUPABASE_SERVICE_ROLE_KEY or SUPABASE_ANON_KEY
+)
