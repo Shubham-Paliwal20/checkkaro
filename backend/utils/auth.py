@@ -2,7 +2,10 @@ import os
 from fastapi import HTTPException, Request
 from db.supabase_client import supabase_admin
 
-ADMIN_EMAIL = os.getenv("ADMIN_EMAIL", "shubhampaliwal5@gmail.com")
+ADMIN_EMAIL = os.getenv("ADMIN_EMAIL") or "shubhampaliwal5@gmail.com"
+if not os.getenv("ADMIN_EMAIL"):
+    import warnings
+    warnings.warn("ADMIN_EMAIL env var not set — using hardcoded fallback. Set it in production.", stacklevel=0)
 
 
 async def get_current_user(request: Request):

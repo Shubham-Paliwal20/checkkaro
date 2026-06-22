@@ -478,13 +478,21 @@ function Result() {
     try {
       const { data: { session } } = await supabase.auth.getSession()
       const token = session?.access_token
+      if (!token) { alert('Session expired. Please log in again.'); return }
       const API = import.meta.env.VITE_API_BASE_URL || ''
       const res = await fetch(`${API}/api/photos/${photoId}`, {
         method: 'DELETE',
         headers: { Authorization: `Bearer ${token}` },
       })
-      if (res.ok) setDbPhotos(prev => prev.filter(p => p.id !== photoId))
-    } catch { /* silent */ }
+      if (res.ok) {
+        setDbPhotos(prev => prev.filter(p => p.id !== photoId))
+      } else {
+        const err = await res.json().catch(() => ({}))
+        alert(`Delete failed: ${err.detail || res.status}`)
+      }
+    } catch (e) {
+      console.error('[handleDeletePhoto]', e)
+    }
   }
 
   const handleDeleteBackendImage = async (url) => {
