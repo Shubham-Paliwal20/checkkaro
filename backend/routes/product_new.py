@@ -468,7 +468,7 @@ def _search_query(term: str):
             else:
                 q = q.ilike(col, val)
             if prefer_static:
-                q = q.order("static_key", nullsfirst=False)
+                q = q.order("static_key", desc=False)
             return (q.limit(1).execute().data or [None])[0]
         except Exception:
             return None
@@ -737,14 +737,14 @@ async def get_search_suggestions(q: str = Query(..., min_length=1, max_length=80
         name_result = supabase.from_("ai_extracted_products") \
             .select("name, brand, category, static_key") \
             .ilike("name", f"%{q}%") \
-            .order("static_key", nullsfirst=False) \
+            .order("static_key", desc=False) \
             .limit(30) \
             .execute()
 
         brand_result = supabase.from_("ai_extracted_products") \
             .select("name, brand, category, static_key") \
             .ilike("brand", f"%{q}%") \
-            .order("static_key", nullsfirst=False) \
+            .order("static_key", desc=False) \
             .limit(30) \
             .execute()
 
