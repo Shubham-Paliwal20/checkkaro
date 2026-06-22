@@ -231,6 +231,7 @@ INGREDIENT_DESCRIPTIONS = {
     # --- Anticaking ---
     'silicon dioxide': """Silicon dioxide (SiO₂ / E551/INS 551 / silica) is one of the most abundant naturally occurring minerals on Earth — the primary constituent of sand (quartz), diatomite and many rocks. For food use, food-grade synthetic amorphous silicon dioxide (rather than crystalline quartz) is manufactured by gas-phase hydrolysis of silicon tetrachloride (fumed silica) or wet precipitation from sodium silicate solutions (precipitated silica), producing a highly porous, very fine white powder with enormous surface area (50–800 m²/g). This large surface area enables the primary food function — anti-caking: particles of silicon dioxide physically insert between powder particles (salt, spices, cocoa powder, milk powder, soup mixes, baking powder, nutritional supplement powders), absorbing moisture and preventing the electrostatic and capillary water bridging that causes caking, especially in humid tropical climates like India. Also used as a carrier for liquid flavours and colours, allowing them to be converted to free-flowing powders for industrial use. Safety — critical distinction: crystalline silica (quartz dust from mining/construction) is an IARC Group 1 carcinogen causing silicosis and lung cancer from occupational inhalation exposure. Food-grade and cosmetic-grade silica is amorphous — entirely different morphology; no fibrous particles; no carcinogenicity concerns at food use levels. 2018 EFSA nano-silica concern: EFSA flagged food-grade E551 nano-particles as a concern (some silica particles are in the nano range <100 nm); EFSA concluded the available data are insufficient to establish an ADI for nano-SiO₂ — a precautionary review is ongoing. Traditional coarser-particle silicon dioxide is not the subject of this concern. At approved food additive use levels (typically 1–2% of powdered products), silicon dioxide is not absorbed in meaningful amounts; any absorbed silicic acid is excreted in urine. ADI: not specified (JECFA for food-grade). Approved by FSSAI, EU (E551), FDA (GRAS) and CODEX.""",
     # --- Flavor enhancers (natural) ---
+    'yeast': """Yeast (Saccharomyces cerevisiae / baker's yeast / brewer's yeast) is a single-celled fungus used as a biological leavening agent in bread, buns, pizza bases, doughnuts, idli/dosa batter and fermented beverages. In baking, live yeast cells ferment sugars (glucose, fructose, maltose) anaerobically, producing carbon dioxide (CO2) which makes dough rise, and ethanol which evaporates during baking. The CO2 is trapped by the gluten network in wheat dough, creating the characteristic open, light crumb structure. In India, commercial instant dry yeast and active dry yeast are widely used in bakery products. Yeast is also a nutritional powerhouse — it is a natural source of B vitamins (B1, B2, B3, B5, B6, folate), protein, zinc, selenium and beta-glucans (immune-supporting polysaccharides). Nutritional/brewer's yeast (inactive) is sold as a dietary supplement for its nutrient density. Safety: yeast is completely safe for all healthy individuals. It is not an allergen for most people. Rare exception: individuals with inflammatory bowel disease (Crohn's disease) who test positive for anti-Saccharomyces cerevisiae antibodies (ASCA) may be advised to reduce yeast intake — not due to direct harm, but as a management strategy. Yeast extracts (from autolysed yeast) contain naturally occurring glutamate and nucleotides — people with gout should moderate yeast extract intake. As a leavening agent used in baking: fully FSSAI, EU, FDA and Codex approved with no ADI restriction (it is a food, not a food additive). Generally Recognised As Safe.""",
     'yeast extract': """Yeast extract is a concentrated flavour ingredient produced from the intracellular contents of Saccharomyces cerevisiae (baker's or brewer's yeast) or Candida utilis. Production: yeast cells are disrupted — either by autolysis (self-digestion using the yeast's own enzymes, triggered by heat at 45–55°C) or by plasmolysis (salt-induced osmotic rupture) — then the soluble cell contents (amino acids, peptides, nucleotides, B vitamins) are separated from the insoluble cell walls and concentrated by evaporation or spray-drying. Chemical nature: a complex mixture of free amino acids (particularly glutamic acid ~5–20% of dry weight), short peptides, 5'-nucleotides (IMP, GMP — which amplify umami synergistically), B vitamins (thiamine, riboflavin, niacin, B6, folate) and minerals. Rich natural source of umami flavour — used in soups, stocks, gravies, instant noodles, bouillon cubes, savoury seasonings, snack coatings and ready-to-eat meals to enhance flavour depth. Generally considered natural and clean-label. People with gout or hyperuricaemia should moderate intake (nucleotide content raises uric acid). Contains naturally occurring glutamate — similar umami effect to MSG. May not be vegan if grown on animal-derived media (most commercial grades use plant-based substrates). FSSAI and internationally approved as a food ingredient. No ADI specified.""",
     'hydrolysed': """Hydrolysed refers to a substance — most commonly protein, but also starch or vegetable matter — that has been chemically or enzymatically broken down into smaller components. Hydrolysed vegetable protein (HVP) and hydrolysed plant protein (HPP) are produced by breaking down plant proteins (soy, corn, wheat, peanut) using acid hydrolysis (6N HCl at high temperature), base treatment or enzymes (proteases). This releases free amino acids — especially glutamic acid — which produces an intense umami/savoury flavour at concentrations far lower than intact protein. HVP is chemically equivalent to naturally occurring yeast extract or Maillard-reaction products, but is manufactured rather than fermented. Used in: soups, gravies, stock cubes, savoury sauces, instant noodles, seasoning mixes, processed meats, ready meals and snack seasonings. Functions: natural-source flavour enhancer, savoury depth without added MSG (though the free glutamate content achieves the same umami effect). Concern: acid hydrolysis of protein can produce 3-MCPD (3-monochloropropane-1,2-diol), a probable human carcinogen at high levels; EU limits 3-MCPD in HVP to ≤20 µg/kg. Enzyme-hydrolysed proteins produce negligible 3-MCPD. Allergen risk: source protein must be declared — soy-hydrolysed, wheat-hydrolysed or peanut-hydrolysed products carry the relevant allergen. Coeliac patients must avoid wheat-hydrolysed proteins. FSSAI and Codex Alimentarius regulate HVP as a flavouring ingredient; 3-MCPD limits apply.""",
     # --- Natural colorants ---
@@ -1760,17 +1761,62 @@ COSMETIC_SAFE_OVERRIDES = {
 def _normalize_ins(name: str) -> str:
     """
     Normalize additive number formats to a lowercase 'eNNN[sub]' key:
-      'INS 322'       → 'e322'
-      'INS322(i)'     → 'e322i'
-      '322(i)'        → 'e322i'
-      '500(ii)'       → 'e500ii'
-      '503 ii'        → 'e503ii'
-      '471'           → 'e471'
-      'E471'          → 'e471'
-      'E 500(ii)'     → 'e500ii'
+      'INS 322'                    -> 'e322'
+      'INS322(i)'                  -> 'e322i'
+      '322(i)'                     -> 'e322i'
+      '500(ii)'                    -> 'e500ii'
+      '503 ii'                     -> 'e503ii'
+      '471'                        -> 'e471'
+      'E471'                       -> 'e471'
+      'E 500(ii)'                  -> 'e500ii'
+      'Raising Agent 503(ii)'      -> 'e503ii'
+      'Emulsifier 322'             -> 'e322'
+      'Emulsifier (INS 471)'       -> 'e471'
+      'Dough Conditioner (223)'    -> 'e223'
+      'Acidity Regulator (INS 330)'-> 'e330'
     """
     import re
     s = name.strip()
+
+    # Strip FSSAI/EU functional-class descriptor prefixes that appear on Indian
+    # product labels before the INS/E number.
+    # e.g. "Raising Agent 503(ii)" -> "503(ii)", "Emulsifier (INS 471)" -> "INS 471"
+    _FUNC_PREFIXES = (
+        r'raising\s+agents?',
+        r'leavening\s+agents?',
+        r'emulsifiers?',
+        r'dough\s+conditioners?',
+        r'stabilisers?',
+        r'stabilizers?',
+        r'preservatives?',
+        r'acidity\s+regulators?',
+        r'anti[\s\-]?caking\s+agents?',
+        r'flavou?r\s+enhancers?',
+        r'food\s+colou?r(?:ing)?',
+        r'colou?r(?:ing)?',
+        r'humectants?',
+        r'thickeners?',
+        r'antioxidants?',
+        r'sequestrants?',
+        r'flour\s+treatment\s+agents?',
+        r'bulking\s+agents?',
+        r'gelling\s+agents?',
+        r'glazing\s+agents?',
+        r'firming\s+agents?',
+        r'foaming\s+agents?',
+        r'propellants?',
+        r'sweeteners?',
+        r'acids?',
+        r'pH\s+regulators?',
+    )
+    _PREFIX_RE = re.compile(
+        r'^(?:' + '|'.join(_FUNC_PREFIXES) + r')[\s:,\-]*\(?',
+        re.IGNORECASE
+    )
+    stripped = _PREFIX_RE.sub('', s).rstrip(')').strip()
+    if stripped and stripped != s:
+        s = stripped
+
     # Pattern: optional 'INS' or 'E' prefix + optional space, then digits,
     # then optional sub-type: (i), (ii), (iii), (iv), (v) or bare i/ii/iii/iv
     m = re.match(
@@ -1783,7 +1829,7 @@ def _normalize_ins(name: str) -> str:
     m2 = re.match(r'^(?:ins[\s\-]?|e[\s]?)?(\d+)', s, re.IGNORECASE)
     if m2:
         return 'e' + m2.group(1)
-    # Old behaviour: 'INS 200' → 'e200'
+    # Old behaviour: 'INS 200' -> 'e200'
     m3 = re.match(r'^ins[\s\-]*(\d+)', s, re.IGNORECASE)
     if m3:
         return 'e' + m3.group(1)

@@ -2,6 +2,13 @@ import { useState, useEffect, useMemo } from 'react'
 import { supabase } from '../lib/supabaseClient'
 import { useAuth } from '../context/AuthContext'
 
+const API = import.meta.env.VITE_API_BASE_URL || ''
+
+async function getToken() {
+  const { data: { session } } = await supabase.auth.getSession()
+  return session?.access_token || null
+}
+
 const BRAND_BLUE   = '#1B3F8A'
 const ORANGE       = '#FF9933'
 const AVATAR_COLORS = ['#1B3F8A', '#0d7c66', '#9333ea', '#c2410c', '#0369a1', '#b45309']
@@ -163,14 +170,13 @@ export default function ProductReviews({ productId, productName }) {
 
   const fetchReviews = async () => {
     setLoading(true)
-    const { data, error } = await supabase
-      .from('product_reviews')
-      .select('*')
-      .eq('product_id', normId(productId))
-      .order('created_at', { ascending: false })
-    if (error) console.error('[Reviews] fetch error:', error)
-    const list = data || []
-    setReviews(list)
+    try {
+      const res = await fetch(`${API}/api/reviews/${normId(productId)}`)
+      const json = await res.json()
+      setReviews(json.reviews || [])
+    } catch (e) {
+      console.error('[Reviews] fetch error:', e)
+    }
     setLoading(false)
   }
 
@@ -209,29 +215,35 @@ export default function ProductReviews({ productId, productName }) {
     if (!productId)   { setFormError('Product ID missing — please reload the page.'); return }
 
     setSubmitting(true)
-    const payload = { product_id: normId(productId), product_name: productName, user_id: user.id, reviewer_name: name.trim(), rating, review_text: text.trim() }
-    console.log('[Review] submit:', payload)
+    try {
+      const token = await getToken()
+      if (!token) { setFormError('Session expired. Please log in again.'); setSubmitting(false); return }
 
-    let err
-    if (myReview && editing) {
-      const { error } = await supabase.from('product_reviews')
-        .update({ reviewer_name: payload.reviewer_name, rating: payload.rating, review_text: payload.review_text })
-        .eq('id', myReview.id).eq('user_id', user.id)
-      err = error
-    } else {
-      const { error } = await supabase.from('product_reviews').upsert(payload, { onConflict: 'product_id,user_id' })
-      err = error
-    }
+      const payload = { product_id: normId(productId), product_name: productName, reviewer_name: name.trim(), rating, review_text: text.trim() }
 
-    if (err) {
-      console.error('[Review] error:', err)
-      let msg = err.message || 'Something went wrong. Please try again.'
-      if (err.code === '42P01') msg = 'Reviews table not found — please contact support.'
-      if (err.code === '42501' || err.message?.includes('policy')) msg = 'Session expired. Please log out and log in again.'
-      setFormError(msg)
-    } else {
+      let res
+      if (myReview && editing) {
+        res = await fetch(`${API}/api/reviews/${myReview.id}`, {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
+          body: JSON.stringify({ reviewer_name: payload.reviewer_name, rating: payload.rating, review_text: payload.review_text }),
+        })
+      } else {
+        res = await fetch(`${API}/api/reviews`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
+          body: JSON.stringify(payload),
+        })
+      }
+
+      if (!res.ok) {
+        const errJson = await res.json().catch(() => ({}))
+        throw new Error(errJson.detail || 'Something went wrong. Please try again.')
+      }
       setSuccess(true); setEditing(false)
       await fetchReviews()
+    } catch (e) {
+      setFormError(e.message)
     }
     setSubmitting(false)
   }
