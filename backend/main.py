@@ -137,6 +137,21 @@ async def health_check():
     return {"status": "ok", "service": "Parkho API"}
 
 
+@app.get("/debug-db")
+async def debug_db():
+    """Temporary: diagnose Supabase connectivity. Remove after fix."""
+    from db.supabase_client import supabase
+    try:
+        res = supabase.table("ai_extracted_products").select("name").ilike("name", "%maggi%").limit(3).execute()
+        return {
+            "data": res.data,
+            "error": str(getattr(res, "error", None)),
+            "count": len(res.data) if res.data else 0,
+        }
+    except Exception as e:
+        return {"exception": str(e), "type": type(e).__name__}
+
+
 @app.get("/")
 async def root():
     return {"message": "Welcome to Parkho API"}
