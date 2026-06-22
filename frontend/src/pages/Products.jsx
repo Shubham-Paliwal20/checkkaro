@@ -280,12 +280,14 @@ export default function Products() {
           const numericIds = pageProducts.map(p => p.id).filter(Boolean)
           const allKeys = [...new Set([...staticKeys, ...numericIds])]
           if (allKeys.length > 0) {
-            supabase
-              .from('product_photos')
-              .select('product_id, image_url')
-              .in('product_id', allKeys)
-              .order('created_at')
-              .then(({ data: photos }) => {
+            const API = import.meta.env.VITE_API_BASE_URL || ''
+            fetch(`${API}/api/photos/batch`, {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({ ids: allKeys }),
+            })
+              .then(r => r.json())
+              .then(({ photos }) => {
                 if (!active || !photos?.length) return
                 const photoMap = {}
                 photos.forEach(ph => {

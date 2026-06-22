@@ -1,7 +1,6 @@
 import { useState, useEffect, useRef } from 'react'
 import { useNavigate } from 'react-router-dom'
 import axios from 'axios'
-import { supabase } from '../lib/supabaseClient'
 
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'https://checkkaro.onrender.com'
 
@@ -75,32 +74,14 @@ function SearchBar({ placeholder = 'Search any product...', onSearch }) {
     const abortController = new AbortController()
     timerRef.current = setTimeout(async () => {
       try {
-        // Three parallel requests: backend API + name-db + brand-db.
-        // Name-db and brand-db are separate so brand-matched products always appear
-        // even when the product name doesn't contain the query.
-        const [backendRes, nameDbRes, brandDbRes] = await Promise.allSettled([
+        const [backendRes] = await Promise.allSettled([
           axios.get(`${API_BASE_URL}/api/product/suggestions`, { params: { q: query }, timeout: 5000, signal: abortController.signal }),
-          supabase.from('ai_extracted_products')
-            .select('name, brand, category, static_key')
-            .ilike('name', `%${query}%`)
-            .order('static_key', { nullsFirst: false })
-            .limit(30)
-            .abortSignal(abortController.signal),
-          supabase.from('ai_extracted_products')
-            .select('name, brand, category, static_key')
-            .ilike('brand', `%${query}%`)
-            .order('static_key', { nullsFirst: false })
-            .limit(30)
-            .abortSignal(abortController.signal),
         ])
 
-        const backendResults  = backendRes.status  === 'fulfilled' ? (backendRes.value.data.suggestions || []) : []
-        const nameDbResults   = nameDbRes.status   === 'fulfilled' ? (nameDbRes.value.data  || []).map(p => ({ name: p.name, brand: p.brand || '', category: p.category || 'General' })) : []
-        const brandDbResults  = brandDbRes.status  === 'fulfilled' ? (brandDbRes.value.data || []).map(p => ({ name: p.name, brand: p.brand || '', category: p.category || 'General' })) : []
+        const backendResults = backendRes.status === 'fulfilled' ? (backendRes.value.data.suggestions || []) : []
 
-        // Merge preserving priority: backend → name-db → brand-db; deduplicate by name
         const seen = new Set()
-        const final = [...backendResults, ...nameDbResults, ...brandDbResults].filter(s => {
+        const final = backendResults.filter(s => {
           const k = s.name.toLowerCase()
           if (seen.has(k)) return false
           seen.add(k)

@@ -9,7 +9,7 @@ from starlette.middleware.base import BaseHTTPMiddleware
 from dotenv import load_dotenv
 
 # Import routers
-from routes import product_new, ingredient, history, admin_extract, reports
+from routes import product_new, ingredient, history, admin_extract, reports, photos, reviews, admin_products
 
 load_dotenv()
 
@@ -18,7 +18,7 @@ _sb_client = None
 try:
     from supabase import create_client
     _sb_url = os.getenv("SUPABASE_URL", "")
-    _sb_key = os.getenv("SUPABASE_ANON_KEY") or os.getenv("SUPABASE_SERVICE_KEY") or os.getenv("SUPABASE_KEY", "")
+    _sb_key = os.getenv("SUPABASE_ANON_KEY") or os.getenv("SUPABASE_KEY", "")
     if _sb_url and _sb_key:
         _sb_client = create_client(_sb_url, _sb_key)
         print("[SITEMAP] Supabase client ready")
@@ -93,9 +93,14 @@ ALLOWED_ORIGINS = [
     "https://www.parkho.in",
     "https://parkho.in",
     "https://checkkaro-lemon.vercel.app",
+    # Dev origins — only present when ENV != production
+    *(
+        ["http://localhost:5173", "http://localhost:5174", "http://localhost:3000"]
+        if os.getenv("ENV", "development") != "production"
+        else []
+    ),
 ]
 
-# Allow Vercel preview deployments (testing branch, PR previews)
 def _is_allowed_origin(origin: str) -> bool:
     if origin in ALLOWED_ORIGINS:
         return True
@@ -117,7 +122,7 @@ app.add_middleware(RateLimitMiddleware)
 app.add_middleware(
     CORSMiddleware,
     allow_origins=ALLOWED_ORIGINS,
-    allow_origin_regex=r"https://.*\.vercel\.app",
+    allow_origin_regex=r"https://checkkaro(-[a-z0-9]+)*\.vercel\.app",
     allow_credentials=False,
     allow_methods=["GET", "POST", "PATCH", "DELETE", "OPTIONS"],
     allow_headers=["Authorization", "Content-Type", "X-Requested-With"],
@@ -129,6 +134,9 @@ app.include_router(ingredient.router,     prefix="/api/ingredient",  tags=["Ingr
 app.include_router(history.router,        prefix="/api/history",     tags=["History"])
 app.include_router(admin_extract.router,  prefix="/api/admin",       tags=["Admin"])
 app.include_router(reports.router,        prefix="/api/admin",       tags=["Reports"])
+app.include_router(photos.router,         prefix="/api/photos",      tags=["Photos"])
+app.include_router(reviews.router,        prefix="/api/reviews",     tags=["Reviews"])
+app.include_router(admin_products.router, prefix="/api/admin-products", tags=["Admin Products"])
 
 
 @app.api_route("/health", methods=["GET", "HEAD"])

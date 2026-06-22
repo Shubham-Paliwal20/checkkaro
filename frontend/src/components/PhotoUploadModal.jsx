@@ -4,6 +4,7 @@ import { supabase } from '../lib/supabaseClient'
 const ADMIN_EMAIL = 'shubhampaliwal5@gmail.com'
 const MAX_SIZE_MB = 8
 const MIN_PHOTOS = 2
+const API = import.meta.env.VITE_API_BASE_URL || ''
 
 export default function PhotoUploadModal({ productId, productName, currentCount, user, onClose, onSuccess }) {
   const [files, setFiles] = useState([])
@@ -23,10 +24,8 @@ export default function PhotoUploadModal({ productId, productName, currentCount,
     const oversized = newArr.filter(f => f.size > MAX_SIZE_MB * 1024 * 1024)
     if (oversized.length) { setError(`Each image must be under ${MAX_SIZE_MB}MB`); return }
     setError(null)
-    // Append to existing, cap at remaining slots
     setFiles(prev => [...prev, ...newArr].slice(0, remaining))
     setPreviews(prev => [...prev, ...newArr.map(f => URL.createObjectURL(f))].slice(0, remaining))
-    // Reset input so the same file can be picked again
     if (inputRef.current) inputRef.current.value = ''
   }
 
@@ -40,6 +39,11 @@ export default function PhotoUploadModal({ productId, productName, currentCount,
     e.preventDefault()
     setDragOver(false)
     addFiles(e.dataTransfer.files)
+  }
+
+  const getToken = async () => {
+    const { data: { session } } = await supabase.auth.getSession()
+    return session?.access_token || null
   }
 
   const handleUpload = async () => {
@@ -58,45 +62,37 @@ export default function PhotoUploadModal({ productId, productName, currentCount,
     setError(null)
 
     try {
-      const uploadedUrls = []
-      for (const file of files) {
-        const ext = file.name.split('.').pop()?.toLowerCase() || 'jpg'
-        const path = `${productId}/${Date.now()}_${Math.random().toString(36).slice(2)}.${ext}`
-        const { error: upErr } = await supabase.storage
-          .from('product-images')
-          .upload(path, file, { contentType: file.type, upsert: false })
-        if (upErr) throw new Error(`Upload failed: ${upErr.message}`)
-        const { data: { publicUrl } } = supabase.storage.from('product-images').getPublicUrl(path)
-        uploadedUrls.push({ url: publicUrl, path })
-      }
+      const token = await getToken()
+      if (!token) throw new Error('Session expired. Please log in again.')
+
+      const formData = new FormData()
+      formData.append('product_id', productId)
+      files.forEach(f => formData.append('files', f))
 
       if (isAdmin) {
-        const { error: dbErr } = await supabase.from('product_photos').insert(
-          uploadedUrls.map(({ url, path }) => ({
-            product_id: productId,
-            image_url: url,
-            storage_path: path,
-            added_by: user.id,
-            is_admin_added: true,
-          }))
-        )
-        if (dbErr) throw new Error(dbErr.message)
-        // Update the primary image_url so Products browse page reflects the new photo
-        await supabase
-          .from('ai_extracted_products')
-          .update({ image_url: uploadedUrls[0].url })
-          .eq('id', productId)
-        onSuccess(`${uploadedUrls.length} photo(s) added to product.`, true, uploadedUrls[0].url)
-      } else {
-        const { error: dbErr } = await supabase.from('product_photo_submissions').insert({
-          product_id: productId,
-          product_name: productName,
-          user_id: user.id,
-          image_urls: uploadedUrls.map(u => u.url),
-          upi_or_mobile: upiOrMobile.trim(),
-          status: 'pending',
+        const res = await fetch(`${API}/api/photos/upload`, {
+          method: 'POST',
+          headers: { Authorization: `Bearer ${token}` },
+          body: formData,
         })
-        if (dbErr) throw new Error(dbErr.message)
+        if (!res.ok) {
+          const err = await res.json().catch(() => ({}))
+          throw new Error(err.detail || 'Upload failed')
+        }
+        const { uploaded } = await res.json()
+        onSuccess(`${uploaded.length} photo(s) added to product.`, true, uploaded[0]?.url)
+      } else {
+        formData.append('product_name', productName)
+        formData.append('upi_or_mobile', upiOrMobile.trim())
+        const res = await fetch(`${API}/api/photos/submit`, {
+          method: 'POST',
+          headers: { Authorization: `Bearer ${token}` },
+          body: formData,
+        })
+        if (!res.ok) {
+          const err = await res.json().catch(() => ({}))
+          throw new Error(err.detail || 'Submission failed')
+        }
         onSuccess('Submitted! You will earn ₹1 after admin approves your photos.', false)
       }
       onClose()
@@ -116,7 +112,6 @@ export default function PhotoUploadModal({ productId, productName, currentCount,
     >
       <div style={{ background: '#fff', borderRadius: 20, width: '100%', maxWidth: 460, maxHeight: '90vh', overflowY: 'auto', boxShadow: '0 20px 60px rgba(0,0,0,0.25)' }}>
 
-        {/* Header */}
         <div style={{ padding: '18px 20px 14px', borderBottom: '1px solid #f3f4f6', display: 'flex', alignItems: 'center', justifyContent: 'space-between', position: 'sticky', top: 0, background: '#fff', zIndex: 1 }}>
           <div>
             <h3 style={{ margin: 0, fontFamily: 'Poppins,sans-serif', fontSize: 16, fontWeight: 700, color: '#111827' }}>
@@ -136,7 +131,6 @@ export default function PhotoUploadModal({ productId, productName, currentCount,
             </div>
           ) : (
             <>
-              {/* Instructions for users */}
               {!isAdmin && (
                 <div style={{ marginBottom: 14, padding: '10px 14px', background: '#f0f9ff', border: '1px solid #bae6fd', borderRadius: 10, fontSize: 12, color: '#0369a1' }}>
                   <strong>How it works:</strong> Upload the front and back of the product packaging.
@@ -144,7 +138,6 @@ export default function PhotoUploadModal({ productId, productName, currentCount,
                 </div>
               )}
 
-              {/* Drop zone */}
               <div
                 onClick={() => inputRef.current?.click()}
                 onDrop={handleDrop}
@@ -173,7 +166,6 @@ export default function PhotoUploadModal({ productId, productName, currentCount,
                 />
               </div>
 
-              {/* Previews */}
               {previews.length > 0 && (
                 <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap', marginBottom: 14 }}>
                   {previews.map((src, i) => (
@@ -195,7 +187,6 @@ export default function PhotoUploadModal({ productId, productName, currentCount,
                 </div>
               )}
 
-              {/* UPI / Mobile for non-admin */}
               {!isAdmin && (
                 <div style={{ marginBottom: 12 }}>
                   <label style={{ display: 'block', fontSize: 12, fontWeight: 700, color: '#374151', marginBottom: 6 }}>
@@ -220,7 +211,6 @@ export default function PhotoUploadModal({ productId, productName, currentCount,
                 </div>
               )}
 
-              {/* Earn badge for users */}
               {!isAdmin && (
                 <div style={{ marginBottom: 12, padding: '9px 12px', background: '#fefce8', border: '1px solid #fde68a', borderRadius: 8, fontSize: 12, color: '#92400e', display: 'flex', alignItems: 'center', gap: 8 }}>
                   <span style={{ fontSize: 18 }}>💰</span>

@@ -472,29 +472,31 @@ function Result() {
 
   const fetchDbPhotos = async (productId, staticKey) => {
     try {
-      // Query by both numeric id and static_key — old uploads used numeric id,
-      // newer uploads use static_key. Merge results and deduplicate.
-      const queries = [
-        supabase.from('product_photos').select('*').eq('product_id', productId).order('created_at'),
-      ]
-      if (staticKey && staticKey !== productId) {
-        queries.push(
-          supabase.from('product_photos').select('*').eq('product_id', staticKey).order('created_at')
-        )
-      }
-      const results = await Promise.all(queries)
+      const API = import.meta.env.VITE_API_BASE_URL || ''
+      const ids = [productId, ...(staticKey && staticKey !== productId ? [staticKey] : [])]
+      const results = await Promise.all(
+        ids.map(id => fetch(`${API}/api/photos/${id}`).then(r => r.json()).catch(() => ({ photos: [] })))
+      )
       const seen = new Set()
       const photos = []
-      results.forEach(({ data }) => {
-        (data || []).forEach(p => { if (!seen.has(p.id)) { seen.add(p.id); photos.push(p) } })
+      results.forEach(({ photos: list = [] }) => {
+        list.forEach(p => { if (!seen.has(p.id)) { seen.add(p.id); photos.push(p) } })
       })
       setDbPhotos(photos)
     } catch { /* silent */ }
   }
 
   const handleDeletePhoto = async (photoId) => {
-    const { error } = await supabase.from('product_photos').delete().eq('id', photoId)
-    if (!error) setDbPhotos(prev => prev.filter(p => p.id !== photoId))
+    try {
+      const { data: { session } } = await supabase.auth.getSession()
+      const token = session?.access_token
+      const API = import.meta.env.VITE_API_BASE_URL || ''
+      const res = await fetch(`${API}/api/photos/${photoId}`, {
+        method: 'DELETE',
+        headers: { Authorization: `Bearer ${token}` },
+      })
+      if (res.ok) setDbPhotos(prev => prev.filter(p => p.id !== photoId))
+    } catch { /* silent */ }
   }
 
   const handleDeleteBackendImage = async (url) => {
@@ -502,15 +504,21 @@ function Result() {
     const currentImages = (product.images && product.images.length > 0) ? product.images : (product.image_url ? [product.image_url] : [])
     const newImages = currentImages.filter(u => u !== url)
     const newImageUrl = newImages.length > 0 ? newImages[0] : null
-    const { error } = await supabase
-      .from('ai_extracted_products')
-      .update({ image_url: newImageUrl, images: newImages.length > 0 ? newImages : null })
-      .eq('id', product.id)
-    if (!error) {
-      const updated = { ...product, image_url: newImageUrl, images: newImages.length > 0 ? newImages : null }
-      setProduct(updated)
-      cacheSet(productName.toLowerCase(), updated)
-    }
+    try {
+      const { data: { session } } = await supabase.auth.getSession()
+      const token = session?.access_token
+      const API = import.meta.env.VITE_API_BASE_URL || ''
+      const res = await fetch(`${API}/api/photos/primary`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
+        body: JSON.stringify({ product_id: product.id, image_url: newImageUrl, images: newImages.length > 0 ? newImages : null }),
+      })
+      if (res.ok) {
+        const updated = { ...product, image_url: newImageUrl, images: newImages.length > 0 ? newImages : null }
+        setProduct(updated)
+        cacheSet(productName.toLowerCase(), updated)
+      }
+    } catch { /* silent */ }
   }
 
   const handlePhotoSuccess = (msg, isAdminAdd, firstUploadedUrl) => {
@@ -532,33 +540,17 @@ function Result() {
     return [...new Set([...backendImgs, ...dbPhotos.map(p => p.image_url)])].length
   }, [product, dbPhotos])
 
-  // Multi-strategy Supabase search — mirrors backend _search_query() logic
+  // Secondary backend search with a longer timeout (replaces former direct-DB fallback)
   const _supabaseSearch = async (name) => {
-    const norm = (s) => s.replace(/[^a-z0-9]/g, '')
-    const wordPat = (s) => '%' + s.trim().split(/\s+/).join('%') + '%'
-    const strategies = [
-      // 1. Exact name
-      () => supabase.from('ai_extracted_products').select('*').ilike('name', name).order('static_key', { nullsFirst: false }).limit(1),
-      // 2. Prefix
-      () => supabase.from('ai_extracted_products').select('*').ilike('name', `${name}%`).order('static_key', { nullsFirst: false }).limit(1),
-      // 3. Word-by-word pattern
-      () => supabase.from('ai_extracted_products').select('*').ilike('name', wordPat(name)).order('static_key', { nullsFirst: false }).limit(1),
-      // 4. Substring
-      () => supabase.from('ai_extracted_products').select('*').ilike('name', `%${name}%`).order('static_key', { nullsFirst: false }).limit(1),
-      // 5. Word-by-word on alphanumeric-only terms
-      () => {
-        const words = name.toLowerCase().replace(/[^a-z0-9 ]/g, ' ').split(/\s+/).filter(w => w.length > 1)
-        if (!words.length) return Promise.resolve({ data: [] })
-        return supabase.from('ai_extracted_products').select('*').ilike('name', '%' + words.join('%') + '%').order('static_key', { nullsFirst: false }).limit(1)
-      },
-    ]
-    for (const fn of strategies) {
-      try {
-        const { data } = await fn()
-        if (data && data.length > 0) return data[0]
-      } catch { /* try next */ }
+    try {
+      const res = await axios.get(`${API_BASE_URL}/api/product/search`, {
+        params: { name },
+        timeout: 20000,
+      })
+      return res.data || null
+    } catch {
+      return null
     }
-    return null
   }
 
   const fetchProduct = async () => {
@@ -704,19 +696,7 @@ function Result() {
     return { allIngredients: all, generally_recognised: gr, worth_knowing: wk, commonly_questioned: cq, effectiveGrade }
   }, [product?.ingredients, product?.grade])
 
-  // Auto-correct DB grade when effectiveGrade differs — keeps Products page in sync
-  useEffect(() => {
-    if (!product?.id || !effectiveGrade || effectiveGrade === product?.grade) return
-    supabase.from('ai_extracted_products')
-      .update({ grade: effectiveGrade })
-      .eq('id', product.id)
-      .then(() => {
-        // Update cache so navigating back shows correct grade
-        const updated = { ...product, grade: effectiveGrade }
-        cacheSet(productName.toLowerCase(), updated)
-      })
-      .catch(() => {})
-  }, [product?.id, effectiveGrade, product?.grade])
+  // Grade auto-sync removed — grade corrections go through backend admin endpoints now
 
   if (loading) {
     return (
@@ -862,9 +842,13 @@ function Result() {
                       try {
                         const isUUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(product.id)
                         if (isUUID) {
-                          await supabase.auth.getSession()
-                          const { error } = await supabase.from('ai_extracted_products').update({ name: adminNameText.trim() }).eq('id', product.id)
-                          if (error) throw error
+                          const { data: { session } } = await supabase.auth.getSession()
+                          const res = await fetch(`${API_BASE_URL}/api/admin-products/${product.id}/name`, {
+                            method: 'PATCH',
+                            headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${session?.access_token}` },
+                            body: JSON.stringify({ name: adminNameText.trim() }),
+                          })
+                          if (!res.ok) { const e = await res.json().catch(() => ({})); throw new Error(e.detail || 'Save failed') }
                         }
                         _productCache.delete(productName.toLowerCase())
                         setProduct(prev => ({ ...prev, name: adminNameText.trim() }))
@@ -1080,27 +1064,29 @@ function Result() {
                         try {
                           let saveErr = null
                           let resolvedId = adminDbId // use cached ID if we have it
+                          const { data: { session: adminSession } } = await supabase.auth.getSession()
+                          const adminToken = adminSession?.access_token
 
                           if (isUUID) {
                             resolvedId = product.id
                           } else if (!resolvedId) {
-                            // First edit for a static product — look up DB record once
-                            const { data: found } = await supabase.from('ai_extracted_products')
-                              .select('id').ilike('name', product.name).limit(1)
-                            resolvedId = found?.[0]?.id || null
-                            if (resolvedId) setAdminDbId(resolvedId)
+                            // First edit for a static product — look up or insert via backend
+                            const lookupRes = await fetch(`${API_BASE_URL}/api/admin-products/lookup-or-insert`, {
+                              method: 'POST',
+                              headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${adminToken}` },
+                              body: JSON.stringify({ name: product.name }),
+                            })
+                            if (!lookupRes.ok) { const e = await lookupRes.json().catch(() => ({})); saveErr = { message: e.detail || 'Lookup failed' } }
+                            else { const lj = await lookupRes.json(); resolvedId = lj.id; setAdminDbId(lj.id) }
                           }
 
-                          if (resolvedId) {
-                            const { error } = await supabase.from('ai_extracted_products')
-                              .update(payload).eq('id', resolvedId)
-                            saveErr = error
-                          } else {
-                            // No DB record yet — insert and cache the new ID
-                            const { data: inserted, error } = await supabase.from('ai_extracted_products')
-                              .insert({ name: product.name, ...payload }).select('id')
-                            saveErr = error
-                            if (!error && inserted?.[0]?.id) setAdminDbId(inserted[0].id)
+                          if (!saveErr && resolvedId) {
+                            const updateRes = await fetch(`${API_BASE_URL}/api/admin-products/${resolvedId}/ingredients`, {
+                              method: 'PATCH',
+                              headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${adminToken}` },
+                              body: JSON.stringify(payload),
+                            })
+                            if (!updateRes.ok) { const e = await updateRes.json().catch(() => ({})); saveErr = { message: e.detail || 'Update failed' } }
                           }
 
                           if (saveErr) {
@@ -1208,15 +1194,18 @@ function Result() {
                       if (!reportText.trim()) return
                       setReportSubmitting(true)
                       try {
-                        await supabase.from('ingredient_reports').insert({
-                          product_id: product.id,
-                          product_name: product.name,
-                          user_id: user.id,
-                          user_email: user.email,
-                          reported_ingredients: reportText.trim(),
-                          reason: reportReason.trim() || null,
-                          status: 'pending',
+                        const { data: { session: rptSession } } = await supabase.auth.getSession()
+                        const rptRes = await fetch(`${API_BASE_URL}/api/admin-products/reports`, {
+                          method: 'POST',
+                          headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${rptSession?.access_token}` },
+                          body: JSON.stringify({
+                            product_id: product.id,
+                            product_name: product.name,
+                            reported_ingredients: reportText.trim(),
+                            reason: reportReason.trim() || null,
+                          }),
                         })
+                        if (!rptRes.ok) { const e = await rptRes.json().catch(() => ({})); throw new Error(e.detail || 'Report failed') }
                         setReportSuccess(true)
                         setShowReportForm(false)
                       } catch { /* silent */ } finally {
