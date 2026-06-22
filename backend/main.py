@@ -101,10 +101,13 @@ ALLOWED_ORIGINS = [
     ),
 ]
 
+import re as _re
+_VERCEL_RE = _re.compile(r'^https://checkkaro(-[a-z0-9]+)*\.vercel\.app$')
+
 def _is_allowed_origin(origin: str) -> bool:
     if origin in ALLOWED_ORIGINS:
         return True
-    if origin.endswith(".vercel.app"):
+    if _VERCEL_RE.match(origin):
         return True
     return False
 

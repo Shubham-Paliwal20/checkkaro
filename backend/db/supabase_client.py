@@ -17,7 +17,6 @@ if not SUPABASE_ANON_KEY:
 supabase: Client = create_client(SUPABASE_URL, SUPABASE_ANON_KEY)
 
 # Service client — bypasses RLS; used only for admin write operations
-supabase_admin: Client = create_client(
-    SUPABASE_URL,
-    SUPABASE_SERVICE_ROLE_KEY or SUPABASE_ANON_KEY  # falls back to anon if service key not set
-)
+if not SUPABASE_SERVICE_ROLE_KEY:
+    raise ValueError("SUPABASE_SERVICE_ROLE_KEY environment variable is not set.")
+supabase_admin: Client = create_client(SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY)

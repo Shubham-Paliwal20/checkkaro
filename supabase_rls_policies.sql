@@ -186,10 +186,28 @@ DROP POLICY IF EXISTS "admin_manage_all_reviews"       ON reviews;
 CREATE POLICY "public_read_approved_reviews" ON reviews
   FOR SELECT USING (is_approved = true OR auth.email() = 'shubhampaliwal5@gmail.com');
 
--- Authenticated users can insert their own review
+-- Authenticated users can insert their own review (is_approved forced to false by trigger below)
 CREATE POLICY "authenticated_insert_review_hp" ON reviews
   FOR INSERT
   WITH CHECK (auth.uid() IS NOT NULL AND user_id::text = auth.uid()::text);
+
+-- DB trigger: force is_approved=false on every insert so clients cannot bypass approval
+CREATE OR REPLACE FUNCTION reviews_force_unapproved()
+RETURNS TRIGGER LANGUAGE plpgsql AS $$
+BEGIN
+  -- Admin may self-approve; everyone else must wait for admin to set it
+  IF current_setting('request.jwt.claims', true)::json->>'email' = 'shubhampaliwal5@gmail.com' THEN
+    RETURN NEW;
+  END IF;
+  NEW.is_approved := false;
+  RETURN NEW;
+END;
+$$;
+
+DROP TRIGGER IF EXISTS trg_reviews_force_unapproved ON reviews;
+CREATE TRIGGER trg_reviews_force_unapproved
+  BEFORE INSERT ON reviews
+  FOR EACH ROW EXECUTE FUNCTION reviews_force_unapproved();
 
 -- Users can update / delete only their own review; admin manages all
 CREATE POLICY "user_manage_own_review_hp" ON reviews

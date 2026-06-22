@@ -101,7 +101,7 @@ function SearchBar({ placeholder = 'Search any product...', onSearch }) {
       } finally {
         setLoading(false)
       }
-    }, 80)
+    }, 250)
 
     return () => { clearTimeout(timerRef.current); abortController.abort() }
   }, [query])

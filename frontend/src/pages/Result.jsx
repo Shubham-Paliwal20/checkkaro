@@ -1204,7 +1204,9 @@ function Result() {
                         if (!rptRes.ok) { const e = await rptRes.json().catch(() => ({})); throw new Error(e.detail || 'Report failed') }
                         setReportSuccess(true)
                         setShowReportForm(false)
-                      } catch { /* silent */ } finally {
+                      } catch (e) {
+                        alert(`Could not submit report: ${e.message || 'Please try again.'}`)
+                      } finally {
                         setReportSubmitting(false)
                       }
                     }}

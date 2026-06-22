@@ -507,10 +507,13 @@ function AddProductForm({ isMobile }) {
     setImagePreview(e.target.value || null)
   }
 
+  const _EXT_MAP = { 'image/jpeg': 'jpg', 'image/png': 'png', 'image/webp': 'webp', 'image/gif': 'gif' }
+
   const uploadImage = async (productId) => {
     if (!imageFile) return imageUrl || null
+    const ext = _EXT_MAP[imageFile.type]
+    if (!ext) { console.warn('Unsupported image type:', imageFile.type); return null }
     try {
-      const ext  = imageFile.name.split('.').pop()
       const path = `products/${productId}.${ext}`
       const { error } = await supabase.storage.from('product-images').upload(path, imageFile, { upsert: true })
       if (error) throw error
@@ -782,7 +785,6 @@ function DeleteProductSection({ isMobile }) {
       if (!session) throw new Error('Not authenticated — please log out and log back in')
 
       const url = `${API_BASE_URL}/api/admin/product/${product.id}`
-      console.log('[DELETE] calling', url)
 
       let resp
       try {
@@ -795,7 +797,6 @@ function DeleteProductSection({ isMobile }) {
       }
 
       const body = await resp.text()
-      console.log('[DELETE] status', resp.status, 'body', body)
 
       if (!resp.ok) {
         let detail = body

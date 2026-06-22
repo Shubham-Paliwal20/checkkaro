@@ -80,7 +80,7 @@ function ReviewFormModal({ onClose, onSubmitted, existingReview, isMobile }) {
       } else {
         const { error: e } = await supabase
           .from('reviews')
-          .insert({ user_id: user.id, reviewer_name: name.trim(), review_text: text.trim(), rating, is_approved: true })
+          .insert({ user_id: user.id, reviewer_name: name.trim(), review_text: text.trim(), rating })
         if (e) throw e
       }
       await onSubmitted()
