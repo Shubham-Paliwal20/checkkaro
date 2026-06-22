@@ -139,17 +139,20 @@ async def health_check():
 
 @app.get("/debug-db")
 async def debug_db():
-    """Temporary: diagnose Supabase connectivity. Remove after fix."""
-    from db.supabase_client import supabase
+    """Temporary: diagnose Supabase connectivity via direct httpx call."""
+    import httpx
+    sb_url = os.getenv("SUPABASE_URL", "")
+    sb_key = os.getenv("SUPABASE_ANON_KEY", "")
     try:
-        res = supabase.table("ai_extracted_products").select("name").ilike("name", "%maggi%").limit(3).execute()
-        return {
-            "data": res.data,
-            "error": str(getattr(res, "error", None)),
-            "count": len(res.data) if res.data else 0,
-        }
+        async with httpx.AsyncClient(timeout=10.0) as client:
+            resp = await client.get(
+                f"{sb_url}/rest/v1/ai_extracted_products",
+                params={"select": "name", "name": "ilike.*maggi*", "limit": "3"},
+                headers={"apikey": sb_key, "Authorization": f"Bearer {sb_key}"},
+            )
+        return {"status": resp.status_code, "data": resp.json(), "url_domain": sb_url[:40]}
     except Exception as e:
-        return {"exception": str(e), "type": type(e).__name__}
+        return {"exception": str(e), "type": type(e).__name__, "url_domain": sb_url[:40]}
 
 
 @app.get("/")
