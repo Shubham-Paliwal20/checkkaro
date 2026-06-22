@@ -3,11 +3,49 @@ from typing import Optional, List, Dict
 from models.schemas import ProductResponse, IngredientItem
 import re
 import time
-from db.supabase_client import supabase, supabase_admin
+import os
+import httpx
+from db.supabase_client import supabase_admin
 from grading import calculate_grade, grade_to_legacy_score
 from routes.ingredient_database import classify_ingredient as _db_classify_ingredient
 
 router = APIRouter()
+
+# ── Direct Supabase REST helpers (bypass supabase-py SDK) ─────────────────────
+# supabase-py 2.4.2 sends headers that trigger Cloudflare Worker errors on Render.
+# Direct httpx calls to the same REST API work reliably.
+
+def _sb_base() -> tuple[str, dict]:
+    url = f"{os.getenv('SUPABASE_URL', '')}/rest/v1"
+    key = os.getenv("SUPABASE_ANON_KEY", "")
+    hdrs = {"apikey": key, "Authorization": f"Bearer {key}"}
+    return url, hdrs
+
+def _pg(pattern: str) -> str:
+    """Convert % wildcards to PostgREST * wildcards."""
+    return pattern.replace('%', '*')
+
+def _db_get(table: str, params: dict) -> list:
+    """Synchronous direct REST call — used inside sync helper functions."""
+    base, hdrs = _sb_base()
+    try:
+        with httpx.Client(timeout=8.0) as c:
+            r = c.get(f"{base}/{table}", params=params, headers=hdrs)
+        data = r.json()
+        return data if isinstance(data, list) else []
+    except Exception:
+        return []
+
+async def _db_get_async(table: str, params: dict) -> list:
+    """Async direct REST call — used inside async endpoint functions."""
+    base, hdrs = _sb_base()
+    try:
+        async with httpx.AsyncClient(timeout=8.0) as c:
+            r = await c.get(f"{base}/{table}", params=params, headers=hdrs)
+        data = r.json()
+        return data if isinstance(data, list) else []
+    except Exception:
+        return []
 
 # ── Browse cache ──────────────────────────────────────────────────────────────
 # Caches the full sorted+deduped product list per filter combo for 2 minutes.
@@ -461,17 +499,15 @@ def _search_query(term: str):
     normalized = normalize_name(term)
 
     def _run(col, op, val, prefer_static=True):
-        try:
-            q = supabase.from_("ai_extracted_products").select("*")
-            if op == "eq":
-                q = q.eq(col, val)
-            else:
-                q = q.ilike(col, val)
-            if prefer_static:
-                q = q.order("static_key", desc=False)
-            return (q.limit(1).execute().data or [None])[0]
-        except Exception:
-            return None
+        params: dict = {"select": "*", "limit": "1"}
+        if op == "eq":
+            params[col] = f"eq.{val}"
+        else:
+            params[col] = f"ilike.{_pg(val)}"
+        if prefer_static:
+            params["order"] = "static_key.asc.nullslast"
+        rows = _db_get("ai_extracted_products", params)
+        return rows[0] if rows else None
 
     # 1a. Exact static_key — normalized (spaces stripped)
     r = _run("static_key", "eq", normalized, prefer_static=False)
@@ -635,24 +671,23 @@ async def browse_products(
                 "brands":     cached["brands"],
             }
 
-    # ── Fetch from Supabase ───────────────────────────────────────────────────
+    # ── Fetch from Supabase via direct REST ──────────────────────────────────
     try:
-        def _base_query():
-            q_ = supabase.from_("ai_extracted_products") \
-                .select("id, name, brand, category, image_url, images, verdict, grade, static_key")
-            if category and category != "All":
-                q_ = q_.eq("category", category)
-            if brand and brand != "All":
-                q_ = q_.eq("brand", brand)
-            if q:
-                q_ = q_.or_(f"name.ilike.%{q}%,brand.ilike.%{q}%,category.ilike.%{q}%")
-            return q_
-
         all_rows = []
         offset = 0
         while True:
-            batch = _base_query().range(offset, offset + 999).execute()
-            rows = batch.data or []
+            params: dict = {
+                "select": "id,name,brand,category,image_url,images,verdict,grade,static_key",
+                "limit": "1000",
+                "offset": str(offset),
+            }
+            if category and category != "All":
+                params["category"] = f"eq.{category}"
+            if brand and brand != "All":
+                params["brand"] = f"eq.{brand}"
+            if q:
+                params["or"] = f"(name.ilike.*{q}*,brand.ilike.*{q}*,category.ilike.*{q}*)"
+            rows = _db_get("ai_extracted_products", params)
             all_rows.extend(rows)
             if len(rows) < 1000:
                 break
@@ -721,6 +756,17 @@ async def browse_products(
 
 # ── Suggestions ───────────────────────────────────────────────────────────────
 
+import asyncio as _asyncio
+
+async def _gather_suggestions(q: str):
+    name_params = {"select": "name,brand,category,static_key", "name": f"ilike.*{q}*", "order": "static_key.asc.nullslast", "limit": "30"}
+    brand_params = {"select": "name,brand,category,static_key", "brand": f"ilike.*{q}*", "order": "static_key.asc.nullslast", "limit": "30"}
+    name_rows, brand_rows = await _asyncio.gather(
+        _db_get_async("ai_extracted_products", name_params),
+        _db_get_async("ai_extracted_products", brand_params),
+    )
+    return name_rows, brand_rows
+
 @router.get("/suggestions")
 async def get_search_suggestions(q: str = Query(..., min_length=1, max_length=80)):
     # ── Cache check ───────────────────────────────────────────────────────────
@@ -732,26 +778,12 @@ async def get_search_suggestions(q: str = Query(..., min_length=1, max_length=80
             return {"suggestions": cached}
 
     try:
-        # Two queries: name-match first (more precise), brand-match fills remaining slots.
-        # This ensures "amul" returns Amul products even when the product name doesn't contain "amul".
-        name_result = supabase.from_("ai_extracted_products") \
-            .select("name, brand, category, static_key") \
-            .ilike("name", f"%{q}%") \
-            .order("static_key", desc=False) \
-            .limit(30) \
-            .execute()
-
-        brand_result = supabase.from_("ai_extracted_products") \
-            .select("name, brand, category, static_key") \
-            .ilike("brand", f"%{q}%") \
-            .order("static_key", desc=False) \
-            .limit(30) \
-            .execute()
+        name_rows, brand_rows = await _gather_suggestions(q)
 
         seen_names = set()
         suggestions = []
 
-        for p in (name_result.data or []):
+        for p in name_rows:
             if not p.get("name"):
                 continue
             nn = normalize_name(p["name"])
@@ -764,7 +796,7 @@ async def get_search_suggestions(q: str = Query(..., min_length=1, max_length=80
                 "category": p.get("category") or "General",
             })
 
-        for p in (brand_result.data or []):
+        for p in brand_rows:
             if not p.get("name"):
                 continue
             nn = normalize_name(p["name"])
