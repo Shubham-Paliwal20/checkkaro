@@ -407,14 +407,14 @@ function ProductImageGallery({ imageUrl, images, name, dbPhotos, onDeleteDbPhoto
 const GRADE_COLOR = { A: '#16a34a', B: '#0891b2' }
 const GRADE_BG    = { A: '#dcfce7', B: '#e0f2fe' }
 
-function SaferAlternatives({ category, excludeId }) {
+function SaferAlternatives({ category, name, excludeId }) {
   const navigate = useNavigate()
   const [items, setItems] = useState([])
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
-    if (!category) { setLoading(false); return }
-    const params = new URLSearchParams({ category, exclude_id: excludeId || '', limit: '6' })
+    if (!category || !name) { setLoading(false); return }
+    const params = new URLSearchParams({ category, name, exclude_id: excludeId || '', limit: '6' })
     fetch(`${API_BASE_URL}/api/product/safer-alternatives?${params}`)
       .then(r => r.ok ? r.json() : { alternatives: [] })
       .then(d => setItems(d.alternatives || []))
@@ -1531,8 +1531,8 @@ function Result() {
         )}
 
         {/* Safer Alternatives */}
-        {product.category && (
-          <SaferAlternatives category={product.category} excludeId={product.id} />
+        {product.category && product.name && (
+          <SaferAlternatives category={product.category} name={product.name} excludeId={product.id} />
         )}
 
         {/* Ratings & Reviews */}
