@@ -83,8 +83,8 @@ function ReviewFormModal({ onClose, onSubmitted, existingReview, isMobile }) {
           .insert({ user_id: user.id, reviewer_name: name.trim(), review_text: text.trim(), rating })
         if (e) throw e
       }
-      await onSubmitted()
-      onClose()
+      onClose()        // close immediately — never block on background refresh
+      onSubmitted()    // fire-and-forget; updates parent state in background
     } catch (e) {
       setError(e.message || 'Failed to submit.')
       setLoading(false)
@@ -211,10 +211,15 @@ export default function ReviewsSection() {
   const goTo = (idx) => { stopTimer(); setCurrentIdx(idx); startTimer() }
 
   const handleSubmitted = async () => {
-    const all = await fetchReviews()
+    fetchReviews()   // refresh public carousel in background (no await)
     if (user) {
-      const mine = all.find(r => r.user_id === user.id) || null
-      setMyReview(mine)
+      // Fetch user's own review separately — it may be unapproved (not in public feed)
+      const { data } = await supabase
+        .from('reviews')
+        .select('id, reviewer_name, review_text, rating, user_id')
+        .eq('user_id', user.id)
+        .maybeSingle()
+      setMyReview(data || null)
     }
   }
 
