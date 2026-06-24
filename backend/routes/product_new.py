@@ -662,64 +662,69 @@ _CAT_PEERS: dict[str, list[str]] = {
     "medicine":           ["Medicine"],
 }
 
-# Maps name regex → ONE precise ilike pattern for DB search.
-# Rule: each pattern must be specific enough that it ONLY matches the intended product type.
-# Use multiple patterns in OR only when they're equally specific (e.g. noodles/pasta).
-# NEVER use broad terms like *spf*, *bar*, *cream*, *gel* alone — they cause false positives.
-_NAME_TYPE_PATTERNS: list[tuple[str, str]] = [
-    # ── Skincare / Personal Care (most specific first) ────────────────────────
-    (r'\bsunscreen\b|\bsunblock\b|\bsun\s*protect',   '*sunscreen*'),      # NOT *spf* — matches lip balm SPF
-    (r'\bface\s*wash\b|\bfacewash\b',                 '*face wash*'),
-    (r'\bface\s*scrub\b',                             '*face scrub*'),
-    (r'\bface\s*pack\b|\bface\s*mask\b',              '*face pack*'),
-    (r'\bface\s*cream\b|\bnight\s*cream\b|\bday\s*cream\b', '*face cream*'),
-    (r'\bserum\b',                                    '*serum*'),
-    (r'\btoner\b',                                    '*toner*'),
-    (r'\bmoistURIZ',                                  '*moisturizer*'),
-    (r'\bshampoo\b',                                  '*shampoo*'),
-    (r'\bconditioner\b',                              '*conditioner*'),
-    (r'\bhair\s*oil\b',                               '*hair oil*'),
-    (r'\bhair\s*serum\b',                             '*hair serum*'),
-    (r'\bbody\s*wash\b|\bshower\s*gel\b',             '*body wash*'),
-    (r'\bbody\s*lotion\b',                            '*body lotion*'),
-    (r'\bdeodorant\b',                                '*deodorant*'),
-    (r'\btoothpaste\b',                               '*toothpaste*'),
-    (r'\blip\s*balm\b',                              '*lip balm*'),         # NOT *lip* — matches lipstick,lip liner
-    (r'\blipstick\b',                                 '*lipstick*'),
-    (r'\blip\s*gloss\b',                              '*lip gloss*'),
-    (r'\bsoap\b|\bsabun\b|\bbathing\s*bar\b|\bbeauty\s*bar\b', '*soap*'),
-    (r'\bhair\s*color\b|\bhair\s*colour\b|\bhair\s*dye\b', '*hair color*'),
-    (r'\beye\s*cream\b|\bunder\s*eye\b',              '*eye cream*'),
-    (r'\bsunburn\b|\bafter\s*sun\b',                  '*after sun*'),
+# Maps name regex → list of precise ilike patterns (ANDed with OR in PostgREST).
+# Rules:
+#   - Every pattern must be specific enough on its own (no false positives).
+#   - NEVER add broad terms like *spf* alone, *bar* alone, *gel* alone, *lip* alone.
+#   - *sun spf* is safe — "Lip Balm SPF 15" doesn't contain "sun spf".
+#   - More specific regex rules must come BEFORE broader ones.
+_NAME_TYPE_PATTERNS: list[tuple[str, list[str]]] = [
+    # ── Skincare / Personal Care ──────────────────────────────────────────────
+    (r'\bsunscreen\b|\bsunblock\b|\bsun\s*protect|\bsun\s+spf',
+                                    ['*sunscreen*', '*sunblock*', '*sun spf*']),
+    (r'\bface\s*wash\b|\bfacewash\b',   ['*face wash*', '*facewash*']),
+    (r'\bface\s*scrub\b',               ['*face scrub*']),
+    (r'\bface\s*pack\b|\bface\s*mask\b', ['*face pack*', '*face mask*']),
+    (r'\bface\s*cream\b|\bnight\s*cream\b|\bday\s*cream\b', ['*face cream*', '*night cream*', '*day cream*']),
+    (r'\bserum\b',                       ['*serum*']),
+    (r'\btoner\b',                       ['*toner*']),
+    (r'\bmoistURIZ',                     ['*moisturizer*', '*moisturiser*']),
+    (r'\bshampoo\b',                     ['*shampoo*']),
+    (r'\bconditioner\b',                 ['*conditioner*']),
+    (r'\bhair\s*oil\b',                  ['*hair oil*']),
+    (r'\bhair\s*serum\b',                ['*hair serum*']),
+    (r'\bbody\s*wash\b|\bshower\s*gel\b', ['*body wash*', '*shower gel*']),
+    (r'\bbody\s*lotion\b',               ['*body lotion*']),
+    (r'\bdeodorant\b',                   ['*deodorant*']),
+    (r'\btoothpaste\b',                  ['*toothpaste*']),
+    (r'\blip\s*balm\b',                  ['*lip balm*']),
+    (r'\blipstick\b',                    ['*lipstick*']),
+    (r'\blip\s*gloss\b',                 ['*lip gloss*']),
+    (r'\bsoap\b|\bsabun\b|\bbathing\s*bar\b|\bbeauty\s*bar\b', ['*soap*']),
+    (r'\bhair\s*color\b|\bhair\s*colour\b|\bhair\s*dye\b', ['*hair color*', '*hair colour*']),
+    (r'\beye\s*cream\b|\bunder\s*eye\b', ['*eye cream*', '*under eye*']),
     # ── Food ──────────────────────────────────────────────────────────────────
-    (r'\bbiscuit\b|\bcookie\b|\bcracker\b',           '*biscuit*'),
-    (r'\bchips\b|\bcrisp\b|\bwafer\b',                '*chips*'),
-    (r'\bnamkeen\b|\bbhujia\b|\bchivda\b|\bsev\b',   '*namkeen*'),
-    (r'\bnoodles?\b|\bpasta\b',                       '*noodles*'),
-    (r'\bchocolate\b',                                '*chocolate*'),
-    (r'\bice\s*cream\b|\bicecream\b',                 '*ice cream*'),
-    (r'\byogurt\b|\bcurd\b|\bdahi\b',                 '*curd*'),
-    (r'\bpaneer\b',                                   '*paneer*'),
-    (r'\bghee\b',                                     '*ghee*'),
-    (r'\bhoney\b',                                    '*honey*'),
-    (r'\bjuice\b',                                    '*juice*'),
-    (r'\bprotein\b|\bwhey\b',                         '*protein*'),
-    (r'\boats\b|\bmuesli\b',                          '*oats*'),
-    (r'\bcoffee\b',                                   '*coffee*'),
-    (r'\btea\b',                                      '*tea*'),
-    (r'\bketchup\b',                                  '*ketchup*'),
-    (r'\bpickle\b|\bachar\b',                         '*pickle*'),
-    (r'\bmasala\b',                                   '*masala*'),
-    (r'\bcooking\s*oil\b|\bedible\s*oil\b',           '*oil*'),
-    (r'\bmilk\b',                                     '*milk*'),
-    (r'\bbutter\b',                                   '*butter*'),
+    (r'\bbiscuit\b|\bcookie\b|\bcracker\b', ['*biscuit*', '*cookie*']),
+    (r'\bchips\b|\bcrisp\b|\bwafer\b',      ['*chips*', '*crisp*']),
+    (r'\bnamkeen\b|\bbhujia\b|\bchivda\b|\bsev\b', ['*namkeen*', '*bhujia*']),
+    (r'\bnoodles?\b|\bpasta\b',              ['*noodles*', '*pasta*']),
+    (r'\bchocolate\b',                       ['*chocolate*']),
+    (r'\bice\s*cream\b|\bicecream\b',        ['*ice cream*']),
+    (r'\byogurt\b|\bcurd\b|\bdahi\b',        ['*curd*', '*yogurt*', '*dahi*']),
+    (r'\bpaneer\b',                          ['*paneer*']),
+    (r'\bghee\b',                            ['*ghee*']),
+    (r'\bhoney\b',                           ['*honey*']),
+    (r'\bjuice\b',                           ['*juice*']),
+    (r'\bprotein\b|\bwhey\b',                ['*protein*', '*whey*']),
+    (r'\boats\b|\bmuesli\b',                 ['*oats*', '*muesli*']),
+    (r'\bcoffee\b',                          ['*coffee*']),
+    (r'\btea\b',                             ['*tea*']),
+    (r'\bketchup\b',                         ['*ketchup*']),
+    (r'\bpickle\b|\bachar\b',               ['*pickle*', '*achar*']),
+    (r'\bmasala\b',                          ['*masala*']),
+    (r'\bcooking\s*oil\b|\bedible\s*oil\b',  ['*oil*']),
+    (r'\bmilk\b',                            ['*milk*']),
+    (r'\bbutter\b',                          ['*butter*']),
 ]
 
 def _name_search_pattern(product_name: str) -> str | None:
-    """Return ONE precise PostgREST ilike pattern for this product's type, or None."""
-    for regex, pattern in _NAME_TYPE_PATTERNS:
+    """Return a PostgREST ilike filter value for this product's type, or None if unknown."""
+    for regex, patterns in _NAME_TYPE_PATTERNS:
         if re.search(regex, product_name, re.IGNORECASE):
-            return pattern
+            if len(patterns) == 1:
+                return f"ilike.{patterns[0]}"
+            # Multiple specific patterns — build an OR filter
+            return "or.(" + ",".join(f"name.ilike.{p}" for p in patterns) + ")"
     return None
 
 # Broad categories where category alone mixes many product types together.
@@ -750,11 +755,15 @@ async def get_safer_alternatives(
         base_params["id"] = f"neq.{exclude_id}"
 
     if is_broad:
-        pattern = _name_search_pattern(name)
-        if not pattern:
-            # Can't determine product type precisely — show nothing rather than wrong results
+        filter_val = _name_search_pattern(name)
+        if not filter_val:
             return {"alternatives": [], "total": 0}
-        base_params["name"] = f"ilike.{pattern}"
+        if filter_val.startswith("or.("):
+            # Multiple specific patterns — use PostgREST top-level 'or'
+            base_params["or"] = filter_val[3:]   # strip leading "or." → "(name.ilike.*x*,...)"
+        else:
+            # Single pattern — simple column filter
+            base_params["name"] = filter_val
 
     # Specific category: category itself IS the product type — no extra name filter needed
 
