@@ -9,7 +9,7 @@ from starlette.middleware.base import BaseHTTPMiddleware
 from dotenv import load_dotenv
 
 # Import routers
-from routes import product_new, ingredient, history, admin_extract, reports, photos, reviews, admin_products
+from routes import product_new, ingredient, history, admin_extract, reports, photos, reviews, admin_products, admin_actions
 
 load_dotenv()
 
@@ -130,6 +130,7 @@ app.include_router(reports.router,        prefix="/api/admin",       tags=["Repo
 app.include_router(photos.router,         prefix="/api/photos",      tags=["Photos"])
 app.include_router(reviews.router,        prefix="/api/reviews",     tags=["Reviews"])
 app.include_router(admin_products.router, prefix="/api/admin-products", tags=["Admin Products"])
+app.include_router(admin_actions.router,  prefix="/api/admin/actions",  tags=["Admin Actions"])
 
 
 @app.api_route("/health", methods=["GET", "HEAD"])
