@@ -639,15 +639,15 @@ async def search_product(name: str = Query(..., description="Product name to sea
 
 
 # ── Safer Alternatives ───────────────────────────────────────────────────────
-# Groups categories that are "peer" categories — used when fetching safer
-# alternatives on the product detail page.
+# Category groups for peer lookup (broad category → exact DB categories).
 _CAT_PEERS: dict[str, list[str]] = {
     "hair care":          ["Hair Care", "Haircare"],
     "haircare":           ["Hair Care", "Haircare"],
     "skincare":           ["Skincare", "Face Care"],
     "face care":          ["Skincare", "Face Care"],
     "personal care":      ["Personal Care"],
-    "food":               ["Food"],
+    "food":               ["Food", "Snacks"],
+    "snacks":             ["Food", "Snacks"],
     "beverages":          ["Beverages"],
     "dairy":              ["Dairy"],
     "cooking oil":        ["Cooking Oil"],
@@ -662,17 +662,85 @@ _CAT_PEERS: dict[str, list[str]] = {
     "medicine":           ["Medicine"],
 }
 
+# Maps name keywords → PostgREST ilike patterns for same-type matching.
+# Order matters: more specific patterns must come before broader ones.
+_NAME_TYPE_PATTERNS: list[tuple[str, list[str]]] = [
+    # ── Personal care / Skincare ──────────────────────────────────────────────
+    (r'\bsunscreen\b|\bspf\b|\bsunblock\b|\bsun\s*protect',        ['*sunscreen*', '*spf*', '*sunblock*']),
+    (r'\bface\s*wash\b|\bfacewash\b|\bface\s*cleanser\b',           ['*face wash*', '*facewash*', '*cleanser*']),
+    (r'\bface\s*scrub\b|\bexfoliat',                                 ['*face scrub*', '*scrub*']),
+    (r'\bface\s*pack\b|\bface\s*mask\b|\bface\s*cream\b|\bnight\s*cream\b|\bday\s*cream\b', ['*face pack*', '*face mask*', '*face cream*']),
+    (r'\bserum\b',                                                   ['*serum*']),
+    (r'\btoner\b',                                                   ['*toner*']),
+    (r'\bmoistUR',                                                   ['*moisturizer*', '*moisturiser*']),
+    (r'\bshampoo\b',                                                 ['*shampoo*']),
+    (r'\bconditioner\b|\bhair\s*mask\b',                             ['*conditioner*', '*hair mask*']),
+    (r'\bhair\s*oil\b|\bhair\s*serum\b',                             ['*hair oil*', '*hair serum*']),
+    (r'\bbody\s*wash\b|\bshower\s*gel\b|\bbath\s*gel\b',             ['*body wash*', '*shower gel*']),
+    (r'\bbody\s*lotion\b|\bbody\s*cream\b|\bbody\s*butter\b',        ['*body lotion*', '*body cream*', '*body butter*']),
+    (r'\bdeodorant\b|\bdeo\b|\bantiperspirant\b',                    ['*deodorant*', '*deo*']),
+    (r'\btoothpaste\b',                                              ['*toothpaste*']),
+    (r'\blip\s*balm\b|\blipstick\b|\blip\s*gloss\b',                ['*lip*']),
+    (r'\bsoap\b|\bsabun\b|\bbathing\s*bar\b|\bbeauty\s*bar\b',      ['*soap*', '*bathing bar*', '*beauty bar*', '*sabun*']),
+    (r'\bhair\s*color\b|\bhair\s*colour\b|\bhair\s*dye\b',           ['*hair color*', '*hair colour*', '*hair dye*']),
+    # ── Food & Beverages ──────────────────────────────────────────────────────
+    (r'\bbiscuit\b|\bcookie\b|\bcracker\b',                          ['*biscuit*', '*cookie*', '*cracker*']),
+    (r'\bchips\b|\bcrisp\b|\bwafer\b',                               ['*chips*', '*crisp*', '*wafer*']),
+    (r'\bnamkeen\b|\bbhujia\b|\bchivda\b|\bsev\b|\bmixture\b',      ['*namkeen*', '*bhujia*', '*chivda*', '*sev*', '*mixture*']),
+    (r'\bnoodles?\b|\bpasta\b|\bmacaroni\b',                         ['*noodles*', '*pasta*', '*macaroni*']),
+    (r'\bchocolate\b',                                               ['*chocolate*']),
+    (r'\bice\s*cream\b|\bicecream\b|\bgelato\b|\bice\s*lolly\b',     ['*ice cream*', '*gelato*']),
+    (r'\byogurt\b|\bcurd\b|\bdahi\b',                                ['*yogurt*', '*curd*', '*dahi*']),
+    (r'\bpaneer\b',                                                  ['*paneer*']),
+    (r'\bghee\b',                                                    ['*ghee*']),
+    (r'\bhoney\b',                                                   ['*honey*']),
+    (r'\bjuice\b|\bnectar\b',                                        ['*juice*', '*nectar*']),
+    (r'\bprotein\b|\bwhey\b|\bgainer\b',                             ['*protein*', '*whey*', '*gainer*']),
+    (r'\boats\b|\bcereal\b|\bmuesli\b|\bgranola\b',                  ['*oats*', '*cereal*', '*muesli*', '*granola*']),
+    (r'\bbutter\b',                                                  ['*butter*']),
+    (r'\bcoffee\b',                                                  ['*coffee*']),
+    (r'\btea\b',                                                     ['*tea*']),
+    (r'\bsauce\b|\bketchup\b',                                       ['*sauce*', '*ketchup*']),
+    (r'\bpickle\b|\bachar\b',                                        ['*pickle*', '*achar*']),
+    (r'\bmasala\b|\bspice\b',                                        ['*masala*', '*spice*']),
+    (r'\boil\b',                                                     ['*oil*']),
+    (r'\bmilk\b',                                                    ['*milk*']),
+    (r'\bcola\b|\bsoda\b|\bsoft\s*drink\b|\benergy\s*drink\b',       ['*cola*', '*soda*', '*drink*']),
+    (r'\bbar\b',                                                     ['*bar*']),
+]
+
+def _name_ilike_patterns(product_name: str) -> list[str]:
+    """Return PostgREST ilike patterns that match this product's type, or [] if unknown."""
+    name_l = product_name.lower()
+    for regex, patterns in _NAME_TYPE_PATTERNS:
+        if re.search(regex, name_l, re.IGNORECASE):
+            return patterns
+    return []
+
+
 @router.get("/safer-alternatives")
 async def get_safer_alternatives(
     category: str = Query(..., max_length=100),
+    name: str = Query(..., max_length=200),
     exclude_id: str = Query("", max_length=200),
     limit: int = Query(6, ge=1, le=12),
 ):
+    # Step 1: determine name-based ilike patterns for exact product type match
+    ilike_patterns = _name_ilike_patterns(name)
+    if not ilike_patterns:
+        # Can't determine product type — don't risk showing wrong alternatives
+        return {"alternatives": [], "total": 0}
+
+    # Step 2: determine peer categories
     peer_cats = _CAT_PEERS.get(category.lower().strip(), [category])
+
+    # Step 3: build PostgREST 'or' for name patterns — ensures only same-type products
+    or_filter = "(" + ",".join(f"name.ilike.{p}" for p in ilike_patterns) + ")"
 
     base_params = {
         "select": "id,name,brand,category,grade,image_url,static_key",
         "grade":  "in.(A,B)",
+        "or":     or_filter,
         "order":  "grade.asc,name.asc",
         "limit":  str(limit * 3),
     }
