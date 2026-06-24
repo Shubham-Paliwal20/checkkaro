@@ -638,7 +638,71 @@ async def search_product(name: str = Query(..., description="Product name to sea
     return response
 
 
-# ── Better Alternatives ───────────────────────────────────────────────────────
+# ── Safer Alternatives ───────────────────────────────────────────────────────
+# Groups categories that are "peer" categories — used when fetching safer
+# alternatives on the product detail page.
+_CAT_PEERS: dict[str, list[str]] = {
+    "hair care":          ["Hair Care", "Haircare"],
+    "haircare":           ["Hair Care", "Haircare"],
+    "skincare":           ["Skincare", "Face Care"],
+    "face care":          ["Skincare", "Face Care"],
+    "personal care":      ["Personal Care"],
+    "food":               ["Food"],
+    "beverages":          ["Beverages"],
+    "dairy":              ["Dairy"],
+    "cooking oil":        ["Cooking Oil"],
+    "spices":             ["Spices"],
+    "health":             ["Health", "Health Supplement", "Nutrition"],
+    "health supplement":  ["Health", "Health Supplement", "Nutrition"],
+    "nutrition":          ["Health", "Health Supplement", "Nutrition"],
+    "protein supplement": ["Protein Supplement"],
+    "breakfast cereal":   ["Breakfast Cereal", "Breakfast Cereals"],
+    "breakfast cereals":  ["Breakfast Cereal", "Breakfast Cereals"],
+    "ice cream":          ["Ice Cream"],
+    "medicine":           ["Medicine"],
+}
+
+import asyncio as _asyncio
+
+@router.get("/safer-alternatives")
+async def get_safer_alternatives(
+    category: str = Query(..., max_length=100),
+    exclude_id: str = Query("", max_length=200),
+    limit: int = Query(6, ge=1, le=12),
+):
+    peer_cats = _CAT_PEERS.get(category.lower().strip(), [category])
+
+    base_params = {
+        "select": "id,name,brand,category,grade,image_url,static_key",
+        "grade":  "in.(A,B)",
+        "order":  "grade.asc,name.asc",
+        "limit":  str(limit * 3),
+    }
+    if exclude_id:
+        base_params["id"] = f"neq.{exclude_id}"
+
+    tasks = [
+        _db_get_async("ai_extracted_products", {**base_params, "category": f"eq.{cat}"})
+        for cat in peer_cats
+    ]
+    results = await _asyncio.gather(*tasks, return_exceptions=True)
+
+    _grade_rank = {"A": 0, "B": 1}
+    seen: set = set()
+    merged: list = []
+    for rows in results:
+        if not isinstance(rows, list):
+            continue
+        for p in rows:
+            pid = p.get("id")
+            if not pid or pid in seen:
+                continue
+            seen.add(pid)
+            merged.append(p)
+
+    merged.sort(key=lambda p: (_grade_rank.get(p.get("grade", "C"), 2), p.get("name", "")))
+    return {"alternatives": merged[:limit], "total": len(merged)}
+
 
 # ── Browse ────────────────────────────────────────────────────────────────────
 
