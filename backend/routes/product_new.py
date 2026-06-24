@@ -717,6 +717,13 @@ def _name_ilike_patterns(product_name: str) -> list[str]:
             return patterns
     return []
 
+# Broad categories where the category alone doesn't tell us the product type.
+# For these, name keyword matching is required to avoid mixing soaps with sunscreens.
+# Specific categories (Biscuit, Ice Cream, Cooking Oil, etc.) are trusted as-is.
+_BROAD_CATS = {
+    "personal care", "food", "snacks", "skincare", "face care",
+    "hair care", "haircare", "health", "nutrition", "beverages",
+}
 
 @router.get("/safer-alternatives")
 async def get_safer_alternatives(
@@ -725,27 +732,27 @@ async def get_safer_alternatives(
     exclude_id: str = Query("", max_length=200),
     limit: int = Query(6, ge=1, le=12),
 ):
-    # Step 1: determine name-based ilike patterns for exact product type match
-    ilike_patterns = _name_ilike_patterns(name)
-    if not ilike_patterns:
-        # Can't determine product type — don't risk showing wrong alternatives
-        return {"alternatives": [], "total": 0}
+    cat_lower = category.lower().strip()
+    peer_cats = _CAT_PEERS.get(cat_lower, [category])
+    is_broad = cat_lower in _BROAD_CATS
 
-    # Step 2: determine peer categories
-    peer_cats = _CAT_PEERS.get(category.lower().strip(), [category])
-
-    # Step 3: build PostgREST 'or' for name patterns — ensures only same-type products
-    or_filter = "(" + ",".join(f"name.ilike.{p}" for p in ilike_patterns) + ")"
-
-    base_params = {
+    base_params: dict = {
         "select": "id,name,brand,category,grade,image_url,static_key",
         "grade":  "in.(A,B)",
-        "or":     or_filter,
         "order":  "grade.asc,name.asc",
         "limit":  str(limit * 3),
     }
     if exclude_id:
         base_params["id"] = f"neq.{exclude_id}"
+
+    if is_broad:
+        # Broad category: must filter by name keyword to avoid mixing product types
+        ilike_patterns = _name_ilike_patterns(name)
+        if not ilike_patterns:
+            return {"alternatives": [], "total": 0}
+        base_params["or"] = "(" + ",".join(f"name.ilike.{p}" for p in ilike_patterns) + ")"
+
+    # Specific category: category itself is the product type — no name filter needed
 
     tasks = [
         _db_get_async("ai_extracted_products", {**base_params, "category": f"eq.{cat}"})
