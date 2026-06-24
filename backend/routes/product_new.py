@@ -662,8 +662,6 @@ _CAT_PEERS: dict[str, list[str]] = {
     "medicine":           ["Medicine"],
 }
 
-import asyncio as _asyncio
-
 @router.get("/safer-alternatives")
 async def get_safer_alternatives(
     category: str = Query(..., max_length=100),
