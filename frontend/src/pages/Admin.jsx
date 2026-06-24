@@ -538,10 +538,9 @@ function AddProductForm({ isMobile }) {
       const key   = makeStaticKey(name.trim())
       const grade = gradeFromScore(score ?? 50)
 
-      // Insert first to get the UUID, then upload image with that UUID
-      const { data: inserted, error: insertErr } = await supabase
-        .from('ai_extracted_products')
-        .insert({
+      const { id: productId } = await adminFetch('/products', {
+        method: 'POST',
+        body: JSON.stringify({
           name:            name.trim(),
           brand:           brand.trim() || null,
           category,
@@ -554,24 +553,21 @@ function AddProductForm({ isMobile }) {
           verdict:         verdictFromScore(score ?? 50),
           recommendation:  recommendationFromScore(score ?? 50),
           image_url:       imageUrl || null,
-        })
-        .select('id')
-        .single()
+        }),
+      })
 
-      if (insertErr) throw new Error(insertErr.message)
-
-      // Now upload the image file if provided, and update the record
-      if (imageFile) {
-        const uploadedUrl = await uploadImage(inserted.id)
+      // Upload image file if provided, then update the record via backend
+      if (imageFile && productId) {
+        const uploadedUrl = await uploadImage(productId)
         if (uploadedUrl) {
-          await supabase.from('ai_extracted_products')
-            .update({ image_url: uploadedUrl })
-            .eq('id', inserted.id)
+          await adminFetch(`/products/${productId}/image`, {
+            method: 'PATCH',
+            body: JSON.stringify({ image_url: uploadedUrl }),
+          })
         }
       }
 
       setMsg({ type: 'success', text: `"${name.trim()}" saved successfully! Grade ${grade}. It will appear in search and browse immediately.` })
-      // Reset form
       setName(''); setBrand(''); setIngredients(''); setImageUrl(''); setImageFile(null); setImagePreview(null)
     } catch (e) {
       setMsg({ type: 'error', text: `Save failed: ${e.message}` })
@@ -927,6 +923,25 @@ function DeleteProductSection({ isMobile }) {
   )
 }
 
+// Helper: authenticated fetch to backend admin actions endpoint
+async function adminFetch(path, options = {}) {
+  const { data: { session } } = await supabase.auth.getSession()
+  if (!session) throw new Error('Not authenticated — please log in again')
+  const res = await fetch(`${API_BASE_URL}/api/admin/actions${path}`, {
+    ...options,
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${session.access_token}`,
+      ...(options.headers || {}),
+    },
+  })
+  if (!res.ok) {
+    const err = await res.json().catch(() => ({}))
+    throw new Error(err.detail || `Request failed (${res.status})`)
+  }
+  return res.json()
+}
+
 export default function Admin() {
   const { user, loading: authLoading } = useAuth()
   const navigate = useNavigate()
@@ -1061,82 +1076,25 @@ export default function Admin() {
 
   const handleApproveReport = async (report) => {
     const isUUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(report.product_id)
-
-    // Helper: merge existing ingredients_raw with new reported ones (no duplicates)
-    const mergeRaw = (existing, incoming) => {
-      if (!existing) return incoming
-      const existingParts = existing.split(',').map(s => s.trim().toLowerCase())
-      const newParts = incoming.split(',').map(s => s.trim()).filter(s => {
-        return s && !existingParts.includes(s.toLowerCase())
+    try {
+      await adminFetch(`/reports/${report.id}/approve`, {
+        method: 'POST',
+        body: JSON.stringify({
+          product_id:           report.product_id,
+          product_name:         report.product_name,
+          reported_ingredients: report.reported_ingredients,
+          is_uuid:              isUUID,
+        }),
       })
-      return newParts.length > 0 ? existing + ', ' + newParts.join(', ') : existing
-    }
-
-    let productErr = null
-
-    if (isUUID) {
-      // Fetch current ingredients_raw, merge, then update
-      const { data: current } = await supabase
-        .from('ai_extracted_products')
-        .select('ingredients_raw')
-        .eq('id', report.product_id)
-        .limit(1)
-
-      const merged = mergeRaw(current?.[0]?.ingredients_raw, report.reported_ingredients)
-      const res = await supabase
-        .from('ai_extracted_products')
-        .update({ ingredients_raw: merged, ingredients: [] })
-        .eq('id', report.product_id)
-      productErr = res.error
-    } else {
-      // Static/slug product — find by name
-      const { data: existing } = await supabase
-        .from('ai_extracted_products')
-        .select('id, ingredients_raw')
-        .ilike('name', report.product_name)
-        .limit(1)
-
-      if (existing && existing.length > 0) {
-        const merged = mergeRaw(existing[0].ingredients_raw, report.reported_ingredients)
-        const res = await supabase
-          .from('ai_extracted_products')
-          .update({ ingredients_raw: merged, ingredients: [] })
-          .eq('id', existing[0].id)
-        productErr = res.error
-      } else {
-        // First approval for this static product — insert new record
-        const res = await supabase
-          .from('ai_extracted_products')
-          .insert({ name: report.product_name, ingredients_raw: report.reported_ingredients, ingredients: [] })
-        productErr = res.error
-      }
-    }
-
-    if (productErr) {
-      alert(`Approval failed: ${productErr.message}`)
-      return
-    }
-
-    await supabase
-      .from('ingredient_reports')
-      .update({ status: 'approved', reviewed_at: new Date().toISOString() })
-      .eq('id', report.id)
-
-    fetchAll(); fetchReports()
+      fetchAll(); fetchReports()
+    } catch (e) { alert(`Approval failed: ${e.message}`) }
   }
 
   const handleRejectReport = async (id) => {
-    const { error } = await supabase
-      .from('ingredient_reports')
-      .update({ status: 'rejected', reviewed_at: new Date().toISOString() })
-      .eq('id', id)
-
-    if (error) {
-      alert(`Reject failed: ${error.message}`)
-      return
-    }
-
-    fetchAll(); fetchReports()
+    try {
+      await adminFetch(`/reports/${id}/reject`, { method: 'POST' })
+      fetchAll(); fetchReports()
+    } catch (e) { alert(`Reject failed: ${e.message}`) }
   }
 
   const fetchPhotoSubs = async (status = 'pending') => {
@@ -1156,43 +1114,33 @@ export default function Admin() {
 
   const handleApprovePhoto = async (sub) => {
     try {
-      // Copy each image to product_photos
-      const inserts = sub.image_urls.map(url => ({
-        product_id: sub.product_id,
-        image_url: url,
-        added_by: sub.user_id,
-        is_admin_added: false,
-      }))
-      const { error: insertErr } = await supabase.from('product_photos').insert(inserts)
-      if (insertErr) throw new Error(insertErr.message)
-
-      // Credit ₹1 per photo to user
-      const earned = sub.image_urls.length
-      await supabase.rpc('increment_earnings', { uid: sub.user_id, amount: earned })
-
-      // Mark submission approved
-      await supabase.from('product_photo_submissions').update({ status: 'approved' }).eq('id', sub.id)
+      await adminFetch(`/photo-submissions/${sub.id}/approve`, {
+        method: 'POST',
+        body: JSON.stringify({ product_id: sub.product_id, user_id: sub.user_id, image_urls: sub.image_urls }),
+      })
       fetchAll(); fetchPhotoSubs(photoTab)
-    } catch (e) {
-      setFetchError(`Approve photo error: ${e.message}`)
-    }
+    } catch (e) { setFetchError(`Approve photo error: ${e.message}`) }
   }
 
   const handleRejectPhoto = async (id) => {
-    await supabase.from('product_photo_submissions').update({ status: 'rejected' }).eq('id', id)
-    fetchAll(); fetchPhotoSubs(photoTab)
+    try {
+      await adminFetch(`/photo-submissions/${id}/reject`, { method: 'POST' })
+      fetchAll(); fetchPhotoSubs(photoTab)
+    } catch (e) { setFetchError(`Reject photo error: ${e.message}`) }
   }
 
   const handleApprove = async (id) => {
-    const { error } = await supabase.from('product_submissions').update({ status: 'approved' }).eq('id', id)
-    if (error) { setFetchError(`Approve failed: ${error.message} — check Supabase RLS policies`); return }
-    fetchAll(); fetchSubs(tab)
+    try {
+      await adminFetch(`/product-submissions/${id}/approve`, { method: 'POST' })
+      fetchAll(); fetchSubs(tab)
+    } catch (e) { setFetchError(`Approve failed: ${e.message}`) }
   }
 
   const handleReject = async (id) => {
-    const { error } = await supabase.from('product_submissions').update({ status: 'rejected' }).eq('id', id)
-    if (error) { setFetchError(`Reject failed: ${error.message}`); return }
-    fetchAll(); fetchSubs(tab)
+    try {
+      await adminFetch(`/product-submissions/${id}/reject`, { method: 'POST' })
+      fetchAll(); fetchSubs(tab)
+    } catch (e) { setFetchError(`Reject failed: ${e.message}`) }
   }
 
   const setMsg = (id, msg) => setCardMsgs(m => ({ ...m, [id]: msg }))
@@ -1212,27 +1160,23 @@ export default function Admin() {
       const score       = calculateScore(parsed)
       const brandName   = (brand || '').trim() || productName.split(' ')[0]
 
-      const { error: insertErr } = await supabase.from('ai_extracted_products').insert({
-        name:            productName,
-        brand:           brandName.slice(0, 100),
-        category:        category || 'Personal Care',
-        image_url:       images[0] || null,
-        images:          images,
-        awareness_score: score,
-        summary:         `${productName} contains ${parsed.length} ingredients. ${parsed.filter(i => i.classification === 'commonly_questioned').length} are commonly questioned and ${parsed.filter(i => i.classification === 'worth_knowing').length} are worth knowing. This information is for general awareness based on publicly available regulatory data. It is not a health assessment or medical advice.`,
-        fssai_note:      'Subject to applicable FSSAI regulations.',
-        verdict:         verdictFromScore(score),
-        recommendation:  recommendationFromScore(score),
-        ingredients:     parsed,
-        ingredients_raw: text.trim().slice(0, 5000),
-        submission_id:   id,
-        status:          'active',
+      await adminFetch(`/product-submissions/${id}/save`, {
+        method: 'POST',
+        body: JSON.stringify({
+          name:            productName,
+          brand:           brandName.slice(0, 100),
+          category:        category || 'Personal Care',
+          image_url:       images[0] || null,
+          images,
+          awareness_score: score,
+          summary:         `${productName} contains ${parsed.length} ingredients. ${parsed.filter(i => i.classification === 'commonly_questioned').length} are commonly questioned and ${parsed.filter(i => i.classification === 'worth_knowing').length} are worth knowing. This information is for general awareness based on publicly available regulatory data. It is not a health assessment or medical advice.`,
+          fssai_note:      'Subject to applicable FSSAI regulations.',
+          verdict:         verdictFromScore(score),
+          recommendation:  recommendationFromScore(score),
+          ingredients:     parsed,
+          ingredients_raw: text.trim().slice(0, 5000),
+        }),
       })
-      if (insertErr) throw new Error('Save failed: ' + insertErr.message)
-
-      const { error: updateErr } = await supabase
-        .from('product_submissions').update({ status: 'extracted' }).eq('id', id)
-      if (updateErr) throw new Error('Saved to DB but could not move to extracted: ' + updateErr.message)
 
       setMsg(id, { type: 'success', text: `✓ "${productName}" saved — score ${score}/100, ${parsed.length} ingredients` })
       fetchAll(); fetchSubs(tab)
@@ -1652,16 +1596,20 @@ function BlogApprovals() {
   }
 
   async function updateStatus(id, status) {
-    await supabase.from('blogs').update({ status }).eq('id', id)
-    fetchBlogs()
-    setExpanded(null)
+    try {
+      await adminFetch(`/blogs/${id}/status`, { method: 'PATCH', body: JSON.stringify({ status }) })
+      fetchBlogs()
+      setExpanded(null)
+    } catch (e) { alert(`Update failed: ${e.message}`) }
   }
 
   async function deleteBlog(id) {
     if (!window.confirm('Permanently delete this blog? This cannot be undone.')) return
-    await supabase.from('blogs').delete().eq('id', id)
-    fetchBlogs()
-    setExpanded(null)
+    try {
+      await adminFetch(`/blogs/${id}`, { method: 'DELETE' })
+      fetchBlogs()
+      setExpanded(null)
+    } catch (e) { alert(`Delete failed: ${e.message}`) }
   }
 
   const filters = [
