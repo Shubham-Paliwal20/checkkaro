@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef, useMemo } from 'react'
+import { useState, useEffect, useRef, useMemo, useCallback } from 'react'
 import { useParams, useNavigate } from 'react-router-dom'
 import { motion } from 'framer-motion'
 import axios from 'axios'
@@ -399,6 +399,95 @@ function ProductImageGallery({ imageUrl, images, name, dbPhotos, onDeleteDbPhoto
           📸 Suggest a product image · earn ₹1
         </button>
       )}
+    </div>
+  )
+}
+
+// ── Safer Alternatives ────────────────────────────────────────────────────────
+const GRADE_COLOR = { A: '#16a34a', B: '#0891b2' }
+const GRADE_BG    = { A: '#dcfce7', B: '#e0f2fe' }
+
+function SaferAlternatives({ category, excludeId }) {
+  const navigate = useNavigate()
+  const [items, setItems] = useState([])
+  const [loading, setLoading] = useState(true)
+
+  useEffect(() => {
+    if (!category) { setLoading(false); return }
+    const params = new URLSearchParams({ category, exclude_id: excludeId || '', limit: '6' })
+    fetch(`${API_BASE_URL}/api/product/safer-alternatives?${params}`)
+      .then(r => r.ok ? r.json() : { alternatives: [] })
+      .then(d => setItems(d.alternatives || []))
+      .catch(() => setItems([]))
+      .finally(() => setLoading(false))
+  }, [category, excludeId])
+
+  if (loading || items.length === 0) return null
+
+  return (
+    <div style={{ margin: '32px 0' }}>
+      <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 16 }}>
+        <span style={{ fontSize: 22 }}>🛡️</span>
+        <div>
+          <h3 style={{ margin: 0, fontSize: 17, fontWeight: 800, color: '#0D1B2A', fontFamily: 'Poppins, sans-serif' }}>
+            Safer Alternatives
+          </h3>
+          <p style={{ margin: 0, fontSize: 12, color: '#6b7280' }}>
+            Grade A &amp; B products in the same category — better ingredient profiles
+          </p>
+        </div>
+      </div>
+
+      <div style={{
+        display: 'flex', gap: 12, overflowX: 'auto', paddingBottom: 8,
+        scrollbarWidth: 'thin', scrollbarColor: '#e5e7eb transparent',
+        WebkitOverflowScrolling: 'touch',
+      }}>
+        {items.map(p => {
+          const grade = p.grade || 'B'
+          const gc = GRADE_COLOR[grade] || '#6b7280'
+          const gb = GRADE_BG[grade] || '#f3f4f6'
+          return (
+            <div
+              key={p.id}
+              onClick={() => navigate(`/result/${encodeURIComponent(p.name)}`)}
+              style={{
+                flexShrink: 0, width: 155,
+                background: '#fff', borderRadius: 14,
+                border: '1.5px solid #f3f4f6',
+                boxShadow: '0 2px 12px rgba(0,0,0,0.06)',
+                overflow: 'hidden', cursor: 'pointer',
+                transition: 'box-shadow 0.2s, transform 0.15s',
+              }}
+              onMouseEnter={e => { e.currentTarget.style.boxShadow = '0 6px 24px rgba(0,0,0,0.12)'; e.currentTarget.style.transform = 'translateY(-2px)' }}
+              onMouseLeave={e => { e.currentTarget.style.boxShadow = '0 2px 12px rgba(0,0,0,0.06)'; e.currentTarget.style.transform = 'none' }}
+            >
+              {/* Image */}
+              <div style={{ width: '100%', height: 110, background: '#f9fafb', display: 'flex', alignItems: 'center', justifyContent: 'center', position: 'relative', overflow: 'hidden' }}>
+                {p.image_url
+                  ? <img src={p.image_url} alt={p.name} style={{ width: '100%', height: '100%', objectFit: 'contain', padding: 8 }} onError={e => { e.target.style.display='none'; e.target.nextSibling.style.display='flex' }} />
+                  : null}
+                <div style={{ display: p.image_url ? 'none' : 'flex', width: '100%', height: '100%', alignItems: 'center', justifyContent: 'center', fontSize: 36, color: '#d1d5db' }}>
+                  📦
+                </div>
+                <div style={{ position: 'absolute', top: 7, right: 7, background: gb, color: gc, fontSize: 11, fontWeight: 800, borderRadius: 6, padding: '2px 7px', letterSpacing: '0.03em' }}>
+                  {grade}
+                </div>
+              </div>
+              {/* Info */}
+              <div style={{ padding: '10px 10px 12px' }}>
+                <p style={{ margin: '0 0 3px', fontSize: 12, fontWeight: 700, color: '#111827', lineHeight: 1.35, display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', overflow: 'hidden' }}>
+                  {p.name}
+                </p>
+                <p style={{ margin: '0 0 8px', fontSize: 11, color: '#9ca3af', fontWeight: 500 }}>{p.brand || p.category}</p>
+                <div style={{ background: gc, color: '#fff', borderRadius: 6, padding: '5px 0', fontSize: 11, fontWeight: 700, textAlign: 'center', cursor: 'pointer' }}>
+                  Check →
+                </div>
+              </div>
+            </div>
+          )
+        })}
+      </div>
     </div>
   )
 }
@@ -1439,6 +1528,11 @@ function Result() {
               </div>
             </div>
           </div>
+        )}
+
+        {/* Safer Alternatives */}
+        {product.category && (
+          <SaferAlternatives category={product.category} excludeId={product.id} />
         )}
 
         {/* Ratings & Reviews */}
