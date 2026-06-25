@@ -11,6 +11,7 @@ import '../features/blog/blog_screen.dart';
 import '../features/blog/blog_post_screen.dart';
 import '../features/auth/login_screen.dart';
 import '../features/more/more_screen.dart';
+import '../features/products/products_screen.dart';
 import '../features/splash/splash_screen.dart';
 import '../shared/widgets/main_shell.dart';
 
@@ -30,6 +31,7 @@ final appRouter = GoRouter(
           path: '/check-ingredient/:name',
           builder: (c, s) => CheckIngredientScreen(initialQuery: s.pathParameters['name']),
         ),
+        GoRoute(path: '/products',   builder: (c, s) => const ProductsScreen()),
         GoRoute(path: '/contribute', builder: (c, s) => const ContributeScreen()),
         GoRoute(path: '/about',      builder: (c, s) => const AboutScreen()),
         GoRoute(path: '/blog',       builder: (c, s) => const BlogScreen()),

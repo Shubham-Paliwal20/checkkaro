@@ -21,6 +21,37 @@ class ApiClient {
     return [];
   }
 
+  static Future<Map<String, dynamic>> browseProducts({
+    int page = 1, int limit = 24, String sort = 'score',
+    String? category, String? brand, String? q,
+  }) async {
+    final params = <String, dynamic>{'page': page, 'limit': limit, 'sort': sort};
+    if (category != null && category.isNotEmpty) params['category'] = category;
+    if (brand    != null && brand.isNotEmpty)    params['brand']    = brand;
+    if (q        != null && q.isNotEmpty)        params['q']        = q;
+    final res = await _dio.get('/api/product/browse', queryParameters: params);
+    final data = res.data;
+    if (data is Map<String, dynamic>) return data;
+    return {};
+  }
+
+  static Future<Map<String, String>> batchPhotos(List<String> ids) async {
+    if (ids.isEmpty) return {};
+    try {
+      final res = await _dio.post('/api/photos/batch', data: {'ids': ids});
+      final photos = (res.data?['photos'] as List? ?? []);
+      final map = <String, String>{};
+      for (final ph in photos) {
+        final id  = ph['product_id']?.toString() ?? '';
+        final url = ph['image_url']?.toString()  ?? '';
+        if (id.isNotEmpty && url.isNotEmpty) map[id] = url;
+      }
+      return map;
+    } catch (_) {
+      return {};
+    }
+  }
+
   static Future<Map<String, dynamic>?> getProductByName(String name) async {
     final res = await _dio.get('/api/product/search', queryParameters: {'name': name});
     return res.data as Map<String, dynamic>?;

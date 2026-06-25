@@ -8,7 +8,7 @@ class MainShell extends StatelessWidget {
 
   int _selectedIndex(BuildContext context) {
     final loc = GoRouterState.of(context).uri.path;
-    if (loc.startsWith('/search')) return 1;
+    if (loc.startsWith('/products') || loc.startsWith('/search')) return 1;
     if (loc.startsWith('/scanner')) return 2;
     if (loc.startsWith('/check-ingredient')) return 3;
     if (loc.startsWith('/more') || loc.startsWith('/blog') || loc.startsWith('/about') || loc.startsWith('/contribute')) return 4;
@@ -28,7 +28,7 @@ class MainShell extends StatelessWidget {
               context.go('/');
               break;
             case 1:
-              context.go('/search');
+              context.go('/products');
               break;
             case 2:
               context.go('/scanner');
@@ -47,9 +47,9 @@ class MainShell extends StatelessWidget {
               activeIcon: Icon(Icons.home),
               label: 'Home'),
           BottomNavigationBarItem(
-              icon: Icon(Icons.search_outlined),
-              activeIcon: Icon(Icons.search),
-              label: 'Search'),
+              icon: Icon(Icons.grid_view_outlined),
+              activeIcon: Icon(Icons.grid_view),
+              label: 'Products'),
           BottomNavigationBarItem(
               icon: Icon(Icons.qr_code_scanner),
               activeIcon: Icon(Icons.qr_code_scanner),

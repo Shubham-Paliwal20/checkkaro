@@ -166,7 +166,7 @@ class _HeroSection extends StatelessWidget {
 
           // Search bar
           GestureDetector(
-            onTap: () => context.go('/search'),
+            onTap: () => context.go('/products'),
             child: Container(
               padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
               decoration: BoxDecoration(
@@ -311,7 +311,7 @@ class _FeaturesSection extends StatelessWidget {
             borderColor: AppColors.brandOrange, title: 'Food Analysis', titleColor: AppColors.brandOrange,
             desc: 'Breaks down every ingredient in your favourite Indian packaged foods. Understand what each ingredient is and how regulators view it worldwide.',
             linkText: 'Search a food product →',
-            onTap: () => context.go('/search'),
+            onTap: () => context.go('/products'),
           ),
           const SizedBox(height: 12),
           // Cosmetic Analysis uses GREEN (website primary = #138808)
@@ -321,7 +321,7 @@ class _FeaturesSection extends StatelessWidget {
             borderColor: AppColors.brandGreen, title: 'Cosmetic Analysis', titleColor: AppColors.brandGreen,
             desc: 'Analyses ingredients in Indian personal care products and highlights chemicals avoided in other countries.',
             linkText: 'Search a cosmetic →',
-            onTap: () => context.go('/search'),
+            onTap: () => context.go('/products'),
           ),
           const SizedBox(height: 12),
           _FeatureCard(
@@ -612,7 +612,7 @@ class _AppFooter extends StatelessWidget {
             runSpacing: 10,
             children: [
               _footerLink('Home',             () => context.go('/')),
-              _footerLink('Products',         () => context.go('/search')),
+              _footerLink('Products',         () => context.go('/products')),
               _footerLink('Check Ingredient', () => context.go('/check-ingredient')),
               _footerLink('Blog',             () => context.go('/blog')),
               _footerLink('About',            () => context.go('/about')),
