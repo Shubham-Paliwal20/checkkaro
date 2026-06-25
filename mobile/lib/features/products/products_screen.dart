@@ -103,17 +103,24 @@ class _ProductsScreenState extends State<ProductsScreen> {
   }
 
   Future<void> _fetchPhotos(List<Map<String, dynamic>> prods) async {
-    final ids = prods
-        .map((p) => (p['static_key'] ?? p['id'])?.toString() ?? '')
-        .where((id) => id.isNotEmpty)
-        .toList();
-    final map = await ApiClient.batchPhotos(ids);
+    // Send BOTH static_key and id for each product (deduplicated) — same logic as website
+    final ids = <String>{};
+    for (final p in prods) {
+      final sk = p['static_key']?.toString();
+      final id = p['id']?.toString();
+      if (sk != null && sk.isNotEmpty) ids.add(sk);
+      if (id != null && id.isNotEmpty) ids.add(id);
+    }
+    if (ids.isEmpty) return;
+    final map = await ApiClient.batchPhotos(ids.toList());
     if (!mounted || map.isEmpty) return;
     setState(() {
       _products = _products.map((p) {
-        final key = (p['static_key'] ?? p['id'])?.toString() ?? '';
-        final freshUrl = map[key];
-        if (freshUrl != null) return {...p, 'image_url': freshUrl};
+        // Check static_key first, then id — same order as website
+        final sk  = p['static_key']?.toString() ?? '';
+        final id  = p['id']?.toString() ?? '';
+        final freshUrl = (sk.isNotEmpty ? map[sk] : null) ?? (id.isNotEmpty ? map[id] : null);
+        if (freshUrl != null && freshUrl.isNotEmpty) return {...p, 'image_url': freshUrl};
         return p;
       }).toList();
     });
@@ -477,10 +484,12 @@ class _BrowseCard extends StatelessWidget {
                       ? CachedNetworkImage(
                           imageUrl: imageUrl,
                           fit: BoxFit.contain,
-                          placeholder: (_, __) => const Center(child: Icon(Icons.inventory_2_outlined, color: AppColors.border, size: 40)),
-                          errorWidget: (_, __, ___) => const Center(child: Icon(Icons.inventory_2_outlined, color: AppColors.border, size: 40)),
+                          memCacheWidth: 300,
+                          fadeInDuration: const Duration(milliseconds: 200),
+                          placeholder: (_, __) => _ImageShimmer(),
+                          errorWidget: (_, __, ___) => _NoImagePlaceholder(brand: brand, grade: grade, gradeColor: _gradeColor(grade)),
                         )
-                      : const Center(child: Icon(Icons.inventory_2_outlined, color: AppColors.border, size: 40)),
+                      : _NoImagePlaceholder(brand: brand, grade: grade, gradeColor: _gradeColor(grade)),
                 ),
               ),
             ),
@@ -565,6 +574,68 @@ class _SkeletonCard extends StatelessWidget {
             ),
           ),
         ],
+      ),
+    );
+  }
+}
+
+class _ImageShimmer extends StatefulWidget {
+  @override
+  State<_ImageShimmer> createState() => _ImageShimmerState();
+}
+
+class _ImageShimmerState extends State<_ImageShimmer> with SingleTickerProviderStateMixin {
+  late AnimationController _ctrl;
+  late Animation<double> _anim;
+
+  @override
+  void initState() {
+    super.initState();
+    _ctrl = AnimationController(vsync: this, duration: const Duration(milliseconds: 1000))..repeat(reverse: true);
+    _anim = Tween<double>(begin: 0.3, end: 0.7).animate(_ctrl);
+  }
+
+  @override
+  void dispose() { _ctrl.dispose(); super.dispose(); }
+
+  @override
+  Widget build(BuildContext context) => AnimatedBuilder(
+    animation: _anim,
+    builder: (_, __) => Container(color: Color.lerp(const Color(0xFFF3F4F6), const Color(0xFFE5E7EB), _anim.value)),
+  );
+}
+
+class _NoImagePlaceholder extends StatelessWidget {
+  final String brand;
+  final String grade;
+  final Color gradeColor;
+  const _NoImagePlaceholder({required this.brand, required this.grade, required this.gradeColor});
+
+  @override
+  Widget build(BuildContext context) {
+    final initial = brand.isNotEmpty ? brand[0].toUpperCase() : '?';
+    return Container(
+      color: AppColors.surface,
+      child: Center(
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Container(
+              width: 52, height: 52,
+              decoration: BoxDecoration(
+                color: gradeColor.withOpacity(0.12),
+                shape: BoxShape.circle,
+                border: Border.all(color: gradeColor.withOpacity(0.3), width: 1.5),
+              ),
+              child: Center(
+                child: Text(initial,
+                    style: TextStyle(fontSize: 22, fontWeight: FontWeight.w800, color: gradeColor)),
+              ),
+            ),
+            const SizedBox(height: 6),
+            Text('No photo yet', style: TextStyle(fontSize: 9, color: AppColors.textMuted.withOpacity(0.7))),
+          ],
+        ),
       ),
     );
   }
