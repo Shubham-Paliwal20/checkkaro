@@ -21,6 +21,8 @@ class CheckIngredientScreen extends ConsumerStatefulWidget {
 class _CheckIngredientScreenState
     extends ConsumerState<CheckIngredientScreen> {
   late final TextEditingController _ctrl;
+  final _scrollCtrl = ScrollController();
+  final _resultKey = GlobalKey();
   bool _loading = false;
   IngredientDetail? _result;
   String? _error;
@@ -40,7 +42,20 @@ class _CheckIngredientScreenState
   @override
   void dispose() {
     _ctrl.dispose();
+    _scrollCtrl.dispose();
     super.dispose();
+  }
+
+  void _scrollToResult() {
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      final ctx = _resultKey.currentContext;
+      if (ctx != null) {
+        Scrollable.ensureVisible(ctx,
+            duration: const Duration(milliseconds: 450),
+            curve: Curves.easeOut,
+            alignment: 0.0);
+      }
+    });
   }
 
   Future<void> _search(String query) async {
@@ -62,11 +77,13 @@ class _CheckIngredientScreenState
           _error = 'Ingredient not found.';
         }
       });
+      _scrollToResult();
     } catch (e) {
       setState(() {
         _loading = false;
         _error = 'Failed to search. Please try again.';
       });
+      _scrollToResult();
     }
   }
 
@@ -77,6 +94,7 @@ class _CheckIngredientScreenState
     return Scaffold(
       backgroundColor: Colors.white,
       body: CustomScrollView(
+        controller: _scrollCtrl,
         slivers: [
           // Header
           SliverToBoxAdapter(
@@ -217,6 +235,7 @@ class _CheckIngredientScreenState
                     )),
                   if (_error != null && !_loading)
                     Center(
+                      key: _resultKey,
                       child: Padding(
                         padding: const EdgeInsets.only(top: 40),
                         child: Column(
@@ -232,7 +251,7 @@ class _CheckIngredientScreenState
                       ),
                     ),
                   if (_result != null && !_loading)
-                    _IngredientResultCard(detail: _result!),
+                    SizedBox(key: _resultKey, child: _IngredientResultCard(detail: _result!)),
                   if (!_searched && !_loading)
                     const _EmptyState(),
                   const SizedBox(height: 32),
