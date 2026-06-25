@@ -26,7 +26,6 @@ class _CheckIngredientScreenState
   bool _loading = false;
   IngredientDetail? _result;
   String? _error;
-  bool _searched = false;
 
   @override
   void initState() {
@@ -47,14 +46,17 @@ class _CheckIngredientScreenState
   }
 
   void _scrollToResult() {
+    // Two frames + small delay so the result widget is fully laid out
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      final ctx = _resultKey.currentContext;
-      if (ctx != null) {
-        Scrollable.ensureVisible(ctx,
-            duration: const Duration(milliseconds: 450),
-            curve: Curves.easeOut,
-            alignment: 0.0);
-      }
+      Future.delayed(const Duration(milliseconds: 80), () {
+        final ctx = _resultKey.currentContext;
+        if (ctx != null && mounted) {
+          Scrollable.ensureVisible(ctx,
+              duration: const Duration(milliseconds: 450),
+              curve: Curves.easeOut,
+              alignment: 0.0);
+        }
+      });
     });
   }
 
@@ -65,7 +67,6 @@ class _CheckIngredientScreenState
       _loading = true;
       _error = null;
       _result = null;
-      _searched = true;
     });
     try {
       final data = await ApiClient.searchIngredient(q);
@@ -252,7 +253,10 @@ class _CheckIngredientScreenState
                     ),
                   if (_result != null && !_loading)
                     SizedBox(key: _resultKey, child: _IngredientResultCard(detail: _result!)),
-                  if (!_searched && !_loading)
+                  if (_result != null && !_loading)
+                    const SizedBox(height: 24),
+                  // Classification guide — always visible, stays below result
+                  if (!_loading)
                     const _EmptyState(),
                   const SizedBox(height: 32),
                 ],
