@@ -17,11 +17,12 @@ class MoreScreen extends ConsumerWidget {
     showModalBottomSheet(
       context: context,
       backgroundColor: Colors.white,
+      isScrollControlled: true,
       shape: const RoundedRectangleBorder(
         borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
       ),
       builder: (ctx) => Padding(
-        padding: const EdgeInsets.fromLTRB(24, 20, 24, 36),
+        padding: EdgeInsets.fromLTRB(24, 20, 24, MediaQuery.of(ctx).viewInsets.bottom + 36),
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
@@ -115,7 +116,7 @@ class MoreScreen extends ConsumerWidget {
                     iconBg: const Color(0xFFFFF7ED),
                     title: 'Blog',
                     subtitle: 'Read expert articles on food & cosmetics',
-                    onTap: () => _requireLogin(context, ref, () => context.go('/blog')),
+                    onTap: () => context.go('/blog'),
                   ),
                   // About — no login required
                   _MenuTile(
