@@ -88,6 +88,29 @@ class ApiClient {
     return [];
   }
 
+  static Future<List<Map<String, dynamic>>> getReviews() async {
+    try {
+      final res = await _dio.get(
+        'https://ecyuhdegovjhhqvasiez.supabase.co/rest/v1/reviews',
+        queryParameters: {
+          'is_approved': 'eq.true',
+          'select': 'id,reviewer_name,review_text,rating',
+          'order': 'created_at.desc',
+          'limit': '20',
+        },
+        options: Options(headers: {
+          'apikey': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImVjeXVoZGVnb3ZqaGhxdmFzaWV6Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzU4OTI5MzIsImV4cCI6MjA5MTQ2ODkzMn0.Kqjqp0hvkRLAGuKCY1g202sUD74YD2wEixM8r0Ka5GA',
+          'Authorization': 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImVjeXVoZGVnb3ZqaGhxdmFzaWV6Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzU4OTI5MzIsImV4cCI6MjA5MTQ2ODkzMn0.Kqjqp0hvkRLAGuKCY1g202sUD74YD2wEixM8r0Ka5GA',
+        }),
+      );
+      final data = res.data;
+      if (data is List) return data.cast<Map<String, dynamic>>();
+      return [];
+    } catch (_) {
+      return [];
+    }
+  }
+
   static Future<void> reportProduct({
     required String productId,
     required String productName,

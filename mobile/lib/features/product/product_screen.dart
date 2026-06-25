@@ -94,6 +94,7 @@ class _ProductDetail extends ConsumerWidget {
                   ? CachedNetworkImage(
                       imageUrl: product.imageUrl!,
                       fit: BoxFit.contain,
+                      httpHeaders: const {'User-Agent': 'Mozilla/5.0 (Linux; Android 11; Mobile) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Mobile Safari/537.36'},
                       errorWidget: (_, __, ___) => const _PlaceholderImage())
                   : const _PlaceholderImage(),
             ),
@@ -782,6 +783,7 @@ class _SaferAlternatives extends StatelessWidget {
                               height: 60,
                               width: double.infinity,
                               fit: BoxFit.contain,
+                              httpHeaders: const {'User-Agent': 'Mozilla/5.0 (Linux; Android 11; Mobile) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Mobile Safari/537.36'},
                               errorWidget: (_, __, ___) => const Icon(
                                   Icons.inventory_2_outlined,
                                   size: 40,

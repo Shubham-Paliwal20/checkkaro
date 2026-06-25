@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import '../../core/api/api_client.dart';
 import '../../core/auth/auth_provider.dart';
 import '../../core/theme/app_theme.dart';
 
@@ -15,11 +16,6 @@ const _quickSearchItems = [
   ('🌶 Kurkure',         'Kurkure Masala Munch',                  'Snacks'),
 ];
 
-const _reviews = [
-  (name: 'Priya M.',    text: 'Finally an app that tells me what\'s actually in my skincare products. Found out my moisturiser has parabens!', rating: 5),
-  (name: 'Rahul S.',    text: 'Checked Maggi and was shocked to see what some of those E-numbers mean. Very helpful app.', rating: 5),
-  (name: 'Ananya K.',   text: 'Love how simple the explanations are. No jargon, just clear info. Highly recommended!', rating: 5),
-];
 
 class HomeScreen extends ConsumerWidget {
   const HomeScreen({super.key});
@@ -471,9 +467,26 @@ class _Stat extends StatelessWidget {
 
 // ── Reviews ───────────────────────────────────────────────────────────────────
 
-class _ReviewsSection extends StatelessWidget {
+class _ReviewsSection extends StatefulWidget {
+  @override
+  State<_ReviewsSection> createState() => _ReviewsSectionState();
+}
+
+class _ReviewsSectionState extends State<_ReviewsSection> {
+  List<Map<String, dynamic>> _reviews = [];
+
+  @override
+  void initState() {
+    super.initState();
+    ApiClient.getReviews().then((data) {
+      if (mounted && data.isNotEmpty) setState(() => _reviews = data);
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
+    if (_reviews.isEmpty) return const SizedBox.shrink();
+    final colors = [AppColors.brandOrange, AppColors.brandGreen, AppColors.brandOrange];
     return Container(
       color: Colors.white,
       padding: const EdgeInsets.fromLTRB(20, 28, 0, 28),
@@ -491,12 +504,18 @@ class _ReviewsSection extends StatelessWidget {
             padding: const EdgeInsets.only(right: 20),
             child: Row(
               children: _reviews.asMap().entries.map((e) {
-                final colors = [AppColors.brandOrange, AppColors.brandGreen, AppColors.brandOrange];
                 final c = colors[e.key % colors.length];
+                final name   = (e.value['reviewer_name'] as String? ?? 'User');
+                final text   = (e.value['review_text']   as String? ?? '');
+                final rating = (e.value['rating']        as num?)?.toInt() ?? 5;
                 return Container(
                   width: 260,
                   margin: const EdgeInsets.only(right: 12),
-                  decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(16), boxShadow: [BoxShadow(color: Colors.black.withOpacity(0.07), blurRadius: 12, offset: const Offset(0, 2))]),
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(16),
+                    boxShadow: [BoxShadow(color: Colors.black.withOpacity(0.07), blurRadius: 12, offset: const Offset(0, 2))],
+                  ),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
@@ -508,22 +527,22 @@ class _ReviewsSection extends StatelessWidget {
                           children: [
                             Text('"', style: TextStyle(fontSize: 40, color: c.withOpacity(0.25), height: 0.8, fontFamily: 'Georgia')),
                             const SizedBox(height: 6),
-                            Text(e.value.text, style: const TextStyle(fontSize: 13, color: Color(0xFF374151), height: 1.6)),
+                            Text(text, style: const TextStyle(fontSize: 13, color: Color(0xFF374151), height: 1.6)),
                             const SizedBox(height: 10),
-                            Row(children: List.generate(5, (i) => Icon(Icons.star, size: 14, color: i < e.value.rating ? AppColors.brandOrange : AppColors.border))),
+                            Row(children: List.generate(5, (i) => Icon(Icons.star, size: 14, color: i < rating ? AppColors.brandOrange : AppColors.border))),
                             const SizedBox(height: 10),
                             Row(
                               children: [
                                 Container(
                                   width: 36, height: 36,
                                   decoration: BoxDecoration(color: c.withOpacity(0.1), shape: BoxShape.circle, border: Border.all(color: c, width: 1.5)),
-                                  child: Center(child: Text(e.value.name[0], style: TextStyle(color: c, fontWeight: FontWeight.w800, fontSize: 15))),
+                                  child: Center(child: Text(name.isNotEmpty ? name[0].toUpperCase() : '?', style: TextStyle(color: c, fontWeight: FontWeight.w800, fontSize: 15))),
                                 ),
                                 const SizedBox(width: 10),
                                 Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
-                                    Text(e.value.name, style: const TextStyle(fontWeight: FontWeight.w700, fontSize: 13)),
+                                    Text(name, style: const TextStyle(fontWeight: FontWeight.w700, fontSize: 13)),
                                     const Text('Verified user', style: TextStyle(fontSize: 11, color: AppColors.textMuted)),
                                   ],
                                 ),
