@@ -78,27 +78,52 @@ class _CheckIngredientScreenState
       backgroundColor: Colors.white,
       body: CustomScrollView(
         slivers: [
-          // Dark navy header — title only, no search bar
+          // Header
           SliverToBoxAdapter(
             child: Container(
               width: double.infinity,
               padding: EdgeInsets.fromLTRB(
-                  20, MediaQuery.of(context).padding.top + 24, 20, 28),
+                  20, MediaQuery.of(context).padding.top + 28, 20, 36),
               decoration: const BoxDecoration(
                 color: AppColors.textPrimary,
               ),
-              child: const Column(
+              child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text('What does this ingredient do?',
+                  Row(
+                    children: [
+                      Container(
+                        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+                        decoration: BoxDecoration(
+                          color: AppColors.brandGreen.withOpacity(0.15),
+                          borderRadius: BorderRadius.circular(20),
+                          border: Border.all(color: AppColors.brandGreen.withOpacity(0.4)),
+                        ),
+                        child: Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            const Icon(Icons.science, color: AppColors.brandGreen, size: 14),
+                            const SizedBox(width: 5),
+                            const Text('Ingredient Checker',
+                                style: TextStyle(
+                                    fontSize: 12, fontWeight: FontWeight.w700,
+                                    color: AppColors.brandGreen, letterSpacing: 0.3)),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 14),
+                  const Text('What does this\ningredient do?',
                       style: TextStyle(
-                          fontSize: 22,
+                          fontSize: 26,
                           fontWeight: FontWeight.w900,
                           color: Colors.white,
-                          fontFamily: 'Poppins')),
-                  SizedBox(height: 6),
-                  Text('Type any ingredient name or E-number from a product label',
-                      style: TextStyle(fontSize: 13, color: Color(0xFFD1D5DB))),
+                          fontFamily: 'Poppins',
+                          height: 1.2)),
+                  const SizedBox(height: 10),
+                  const Text('Type any ingredient name or E-number from a product label and get instant information.',
+                      style: TextStyle(fontSize: 13, color: Color(0xFFD1D5DB), height: 1.5)),
                 ],
               ),
             ),
@@ -225,23 +250,148 @@ class _EmptyState extends StatelessWidget {
   const _EmptyState();
   @override
   Widget build(BuildContext context) {
-    return const Center(
-      child: Padding(
-        padding: EdgeInsets.only(top: 40),
-        child: Column(
-          children: [
-            Icon(Icons.science_outlined, size: 56, color: AppColors.textMuted),
-            SizedBox(height: 14),
-            Text('Search any ingredient above',
-                style: TextStyle(
-                    fontSize: 15,
-                    fontWeight: FontWeight.w600,
-                    color: AppColors.textMuted)),
-            SizedBox(height: 6),
-            Text('Find out what it does and if it\'s safe',
-                style: TextStyle(fontSize: 12, color: AppColors.textMuted)),
-          ],
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        const SizedBox(height: 8),
+
+        // Classification system section
+        Container(
+          padding: const EdgeInsets.all(18),
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(16),
+            border: Border.all(color: AppColors.border),
+            boxShadow: [BoxShadow(color: Colors.black.withOpacity(0.04), blurRadius: 8, offset: const Offset(0, 2))],
+          ),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Row(
+                children: [
+                  Container(
+                    width: 30, height: 30,
+                    decoration: BoxDecoration(color: AppColors.brandGreenLight, shape: BoxShape.circle),
+                    child: const Icon(Icons.info_outline, color: AppColors.brandGreen, size: 18),
+                  ),
+                  const SizedBox(width: 10),
+                  const Expanded(
+                    child: Text('Understanding Our Classification System',
+                        style: TextStyle(fontSize: 15, fontWeight: FontWeight.w800, color: AppColors.textPrimary, fontFamily: 'Poppins')),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 8),
+              const Text(
+                'We classify ingredients into three categories based on scientific research from FSSAI, WHO, EU, FDA, and peer-reviewed studies:',
+                style: TextStyle(fontSize: 12, color: AppColors.textMuted, height: 1.5),
+              ),
+              const SizedBox(height: 16),
+
+              // Three cards
+              _ClassCard(
+                color: AppColors.gradeA,
+                bg: AppColors.gradeBgA,
+                borderColor: AppColors.gradeA,
+                icon: Icons.check_circle,
+                title: 'Generally Recognised',
+                desc: 'Safe ingredients with no known adverse effects at normal consumption levels. Approved by major regulatory bodies without restrictions.',
+                bullets: const ['Extensive safety data', 'No significant concerns', 'Widely approved globally'],
+                bulletPrefix: '✓',
+              ),
+              const SizedBox(height: 10),
+              _ClassCard(
+                color: AppColors.gradeC,
+                bg: AppColors.gradeBgC,
+                borderColor: AppColors.gradeC,
+                icon: Icons.warning_amber_rounded,
+                title: 'Worth Knowing',
+                desc: 'Ingredients with some concerns or restrictions. May cause issues in sensitive individuals or at high doses. Mixed scientific findings.',
+                bullets: const ['Some restrictions apply', 'Sensitivity possible', 'Emerging research'],
+                bulletPrefix: '⚠',
+              ),
+              const SizedBox(height: 10),
+              _ClassCard(
+                color: AppColors.gradeD,
+                bg: AppColors.gradeBgD,
+                borderColor: AppColors.gradeD,
+                icon: Icons.cancel,
+                title: 'Commonly Questioned',
+                desc: 'Ingredients with significant health concerns backed by scientific research. May be restricted or banned in some countries.',
+                bullets: const ['Significant concerns', 'Restricted/banned', 'Health risks identified'],
+                bulletPrefix: '✕',
+              ),
+
+              const SizedBox(height: 16),
+              Container(
+                padding: const EdgeInsets.all(14),
+                decoration: BoxDecoration(color: AppColors.surface, borderRadius: BorderRadius.circular(10)),
+                child: RichText(
+                  text: const TextSpan(
+                    style: TextStyle(fontSize: 12, color: AppColors.textMuted, height: 1.5, fontFamily: 'Poppins'),
+                    children: [
+                      TextSpan(text: 'Our Mission: ', style: TextStyle(fontWeight: FontWeight.w700, color: AppColors.textPrimary)),
+                      TextSpan(text: 'To provide transparent, science-based information about food and cosmetic ingredients so you can make informed choices for your health and well-being.'),
+                    ],
+                  ),
+                ),
+              ),
+            ],
+          ),
         ),
+        const SizedBox(height: 32),
+      ],
+    );
+  }
+}
+
+class _ClassCard extends StatelessWidget {
+  final Color color, bg, borderColor;
+  final IconData icon;
+  final String title, desc;
+  final List<String> bullets;
+  final String bulletPrefix;
+
+  const _ClassCard({
+    required this.color, required this.bg, required this.borderColor,
+    required this.icon, required this.title, required this.desc,
+    required this.bullets, required this.bulletPrefix,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.all(14),
+      decoration: BoxDecoration(
+        color: bg,
+        borderRadius: BorderRadius.circular(12),
+        border: Border.all(color: borderColor.withOpacity(0.5)),
+      ),
+      child: Column(
+        children: [
+          Container(
+            width: 44, height: 44,
+            decoration: BoxDecoration(color: color, shape: BoxShape.circle),
+            child: Icon(icon, color: Colors.white, size: 22),
+          ),
+          const SizedBox(height: 10),
+          Text(title, textAlign: TextAlign.center,
+              style: TextStyle(fontSize: 14, fontWeight: FontWeight.w800, color: color, fontFamily: 'Poppins')),
+          const SizedBox(height: 8),
+          Text(desc, textAlign: TextAlign.center,
+              style: TextStyle(fontSize: 11, color: color.withOpacity(0.8), height: 1.5)),
+          const Divider(height: 20),
+          ...bullets.map((b) => Padding(
+            padding: const EdgeInsets.only(bottom: 4),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Text('$bulletPrefix ', style: TextStyle(fontSize: 11, fontWeight: FontWeight.w700, color: color)),
+                Text(b, style: TextStyle(fontSize: 11, fontWeight: FontWeight.w600, color: color)),
+              ],
+            ),
+          )),
+        ],
       ),
     );
   }

@@ -622,7 +622,7 @@ class _AppFooter extends StatelessWidget {
           const SizedBox(height: 20),
           const Divider(color: Color(0xFF374151)),
           const SizedBox(height: 12),
-          const Text('© 2025 Parkho. All rights reserved.',
+          const Text('© 2026 Parkho. All rights reserved.',
               style: TextStyle(fontSize: 11, color: Color(0xFF6b7280))),
           const SizedBox(height: 4),
           const Text('Data is for awareness only. Not medical advice.',

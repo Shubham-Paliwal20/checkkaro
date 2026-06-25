@@ -12,7 +12,6 @@ const _staticBlogs = [
     excerpt: 'Most Indians never read the ingredient list on packaged food. Here\'s what you\'re missing — and why it matters for your family\'s health.',
     category: 'Food',
     author: 'Parkho Editorial',
-    date: '2025-12-01',
     cover: 'https://images.unsplash.com/photo-1606787366850-de6330128bfc?w=600&q=70',
   ),
   (
@@ -21,17 +20,87 @@ const _staticBlogs = [
     excerpt: 'Parabens are in almost every moisturiser, shampoo, and cream on the market. But are they actually dangerous? Here\'s what the science says.',
     category: 'Cosmetics',
     author: 'Parkho Editorial',
-    date: '2025-12-03',
-    cover: 'https://images.unsplash.com/photo-1556228578-0d85b1a4d571?w=600&q=70',
+    cover: 'https://images.unsplash.com/photo-1556228578-8c89e6adf883?w=600&q=70',
   ),
   (
     id: 'static-3',
-    title: 'What Does E211 Mean? Understanding Sodium Benzoate in Your Drinks',
-    excerpt: 'E211 appears on ingredient lists of dozens of Indian soft drinks. Here\'s what it is, why it\'s there, and what researchers say about it.',
+    title: 'Hidden Sugar in "Healthy" Indian Foods — What Brands Don\'t Tell You',
+    excerpt: 'Oats, granola, fruit juice, multigrain bread — they all sound healthy. But the sugar content might shock you.',
     category: 'Food',
     author: 'Parkho Editorial',
-    date: '2025-12-05',
-    cover: 'https://images.unsplash.com/photo-1543512214-318c7553f230?w=600&q=70',
+    cover: 'https://images.unsplash.com/photo-1490645935967-10de6ba17061?w=600&q=70',
+  ),
+  (
+    id: 'static-4',
+    title: '5 Harmful Ingredients Hiding in Your Daily Face Cream',
+    excerpt: 'Your moisturiser may be doing more harm than good. These five ingredients are worth avoiding — especially in products you use every day.',
+    category: 'Cosmetics',
+    author: 'Parkho Editorial',
+    cover: 'https://images.unsplash.com/photo-1598440947619-2c35fc9aa908?w=600&q=70',
+  ),
+  (
+    id: 'static-5',
+    title: 'E-Numbers in Indian Food: Which Are Safe and Which to Avoid',
+    excerpt: 'E-numbers are everywhere in packaged food. But not all of them are harmful. Here\'s a simple guide to understanding what they mean.',
+    category: 'Food',
+    author: 'Parkho Editorial',
+    cover: 'https://images.unsplash.com/photo-1567306226416-28f0efdc88ce?w=600&q=70',
+  ),
+  (
+    id: 'static-6',
+    title: 'How to Read a Cosmetic Ingredient List Like an Expert',
+    excerpt: 'INCI names look intimidating. But once you know the basics, you\'ll never look at a skincare product the same way again.',
+    category: 'Cosmetics',
+    author: 'Parkho Editorial',
+    cover: 'https://images.unsplash.com/photo-1596755389378-c31d21fd1273?w=600&q=70',
+  ),
+  (
+    id: 'static-7',
+    title: 'Processed Meats and Cancer: What the WHO Classification Actually Means',
+    excerpt: 'In 2015, the WHO classified processed meats as a Group 1 carcinogen — same as cigarettes. But does that mean salami is as dangerous as smoking?',
+    category: 'Food',
+    author: 'Parkho Editorial',
+    cover: 'https://images.unsplash.com/photo-1504674900247-0877df9cc836?w=600&q=70',
+  ),
+  (
+    id: 'static-8',
+    title: 'Aspartame, Sucralose or Stevia? What 2023 Research Changed About Artificial Sweeteners',
+    excerpt: 'The WHO issued a major advisory on non-sugar sweeteners in 2023. Three landmark studies raised new concerns. Here is what the evidence says.',
+    category: 'Food',
+    author: 'Parkho Editorial',
+    cover: 'https://images.unsplash.com/photo-1548636581-eb82ef43c3ec?w=600&q=70',
+  ),
+  (
+    id: 'static-9',
+    title: 'The Ultra-Processed Food Trap: Why the NOVA Classification Is Changing Nutrition Science',
+    excerpt: 'Not all processed food is harmful. But "ultra-processed" food is a different story. Here\'s the science behind NOVA and why it matters for India.',
+    category: 'Food',
+    author: 'Parkho Editorial',
+    cover: 'https://images.unsplash.com/photo-1565299624946-b28f40a0ae38?w=600&q=70',
+  ),
+  (
+    id: 'static-10',
+    title: 'Retinol: The Science Behind the Most Clinically Proven Anti-Ageing Skincare Ingredient',
+    excerpt: 'Retinol has more peer-reviewed evidence than almost any other skincare ingredient. Here is how it works and how to use it correctly.',
+    category: 'Cosmetics',
+    author: 'Parkho Editorial',
+    cover: 'https://images.unsplash.com/photo-1620916566398-39f1143ab7be?w=600&q=70',
+  ),
+  (
+    id: 'static-11',
+    title: 'Chemical vs Mineral Sunscreen: What the Science Actually Says in 2024',
+    excerpt: 'The FDA flagged four major chemical UV filters as lacking sufficient safety data. Here\'s what the evidence says about which sunscreen is actually better.',
+    category: 'Cosmetics',
+    author: 'Parkho Editorial',
+    cover: 'https://images.unsplash.com/photo-1526947425960-945c6e72858f?w=600&q=70',
+  ),
+  (
+    id: 'static-12',
+    title: 'Your Skin Barrier: The Science Behind Why It Matters More Than Any Serum You Use',
+    excerpt: 'Every dermatologist gives the same advice first: fix your skin barrier before adding actives. Here\'s the biology and what\'s damaging it every day.',
+    category: 'Cosmetics',
+    author: 'Parkho Editorial',
+    cover: 'https://images.unsplash.com/photo-1631729371254-42c2892f0e6e?w=600&q=70',
   ),
 ];
 
@@ -131,7 +200,7 @@ class _BlogList extends StatelessWidget {
 }
 
 class _StaticCard extends StatelessWidget {
-  final ({String id, String title, String excerpt, String category, String author, String date, String cover}) blog;
+  final ({String id, String title, String excerpt, String category, String author, String cover}) blog;
   const _StaticCard({required this.blog});
 
   @override
@@ -172,8 +241,6 @@ class _StaticCard extends StatelessWidget {
                     const Icon(Icons.person_outline, size: 13, color: AppColors.textMuted),
                     const SizedBox(width: 4),
                     Text(blog.author, style: const TextStyle(fontSize: 11, color: AppColors.textMuted)),
-                    const Spacer(),
-                    Text(blog.date, style: const TextStyle(fontSize: 11, color: AppColors.textMuted)),
                   ]),
                 ],
               ),
@@ -195,8 +262,6 @@ class _DynamicCard extends StatelessWidget {
     final cs    = _catStyle[cat];
     final slug  = (blog['slug'] as String?) ?? (blog['id'] as String);
     final cover = blog['cover_image'] as String?;
-    final raw   = blog['created_at'] as String? ?? '';
-    final date  = raw.length >= 10 ? raw.substring(0, 10) : raw;
 
     return GestureDetector(
       onTap: () => context.push('/blog/$slug?dyn=1'),
@@ -232,11 +297,7 @@ class _DynamicCard extends StatelessWidget {
                   Text(blog['excerpt'] ?? '', maxLines: 2, overflow: TextOverflow.ellipsis,
                       style: const TextStyle(fontSize: 11, color: AppColors.textMuted, height: 1.4)),
                   const SizedBox(height: 6),
-                  Row(children: [
-                    Text(blog['author_name'] ?? 'Contributor', style: const TextStyle(fontSize: 11, color: AppColors.textMuted)),
-                    const Spacer(),
-                    if (date.isNotEmpty) Text(date, style: const TextStyle(fontSize: 11, color: AppColors.textMuted)),
-                  ]),
+                  Text(blog['author_name'] ?? 'Contributor', style: const TextStyle(fontSize: 11, color: AppColors.textMuted)),
                 ],
               ),
             ),
