@@ -10,11 +10,15 @@ import '../features/about/about_screen.dart';
 import '../features/blog/blog_screen.dart';
 import '../features/blog/blog_post_screen.dart';
 import '../features/auth/login_screen.dart';
+import '../features/more/more_screen.dart';
+import '../features/splash/splash_screen.dart';
 import '../shared/widgets/main_shell.dart';
 
 final appRouter = GoRouter(
-  initialLocation: '/',
+  initialLocation: '/splash',
   routes: [
+    GoRoute(path: '/splash', builder: (c, s) => const SplashScreen()),
+
     ShellRoute(
       builder: (context, state, child) => MainShell(child: child),
       routes: [
@@ -29,6 +33,7 @@ final appRouter = GoRouter(
         GoRoute(path: '/contribute', builder: (c, s) => const ContributeScreen()),
         GoRoute(path: '/about',      builder: (c, s) => const AboutScreen()),
         GoRoute(path: '/blog',       builder: (c, s) => const BlogScreen()),
+        GoRoute(path: '/more',       builder: (c, s) => const MoreScreen()),
       ],
     ),
 

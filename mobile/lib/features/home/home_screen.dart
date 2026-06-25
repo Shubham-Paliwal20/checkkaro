@@ -68,20 +68,9 @@ class _HeroSection extends StatelessWidget {
             children: [
               Row(
                 children: [
-                  Container(
-                    width: 32, height: 32,
-                    decoration: BoxDecoration(
-                      color: AppColors.brandOrange,
-                      borderRadius: BorderRadius.circular(8),
-                    ),
-                    child: const Center(
-                      child: Text('P',
-                          style: TextStyle(
-                              color: Colors.white,
-                              fontWeight: FontWeight.w900,
-                              fontSize: 18,
-                              fontFamily: 'Poppins')),
-                    ),
+                  ClipRRect(
+                    borderRadius: BorderRadius.circular(8),
+                    child: Image.asset('assets/images/logo.png', width: 32, height: 32, fit: BoxFit.cover),
                   ),
                   const SizedBox(width: 8),
                   const Text('Parkho',
@@ -604,10 +593,9 @@ class _AppFooter extends StatelessWidget {
         children: [
           Row(
             children: [
-              Container(
-                width: 28, height: 28,
-                decoration: BoxDecoration(color: AppColors.brandOrange, borderRadius: BorderRadius.circular(7)),
-                child: const Center(child: Text('P', style: TextStyle(color: Colors.white, fontWeight: FontWeight.w900, fontSize: 15, fontFamily: 'Poppins'))),
+              ClipRRect(
+                borderRadius: BorderRadius.circular(7),
+                child: Image.asset('assets/images/logo.png', width: 28, height: 28, fit: BoxFit.cover),
               ),
               const SizedBox(width: 8),
               const Text('Parkho', style: TextStyle(fontSize: 17, fontWeight: FontWeight.w900, color: Colors.white, fontFamily: 'Poppins')),

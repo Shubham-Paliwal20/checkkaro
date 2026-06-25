@@ -11,7 +11,7 @@ class MainShell extends StatelessWidget {
     if (loc.startsWith('/search')) return 1;
     if (loc.startsWith('/scanner')) return 2;
     if (loc.startsWith('/check-ingredient')) return 3;
-    if (loc.startsWith('/contribute')) return 4;
+    if (loc.startsWith('/more') || loc.startsWith('/blog') || loc.startsWith('/about') || loc.startsWith('/contribute')) return 4;
     return 0;
   }
 
@@ -37,7 +37,7 @@ class MainShell extends StatelessWidget {
               context.go('/check-ingredient');
               break;
             case 4:
-              context.go('/contribute');
+              context.go('/more');
               break;
           }
         },
