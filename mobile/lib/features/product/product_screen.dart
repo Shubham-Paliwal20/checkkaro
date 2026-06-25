@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:go_router/go_router.dart';
 import '../../core/api/api_client.dart';
+import '../../core/auth/auth_provider.dart';
 import '../../core/models/product.dart';
 import '../../core/theme/app_theme.dart';
 import '../../shared/widgets/grade_badge.dart';
@@ -263,7 +264,7 @@ class _HeaderCard extends StatelessWidget {
             ),
           ),
           const SizedBox(width: 12),
-          GradeBadge(grade: product.grade, size: 52),
+          GradeBadge(grade: product.grade, size: 72, showLabel: true),
         ],
       ),
     );
@@ -830,18 +831,31 @@ class _SaferAlternatives extends StatelessWidget {
   }
 }
 
-class _ReportButton extends StatelessWidget {
+class _ReportButton extends ConsumerWidget {
   final String productId;
   final String productName;
   const _ReportButton(
       {required this.productId, required this.productName});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final user = ref.watch(authProvider);
     return SizedBox(
       width: double.infinity,
       child: OutlinedButton.icon(
-        onPressed: () => _showReportDialog(context),
+        onPressed: () {
+          if (user == null) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(
+                content: const Text('Please log in to report an issue'),
+                action: SnackBarAction(label: 'Log In', onPressed: () => context.push('/login')),
+                duration: const Duration(seconds: 4),
+              ),
+            );
+            return;
+          }
+          _showReportDialog(context);
+        },
         icon: const Icon(Icons.flag_outlined, color: AppColors.gradeD, size: 18),
         label: const Text('Ingredients wrong? Report it',
             style: TextStyle(
