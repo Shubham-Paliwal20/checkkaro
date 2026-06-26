@@ -10,8 +10,16 @@ import '../../shared/widgets/grade_badge.dart';
 
 final _productProvider =
     FutureProvider.family<Product?, String>((ref, nameOrKey) async {
-  final data = await ApiClient.getProductByName(nameOrKey);
-  return data == null ? null : Product.fromJson(data);
+  for (int attempt = 0; attempt < 3; attempt++) {
+    try {
+      final data = await ApiClient.getProductByName(nameOrKey);
+      return data == null ? null : Product.fromJson(data);
+    } catch (_) {
+      if (attempt == 2) rethrow;
+      await Future.delayed(const Duration(seconds: 8));
+    }
+  }
+  return null;
 });
 
 final _alternativesProvider = FutureProvider.family<
@@ -59,13 +67,13 @@ class ProductScreen extends ConsumerWidget {
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
-                const Text('⚡', style: TextStyle(fontSize: 48)),
+                const Text('😕', style: TextStyle(fontSize: 48)),
                 const SizedBox(height: 12),
-                const Text('Server is waking up',
+                const Text('Could not load product',
                     style: TextStyle(fontSize: 17, fontWeight: FontWeight.w800, color: AppColors.textPrimary)),
                 const SizedBox(height: 8),
                 const Text(
-                  'Our server is starting up after a period of inactivity. Please wait a moment and try again.',
+                  'Please check your internet connection and try again.',
                   textAlign: TextAlign.center,
                   style: TextStyle(fontSize: 13, color: AppColors.textMuted, height: 1.5),
                 ),

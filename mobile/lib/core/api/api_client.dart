@@ -12,6 +12,11 @@ class ApiClient {
 
   static Dio get instance => _dio;
 
+  // Fire-and-forget warm-up call — called from splash so server is ready when user acts
+  static void ping() {
+    _dio.get('/api/product/browse', queryParameters: {'limit': 1}).ignore();
+  }
+
   static Future<List<Map<String, dynamic>>> searchProducts(String query) async {
     final res = await _dio.get('/api/product/browse', queryParameters: {'q': query, 'limit': 20});
     final data = res.data;

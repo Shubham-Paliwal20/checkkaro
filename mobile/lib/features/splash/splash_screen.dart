@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import '../../core/api/api_client.dart';
 import '../../core/theme/app_theme.dart';
 
 class SplashScreen extends StatefulWidget {
@@ -21,6 +22,7 @@ class _SplashScreenState extends State<SplashScreen> with SingleTickerProviderSt
     _fade  = CurvedAnimation(parent: _ctrl, curve: Curves.easeIn);
     _scale = Tween<double>(begin: 0.8, end: 1.0).animate(CurvedAnimation(parent: _ctrl, curve: Curves.easeOutBack));
     _ctrl.forward();
+    ApiClient.ping(); // wake server while user sees logo
     Future.delayed(const Duration(milliseconds: 2000), () {
       if (mounted) context.go('/');
     });

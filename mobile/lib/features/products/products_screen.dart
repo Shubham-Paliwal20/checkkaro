@@ -59,47 +59,47 @@ class _ProductsScreenState extends State<ProductsScreen> {
 
   Future<void> _fetch() async {
     if (!mounted) return;
-    setState(() { _loading = true; _error = null; });
+    setState(() { _loading = true; _error = null; _slowLoad = false; });
 
-    // Show slow-load hint after 5s
-    final slowTimer = Future.delayed(const Duration(seconds: 5), () {
-      if (mounted && _loading) setState(() => _slowLoad = true);
-    });
+    for (int attempt = 0; attempt < 3; attempt++) {
+      try {
+        final data = await ApiClient.browseProducts(
+          page: _page, limit: 24, sort: _sort,
+          category: _category.isEmpty ? null : _category,
+          brand:    _brand.isEmpty    ? null : _brand,
+          q:        _query.isEmpty    ? null : _query,
+        );
+        if (!mounted) return;
 
-    try {
-      final data = await ApiClient.browseProducts(
-        page: _page, limit: 24, sort: _sort,
-        category: _category.isEmpty ? null : _category,
-        brand:    _brand.isEmpty    ? null : _brand,
-        q:        _query.isEmpty    ? null : _query,
-      );
-      if (!mounted) return;
-
-      final prods = (data['products'] as List? ?? []).cast<Map<String, dynamic>>();
-      setState(() {
-        _products   = prods;
-        _total      = (data['total'] as num?)?.toInt() ?? 0;
-        _pages      = (data['pages'] as num?)?.toInt() ?? 1;
-        _slowLoad   = false;
-        _loading    = false;
-        if ((data['categories'] as List?)?.isNotEmpty == true) {
-          _categories = (data['categories'] as List).cast<String>();
+        final prods = (data['products'] as List? ?? []).cast<Map<String, dynamic>>();
+        setState(() {
+          _products = prods;
+          _total    = (data['total'] as num?)?.toInt() ?? 0;
+          _pages    = (data['pages'] as num?)?.toInt() ?? 1;
+          _loading  = false;
+          _slowLoad = false;
+          if ((data['categories'] as List?)?.isNotEmpty == true) {
+            _categories = (data['categories'] as List).cast<String>();
+          }
+        });
+        _fetchPhotos(prods);
+        return;
+      } catch (_) {
+        if (attempt < 2) {
+          // Show hint only on second retry
+          if (attempt == 1 && mounted) setState(() => _slowLoad = true);
+          await Future.delayed(const Duration(seconds: 8));
+          if (!mounted) return;
+        } else {
+          if (!mounted) return;
+          setState(() {
+            _loading  = false;
+            _slowLoad = false;
+            _error    = 'Could not connect. Please check your internet and try again.';
+          });
         }
-      });
-
-      // Batch photo fetch to get better image URLs
-      _fetchPhotos(prods);
-    } catch (e) {
-      if (!mounted) return;
-      setState(() {
-        _loading  = false;
-        _slowLoad = false;
-        _error    = 'Server is starting up — please retry in a few seconds.';
-      });
+      }
     }
-
-    // ignore unused future warning
-    slowTimer.ignore();
   }
 
   Future<void> _fetchPhotos(List<Map<String, dynamic>> prods) async {
@@ -313,9 +313,9 @@ class _ProductsScreenState extends State<ProductsScreen> {
                   padding: const EdgeInsets.all(40),
                   child: Column(
                     children: [
-                      const Text('⚡', style: TextStyle(fontSize: 48)),
+                      const Text('😕', style: TextStyle(fontSize: 48)),
                       const SizedBox(height: 12),
-                      const Text('Server is waking up', style: TextStyle(fontSize: 16, fontWeight: FontWeight.w700, color: AppColors.textPrimary)),
+                      const Text('Something went wrong', style: TextStyle(fontSize: 16, fontWeight: FontWeight.w700, color: AppColors.textPrimary)),
                       const SizedBox(height: 6),
                       Text(_error!, textAlign: TextAlign.center, style: const TextStyle(fontSize: 12, color: AppColors.textMuted)),
                       const SizedBox(height: 20),
@@ -370,7 +370,7 @@ class _ProductsScreenState extends State<ProductsScreen> {
                 margin: const EdgeInsets.fromLTRB(16, 0, 16, 8),
                 padding: const EdgeInsets.all(12),
                 decoration: BoxDecoration(color: const Color(0xFFFFFBEB), borderRadius: BorderRadius.circular(10), border: Border.all(color: const Color(0xFFFDE68A))),
-                child: const Text('⏳ Server is starting up — this can take up to 30 seconds on first visit. Please wait…',
+                child: const Text('⏳ Loading products… this may take a moment on first visit.',
                     textAlign: TextAlign.center, style: TextStyle(fontSize: 12, color: Color(0xFF92400E))),
               ),
             ),
