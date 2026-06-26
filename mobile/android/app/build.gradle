@@ -11,7 +11,7 @@ keyProperties.load(new FileInputStream(keyPropertiesFile))
 
 android {
     namespace = "in.checkkaro.checkkaro"
-    compileSdk = 34
+    compileSdk = 35
     ndkVersion = flutter.ndkVersion
 
     compileOptions {
