@@ -550,29 +550,9 @@ class _ReviewsSectionState extends State<_ReviewsSection> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Padding(
-            padding: const EdgeInsets.only(right: 20),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                const Text('What our users say', style: TextStyle(fontSize: 18, fontWeight: FontWeight.w800, color: AppColors.textPrimary, fontFamily: 'Poppins')),
-                GestureDetector(
-                  onTap: _openWriteReview,
-                  child: Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
-                    decoration: BoxDecoration(color: AppColors.brandOrange, borderRadius: BorderRadius.circular(20)),
-                    child: const Row(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        Icon(Icons.star_outline, color: Colors.white, size: 15),
-                        SizedBox(width: 5),
-                        Text('Write a Review', style: TextStyle(color: Colors.white, fontSize: 12, fontWeight: FontWeight.w700)),
-                      ],
-                    ),
-                  ),
-                ),
-              ],
-            ),
+          const Padding(
+            padding: EdgeInsets.only(right: 20),
+            child: Text('What our users say', style: TextStyle(fontSize: 18, fontWeight: FontWeight.w800, color: AppColors.textPrimary, fontFamily: 'Poppins')),
           ),
           const SizedBox(height: 16),
           if (_reviews.isEmpty)
@@ -639,6 +619,29 @@ class _ReviewsSectionState extends State<_ReviewsSection> {
                 }).toList(),
               ),
             ),
+          const SizedBox(height: 20),
+          Padding(
+            padding: const EdgeInsets.only(right: 20),
+            child: GestureDetector(
+              onTap: _openWriteReview,
+              child: Container(
+                width: double.infinity,
+                padding: const EdgeInsets.symmetric(vertical: 14),
+                decoration: BoxDecoration(
+                  border: Border.all(color: AppColors.brandOrange),
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                child: const Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Icon(Icons.star_outline, color: AppColors.brandOrange, size: 18),
+                    SizedBox(width: 8),
+                    Text('Write a Review', style: TextStyle(color: AppColors.brandOrange, fontSize: 14, fontWeight: FontWeight.w700)),
+                  ],
+                ),
+              ),
+            ),
+          ),
         ],
       ),
     );
