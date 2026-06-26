@@ -1,0 +1,481 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Arata — Product Catalogue with Ingredients</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'Segoe UI', Arial, sans-serif; background: #f9f9f9; color: #222; font-size: 13px; }
+
+  .cover {
+    page-break-after: always;
+    height: 100vh; display: flex; flex-direction: column;
+    align-items: center; justify-content: center;
+    background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+    color: #fff; text-align: center; padding: 40px;
+  }
+  .cover .logo { font-size: 56px; margin-bottom: 16px; }
+  .cover h1 { font-size: 42px; font-weight: 800; letter-spacing: 3px; margin-bottom: 10px; }
+  .cover .tagline { font-size: 16px; opacity: 0.75; margin-bottom: 28px; letter-spacing: 1px; }
+  .cover .badge {
+    display: inline-block; background: rgba(255,255,255,0.15);
+    border: 2px solid rgba(255,255,255,0.4); border-radius: 24px;
+    padding: 10px 28px; font-size: 13px; letter-spacing: 1px; margin-bottom: 18px;
+  }
+  .cover .note { font-size: 12px; opacity: 0.5; margin-top: 16px; }
+
+  .index-page { padding: 40px 32px; page-break-after: always; }
+  .index-page h2 { font-size: 22px; color: #0f3460; margin-bottom: 20px; border-bottom: 3px solid #0f3460; padding-bottom: 8px; }
+  .index-table { width: 100%; border-collapse: collapse; }
+  .index-table th { background: #0f3460; color: #fff; padding: 9px 12px; text-align: left; font-size: 12px; }
+  .index-table td { padding: 7px 12px; border-bottom: 1px solid #eee; font-size: 12px; }
+  .index-table tr:nth-child(even) td { background: #f5f7ff; }
+
+  .section-header {
+    background: #0f3460; color: #fff;
+    padding: 12px 24px; font-size: 15px; font-weight: 700;
+    letter-spacing: 1px; text-transform: uppercase;
+    margin: 24px 0 0 0; border-radius: 6px 6px 0 0;
+  }
+  .product {
+    background: #fff; border: 1px solid #ddd;
+    border-top: none; padding: 18px 22px;
+    page-break-inside: avoid;
+  }
+  .product:last-of-type { border-radius: 0 0 6px 6px; margin-bottom: 24px; }
+  .product + .product { border-top: 1px solid #eee; }
+
+  .product-inner { display: flex; gap: 18px; }
+  .product-img {
+    width: 110px; min-width: 110px; height: 110px;
+    object-fit: contain; border-radius: 8px;
+    border: 1px solid #eee; background: #fafafa; padding: 4px;
+  }
+  .product-info { flex: 1; }
+  .product-name { font-size: 15px; font-weight: 700; color: #0f3460; margin-bottom: 5px; }
+  .product-meta { display: flex; gap: 10px; margin-bottom: 10px; flex-wrap: wrap; }
+  .tag {
+    border-radius: 12px; padding: 2px 10px; font-size: 11px; font-weight: 600;
+  }
+  .tag.cat   { background: #e8eaf6; color: #283593; }
+  .tag.vol   { background: #e3f2fd; color: #1565c0; }
+  .tag.price { background: #fff3e0; color: #e65100; }
+  .tag.warn  { background: #fce4ec; color: #c62828; }
+
+  .ing-label {
+    font-size: 11px; font-weight: 700; color: #555;
+    text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 4px;
+  }
+  .ing-text {
+    font-size: 12px; color: #333; line-height: 1.6;
+    background: #f0f4ff; border-left: 3px solid #0f3460;
+    padding: 8px 12px; border-radius: 0 4px 4px 0;
+  }
+  .ing-text.partial {
+    background: #fff8e1; border-left-color: #f9a825;
+  }
+  .partial-note { font-size: 10px; color: #f57f17; margin-top: 4px; font-style: italic; }
+
+  .page-body { padding: 24px 24px 0; }
+  .footer { text-align: center; padding: 20px; font-size: 11px; color: #999; border-top: 1px solid #eee; margin-top: 20px; }
+
+  @media print {
+    body { background: #fff; }
+    .section-header, .tag { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+    .ing-text { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  }
+</style>
+</head>
+<body>
+
+<!-- COVER -->
+<div class="cover">
+  <div class="logo">💧</div>
+  <h1>ARATA</h1>
+  <div class="tagline">Hair &amp; Scalp Science Co. · India's Clean Beauty Brand</div>
+  <div class="badge">19 Products &nbsp;|&nbsp; Hair Care · Skin Care · Body Care</div>
+  <div class="tagline" style="font-size:13px; margin-top:10px;">Complete Ingredients Catalogue</div>
+  <div class="note">⚠ Some newer products show Key Actives only — full INCI not published on website<br>Prepared for review · June 2026 · arata.in</div>
+</div>
+
+<!-- INDEX -->
+<div class="index-page">
+  <h2>Product Index</h2>
+  <table class="index-table">
+    <thead><tr><th>#</th><th>Product Name</th><th>Category</th><th>Volume</th><th>Price</th><th>INCI</th></tr></thead>
+    <tbody>
+      <tr><td>1</td><td>Damage Defence Super Shampoo™</td><td>Shampoo</td><td>200 ml</td><td>₹381</td><td>Full ✓</td></tr>
+      <tr><td>2</td><td>Anti-Dandruff Shampoo</td><td>Shampoo</td><td>200 ml</td><td>₹449</td><td>Full ✓</td></tr>
+      <tr><td>3</td><td>Anti-Hair Fall Intensive Shampoo</td><td>Shampoo</td><td>200 ml</td><td>₹399</td><td>Full ✓</td></tr>
+      <tr><td>4</td><td>Damage Defence Super Conditioner™</td><td>Conditioner</td><td>200 ml</td><td>₹599</td><td>Full ✓</td></tr>
+      <tr><td>5</td><td>Anti-Dandruff Conditioner</td><td>Conditioner</td><td>200 ml</td><td>₹449</td><td>Key Actives</td></tr>
+      <tr><td>6</td><td>Anti-Breakage Intensive Conditioner</td><td>Conditioner</td><td>200 ml</td><td>₹399</td><td>Key Actives</td></tr>
+      <tr><td>7</td><td>Hair Growth Intensive Serum</td><td>Hair Serum</td><td>30 ml</td><td>₹552</td><td>Full ✓</td></tr>
+      <tr><td>8</td><td>Damage Defence Super Serum™</td><td>Hair Serum</td><td>30 ml</td><td>₹332</td><td>Full ✓</td></tr>
+      <tr><td>9</td><td>Anti-Dandruff Serum</td><td>Hair Serum</td><td>30 ml</td><td>₹299</td><td>Key Actives</td></tr>
+      <tr><td>10</td><td>Strong Hold Styling Gel</td><td>Hair Styling</td><td>100 ml</td><td>₹418</td><td>Full ✓</td></tr>
+      <tr><td>11</td><td>Medium Hold Styling Cream</td><td>Hair Styling</td><td>100 ml</td><td>₹499</td><td>Key Actives</td></tr>
+      <tr><td>12</td><td>Texturising Styling Spray</td><td>Hair Styling</td><td>50 ml</td><td>₹349</td><td>Full ✓</td></tr>
+      <tr><td>13</td><td>Sleek Hair Styling Stick</td><td>Hair Styling</td><td>15 ml</td><td>₹399</td><td>Key Actives</td></tr>
+      <tr><td>14</td><td>Brightening Face Serum</td><td>Skincare</td><td>30 ml</td><td>₹399</td><td>Key Actives</td></tr>
+      <tr><td>15</td><td>UV-Defence Sunscreen Gel</td><td>Sunscreen</td><td>50 ml</td><td>₹399</td><td>Key Actives</td></tr>
+      <tr><td>16</td><td>1% Salicylic Acid Body Wash</td><td>Body Care</td><td>300 ml</td><td>₹149</td><td>Full ✓</td></tr>
+      <tr><td>17</td><td>6.5% AHA BHA Body Lotion</td><td>Body Care</td><td>200 ml</td><td>₹174</td><td>Full ✓</td></tr>
+      <tr><td>18</td><td>Hydrating Body Wash</td><td>Body Care</td><td>250 ml</td><td>₹349</td><td>Key Actives</td></tr>
+      <tr><td>19</td><td>Hydrating Body Lotion</td><td>Body Care</td><td>250 ml</td><td>₹349</td><td>Key Actives</td></tr>
+    </tbody>
+  </table>
+  <p style="margin-top:14px; font-size:11px; color:#888;">✓ Full INCI = complete ingredient list available &nbsp;|&nbsp; Key Actives = brand only publishes hero ingredients on website</p>
+</div>
+
+<!-- PRODUCTS -->
+<div class="page-body">
+
+<!-- ── SHAMPOOS ── -->
+<div class="section-header">Shampoos (Products 1–3)</div>
+
+<div class="product">
+  <div class="product-inner">
+    <img class="product-img" src="https://www.arata.in/cdn/shop/files/DamageDefenceSuperShampoo_200ml_466bc8bc-4df8-4f04-b590-833b003e9d40.webp" alt="Damage Defence Super Shampoo">
+    <div class="product-info">
+      <div class="product-name">1. Damage Defence Super Shampoo™</div>
+      <div class="product-meta">
+        <span class="tag cat">Shampoo</span><span class="tag vol">200 ml</span><span class="tag price">₹381 (MRP ₹449)</span>
+      </div>
+      <div class="ing-label">Full Ingredients List</div>
+      <div class="ing-text">
+        Purified Water, Sodium Lauroyl Methyl Isethionate, Alpha Olefin Sulfonate, Sodium Cocoyl Isethionate, Cocamidopropyl Betaine, Divinyldimethicone/Dimethicone Copolymer, Acrylamidopropyltrimonium Chloride/Acrylamide Copolymer, Phenoxyethanol, Fragrance, Propylene Glycol, Sodium Chloride, Glycol Distearate, Panthenol, Dimethiconol, Apple Cider Vinegar, Alpha-Glucan Hydroxypropyltrimonium Chloride, Citric Acid, TEA-Dodecylbenzene Sulfonate, Guar Hydroxypropyltrimonium Chloride, Piroctone Olamine, Sodium Hyaluronate, Tocopheryl Acetate, C12-13 Alketh-23, C12-13 Alketh-3, Arginine, Hydrolyzed Pea Protein, Hydrolyzed Soy Protein, Laureth-23, Potassium Sorbate
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="product">
+  <div class="product-inner">
+    <img class="product-img" src="https://www.arata.in/cdn/shop/files/Anti_Dandruff_Shampoo_200_ml_1.webp?v=1780481666&width=400" alt="Anti-Dandruff Shampoo">
+    <div class="product-info">
+      <div class="product-name">2. Anti-Dandruff Shampoo</div>
+      <div class="product-meta">
+        <span class="tag cat">Shampoo</span><span class="tag vol">200 ml</span><span class="tag price">₹449</span>
+      </div>
+      <div class="ing-label">Full Ingredients List</div>
+      <div class="ing-text">
+        Aqua, Cocamidopropyl Betaine, Sodium Cocoyl Isethionate, Lauryl Glucoside, Polyquaternium-10, Glycerin, Polyquaternium-7, Ethylene Glycol Distearate, Octyldodecanol, Leptospermum Scoparium (Manuka) Branch/Leaf Oil, Piper Nigrum (Black Pepper) Seed Extract, Magnolia Officinalis (Magnolia) Bark Extract, Phenoxyethanol, Ethylhexylglycerin, Piroctone Olamine, Trigonella Foenum-Graecum (Fenugreek) Seed Extract, Azadirachta Indica (Neem) Leaf Extract, Melaleuca Alternifolia (Tea Tree) Leaf Extract, Hamamelis Virginiana (Witch Hazel) Extract, Parfum, Disodium EDTA
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="product">
+  <div class="product-inner">
+    <img class="product-img" src="https://www.arata.in/cdn/shop/files/Anti-HairFallIntensiveShampoo200ml_8ca11048-13ab-4770-9b40-71c65169f7a4.webp" alt="Anti-Hair Fall Intensive Shampoo">
+    <div class="product-info">
+      <div class="product-name">3. Anti-Hair Fall Intensive Shampoo</div>
+      <div class="product-meta">
+        <span class="tag cat">Shampoo</span><span class="tag vol">200 ml</span><span class="tag price">₹399</span>
+      </div>
+      <div class="ing-label">Full Ingredients List</div>
+      <div class="ing-text">
+        Purified Water, Alpha Olefin Sulfonate, Cocamidopropyl Betaine, Glycerin, Oryza Sativa (Rice) Extract, Sodium Chloride, Dimethiconol, Glycol Distearate, Phenoxyethanol, Rosmarinus Officinalis (Rosemary) Leaf Extract, Fragrance, PEG-150 Distearate, Sodium Methyl Cocoyl Taurate, Polyquaternium 39, Polyquaternium 7, Sodium Cocoamphoacetate, Polyquaternium 10, Cocamide MEA, Guar Hydroxypropyltrimonium Chloride, Lauryl Glucoside, Carbomer, Propanediol, Caffeine, Disodium EDTA, Alpha-Glucan Hydroxypropyltrimonium Chloride, Propylene Glycol, Sodium Cocoyl Glutamate, Sodium Lauryl Glucose Carboxylate, Platycladus Orientalis (Chinese Arborvitae) Leaf Extract, Sodium Benzoate, Triethanolamine Dodecylbenzene Sulfonate, Citric Acid, Zingiber Officinale (Ginger) Root Extract, Biotin, Artemisia Argyi (Mugwort) Leaf Extract, Trifolium Pratense (Clover) Leaf Extract, Potassium Sorbate
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ── CONDITIONERS ── -->
+<div class="section-header">Conditioners (Products 4–6)</div>
+
+<div class="product">
+  <div class="product-inner">
+    <img class="product-img" src="https://www.arata.in/cdn/shop/files/DamageDefenceSuperConditioner_200ml_1236bbc5-4951-4c4c-9bfc-0d88e012e896.webp" alt="Damage Defence Super Conditioner">
+    <div class="product-info">
+      <div class="product-name">4. Damage Defence Super Conditioner™</div>
+      <div class="product-meta">
+        <span class="tag cat">Conditioner</span><span class="tag vol">200 ml</span><span class="tag price">₹599</span>
+      </div>
+      <div class="ing-label">Full Ingredients List</div>
+      <div class="ing-text">
+        Demineralized Water, Bhringraj Extract (10 mg/ml), Rice Extract (10 mg/ml), Flaxseed Oil (8 mg/ml), Pumpkin Seed Butter (2 mg/ml), Glycerine, Guar Hydroxypropyltrimonium Chloride, Tetrasodium EDTA, Behentrimonium Chloride, Cetyl Alcohol, Emulsifying Wax, Behentrimonium Methosulfate, Cetrimonium Chloride, Quaternium-98, Polyquaternium-7, Cyclopentasiloxane, Hydrolyzed Wheat/Soy/Corn Proteins, PCA Glyceryl Oleate, Pentylene Glycol, Lactic Acid, Sodium Lactate, Arginine, Sorbitol, Saccharide Isomerate, Citric Acid, Sodium Citrate, Safe Fragrance, Sodium Benzoate, Potassium Sorbate, Phenoxyethanol, Ethylhexylglycerine
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="product">
+  <div class="product-inner">
+    <img class="product-img" src="https://www.arata.in/cdn/shop/files/Anti_Dandruff_Conditioner_200ml_1.webp?v=1780481666&width=400" alt="Anti-Dandruff Conditioner">
+    <div class="product-info">
+      <div class="product-name">5. Anti-Dandruff Conditioner</div>
+      <div class="product-meta">
+        <span class="tag cat">Conditioner</span><span class="tag vol">200 ml</span><span class="tag price">₹449</span>
+        <span class="tag warn">Key Actives Only</span>
+      </div>
+      <div class="ing-label">Key Active Ingredients (Full INCI not published)</div>
+      <div class="ing-text partial">
+        Piroctone Olamine (1%), Salicylic Acid (1%), DandErase™, Bifida Ferment Lysate, Shea Butter, Neem Extract, Tea Tree Extract
+      </div>
+      <div class="partial-note">⚠ Full INCI list not available on arata.in product page.</div>
+    </div>
+  </div>
+</div>
+
+<div class="product">
+  <div class="product-inner">
+    <img class="product-img" src="https://www.arata.in/cdn/shop/files/Anti-BreakageIntensiveConditioner200ml_e8f3a091-4b4a-46da-af91-5bdbfd215d74.webp" alt="Anti-Breakage Intensive Conditioner">
+    <div class="product-info">
+      <div class="product-name">6. Anti-Breakage Intensive Conditioner</div>
+      <div class="product-meta">
+        <span class="tag cat">Conditioner</span><span class="tag vol">200 ml</span><span class="tag price">₹399</span>
+        <span class="tag warn">Key Actives Only</span>
+      </div>
+      <div class="ing-label">Key Active Ingredients (Full INCI not published)</div>
+      <div class="ing-text partial">
+        ReparAge®, Aurist AGC™, Rosemary Extract, Caffeine, Biotin
+      </div>
+      <div class="partial-note">⚠ Full INCI list not available on arata.in product page.</div>
+    </div>
+  </div>
+</div>
+
+<!-- ── HAIR SERUMS ── -->
+<div class="section-header">Hair Serums (Products 7–9)</div>
+
+<div class="product">
+  <div class="product-inner">
+    <img class="product-img" src="https://www.arata.in/cdn/shop/files/HairGrowthIntensiveSerum_4ebb45eb-007e-489b-8a5d-b56643771f84.webp" alt="Hair Growth Intensive Serum">
+    <div class="product-info">
+      <div class="product-name">7. Hair Growth Intensive Serum</div>
+      <div class="product-meta">
+        <span class="tag cat">Hair Serum</span><span class="tag vol">30 ml</span><span class="tag price">₹552 (MRP ₹649)</span>
+      </div>
+      <div class="ing-label">Full Ingredients List</div>
+      <div class="ing-text">
+        Aqua, Capixyl (Butylene Glycol, Aqua, Dextran, Acetyl Tetrapeptide-3, Trifolium Pratense Flower Extract), Rice Water Extract, Aloe Vera Extract, Redensyl (Glycerin, Aqua, Sodium Metabisulfite, Larix Europaea Wood Extract, Glycine, Zinc Chloride, Camellia Sinensis Leaf Extract), Procapil (Butylene Glycol, Aqua, PPG-26-Buteth-26, PEG-40 Hydrogenated Castor Oil, Apigenin, Oleanolic Acid, Biotinoyl Tripeptide-1), Glycerin, Xylitylglucoside, Anhydroxylitol, Xylitol, Maltitol, PEG-40 Hydrogenated Castor Oil, Gooseberry Extract, Turmeric Extract, Sodium Benzoate, Potassium Sorbate, Fragrance, Coffee Extract, Xanthan Gum, Propanediol, Onion Extract, Glycine, Sodium Gluconate, Allantoin
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="product">
+  <div class="product-inner">
+    <img class="product-img" src="https://www.arata.in/cdn/shop/files/DamageDefenceSuperSerum_30ml_1cd76dbc-fd1a-4228-8eb4-d94f46b0c22d.webp" alt="Damage Defence Super Serum">
+    <div class="product-info">
+      <div class="product-name">8. Damage Defence Super Serum™</div>
+      <div class="product-meta">
+        <span class="tag cat">Hair Serum</span><span class="tag vol">30 ml</span><span class="tag price">₹332 (MRP ₹349)</span>
+      </div>
+      <div class="ing-label">Full Ingredients List</div>
+      <div class="ing-text">
+        Camellia Sinensis (Green Tea) Oil, Nelumbo Nucifera (Lotus) Oil, Olea Europaea (Olive) Oil, Cyclopentasiloxane, Dimethiconol, Hydrogenated Polyisobutene, Simmondsia Chinensis (Jojoba) Seed Oil, Parfum (Safe Fragrances)
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="product">
+  <div class="product-inner">
+    <img class="product-img" src="https://www.arata.in/cdn/shop/files/Anti_dandruff_serum_30ml_1.webp?v=1780481666&width=400" alt="Anti-Dandruff Serum">
+    <div class="product-info">
+      <div class="product-name">9. Anti-Dandruff Serum</div>
+      <div class="product-meta">
+        <span class="tag cat">Hair Serum</span><span class="tag vol">30 ml</span><span class="tag price">₹299</span>
+        <span class="tag warn">Key Actives Only</span>
+      </div>
+      <div class="ing-label">Key Active Ingredients (Full INCI not published)</div>
+      <div class="ing-text partial">
+        Sodium Usnate (Evosina® GP Green), Bifida Ferment Lysate (1%), Salicylic Acid (1%), Piroctone Olamine (1%), Neem Extract, Encapsulated Glycolic Acid, Zinc PCA, DandErase™, Tea Tree Extract
+      </div>
+      <div class="partial-note">⚠ Full INCI list not available on arata.in product page.</div>
+    </div>
+  </div>
+</div>
+
+<!-- ── STYLING ── -->
+<div class="section-header">Hair Styling (Products 10–13)</div>
+
+<div class="product">
+  <div class="product-inner">
+    <img class="product-img" src="https://www.arata.in/cdn/shop/files/StrongHoldStylingGel_100ml_8164a1f2-cef2-4a99-9b38-c385be55420b.webp" alt="Strong Hold Styling Gel">
+    <div class="product-info">
+      <div class="product-name">10. Strong Hold Styling Gel</div>
+      <div class="product-meta">
+        <span class="tag cat">Hair Styling</span><span class="tag vol">100 ml</span><span class="tag price">₹418 (MRP ₹449)</span>
+      </div>
+      <div class="ing-label">Full Ingredients List</div>
+      <div class="ing-text">
+        Purified Water, Linum Usitatissimum (Flaxseed) Extract, Propanediol, Dehydroxanthan Gum, Caprylhydroxamic Acid, Caprylyl Glycol, Glycerin, Essential Oils, Parfum (Safe Fragrances), Sodium Gluconate
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="product">
+  <div class="product-inner">
+    <img class="product-img" src="https://www.arata.in/cdn/shop/files/Medium_Hold_Styling_Cream_100ml_294e117b-10cb-40e4-a4c7-57334416caa5.webp" alt="Medium Hold Styling Cream">
+    <div class="product-info">
+      <div class="product-name">11. Medium Hold Styling Cream</div>
+      <div class="product-meta">
+        <span class="tag cat">Hair Styling</span><span class="tag vol">100 ml</span><span class="tag price">₹499</span>
+        <span class="tag warn">Key Actives Only</span>
+      </div>
+      <div class="ing-label">Key Active Ingredients (Full INCI not published)</div>
+      <div class="ing-text partial">
+        Luviquat® Supreme (flexible hold polymer), Benzophenone-4 (UV Filter), Niacinamide, Panthenol (Pro-Vitamin B5)
+      </div>
+      <div class="partial-note">⚠ Full INCI list not available on arata.in product page.</div>
+    </div>
+  </div>
+</div>
+
+<div class="product">
+  <div class="product-inner">
+    <img class="product-img" src="https://www.arata.in/cdn/shop/files/TexturisingStylingSpray50ml_e42d2273-32ea-439f-a4c5-931445f8a549.webp?v=1773663592" alt="Texturising Styling Spray">
+    <div class="product-info">
+      <div class="product-name">12. Texturising Styling Spray</div>
+      <div class="product-meta">
+        <span class="tag cat">Hair Styling</span><span class="tag vol">50 ml</span><span class="tag price">₹349</span>
+      </div>
+      <div class="ing-label">Full Ingredients List</div>
+      <div class="ing-text">
+        Aqua, Butylene Glycol, Magnesium Sulfate, Phenoxyethanol, Triethylene Glycol, Dimethicone, Maris Sal (Sea Salt), Sodium Aspartate, Perfume, Disodium EDTA, Niacinamide, Benzophenone-4, Panthenol, Biotin
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="product">
+  <div class="product-inner">
+    <img class="product-img" src="https://www.arata.in/cdn/shop/files/Sleek_Hair_Styling_Stick_15_ml_1.webp?v=1774607045&width=400" alt="Sleek Hair Styling Stick">
+    <div class="product-info">
+      <div class="product-name">13. Sleek Hair Styling Stick</div>
+      <div class="product-meta">
+        <span class="tag cat">Hair Styling</span><span class="tag vol">15 ml</span><span class="tag price">₹399</span>
+        <span class="tag warn">Key Actives Only</span>
+      </div>
+      <div class="ing-label">Key Active Ingredients (Full INCI not published)</div>
+      <div class="ing-text partial">
+        Luviquat® Supreme (hold polymer), Benzophenone-4 (UV Filter), Niacinamide, Panthenol (Pro-Vitamin B5), Hyaluronic Acid, Biotin, Jojoba Oil
+      </div>
+      <div class="partial-note">⚠ Full INCI list not available on arata.in product page. Hair Fix Stick (older version) INCI: Aqua, Pentylene Glycol, Glycerine, PVP K-30, Hydrogenated Castor Oil, Polysorbate 20, Acrylates/C10-30 Alkyl Acrylate Crosspolymer, Simmondsia Chinensis Seed Oil, Oenothera Biennis Oil, Saccharide Isomerate, Parfum, EDTA, Sodium Benzoate, Potassium Sorbate, Biotin, Sodium Hyaluronate, Sorbitol</div>
+    </div>
+  </div>
+</div>
+
+<!-- ── SKINCARE ── -->
+<div class="section-header">Skincare (Products 14–15)</div>
+
+<div class="product">
+  <div class="product-inner">
+    <img class="product-img" src="https://www.arata.in/cdn/shop/files/BrighteningFaceSerum30ml_8893acb7-0135-47b0-91f8-0a06aa1bf661.webp" alt="Brightening Face Serum">
+    <div class="product-info">
+      <div class="product-name">14. Brightening Face Serum</div>
+      <div class="product-meta">
+        <span class="tag cat">Face Serum</span><span class="tag vol">30 ml</span><span class="tag price">₹399</span>
+        <span class="tag warn">Key Actives Only</span>
+      </div>
+      <div class="ing-label">Key Active Ingredients (Full INCI not published)</div>
+      <div class="ing-text partial">
+        15% L-Ascorbic Acid (Vitamin C), Encapsulated Vitamin C, Ferulic Acid, Vitamin E (Tocopherol), Centella Asiatica Extract, Aquaxyl™ (Xylitylglucoside, Anhydroxylitol, Xylitol), Glycerin, Hyaluronic Acid (Sodium Hyaluronate), Sodium Gluconate
+      </div>
+      <div class="partial-note">⚠ Full INCI list not available on arata.in product page.</div>
+    </div>
+  </div>
+</div>
+
+<div class="product">
+  <div class="product-inner">
+    <img class="product-img" src="https://www.arata.in/cdn/shop/files/UV-DefenceSunscreenGel50ml_773bbb55-cb94-4766-a4ec-726b6cca4960.webp" alt="UV-Defence Sunscreen Gel">
+    <div class="product-info">
+      <div class="product-name">15. UV-Defence Sunscreen Gel SPF 50 PA++++</div>
+      <div class="product-meta">
+        <span class="tag cat">Sunscreen</span><span class="tag vol">50 ml</span><span class="tag price">₹399</span>
+        <span class="tag warn">Key Actives Only</span>
+      </div>
+      <div class="ing-label">Key Active Ingredients (Full INCI not published)</div>
+      <div class="ing-text partial">
+        Tinosorb S (Bis-Ethylhexyloxyphenol Methoxyphenyl Triazine), Tinosorb M (Methylene Bis-Benzotriazolyl Tetramethylbutylphenol), Hyaluronic Acid, Niacinamide, Ceramide NP, Vitamin C (Ascorbic Acid), Vitamin E (Tocopheryl Acetate)
+      </div>
+      <div class="partial-note">⚠ Full INCI list not available on arata.in product page.</div>
+    </div>
+  </div>
+</div>
+
+<!-- ── BODY CARE ── -->
+<div class="section-header">Body Care (Products 16–19)</div>
+
+<div class="product">
+  <div class="product-inner">
+    <img class="product-img" src="https://www.arata.in/cdn/shop/files/1-salicylic-acid-body-wash-removes-bacne-i-treats-476.webp?v=1749897225&width=400" alt="1% Salicylic Acid Body Wash">
+    <div class="product-info">
+      <div class="product-name">16. 1% Salicylic Acid Body Wash</div>
+      <div class="product-meta">
+        <span class="tag cat">Body Wash</span><span class="tag vol">300 ml</span><span class="tag price">₹149 (MRP ₹299)</span>
+      </div>
+      <div class="ing-label">Full Ingredients List</div>
+      <div class="ing-text">
+        Purified Water, Sodium Laureth Sulfate, Sodium Chloride, Cocamidopropyl Betaine, Fragrance, Cocamide Diethanolamide, Glycerine, Polyquaternium 7, Salicylic Acid, Ceteareth-25, Sodium Hydroxide, PEG-150 Distearate, Sodium Gluconate, Sodium Metabisulfite, Sodium Benzoate, Methylchloroisothiazolinone, Methylisothiazolinone, CI 17200, CI 14700
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="product">
+  <div class="product-inner">
+    <img class="product-img" src="https://www.arata.in/cdn/shop/files/6-5-aha-bha-body-lotion-for-rough-and-textured-skin-598.webp?v=1750945054&width=400" alt="6.5% AHA BHA Body Lotion">
+    <div class="product-info">
+      <div class="product-name">17. 6.5% AHA BHA Body Lotion</div>
+      <div class="product-meta">
+        <span class="tag cat">Body Lotion</span><span class="tag vol">200 ml</span><span class="tag price">₹174 (MRP ₹349)</span>
+      </div>
+      <div class="ing-label">Full Ingredients List</div>
+      <div class="ing-text">
+        Purified Water, Glycolic Acid, Lactic Acid, Cetyl Alcohol, Cyclopentasiloxane, Glyceryl Monostearate, Propanediol, Stearic Acid, Ethyl Olivate, Sodium Hydroxide, Cetostearyl Alcohol, Emulsifying Wax, Glycerine, Niacinamide, Fragrance, Salicylic Acid, Phenoxyethanol, Olive Oil Methyl Ester, Sodium Benzoate, Potassium Sorbate, Sodium Acrylate/Sodium Acryloyldimethyl Taurate Copolymer, Polyacrylate-13, Isohexadecane, Oat (Avena Sativa) Meal Extract, Citrus Grandis Fruit Extract, Sodium Gluconate, Vaccinium Angustifolium (Blueberry) Fruit Extract, Polyisobutene, Ethylhexylglycerin, Polysorbate 80, PEG-7 Glyceryl Cocoate, Polysorbate 20, Sorbitan Oleate, Sorbitan Isostearate, Sodium Hyaluronate, Ceramide NP
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="product">
+  <div class="product-inner">
+    <img class="product-img" src="https://www.arata.in/cdn/shop/files/HydratingBodyWash250ml_8be949f6-6d3c-4b40-a646-f2f3a6c444a5.webp?v=1773663609&width=400" alt="Hydrating Body Wash">
+    <div class="product-info">
+      <div class="product-name">18. Hydrating Body Wash</div>
+      <div class="product-meta">
+        <span class="tag cat">Body Wash</span><span class="tag vol">250 ml</span><span class="tag price">₹349</span>
+        <span class="tag warn">Key Actives Only</span>
+      </div>
+      <div class="ing-label">Key Active Ingredients (Full INCI not published)</div>
+      <div class="ing-text partial">
+        Glycerin, Aquaxyl™ (Xylitylglucoside, Anhydroxylitol, Xylitol), Prodew™600, Sodium Stearoyl Glutamate (gentle surfactant)
+      </div>
+      <div class="partial-note">⚠ Full INCI list not available on arata.in product page.</div>
+    </div>
+  </div>
+</div>
+
+<div class="product" style="border-radius:0 0 6px 6px; margin-bottom:40px;">
+  <div class="product-inner">
+    <img class="product-img" src="https://www.arata.in/cdn/shop/files/HydratingBodyLotion250ml_6c3d18fb-8f82-4b6d-9806-f2f097444255.webp?v=1773663602" alt="Hydrating Body Lotion">
+    <div class="product-info">
+      <div class="product-name">19. Hydrating Body Lotion</div>
+      <div class="product-meta">
+        <span class="tag cat">Body Lotion</span><span class="tag vol">250 ml</span><span class="tag price">₹349</span>
+        <span class="tag warn">Key Actives Only</span>
+      </div>
+      <div class="ing-label">Key Active Ingredients (Full INCI not published)</div>
+      <div class="ing-text partial">
+        Ceramide NP, Aquaxyl™ (Xylitylglucoside, Anhydroxylitol, Xylitol), Cocoa Butter (Theobroma Cacao), Shea Butter (Butyrospermum Parkii), Kokum Butter (Garcinia Indica), Mango Butter (Mangifera Indica), Glycerin
+      </div>
+      <div class="partial-note">⚠ Full INCI list not available on arata.in product page.</div>
+    </div>
+  </div>
+</div>
+
+</div><!-- end page-body -->
+
+<div class="footer">
+  Arata — Hair &amp; Scalp Science Co. · arata.in · Ingredients sourced from official website &amp; INCIdecoder · June 2026
+</div>
+
+</body>
+</html>

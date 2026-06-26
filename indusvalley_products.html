@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Indus Valley — Product Catalogue with Ingredients</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'Segoe UI', Arial, sans-serif; background: #f4f7f0; color: #1a1a1a; font-size: 13px; }
+
+  .cover {
+    page-break-after: always;
+    height: 100vh; display: flex; flex-direction: column;
+    align-items: center; justify-content: center;
+    background: linear-gradient(150deg, #1b3a10 0%, #2d6016 55%, #4a8c28 100%);
+    color: #fff; text-align: center; padding: 40px;
+  }
+  .cover .logo { font-size: 54px; margin-bottom: 14px; }
+  .cover h1 { font-size: 44px; font-weight: 900; letter-spacing: 4px; margin-bottom: 4px; text-transform: uppercase; }
+  .cover .tagline { font-size: 13px; color: #c8e8a0; letter-spacing: 2px; text-transform: uppercase; margin-bottom: 22px; }
+  .cover .badge { display: inline-block; background: rgba(255,255,255,0.14); border: 2px solid rgba(255,255,255,0.38); border-radius: 24px; padding: 10px 28px; font-size: 13px; letter-spacing: 1px; margin-bottom: 18px; }
+  .cover .claims { display: flex; gap: 16px; margin-top: 18px; flex-wrap: wrap; justify-content: center; }
+  .cover .claim { background: rgba(255,255,255,0.10); border-radius: 10px; padding: 10px 16px; font-size: 11.5px; color: #d4f4b4; }
+  .cover .note { font-size: 11px; opacity: 0.55; margin-top: 18px; line-height: 1.8; }
+
+  .index-page { padding: 32px 26px; page-break-after: always; }
+  .index-page h2 { font-size: 20px; color: #1b3a10; margin-bottom: 14px; border-bottom: 3px solid #2d6016; padding-bottom: 8px; }
+  .index-table { width: 100%; border-collapse: collapse; }
+  .index-table th { background: #1b3a10; color: #fff; padding: 8px 10px; text-align: left; font-size: 11px; }
+  .index-table td { padding: 6px 10px; border-bottom: 1px solid #d4e8c4; font-size: 11px; }
+  .index-table tr:nth-child(even) td { background: #edf5e4; }
+
+  .section-header { background: #1b3a10; color: #fff; padding: 11px 22px; font-size: 13.5px; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; margin: 22px 0 0 0; border-radius: 6px 6px 0 0; }
+
+  .product { background: #fff; border: 1px solid #c8ddb8; border-top: none; padding: 14px 18px; page-break-inside: avoid; }
+  .product:last-of-type { border-radius: 0 0 6px 6px; margin-bottom: 22px; }
+  .product + .product { border-top: 1px solid #d8ecc8; }
+  .product-inner { display: flex; gap: 14px; }
+  .product-img { width: 100px; min-width: 100px; height: 100px; object-fit: contain; border-radius: 8px; border: 1px solid #c8ddb8; background: #f2f9ec; padding: 4px; }
+  .product-info { flex: 1; }
+  .product-name { font-size: 13.5px; font-weight: 700; color: #1b3a10; margin-bottom: 5px; }
+  .product-meta { display: flex; gap: 7px; margin-bottom: 8px; flex-wrap: wrap; }
+  .tag { border-radius: 12px; padding: 2px 9px; font-size: 10.5px; font-weight: 600; }
+  .tag.cat   { background: #dff0d8; color: #1b3a10; }
+  .tag.vol   { background: #e8f5e0; color: #2d6016; }
+  .tag.price { background: #fff8e0; color: #b85c00; }
+  .tag.note  { background: #e8fce8; color: #145214; }
+  .tag.warn  { background: #fff0e0; color: #b05800; }
+  .tag.alert { background: #fce8e8; color: #8b1a1a; }
+  .ing-label { font-size: 10px; font-weight: 700; color: #888; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 3px; }
+  .ing-text  { font-size: 11.5px; color: #333; line-height: 1.65; background: #f2f9ec; border-left: 3px solid #2d6016; padding: 7px 11px; border-radius: 0 4px 4px 0; }
+  .ing-text .flagged { color: #b05800; font-weight: 600; }
+  .ing-text .danger  { color: #8b1a1a; font-weight: 600; }
+  .partial-note { font-size: 10.5px; color: #888; font-style: italic; margin-top: 4px; }
+
+  .page-body { padding: 18px 18px 0; }
+  .footer { text-align: center; padding: 16px; font-size: 11px; color: #999; border-top: 1px solid #d4e8c4; margin-top: 16px; }
+
+  @media print {
+    body { background: #fff; }
+    .section-header, .tag, .ing-text { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  }
+</style>
+</head>
+<body>
+
+<!-- COVER -->
+<div class="cover">
+  <div class="logo">🌿</div>
+  <h1>Indus Valley</h1>
+  <div class="tagline">Bio Organic · Certified Natural · Himalayan Spring Water</div>
+  <div class="badge">11 Products &nbsp;|&nbsp; Hair · Skin · Colour Care</div>
+  <div class="claims">
+    <div class="claim">✓ Ammonia Free</div>
+    <div class="claim">✓ PPD Free Hair Colour</div>
+    <div class="claim">✓ SLS/SLES Free</div>
+    <div class="claim">✓ Paraben Free</div>
+    <div class="claim">✓ Certified Organic Herbs</div>
+  </div>
+  <div class="note">
+    Himalayan Spring Purified Water · 100% Natural Herbal Extracts<br>
+    buyindusvalley.in &nbsp;|&nbsp; Made in India · Faridabad, Haryana<br>
+    Ingredients sourced from INCIDecoder, BuyIndusValley.in &amp; Amazon · June 2026
+  </div>
+</div>
+
+<!-- INDEX -->
+<div class="index-page">
+  <h2>Product Index — 11 Products</h2>
+  <table class="index-table">
+    <thead><tr><th>#</th><th>Product Name</th><th>Category</th><th>Volume</th><th>Price (MRP)</th></tr></thead>
+    <tbody>
+      <tr><td>1</td><td>Damage Free Natural Gel Hair Colour</td><td>Hair Colour</td><td>220 ml</td><td>₹699</td></tr>
+      <tr><td>2</td><td>Bio Organic Growout Hair Oil</td><td>Hair Oil</td><td>100 ml</td><td>₹349</td></tr>
+      <tr><td>3</td><td>Bio Organic Growout Hair Shampoo</td><td>Shampoo</td><td>200 ml</td><td>₹349</td></tr>
+      <tr><td>4</td><td>Bio Organic Colour Protective Shampoo</td><td>Shampoo</td><td>200 ml</td><td>₹335</td></tr>
+      <tr><td>5</td><td>Bio Organic Argan Oil Shampoo</td><td>Shampoo</td><td>200 ml</td><td>₹315</td></tr>
+      <tr><td>6</td><td>Anti Dandruff Shampoo</td><td>Shampoo</td><td>200 ml</td><td>₹350</td></tr>
+      <tr><td>7</td><td>Deep Nourishing Hair Ultima Spa</td><td>Hair Mask</td><td>175 ml</td><td>₹349</td></tr>
+      <tr><td>8</td><td>Brightening Depigmentation Gel</td><td>Skincare</td><td>50 ml</td><td>₹349</td></tr>
+      <tr><td>9</td><td>Soothing & Firming Light Day Cream</td><td>Skincare</td><td>100 ml</td><td>₹399</td></tr>
+      <tr><td>10</td><td>Bio Organic Aloe Vera Gel (with Green Tea)</td><td>Skincare</td><td>175 ml</td><td>₹399</td></tr>
+      <tr><td>11</td><td>Saffron Water Toner</td><td>Toner</td><td>250 ml</td><td>₹312</td></tr>
+    </tbody>
+  </table>
+</div>
+
+<!-- PRODUCTS -->
+<div class="page-body">
+
+<!-- ── HAIR COLOUR ── -->
+<div class="section-header">Hair Colour (Product 1)</div>
+
+<div class="product">
+  <div class="product-inner">
+    <img class="product-img" src="https://incidecoder-content.storage.googleapis.com/28af8884-bd6a-41ec-9397-cbc7ae9763e7/products/indus-valley-hair-colour-gel/indus-valley-hair-colour-gel_front_photo_original.jpeg" alt="Damage Free Natural Gel Hair Colour">
+    <div class="product-info">
+      <div class="product-name">1. Damage Free Natural Gel Hair Colour</div>
+      <div class="product-meta">
+        <span class="tag cat">Hair Colour</span><span class="tag vol">220 ml</span><span class="tag price">₹699</span>
+        <span class="tag warn">Ammonia Free · PPD Free · 100% Grey Coverage</span>
+      </div>
+      <div class="ing-label">Full Ingredients List</div>
+      <div class="ing-text">Aqua (Himalayan Spring Purified Water), Aloe Barbadensis Leaf Juice, Glycerin, <span class="flagged">Guar Hydroxypropyltrimonium Chloride</span>, Helianthus Annuus (Sunflower) Seed Oil, Carbomer, Alpha Olefin Sulfonate, Citrus Aurantium Dulcis (Orange) Peel Oil, Triticum Vulgare (Wheat Germ) Oil, Simmondsia Chinensis (Jojoba) Seed Oil, <span class="danger">Sodium Picramate</span>, Potassium Sorbate, Sodium Benzoate, Benzyl Alcohol, <span class="danger">Sodium Perborate</span>, <span class="danger">Toluene-2,5-Diamine Sulfate</span>, Certified Organic Phyllanthus Emblica (Amla) Fruit Powder, Certified Organic Lawsonia Inermis (Henna) Leaf Powder, Cellulose Gum, Sodium Chloride, Ocimum Basilicum (Basil) Leaf Powder, Cocos Nucifera (Coconut) Oil, Citric Acid, <span class="danger">4-Chlororesorcinol</span>, <span class="danger">P-Aminophenol</span>, <span class="danger">M-Aminophenol</span>, <span class="danger">2-Amino-6-Chloro-4-Nitrophenol</span>, <span class="danger">4-Amino-2-Hydroxytoluene</span>, <span class="danger">1-Naphthol</span>, <span class="danger">Picramic Acid</span>, <span class="danger">1,5-Naphthalenediol</span></div>
+      <div class="partial-note">⚠ Hair dye chemicals (red highlights) are synthetic colorants regulated for cosmetic use. PPD-free but contains alternative oxidative dye precursors. Patch test 48 hrs before use.</div>
+    </div>
+  </div>
+</div>
+
+<!-- ── HAIR CARE ── -->
+<div class="section-header">Hair Care — Oils, Shampoos & Mask (Products 2–7)</div>
+
+<div class="product">
+  <div class="product-inner">
+    <img class="product-img" src="https://cdn.shopify.com/s/files/1/0593/5720/0560/files/growout-oil-100ml_9e675c90-e52a-4182-b41f-e25aa3b28550.jpg" alt="Bio Organic Growout Hair Oil">
+    <div class="product-info">
+      <div class="product-name">2. Bio Organic Growout Hair Oil</div>
+      <div class="product-meta">
+        <span class="tag cat">Hair Oil</span><span class="tag vol">100 ml</span><span class="tag price">₹349</span>
+        <span class="tag note">11 Herbal Extracts · Stimulates Hair Growth</span>
+      </div>
+      <div class="ing-label">Key Ingredients (as listed on product)</div>
+      <div class="ing-text">Helianthus Annuus (Sunflower) Seed Oil, Hibiscus Rosa Sinensis Flower Extract, Allium Cepa (Onion) Root Extract, Cyperus Scariosus (Nagarmotha) Root Extract, Centella Asiatica (Thankuni) Leaf Extract, Urtica Dioica (Nettles) Leaf Extract, Eclipta Alba (Bhringraj) Leaf Extract, Terminalia Chebula (Haritaki) Fruit Extract, Syzygium Aromaticum (Clove) Oil, Vitis Vinifera (Grape Seed) Oil, Nardostachys Jatamansi Root Extract</div>
+    </div>
+  </div>
+</div>
+
+<div class="product">
+  <div class="product-inner">
+    <img class="product-img" src="https://cdn.shopify.com/s/files/1/0593/5720/0560/files/Growout-Hair-Fall-Control-Shampoo.jpg?v=1757398645" alt="Bio Organic Growout Hair Shampoo">
+    <div class="product-info">
+      <div class="product-name">3. Bio Organic Growout Hair Shampoo</div>
+      <div class="product-meta">
+        <span class="tag cat">Shampoo</span><span class="tag vol">200 ml</span><span class="tag price">₹349</span>
+        <span class="tag note">SLS Free · Bhringraj · Onion · Hibiscus</span>
+      </div>
+      <div class="ing-label">Key Ingredients (as listed on product)</div>
+      <div class="ing-text">Himalayan Spring Purified Water, Triticum Vulgare (Wheat Germ) Seed Extract, Centella Asiatica (Thankuni) Leaf Extract, Eclipta Alba (Bhringraj) Leaf Extract, Cyperus Scariosus (Nagarmotha) Root Extract, Terminalia Chebula (Haritaki) Fruit Extract, Urtica Dioica (Nettles) Leaf Extract, Allium Cepa (Onion) Root Extract, Nardostachys Jatamansi Root Extract, Hibiscus Rosa Sinensis Flower Extract, Persea Gratissima (Avocado) Oil, Cocos Nucifera (Coconut) Oil</div>
+    </div>
+  </div>
+</div>
+
+<div class="product">
+  <div class="product-inner">
+    <img class="product-img" src="https://www.buyindusvalley.in/cdn/shop/files/colour-protective-shampoo-200ml_50740e49-8907-49a1-aedb-d388161b5717.jpg" alt="Bio Organic Colour Protective Shampoo">
+    <div class="product-info">
+      <div class="product-name">4. Bio Organic Colour Protective Shampoo</div>
+      <div class="product-meta">
+        <span class="tag cat">Shampoo</span><span class="tag vol">200 ml</span><span class="tag price">₹335</span>
+        <span class="tag note">SLS/SLES Free · pH 5.5 · Henna + Amla + Manjistha</span>
+      </div>
+      <div class="ing-label">Key Ingredients (as listed on product)</div>
+      <div class="ing-text">Himalayan Spring Purified Water, Coco Betaine, Cocamidopropyl Betaine, Certified Organic Aloe Barbadensis Leaf Juice, Certified Organic Phyllanthus Emblica (Amla) Extract, Certified Organic Rubia Cordifolia (Manjistha) Extract, Trigonella Foenum-Graecum (Fenugreek) Seed Extract, Withania Somnifera (Ashwagandha) Extract, Certified Organic Lawsonia Inermis (Henna) Extract, Soya Protein, Casein, Honey (Apis Mellifera), Melaleuca Alternifolia (Tea Tree) Oil, Citrus Limon (Lemon) Peel Oil, Glycerin</div>
+    </div>
+  </div>
+</div>
+
+<div class="product">
+  <div class="product-inner">
+    <img class="product-img" src="https://cdn.shopify.com/s/files/1/0593/5720/0560/files/argan-oil-shampoo-200ml.jpg?v=1757398642" alt="Bio Organic Argan Oil Shampoo">
+    <div class="product-info">
+      <div class="product-name">5. Bio Organic Argan Oil Shampoo</div>
+      <div class="product-meta">
+        <span class="tag cat">Shampoo</span><span class="tag vol">200 ml</span><span class="tag price">₹315</span>
+        <span class="tag warn">Contains C14-16 Olefin Sulfonate · Cyclopentasiloxane</span>
+      </div>
+      <div class="ing-label">Full Ingredients List</div>
+      <div class="ing-text">Himalayan Spring Purified Water, Wheat Protein Extract, Decyl Glucoside, <span class="flagged">C14-16 Olefin Sulfonate</span>, Cocamidopropyl Betaine, Argania Spinosa (Moroccan Argan) Kernel Oil, Theobroma Cacao (Cocoa) Butter, Parfum, Cocos Nucifera (Coconut) Oil, Panthenol, <span class="flagged">Polyquaternium-11</span>, Cetyl Alcohol, Hydrolyzed Soya Protein, Sodium Benzoate, <span class="flagged">Behentrimonium Chloride</span>, <span class="flagged">Cetrimonium Chloride</span>, <span class="flagged">Amodimethicone</span>, Potassium Sorbate, Phenoxyethanol, Ascorbic Acid, Disodium EDTA, <span class="flagged">Cyclopentasiloxane</span>, Hydroxypropyltrimonium Chloride</div>
+    </div>
+  </div>
+</div>
+
+<div class="product">
+  <div class="product-inner">
+    <img class="product-img" src="https://www.buyindusvalley.in/cdn/shop/files/anti-dandruff-shampoo-001.jpg?v=1757398639" alt="Anti Dandruff Shampoo">
+    <div class="product-info">
+      <div class="product-name">6. Anti Dandruff Shampoo</div>
+      <div class="product-meta">
+        <span class="tag cat">Shampoo</span><span class="tag vol">200 ml</span><span class="tag price">₹350</span>
+        <span class="tag note">2% Climbazole · 1% Salicylic Acid · Rosemary · SLS Free</span>
+      </div>
+      <div class="ing-label">Key Actives (as listed on product)</div>
+      <div class="ing-text">Himalayan Spring Purified Water, <span class="flagged">Climbazole (2%)</span>, <span class="flagged">Salicylic Acid (1%)</span>, Rosmarinus Officinalis (Rosemary) Extract, Aloe Barbadensis Leaf Juice, Glycerine, Hydrolyzed Soy Protein</div>
+      <div class="partial-note">⚠ Active ingredients listed by brand — complete INCI list not publicly disclosed. Climbazole and Salicylic Acid are anti-fungal/exfoliating actives approved for cosmetic use in India.</div>
+    </div>
+  </div>
+</div>
+
+<div class="product">
+  <div class="product-inner">
+    <img class="product-img" src="https://cdn.shopify.com/s/files/1/0593/5720/0560/files/ultima-spa-175ml.webp?v=1777360468" alt="Deep Nourishing Hair Ultima Spa">
+    <div class="product-info">
+      <div class="product-name">7. Deep Nourishing Hair Ultima Spa</div>
+      <div class="product-meta">
+        <span class="tag cat">Hair Mask</span><span class="tag vol">175 ml</span><span class="tag price">₹349</span>
+        <span class="tag warn">Contains Cyclopentasiloxane · Behentrimonium Chloride</span>
+      </div>
+      <div class="ing-label">Full Ingredients List</div>
+      <div class="ing-text">Aqua (Himalayan Spring Purified Water), Cetyl Alcohol, <span class="flagged">Cyclopentasiloxane</span>, <span class="flagged">Behentrimonium Chloride</span>, Stearyl Alcohol, Phenyl Trimethicone, Triticum Vulgare (Wheat Germ) Extract, Azadirachta Indica (Neem), Mentha (Mint) Extract, Butylene Glycol, Cocos Nucifera (Coconut) Oil, Collagen, Trigonella Foenum-Graecum (Methi/Fenugreek) Seeds Extract, Lawsonia Inermis (Henna) Extract, Panthenol, Hydrolyzed Wheat Protein, Citrus Limon (Lemon) Peel Oil, Glycol Stearate, Prunus Dulcis (Almond) Oil, Rosmarinus Officinalis (Rosemary) Oil, Camellia Sinensis (Tea Tree) Oil, Ocimum Basilicum (Basil) Oil, Lavandula Angustifolia (Lavender) Oil, Casein, <span class="flagged">Polyquaternium-10</span>, Sorbic Acid, Citric Acid, Phenoxyethanol, Sodium Benzoate</div>
+    </div>
+  </div>
+</div>
+
+<!-- ── SKIN CARE ── -->
+<div class="section-header">Skin Care — Gel, Cream & Toners (Products 8–11)</div>
+
+<div class="product">
+  <div class="product-inner">
+    <img class="product-img" src="https://cdn.shopify.com/s/files/1/0593/5720/0560/files/Depigmentation-gel-iv.jpg?v=1763988237" alt="Brightening Depigmentation Gel">
+    <div class="product-info">
+      <div class="product-name">8. Brightening Depigmentation Gel</div>
+      <div class="product-meta">
+        <span class="tag cat">Skincare Gel</span><span class="tag vol">50 ml</span><span class="tag price">₹349</span>
+        <span class="tag note">Tea Tree · Honey · Grapefruit Seed Extract</span>
+      </div>
+      <div class="ing-label">Ingredients (from INCIDecoder — key actives listed)</div>
+      <div class="ing-text">Melaleuca Alternifolia (Tea Tree) Leaf Oil, Lac Vaccinum (Cow Yogurt), Citrus Grandis (Grapefruit) Seed Extract, Triticum Vulgare (Wheat Germ) Oil, Honey (Apis Mellifera), Cellulose Gum, Cyamopsis Tetragonoloba (Guar) Gum, Benzyl Alcohol, Phenoxyethanol, Potassium Sorbate</div>
+      <div class="partial-note">⚠ Key actives as listed on INCIDecoder — brand does not disclose full INCI list on packaging.</div>
+    </div>
+  </div>
+</div>
+
+<div class="product">
+  <div class="product-inner">
+    <img class="product-img" src="https://incidecoder-content.storage.googleapis.com/12b3332c-844c-4142-ab72-9cfe0c79e703/products/indus-valley-soothing-firming-light-day-cream/indus-valley-soothing-firming-light-day-cream_front_photo_original.jpeg" alt="Soothing & Firming Light Day Cream">
+    <div class="product-info">
+      <div class="product-name">9. Soothing & Firming Light Day Cream</div>
+      <div class="product-meta">
+        <span class="tag cat">Face Cream</span><span class="tag vol">100 ml</span><span class="tag price">₹399</span>
+        <span class="tag warn">Contains Sodium Borate (Borax)</span>
+      </div>
+      <div class="ing-label">Ingredients (from INCIDecoder)</div>
+      <div class="ing-text">Rosa Damascena (Rose) Extract, Ocimum Basilicum (Basil) Oil, Simmondsia Chinensis (Jojoba) Seed Oil, Citrus Limon (Lemon) Fruit Extract, Triticum Vulgare (Wheat Germ) Oil, Potassium Hydroxide, <span class="danger">Sodium Borate (Borax)</span>, Sesamum Indicum (Sesame) Seed Oil, Stearic Acid, Potassium Sorbate, Sodium Benzoate, Phenoxyethanol, Benzyl Alcohol</div>
+      <div class="partial-note">⚠ Sodium Borate (Borax) is restricted in some countries for cosmetic use — EU restricts use in leave-on products. Key actives listed; full INCI may vary. Avoid use around eyes.</div>
+    </div>
+  </div>
+</div>
+
+<div class="product">
+  <div class="product-inner">
+    <img class="product-img" src="https://incidecoder-content.storage.googleapis.com/c685d112-421f-4b61-9971-2c7746975e22/products/indus-valley-alovera-gel-with-green-tea-extract/indus-valley-alovera-gel-with-green-tea-extract_front_photo_original.jpeg" alt="Bio Organic Aloe Vera Gel with Green Tea Extract">
+    <div class="product-info">
+      <div class="product-name">10. Bio Organic Aloe Vera Gel (with Green Tea Extract)</div>
+      <div class="product-meta">
+        <span class="tag cat">Skincare Gel</span><span class="tag vol">175 ml</span><span class="tag price">₹399</span>
+        <span class="tag note">Green Tea · Rose Water · Honey · Alcohol Free</span>
+      </div>
+      <div class="ing-label">Full Ingredients List</div>
+      <div class="ing-text">Aloe Barbadensis (Aloe Vera) Leaf Juice, Rosa Damascena (Rose Water), Triticum Vulgare (Wheat Germ) Extract, Camellia Sinensis (Green Tea) Leaf Extract, Honey (Apis Mellifera), Citrus Limon (Lemon) Peel Extract, Carbomer, Potassium Hydroxide, Sodium Benzoate, Benzyl Alcohol, Potassium Sorbate</div>
+    </div>
+  </div>
+</div>
+
+<div class="product">
+  <div class="product-inner">
+    <img class="product-img" src="https://incidecoder-content.storage.googleapis.com/de234c9b-7691-4c07-82f7-48985697fc4e/products/indus-valley-saffron-water/indus-valley-saffron-water_front_photo_original.jpeg" alt="Saffron Water Toner">
+    <div class="product-info">
+      <div class="product-name">11. Saffron Water Toner</div>
+      <div class="product-meta">
+        <span class="tag cat">Face Toner</span><span class="tag vol">250 ml</span><span class="tag price">₹312</span>
+        <span class="tag note">Saffron · Rose · Grape Seed Extract · Alcohol Free</span>
+      </div>
+      <div class="ing-label">Full Ingredients List</div>
+      <div class="ing-text">Spring Water, Crocus Sativus (Saffron) Flower Extract, Aloe Barbadensis Leaf Extract, Mentha (Mint) Hydrosol, Rosa Damascena (Rose) Extract, Vitis Vinifera (Grape Seed) Extract, Glycerin, Levulinic Acid, PCA Ethyl Cocoyl Arginate</div>
+    </div>
+  </div>
+</div>
+
+</div><!-- end page-body -->
+
+<div class="footer">
+  Indus Valley · buyindusvalley.in · Bio Organic · Made in India<br>
+  <span style="color:#8b1a1a; font-weight:600;">Red highlights</span> = commonly questioned dye chemicals &nbsp;|&nbsp; <span style="color:#b05800; font-weight:600;">Orange highlights</span> = worth knowing · June 2026
+</div>
+
+</body>
+</html>

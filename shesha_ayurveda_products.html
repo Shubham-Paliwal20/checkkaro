@@ -1,0 +1,657 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Shesha Ayurveda — Product Catalogue with Ingredients</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'Segoe UI', Arial, sans-serif; background: #f9f7f2; color: #222; font-size: 13px; }
+
+  .cover {
+    page-break-after: always;
+    height: 100vh; display: flex; flex-direction: column;
+    align-items: center; justify-content: center;
+    background: linear-gradient(135deg, #1b4332 0%, #2d6a4f 50%, #52b788 100%);
+    color: #fff; text-align: center; padding: 40px;
+  }
+  .cover .logo { font-size: 56px; margin-bottom: 16px; }
+  .cover h1 { font-size: 38px; font-weight: 800; letter-spacing: 3px; margin-bottom: 6px; }
+  .cover .sub { font-size: 18px; font-weight: 300; letter-spacing: 2px; margin-bottom: 20px; opacity: 0.9; }
+  .cover .tagline { font-size: 14px; opacity: 0.75; margin-bottom: 28px; font-style: italic; }
+  .cover .badge {
+    display: inline-block; background: rgba(255,255,255,0.15);
+    border: 2px solid rgba(255,255,255,0.5); border-radius: 24px;
+    padding: 10px 28px; font-size: 13px; letter-spacing: 1px; margin-bottom: 18px;
+  }
+  .cover .cert { font-size: 12px; opacity: 0.65; margin-top: 14px; line-height: 1.7; }
+
+  .index-page { padding: 36px 28px; page-break-after: always; }
+  .index-page h2 { font-size: 20px; color: #1b4332; margin-bottom: 16px; border-bottom: 3px solid #52b788; padding-bottom: 8px; }
+  .index-table { width: 100%; border-collapse: collapse; }
+  .index-table th { background: #1b4332; color: #fff; padding: 8px 10px; text-align: left; font-size: 11px; }
+  .index-table td { padding: 6px 10px; border-bottom: 1px solid #e6e0d4; font-size: 11px; }
+  .index-table tr:nth-child(even) td { background: #f0f7f4; }
+
+  .section-header {
+    background: #1b4332; color: #fff;
+    padding: 11px 22px; font-size: 14px; font-weight: 700;
+    letter-spacing: 1px; text-transform: uppercase;
+    margin: 22px 0 0 0; border-radius: 6px 6px 0 0;
+  }
+  .product {
+    background: #fff; border: 1px solid #d4cfc6;
+    border-top: none; padding: 16px 20px;
+    page-break-inside: avoid;
+  }
+  .product:last-of-type { border-radius: 0 0 6px 6px; margin-bottom: 22px; }
+  .product + .product { border-top: 1px solid #ede8df; }
+
+  .product-inner { display: flex; gap: 16px; }
+  .product-img {
+    width: 105px; min-width: 105px; height: 105px;
+    object-fit: contain; border-radius: 8px;
+    border: 1px solid #e0dbd2; background: #fafaf7; padding: 4px;
+  }
+  .product-info { flex: 1; }
+  .product-name { font-size: 14px; font-weight: 700; color: #1b4332; margin-bottom: 5px; }
+  .product-meta { display: flex; gap: 8px; margin-bottom: 9px; flex-wrap: wrap; }
+  .tag {
+    border-radius: 12px; padding: 2px 10px; font-size: 11px; font-weight: 600;
+  }
+  .tag.cat   { background: #d8f3dc; color: #1b4332; }
+  .tag.vol   { background: #e3f2fd; color: #1565c0; }
+  .tag.price { background: #fff3e0; color: #e65100; }
+  .tag.ayur  { background: #f3e5f5; color: #6a1b9a; }
+
+  .ing-label {
+    font-size: 10px; font-weight: 700; color: #555;
+    text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 4px;
+  }
+  .ing-text {
+    font-size: 11.5px; color: #333; line-height: 1.65;
+    background: #f0f7f4; border-left: 3px solid #52b788;
+    padding: 8px 12px; border-radius: 0 4px 4px 0;
+  }
+
+  .page-body { padding: 20px 20px 0; }
+  .footer { text-align: center; padding: 18px; font-size: 11px; color: #999; border-top: 1px solid #e0dbd2; margin-top: 18px; }
+
+  @media print {
+    body { background: #fff; }
+    .section-header, .tag, .ing-text { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  }
+</style>
+</head>
+<body>
+
+<!-- COVER -->
+<div class="cover">
+  <div class="logo">🌿</div>
+  <h1>SHESHA AYURVEDA</h1>
+  <div class="sub">Authentic Ayurveda from Kerala</div>
+  <div class="tagline">Handcrafted in India · GMP Certified · Ayurvedic License T-2398/Ayur</div>
+  <div class="badge">30 Products &nbsp;|&nbsp; Hair · Skin · Oils · Body · Colour</div>
+  <div class="cert">
+    ✦ As seen on Shark Tank India Season 5<br>
+    ✦ Formulations based on Ashtanga Hrudayam, Sahasrayogam, Yogaratnakaram<br>
+    ✦ Paraben-Free · SLS-Free · Mineral Oil–Free · No Artificial Fragrance<br>
+    ✦ Prepared for review · June 2026 · sheshaayurveda.com
+  </div>
+</div>
+
+<!-- INDEX -->
+<div class="index-page">
+  <h2>Product Index — 30 Products (All Full INCI)</h2>
+  <table class="index-table">
+    <thead>
+      <tr><th>#</th><th>Product Name</th><th>Category</th><th>Size</th><th>Price</th></tr>
+    </thead>
+    <tbody>
+      <tr><td>1</td><td>Neeli Bringadi Hair Oil</td><td>Hair Care</td><td>100 ml</td><td>₹550</td></tr>
+      <tr><td>2</td><td>Bhringa Thali Ayurvedic Shampoo</td><td>Hair Care</td><td>200 ml</td><td>₹350</td></tr>
+      <tr><td>3</td><td>Bhringa Thali Hair Conditioner</td><td>Hair Care</td><td>200 ml</td><td>₹350</td></tr>
+      <tr><td>4</td><td>Root Touch Up Hair Powder</td><td>Hair Care</td><td>4 g</td><td>₹499</td></tr>
+      <tr><td>5</td><td>Nilini Hair Color – Natural Black</td><td>Hair Colour</td><td>40 g</td><td>₹299</td></tr>
+      <tr><td>6</td><td>Beard Colour – Natural Black</td><td>Hair Colour</td><td>20 g</td><td>₹250</td></tr>
+      <tr><td>7</td><td>Kumkumadi Thailam (Saffron Face Oil)</td><td>Skin Oil</td><td>5 ml</td><td>₹750</td></tr>
+      <tr><td>8</td><td>Nalpamaradi Thailam</td><td>Skin Oil</td><td>50 ml</td><td>₹299</td></tr>
+      <tr><td>9</td><td>Eladi Thailam</td><td>Skin Oil</td><td>50 ml</td><td>₹299</td></tr>
+      <tr><td>10</td><td>Dhanwantaram Thailam</td><td>Wellness Oil</td><td>50 ml</td><td>₹299</td></tr>
+      <tr><td>11</td><td>Karpooradi Thailam</td><td>Wellness Oil</td><td>50 ml</td><td>₹250</td></tr>
+      <tr><td>12</td><td>Balaswagandhadi Thailam</td><td>Wellness Oil</td><td>50 ml</td><td>₹250</td></tr>
+      <tr><td>13</td><td>Kottamchukkadi Pain Relief Thailam</td><td>Wellness Oil</td><td>50 ml</td><td>₹250</td></tr>
+      <tr><td>14</td><td>Murivenna Pain Relief Oil</td><td>Wellness Oil</td><td>50 ml</td><td>₹250</td></tr>
+      <tr><td>15</td><td>Lakshadi Baby Massage Oil</td><td>Wellness Oil</td><td>50 ml</td><td>₹299</td></tr>
+      <tr><td>16</td><td>Red Sandalwood Skin Brightening Face Wash</td><td>Skincare</td><td>100 ml</td><td>₹350</td></tr>
+      <tr><td>17</td><td>Red Sandalwood Night Repair Cream</td><td>Skincare</td><td>50 g</td><td>₹599</td></tr>
+      <tr><td>18</td><td>Kumkumadi Brightening Day Cream</td><td>Skincare</td><td>50 g</td><td>₹599</td></tr>
+      <tr><td>19</td><td>Kumkumadi Suvarna Ubtan (Saffron Face Pack)</td><td>Skincare</td><td>50 g</td><td>₹599</td></tr>
+      <tr><td>20</td><td>Yellow Kasturi Manjal Face Pack</td><td>Skincare</td><td>50 g</td><td>₹399</td></tr>
+      <tr><td>21</td><td>Kasturi Manjal (Musk Turmeric Powder)</td><td>Skincare</td><td>25 g</td><td>₹399</td></tr>
+      <tr><td>22</td><td>Multani Mitti Facial Ubtan</td><td>Skincare</td><td>50 g</td><td>₹299</td></tr>
+      <tr><td>23</td><td>Kumkumadi Lip Balm</td><td>Lip Care</td><td>5 g</td><td>₹399</td></tr>
+      <tr><td>24</td><td>Pure Aloe Vera Gel</td><td>Body Care</td><td>100 g</td><td>₹299</td></tr>
+      <tr><td>25</td><td>Pure Rose Water</td><td>Body Care</td><td>100 ml</td><td>₹399</td></tr>
+      <tr><td>26</td><td>Kasturi Turmeric & Vetiver Shower Gel</td><td>Body Care</td><td>200 ml</td><td>₹399</td></tr>
+      <tr><td>27</td><td>Mud with Nalpamaradi Skin Brightening Soap</td><td>Body Care</td><td>125 g</td><td>₹199</td></tr>
+      <tr><td>28</td><td>Extra Virgin Coconut Oil</td><td>Body Care</td><td>200 ml</td><td>₹350</td></tr>
+      <tr><td>29</td><td>Nargis Deodorant Body Mist</td><td>Body Care</td><td>50 ml</td><td>₹350</td></tr>
+      <tr><td>30</td><td>Parijatham Deodorant Body Mist</td><td>Body Care</td><td>100 ml</td><td>₹499</td></tr>
+    </tbody>
+  </table>
+  <p style="margin-top:12px; font-size:11px; color:#888;">All 30 products have complete ingredient lists sourced from sheshaayurveda.com</p>
+</div>
+
+<!-- PRODUCTS -->
+<div class="page-body">
+
+<!-- ── HAIR CARE ── -->
+<div class="section-header">Hair Care (Products 1–4)</div>
+
+<div class="product">
+  <div class="product-inner">
+    <img class="product-img" src="https://sheshaayurveda.com/cdn/shop/files/Ayurvedic_Neelibringadi_hair_oil_for_reducing_hair_fall_and_promoting_new_hair_growth.png?v=1770449339&width=400" alt="Neeli Bringadi Hair Oil">
+    <div class="product-info">
+      <div class="product-name">1. Neeli Bringadi Hair Oil</div>
+      <div class="product-meta">
+        <span class="tag cat">Hair Oil</span><span class="tag vol">100 ml</span><span class="tag price">₹550</span><span class="tag ayur">Sahasrayogam Formula</span>
+      </div>
+      <div class="ing-label">Full Ingredients List</div>
+      <div class="ing-text">
+        Indigofera Tinctoria (Indigo/Nilini), Eclipta Alba (Bhringraj), Cardiospermum Halicacabum (Balloon Vine/Indravalli), Emblica Officinalis (Indian Gooseberry/Amla), Cocos Nucifera Milk (Coconut Milk), Cow's Milk, Goat's Milk, Buffalo's Milk, Glycyrrhiza Glabra (Liquorice/Yashtimadhu), Abrus Precatorius (Rosary Pea Root/Kakadantika), Berberis Species Extract (Indian Barberry/Daruharidra), Cocos Nucifera (Virgin Coconut Oil – Grade 1 Premium)
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="product">
+  <div class="product-inner">
+    <img class="product-img" src="https://sheshaayurveda.com/cdn/shop/files/Ayurvedic_shampoo_with_Reetha_Amla_and_Hibiscus_for_deep_cleansing_and_volume.jpg?v=1775215268&width=400" alt="Bhringa Thali Shampoo">
+    <div class="product-info">
+      <div class="product-name">2. Bhringa Thali Ayurvedic Shampoo</div>
+      <div class="product-meta">
+        <span class="tag cat">Shampoo</span><span class="tag vol">200 ml</span><span class="tag price">₹350</span>
+      </div>
+      <div class="ing-label">Full Ingredients List (per 100 ml)</div>
+      <div class="ing-text">
+        Eclipta Alba Hassk (Bhringaraja) 10%, Hibiscus Rosa Sinensis (Japa Pushpa) 5%, Acacia Concinna (Shikakai) 5%, Lawsonia Inermis Linn (Madayanti/Henna) 5%, Aloe Barbadensis Mill (Kumari/Aloe Vera) 3%, Piper Betle Linn (Nagavalli/Betel) 3%, Ocimum Sanctum Linn (Tulasi) 3%, Nigella Sativa Linn (Upakunchika/Black Cumin) 3%, Terminalia Chebula Retz (Haritaki) 2%, Terminalia Belerica Roxb (Bibhitaka) 2%, Emblica Officinalis Gaertn (Amalaki Dry) 2%, Coco-Glucoside (Shampoo Base q.s.), Galguard Trident (Preservative)
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="product">
+  <div class="product-inner">
+    <img class="product-img" src="https://sheshaayurveda.com/cdn/shop/files/BhringaThaliHairConditionersulphatefreeparabenfreesiliconefreegentleAyurvedicconditioner.png?v=1775043152&width=400" alt="Bhringa Thali Conditioner">
+    <div class="product-info">
+      <div class="product-name">3. Bhringa Thali Hair Conditioner</div>
+      <div class="product-meta">
+        <span class="tag cat">Conditioner</span><span class="tag vol">200 ml</span><span class="tag price">₹350</span>
+      </div>
+      <div class="ing-label">Full Ingredients List (per 100 ml)</div>
+      <div class="ing-text">
+        Cocos Nucifera (Narikela Taila/Coconut Oil) 25%, Eclipta Alba Hassk (Bhringaraja) 10%, Glycerin 10%, Aloe Barbadensis Mill (Kumari/Aloe Vera) 5%, Olea Europaea (Jaitun Tel/Olive Oil) 5%, Hibiscus Rosa Sinensis (Japa Pushpa) 5%, Crocus Sativus Linn (Kumkuma/Saffron) 1%; Base: Aqua, Cetearyl Alcohol, Behentriamonium Chloride, Tocopherol (Vitamin E), Cetrimonium Chloride, D-Panthenol, Plant Keratin, Capryl Capric Triglyceride, Olive Oil, Disodium EDTA, Glyceryl Monostearate, Sodium Benzoate, Saffron Oil, Potassium Sorbate
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="product">
+  <div class="product-inner">
+    <img class="product-img" src="https://sheshaayurveda.com/cdn/shop/files/SheshaAyurvedaroottouchuphairpowdernaturalblack4gwithapplicator.jpg?v=1767453771&width=400" alt="Root Touch Up Hair Powder">
+    <div class="product-info">
+      <div class="product-name">4. Root Touch Up Hair Powder</div>
+      <div class="product-meta">
+        <span class="tag cat">Hair Powder</span><span class="tag vol">4 g</span><span class="tag price">₹499</span>
+      </div>
+      <div class="ing-label">Full Ingredients List</div>
+      <div class="ing-text">
+        Talc, Iron Oxide Black (CI 77499), Zinc Stearate, Magnesium Stearate, Caprylic/Capric Triglyceride, Dimethicone/Vinyl Dimethicone Crosspolymer, Hyaluronic Acid (Sodium Hyaluronate)
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ── HAIR COLOUR ── -->
+<div class="section-header">Hair Colour (Products 5–6)</div>
+
+<div class="product">
+  <div class="product-inner">
+    <img class="product-img" src="https://sheshaayurveda.com/cdn/shop/files/NILINI_hair_color_-_best_natural_black_hair_color-min.jpg?v=1763450002&width=400" alt="Nilini Hair Color Natural Black">
+    <div class="product-info">
+      <div class="product-name">5. Nilini Hair Color – Natural Black</div>
+      <div class="product-meta">
+        <span class="tag cat">Hair Colour</span><span class="tag vol">40 g (4 × 10g sachets)</span><span class="tag price">₹299</span><span class="tag ayur">100% Herbal</span>
+      </div>
+      <div class="ing-label">Full Ingredients List (per 10g sachet)</div>
+      <div class="ing-text">
+        Indigofera Tinctoria (Indigo Leaf) 1.5g, Lawsonia Inermis (Henna Leaf) 1.5g, Cocos Nucifera (Coconut Endosperm) 1.5g, Centella Asiatica (Gotu Kola) 1.5g, Aloe Barbadensis (Aloe Vera Leaf) 1g, Emblica Officinalis (Amla Dry Fruit) 1g, Eclipta Alba (Bhringaraja) 1g, Hibiscus Rosa-Sinensis (Hibiscus Flower) 0.5g, Himalayan Pink Salt 0.13g, Musa Paradisica (Banana Rhizome) 0.13g, Camellia Sinensis (Tea Leaves) 0.13g, Nigella Sativa (Black Cumin) 0.01g, Punica Granatum (Pomegranate Fruit Rind) 0.01g, Terminalia Belerica (Bibhitaka) 0.01g, Moringa Oleifera (Moringa Bark) 0.01g, Nelumbo Nucifera (Lotus Rhizome) 0.01g, Acacia Concinna (Shikakai Pod) 0.01g, Vetiveria Zizanioides (Vetiver Root) 0.01g, Abrus Precatorius 0.01g, Piper Betle (Betel Leaf) 0.005g, Azadirachta Indica (Neem Leaf) 0.005g, Sesamum Indicum Nigrum (Black Sesame Seeds) 0.005g, Vitex Negundo 0.005g, Murraya Koenigii (Curry Leaf) 0.005g, Ocimum Tenuiflorum (Tulsi) 0.005g
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="product">
+  <div class="product-inner">
+    <img class="product-img" src="https://sheshaayurveda.com/cdn/shop/files/shesha-ayurveda-beard-color-indias-best-beard-color.jpg?v=1740811993" alt="Beard Colour Natural Black">
+    <div class="product-info">
+      <div class="product-name">6. Beard Colour – Natural Black</div>
+      <div class="product-meta">
+        <span class="tag cat">Beard Colour</span><span class="tag vol">20 g (4 × 5g sachets)</span><span class="tag price">₹250</span><span class="tag ayur">100% Herbal</span>
+      </div>
+      <div class="ing-label">Full Ingredients List (per 4g)</div>
+      <div class="ing-text">
+        Indigofera Tinctoria (Nili Patra/Indigo) 0.5g, Lawsonia Inermis (Madayanti/Henna) 0.25g, Cocos Nucifera (Narikela/Coconut) 0.25g, Centella Asiatica (Mandukaparni) 0.25g, Aloe Barbadensis (Kanyasara/Aloe Vera) 0.25g, Emblica Officinalis (Amalaki Dry) 0.25g, Eclipta Alba (Bhringaraja) 0.25g, Hibiscus Rosa-Sinensis (Japa Pushpa) 0.25g, Acacia Concinna (Shikakai) 0.25g, Vetiveria Zizanioides (Usira) 0.25g, Abrus Precatorius 0.25g, Ocimum Tenuiflorum (Tulsi) 0.25g, Camellia Sinensis (Chaha/Tea) 0.15g, Himalayan Pink Salt 0.1g, Musa Paradisica (Kadali/Banana) 0.1g, Nigella Sativa (Karunjeerakam/Black Cumin) 0.1g, Punica Granatum (Dadima Phala Twak/Pomegranate Rind) 0.05g, Terminalia Belerica (Bibhitaka) 0.05g, Moringa Oleifera (Sigru) 0.05g, Azadirachta Indica (Nimba/Neem Leaf) 0.05g, Sesamum Indicum Nigrum (Black Sesame) 0.05g, Vitex Negundo (Karinochi) 0.05g
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ── AYURVEDIC SKIN OILS ── -->
+<div class="section-header">Ayurvedic Skin Oils (Products 7–9)</div>
+
+<div class="product">
+  <div class="product-inner">
+    <img class="product-img" src="https://sheshaayurveda.com/cdn/shop/files/shesha_ayurveda_skin_brightening_saffron_oil.jpg?v=1775239746&width=400" alt="Kumkumadi Thailam">
+    <div class="product-info">
+      <div class="product-name">7. Kumkumadi Thailam (Saffron Face Oil)</div>
+      <div class="product-meta">
+        <span class="tag cat">Face Oil</span><span class="tag vol">5 ml</span><span class="tag price">₹750</span><span class="tag ayur">Ashtanga Hrudayam Formula</span>
+      </div>
+      <div class="ing-label">Full Ingredients List</div>
+      <div class="ing-text">
+        Vetiveria Zizanioides (Usiira/Vetiver), Coscinium Fenestratum (Kaliya/Vana Haridra), Lacca Laccifera Decoction (Laksha), Glycyrrhiza Glabra (Yashtyahwa/Liquorice), Santalum Album (Chandana/White Sandalwood), Ficus Bengalensis (Nyagrodhapada/Banyan), Prunus Cerasoides (Patmaka), Nelumbo Nucifera (Patmakesara/Lotus), Monochoria Vaginalis (Neelopala), Rubia Cordifolia Decoction (Manjistha), Lacca Laccifera (Laksha), Caesalpinia Sappan (Patanga), Rubia Cordifolia (Manjishta), Glycyrrhiza Glabra (Yastimadhuka), Crocus Sativus (Kumkuma/Saffron), Ajasheera (Goat's Milk), Sesamum Indicum (Taila/Sesame Oil Base)
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="product">
+  <div class="product-inner">
+    <img class="product-img" src="https://sheshaayurveda.com/cdn/shop/files/nalpamaradi_thailam_50_ml.png?v=1719138343" alt="Nalpamaradi Thailam">
+    <div class="product-info">
+      <div class="product-name">8. Nalpamaradi Thailam</div>
+      <div class="product-meta">
+        <span class="tag cat">Skin Oil</span><span class="tag vol">50 ml</span><span class="tag price">₹299</span><span class="tag ayur">Classical Formulation</span>
+      </div>
+      <div class="ing-label">Full Ingredients List</div>
+      <div class="ing-text">
+        Curcuma Longa (Wild Turmeric/Rhizome), Fumaria Parviflora (Parpataka/Whole Plant), Sesamum Indicum Seed Oil, Ficus Bengalensis Bark (Indian Banyan/Nyagrodha), Ficus Racemosa Bark (Indian Fig/Udumbara), Ficus Religiosa Bark (Peepal/Asvattha), Ficus Lacor Bark (Plaksha), Terminalia Chebula Pericarp (Haritaki), Emblica Officinalis Pericarp (Indian Gooseberry/Amalaki), Terminalia Bellerica Pericarp (Bibhitaka), Pterocarpus Santalinus Heartwood (Red Sandalwood), Vetiveria Zizanioides Root (Vetiver), Inula Racemosa Root (Pushkarmool), Rubia Cordifolia Root (Indian Madder/Manjistha), Kaempferia Galanga Rhizome (Aromatic Ginger), Aquilaria Agallocha Heartwood (Agarwood)
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="product">
+  <div class="product-inner">
+    <img class="product-img" src="https://sheshaayurveda.com/cdn/shop/files/Eladi-thailam-dry-skin-massage-oil-02.png?v=1768293171" alt="Eladi Thailam">
+    <div class="product-info">
+      <div class="product-name">9. Eladi Thailam</div>
+      <div class="product-meta">
+        <span class="tag cat">Skin Oil</span><span class="tag vol">50 ml</span><span class="tag price">₹299</span><span class="tag ayur">Classical Formulation</span>
+      </div>
+      <div class="ing-label">Full Ingredients List</div>
+      <div class="ing-text">
+        Pterocarpus Marsupium (Heartwood), Aegle Marmelos (Bilva Root), Sida Cordifolia (Whole Plant), Tinospora Cordifolia (Stem), Elettaria Cardamomum (Cardamom Fruit), Amomum Subulatum (Large Cardamom Seed), Boswellia Serrata (Shallaki/Resin), Inula Racemosa (Pushkarmool Root), Callicarpa Macrophylla (Inflorescence), Coleus Vettiveroides (Stem), Actiniopteris Radiata (Whole Plant), Cymbopogon Martini (Palmarosa Whole Plant), Curcuma Zedoaria (Rhizome), Cinnamomum Zeylanicum (Cinnamon Bark), Cinnamomum Tamala (Tejpata Leaf), Valeriana Wallichii (Tagara Rhizome), Taxus Baccata (Himalayan Yew Leaf), Myristica Fragrans (Nutmeg Seed), Commiphora Myrrha (Myrrh Resin), Ostrea Edulis (Oyster Shell/Calcium), Martynia Annua (Whole Plant), Cedrus Deodara (Himalayan Cedar Heartwood), Ventilago Maderaspatana (Bark), Pinus Longifolia (Pine Resin), Costus Speciosus (Rhizome), Commiphora Wightii (Guggul Resin), Shorea Robusta (Sal Resin), Acacia Catechu (Heartwood/Katechu), Celastrus Paniculatus (Seed), Mesua Ferrea (Stamen), Nardostachys Jatamansi (Rhizome), Coconut Milk, Sesamum Indicum Seed Oil, Crocus Sativus (Stigma/Saffron), Cinnamomum Camphora (Camphor)
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ── AYURVEDIC WELLNESS OILS ── -->
+<div class="section-header">Ayurvedic Wellness & Pain Relief Oils (Products 10–15)</div>
+
+<div class="product">
+  <div class="product-inner">
+    <img class="product-img" src="https://sheshaayurveda.com/cdn/shop/files/Dhanwantaram_Post-Partum-massage-oil-01.png?v=1719574669" alt="Dhanwantaram Thailam">
+    <div class="product-info">
+      <div class="product-name">10. Dhanwantaram Thailam</div>
+      <div class="product-meta">
+        <span class="tag cat">Massage Oil</span><span class="tag vol">50 ml</span><span class="tag price">₹299</span><span class="tag ayur">Post-Partum / Muscle Care</span>
+      </div>
+      <div class="ing-label">Full Ingredients List</div>
+      <div class="ing-text">
+        Sida Cordifolia (Bala Root), Desmodium Gangeticum (Prishnaparni), Pseudarthria Viscida (Shalaparni), Aerva Lanata (Polpala Cherula), Solanum Indicum (Brihati), Gmelina Arborea (Gambhari), Aegle Marmelos (Bilva), Stereospermum Suaveolens (Patala), Oroxylum Indicum (Shyonaka), Premna Mucronata (Agnimantha), Tribulus Terrestris (Gokshura), Hordeum Vulgare (Yava/Barley), Ziziphus Jujuba (Badara), Dolichos Biflorus (Kulthi), Polygonatum Cirrhifolium (Meda), Polygonatum Verticillatum (Mahameda), Cedrus Deodara (Himalayan Cedar), Rubia Cordifolia (Manjistha), Lilium Polyphyllum (Ksheera Kakoli), Asparagus Adscendens (Ksheerashukla), Santalum Album (Indian Sandalwood), Hemidesmus Indicus (Sariva), Inula Racemosa (Puskaramulam), Valeriana Wallichii (Tagara), Microstylis Wallichii (Jivakah), Microstylis Muscifera (Rshabhaka), Rock Salt, Milk, Trigonella Foenum-Graecum (Fenugreek), Withania Somnifera (Ashwagandha), Asparagus Racemosus (Shatavari), Ipomoea Paniculata (Vidari), Glycyrrhiza Glabra (Yashtimadhu), Terminalia Chebula (Myrobalan), Emblica Officinalis (Indian Gooseberry), Terminalia Bellerica (Bibhitaki), Commiphora Myrrha (Bola/Myrrh), Peucedanum Graveolens (Shatapushpa), Teramnus Labialis (Mashaparni), Phaseolus Trilobus (Mudgaparni), Elettaria Cardamomum (Elatarri), Cinnamomum Zeylanicum (Cinnamon), Cinnamomum Tamala (Tejpata), Sesamum Indicum Seed Oil
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="product">
+  <div class="product-inner">
+    <img class="product-img" src="https://sheshaayurveda.com/cdn/shop/files/karpooradi-thailam-pain-relief-massage-oil-01.png?v=1719575159&width=400" alt="Karpooradi Thailam">
+    <div class="product-info">
+      <div class="product-name">11. Karpooradi Thailam</div>
+      <div class="product-meta">
+        <span class="tag cat">Pain Relief Oil</span><span class="tag vol">50 ml</span><span class="tag price">₹250</span>
+      </div>
+      <div class="ing-label">Full Ingredients List</div>
+      <div class="ing-text">
+        Cinnamomum Camphora (Camphor), Sesamum Indicum (Gingelly/Sesame Oil)
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="product">
+  <div class="product-inner">
+    <img class="product-img" src="https://sheshaayurveda.com/cdn/shop/files/Balaswagandhadi__001.png?v=1719574426&width=400" alt="Balaswagandhadi Thailam">
+    <div class="product-info">
+      <div class="product-name">12. Balaswagandhadi Thailam</div>
+      <div class="product-meta">
+        <span class="tag cat">Massage Oil</span><span class="tag vol">50 ml</span><span class="tag price">₹250</span><span class="tag ayur">Muscle Tone</span>
+      </div>
+      <div class="ing-label">Full Ingredients List</div>
+      <div class="ing-text">
+        Sida Cordifolia (Bala Root), Withania Somnifera (Ashwagandha Root), Laccifer Lacca (Resin Extract), Curd, Sesamum Indicum Seed Oil, Alpinia Galanga (Galangal Rhizome), Santalum Album (Sandalwood Heartwood), Rubia Cordifolia (Manjistha Stem), Cynodon Dactylon (Durva Root), Glycyrrhiza Glabra (Liquorice Stem), Hedychium Spicatum (Rhizome), Hemidesmus Indicus (Sariva Stem), Vetiveria Zizanioides (Vetiver Root), Cyperus Rotundus (Mustha Rhizome), Inula Racemosa (Pushkarmool Root), Aquilaria Agallocha (Agarwood Heartwood), Cedrus Deodara (Himalayan Cedar Heartwood), Berberis Aristata (Stem), Nymphaea Alba (Water Lily Rhizome), Vitex Negundo (Seed), Anethum Sowa (Sowa/Dill Seed), Nelumbo Nucifera (Lotus Flower)
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="product">
+  <div class="product-inner">
+    <img class="product-img" src="https://sheshaayurveda.com/cdn/shop/files/kottamchukkadi-pain-relief-thailam-01.png?v=1719576712&width=400" alt="Kottamchukkadi Thailam">
+    <div class="product-info">
+      <div class="product-name">13. Kottamchukkadi Pain Relief Thailam</div>
+      <div class="product-meta">
+        <span class="tag cat">Pain Relief Oil</span><span class="tag vol">50 ml</span><span class="tag price">₹250</span>
+      </div>
+      <div class="ing-label">Full Ingredients List</div>
+      <div class="ing-text">
+        Tamarindus Indica Leaf, Inula Racemosa Root (Pushkarmool), Zingiber Officinale Rhizome (Ginger), Acorus Calamus Rhizome (Vacha), Moringa Oleifera Bark, Allium Sativum Bulb (Garlic), Hugonia Mystax Root, Cedrus Deodara Heartwood (Himalayan Cedar), Brassica Campestris Seed (Mustard), Alpinia Galanga Rhizome (Galangal), Neem Oil (Azadirachta Indica), Ricinus Communis Oil (Castor Oil), Sesamum Indicum Oil (Sesame Oil)
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="product">
+  <div class="product-inner">
+    <img class="product-img" src="https://sheshaayurveda.com/cdn/shop/files/murivenna-pain-relief-oil-01.png?v=1719578068&width=400" alt="Murivenna Pain Relief Oil">
+    <div class="product-info">
+      <div class="product-name">14. Murivenna Pain Relief Oil</div>
+      <div class="product-meta">
+        <span class="tag cat">Pain Relief Oil</span><span class="tag vol">50 ml</span><span class="tag price">₹250</span><span class="tag ayur">Sahasrayogam Formula</span>
+      </div>
+      <div class="ing-label">Full Ingredients List</div>
+      <div class="ing-text">
+        Pongamia Pinnata (Karanjam), Aloe Barbadensis (Aloe Vera), Piper Betle (Betel Leaf), Moringa Oleifera (Drumstick/Moringa), Erythrina Indica (Paribhadra/Indian Coral Tree), Allium Oschaninii (Shallot), Spermacoce Articularis (Madanaghanta/Tharthaval), Asparagus Racemosus (Shatavari), Cocos Nucifera Oil (Coconut Oil Base)
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="product">
+  <div class="product-inner">
+    <img class="product-img" src="https://sheshaayurveda.com/cdn/shop/files/lakshadi_thailam_skin_brightening_and_muscle_recovery_and_body_toning_oil_shesha_ayurveda.jpg?v=1774775701&width=400" alt="Lakshadi Baby Massage Oil">
+    <div class="product-info">
+      <div class="product-name">15. Lakshadi Baby Massage Oil</div>
+      <div class="product-meta">
+        <span class="tag cat">Baby Massage Oil</span><span class="tag vol">50 ml</span><span class="tag price">₹299</span><span class="tag ayur">Classical Formulation</span>
+      </div>
+      <div class="ing-label">Full Ingredients List</div>
+      <div class="ing-text">
+        Lacca Laccifera (Lakh/Resin), Sesamum Indicum Seed Oil, Withania Somnifera Root (Ashwagandha), Curcuma Longa Rhizome (Turmeric), Cedrus Deodara Heartwood (Himalayan Cedar), Vitex Negundo Seed (Five-Leaved Chaste Tree), Inula Racemosa Root (Pushkarmool), Curd, Cyperus Rotundus Rhizome (Mustha/Nut Grass), Santalum Album Heartwood (White Sandalwood), Marsdenia Tenacissima Root, Picrorhiza Kurroa Rhizome, Pluchea Lanceolata Rhizome, Anethum Sowa Seed (Dill), Glycyrrhiza Glabra Stem (Liquorice)
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ── SKINCARE ── -->
+<div class="section-header">Skincare (Products 16–22)</div>
+
+<div class="product">
+  <div class="product-inner">
+    <img class="product-img" src="https://sheshaayurveda.com/cdn/shop/files/Red_Sandalwood_Skin_Brightening_face_wash_3.png?v=1719126793&width=400" alt="Red Sandalwood Face Wash">
+    <div class="product-info">
+      <div class="product-name">16. Red Sandalwood Skin Brightening Face Wash</div>
+      <div class="product-meta">
+        <span class="tag cat">Face Wash</span><span class="tag vol">100 ml</span><span class="tag price">₹350</span>
+      </div>
+      <div class="ing-label">Full Ingredients List (per 10 ml)</div>
+      <div class="ing-text">
+        Pterocarpus Santalinus (Red Sandalwood Wood Extract) 1ml, Citrus Aurantifolia Fruit Extract (Lime) 0.5ml, Rosa Damascena Flower (Rose) 0.5ml, Azadirachta Indica (Neem) 0.5ml, Crocus Sativus (Saffron) 0.5ml, Camellia Sinensis (Green Tea) 0.5ml, Tamarindus Indica (Tamarind) 0.1ml; Base: Bakuchiol 1%, Niacinamide 1.5%, Sodium Hyaluronate (Hyaluronic Acid), Aqua, Sodium Lauroyl Sarcosinate, Acrylates Copolymer, Cocamidopropyl Betaine, Decyl Glucoside, Xylitylglucoside, Allantoin, Sodium Hydroxide, Sodium PCA, Phenoxyethanol, Pentylene Glycol, Coco Monoethanolamide
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="product">
+  <div class="product-inner">
+    <img class="product-img" src="https://sheshaayurveda.com/cdn/shop/files/red_sandalwood_cream_shesha_ayurveda_1.png?v=1778162538&width=400" alt="Red Sandalwood Night Repair Cream">
+    <div class="product-info">
+      <div class="product-name">17. Red Sandalwood Skin Brightening & Night Repair Cream</div>
+      <div class="product-meta">
+        <span class="tag cat">Night Cream</span><span class="tag vol">50 g</span><span class="tag price">₹599</span>
+      </div>
+      <div class="ing-label">Full Ingredients List (per 10 g)</div>
+      <div class="ing-text">
+        Pterocarpus Santalinus (Red Sandalwood Extract) 2g, Kumkumadi Thailam 0.2g, Cocos Nucifera (Virgin Coconut Oil) 0.2g, Prunus Dulcis (Almond Oil) 0.2g, Simmondsia Chinensis (Jojoba Oil) 0.2g, Hydnocarpus Wightianus (Chaulmoogra Oil) 0.2g, Vitis Vinifera (Grapeseed Oil) 0.2g, Azadirachta Indica (Neem Oil) 0.2g, Lavandula (Lavender Oil) 0.2g, Chrysopogon Zizanioides (Vetiver Oil) 0.2g, Curcuma Longa (Turmeric Extract) 0.2g, Alpinia Galanga (Galangal Oil) 0.2g, Acorus Calamus (Calamus Oil) 0.2g, Pelargonium Graveolens (Geranium Oil) 0.2g; Base: DM Water, Glyceryl Monostearate, Emulsifying Wax, Glycerin, Stearic Acid, Citric Acid, Phenoxyethanol, Tocopherol (Vitamin E)
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="product">
+  <div class="product-inner">
+    <img class="product-img" src="https://sheshaayurveda.com/cdn/shop/files/shesha_ayurveda_skin_brightening_day_cream_texture.webp?v=1778389680&width=400" alt="Kumkumadi Brightening Day Cream">
+    <div class="product-info">
+      <div class="product-name">18. Kumkumadi Brightening Day Cream</div>
+      <div class="product-meta">
+        <span class="tag cat">Day Cream</span><span class="tag vol">50 g</span><span class="tag price">₹599</span><span class="tag ayur">Saffron + Kumkumadi</span>
+      </div>
+      <div class="ing-label">Full Ingredients List</div>
+      <div class="ing-text">
+        Aloe Vera Extract (Aloe Barbadensis), Kumkumadi Thailam [Crocus Sativus (Saffron), Vetiveria Zizanioides, Coscinium Fenestratum, Rubia Cordifolia, Santalum Album, Glycyrrhiza Glabra, Lacca Laccifera, Nelumbo Nucifera, Sesame Oil Base, Goat's Milk], Ricinus Communis (Castor Oil), Glycerin, 2-Hydroxyethyl Methacrylate (HEMA), Coco-Glucoside, Polysorbate 80, Sodium Benzoate, Potassium Sorbate, Phenoxyethanol, Citric Acid, Deionized Water
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="product">
+  <div class="product-inner">
+    <img class="product-img" src="https://sheshaayurveda.com/cdn/shop/files/kumkumadi-suvarna-ubtan-skin-brightening-face-pack-03.png?v=1774515643" alt="Kumkumadi Suvarna Ubtan">
+    <div class="product-info">
+      <div class="product-name">19. Kumkumadi Suvarna Ubtan (Saffron Face Pack)</div>
+      <div class="product-meta">
+        <span class="tag cat">Face Pack</span><span class="tag vol">50 g</span><span class="tag price">₹599</span><span class="tag ayur">Pure Herbal</span>
+      </div>
+      <div class="ing-label">Full Ingredients List</div>
+      <div class="ing-text">
+        Crocus Sativus (Himalayan Pure Saffron), Hibiscus Rosa-Sinensis (Organic Hibiscus Flowers), Nelumbo Nucifera (Organic Lotus Petals), Pterocarpus Santalinus (Red Tree Bark), Rosa Damascena (Organic Rose Petals), Aloe Barbadensis (Dried Aloe Vera), Prunus Dulcis (Almond), Myristica Fragrans (Nutmeg), Cassia Auriculata (Avarampoo), Ocimum Tenuiflorum (Tulsi Leaves), Vigna Radiata (Green Gram), Cicer Arietinum (Bengal Gram), Curcuma Zedoaria (White Turmeric/Poolankilangu), Emblica Officinalis (Amla), Azadirachta Indica (Neem Leaves), Cyperus Rotundus (Nut Grass), Curcuma Aromatica (Wild Turmeric Powder)
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="product">
+  <div class="product-inner">
+    <img class="product-img" src="https://sheshaayurveda.com/cdn/shop/files/wild_turmeric_or_yellow_skin_brightening_kasturi_manjal_shesha_ayurveda.jpg?v=1747207111&width=400" alt="Yellow Kasturi Manjal Face Pack">
+    <div class="product-info">
+      <div class="product-name">20. Yellow Kasturi Manjal Face Pack</div>
+      <div class="product-meta">
+        <span class="tag cat">Face Pack</span><span class="tag vol">50 g</span><span class="tag price">₹399</span>
+      </div>
+      <div class="ing-label">Full Ingredients List</div>
+      <div class="ing-text">
+        Curcuma Zedoaria (Organic Curcumin/White Turmeric), Curcuma Aromatica (Wild Turmeric/Kasturi Manjal), Pure Orange Peel Powder, Pure Lemon Peel Powder, Ocimum Tenuiflorum (Handpicked Tulsi Leaves)
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="product">
+  <div class="product-inner">
+    <img class="product-img" src="https://sheshaayurveda.com/cdn/shop/files/ALTMF-SHSA-SUM-AD-KMYL-WHT-01-min.jpg?v=1747207234" alt="Kasturi Manjal Powder">
+    <div class="product-info">
+      <div class="product-name">21. Kasturi Manjal – Musk Turmeric Powder</div>
+      <div class="product-meta">
+        <span class="tag cat">Skin Powder</span><span class="tag vol">25 g</span><span class="tag price">₹399</span><span class="tag ayur">Single Ingredient</span>
+      </div>
+      <div class="ing-label">Full Ingredients List</div>
+      <div class="ing-text">
+        100% Organic Curcuma Aromatica (Kasturi Manjal / Musk Turmeric) — no preservatives, no fillers. Wild-harvested from Kerala's Western Ghats.
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="product">
+  <div class="product-inner">
+    <img class="product-img" src="https://sheshaayurveda.com/cdn/shop/files/multani-mitti-square-1_1.png?v=1766909232&width=400" alt="Multani Mitti Facial Ubtan">
+    <div class="product-info">
+      <div class="product-name">22. Multani Mitti Facial Ubtan</div>
+      <div class="product-meta">
+        <span class="tag cat">Face Pack</span><span class="tag vol">50 g</span><span class="tag price">₹299</span><span class="tag ayur">Single Ingredient</span>
+      </div>
+      <div class="ing-label">Full Ingredients List</div>
+      <div class="ing-text">
+        Solum Fullonum (Multani Mitti / Fuller's Earth) — 100% natural mineral clay. No parabens, no synthetic additives, no fillers.
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ── LIP CARE ── -->
+<div class="section-header">Lip Care (Product 23)</div>
+
+<div class="product" style="border-radius:0 0 6px 6px; margin-bottom:22px;">
+  <div class="product-inner">
+    <img class="product-img" src="https://sheshaayurveda.com/cdn/shop/files/kumkumadi_lipbalm_shesha_ayurveda.jpg?v=1754641748" alt="Kumkumadi Lip Balm">
+    <div class="product-info">
+      <div class="product-name">23. Kumkumadi Lip Balm</div>
+      <div class="product-meta">
+        <span class="tag cat">Lip Balm</span><span class="tag vol">5 g</span><span class="tag price">₹399</span><span class="tag ayur">Ashtanga Hrudayam</span>
+      </div>
+      <div class="ing-label">Full Ingredients List</div>
+      <div class="ing-text">
+        Shesha Ayurveda Kumkumadi Thailam, Theobroma Cacao (Cocoa Butter), Mangifera Indica (Mango Butter), Helianthus Annuus (Sunflower High Oleic Oil), Prunus Dulcis (Almond Oil), Cocos Nucifera (Virgin Coconut Oil), Ricinus Communis (Castor Oil), Rubia Cordifolia (Manjistha), Glycyrrhiza Glabra (Licorice Extract), Psoralea Corylifolia (Babchi Seed Extract), Tocopherol (Vitamin E), Crocus Sativus (Saffron Essential Oil), Pterocarpus Santalinus (Red Sandalwood), Cera Alba (Beeswax)
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ── BODY CARE ── -->
+<div class="section-header">Body & Personal Care (Products 24–30)</div>
+
+<div class="product">
+  <div class="product-inner">
+    <img class="product-img" src="https://sheshaayurveda.com/cdn/shop/files/pure-aloe-vera-gel_0002_Layer203.jpg?v=1712786485&width=400" alt="Pure Aloe Vera Gel">
+    <div class="product-info">
+      <div class="product-name">24. Pure Aloe Vera Gel</div>
+      <div class="product-meta">
+        <span class="tag cat">Body Gel</span><span class="tag vol">100 g</span><span class="tag price">₹299</span>
+      </div>
+      <div class="ing-label">Full Ingredients List</div>
+      <div class="ing-text">
+        Aloe Barbadensis Leaf Juice (Aloe Vera), Xanthan Gum, Guar Gum, Geogard ECT (ECOCERT-approved natural preservative — Benzylalcohol, Salicylic Acid, Glycerin, Sorbic Acid)
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="product">
+  <div class="product-inner">
+    <img class="product-img" src="https://sheshaayurveda.com/cdn/shop/files/shesha_ayurveda_pure_rose_water.png?v=1750929241&width=400" alt="Pure Rose Water">
+    <div class="product-info">
+      <div class="product-name">25. Pure Rose Water</div>
+      <div class="product-meta">
+        <span class="tag cat">Toner / Mist</span><span class="tag vol">100 ml</span><span class="tag price">₹399</span><span class="tag ayur">Single Ingredient</span>
+      </div>
+      <div class="ing-label">Full Ingredients List</div>
+      <div class="ing-text">
+        100% Natural Steam-Distilled Rosa Damascena (Damask Rose) Flower Water — no additives, no alcohol, no preservatives. Traditional deg-bhapka method from Kannauj, Uttar Pradesh.
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="product">
+  <div class="product-inner">
+    <img class="product-img" src="https://sheshaayurveda.com/cdn/shop/files/kasturi_vetiver_shower_gel.webp?v=1778268284" alt="Kasturi Turmeric Vetiver Shower Gel">
+    <div class="product-info">
+      <div class="product-name">26. Kasturi Turmeric & Vetiver Shower Gel</div>
+      <div class="product-meta">
+        <span class="tag cat">Shower Gel</span><span class="tag vol">200 ml</span><span class="tag price">₹399</span>
+      </div>
+      <div class="ing-label">Full Ingredients List</div>
+      <div class="ing-text">
+        Aloe Barbadensis (Fresh Aloe Vera Leaf Extract), Chrysopogon Zizanioides (Vetiver Oil), Curcuma Aromatica (Kasturi Turmeric), Curcuma Zedoaria (White Turmeric), Curcuma Longa (Golden Turmeric), Glycerine, Citric Acid, DM Water, CI 15985 (Colour); Mild Sulphate-Free & Paraben-Free Surfactant Base: Capryl Glucoside, Coco-Glucoside, Cocamidopropyl Betaine, Sodium Methyl Cocoyl Taurate; Preservative: Galguard Trident (Methylchloroisothiazolinone and Methylisothiazolinone)
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="product">
+  <div class="product-inner">
+    <img class="product-img" src="https://sheshaayurveda.com/cdn/shop/files/shesha_ayurveda_mud_skin_brightening_soap.jpg?v=1750919913&width=400" alt="Mud Nalpamaradi Soap">
+    <div class="product-info">
+      <div class="product-name">27. Mud with Nalpamaradi Skin Brightening Soap</div>
+      <div class="product-meta">
+        <span class="tag cat">Soap / Bar</span><span class="tag vol">125 g</span><span class="tag price">₹199</span>
+      </div>
+      <div class="ing-label">Full Ingredients List (per 100 g)</div>
+      <div class="ing-text">
+        Gopichandan/Multani Mitti (Fuller's Earth) 10g, Cocos Nucifera Oil (Narikela Taila/Coconut Oil) 70g, Curcuma Longa (Haridra/Turmeric Rhizome) 5g, Aloe Barbadensis (Kumari/Aloe Leaf) 5g, Nigella Sativa (Upakunchika/Black Cumin Bark) 1g, Cynodon Dactylon (Durva Root) 1g, Ficus Lacor Bark (Plaksha) 1g, Ficus Racemosa Bark (Udumbara) 1g, Punica Granatum Fruit Rind (Dadima Phala Twak) 1g, Ficus Bengalensis Bark (Nyagrodha) 1g, Ficus Religiosa Bark (Asvattha) 1g, Piper Betle Leaf (Nagavalli) 1g, Cymbopogon Citratus (Lemongrass/Kattrina) q.s., Sodium Hydroxide (for saponification) q.s.
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="product">
+  <div class="product-inner">
+    <img class="product-img" src="https://sheshaayurveda.com/cdn/shop/files/co2001_1.jpg?v=1715779030&width=400" alt="Extra Virgin Coconut Oil">
+    <div class="product-info">
+      <div class="product-name">28. Extra Virgin Coconut Oil</div>
+      <div class="product-meta">
+        <span class="tag cat">Hair / Body Oil</span><span class="tag vol">200 ml</span><span class="tag price">₹350</span><span class="tag ayur">Single Ingredient</span>
+      </div>
+      <div class="ing-label">Full Ingredients List</div>
+      <div class="ing-text">
+        100% Pure Cocos Nucifera (Extra Virgin Coconut Oil) — cold-pressed centrifuge extraction within 24 hours, no heat processing. No mineral oil, no silicones, no artificial fragrance, no preservatives.
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="product">
+  <div class="product-inner">
+    <img class="product-img" src="https://sheshaayurveda.com/cdn/shop/files/sheshaayurvedanargisdeodorantbodymist3.png?v=1761375536&width=400" alt="Nargis Deodorant Body Mist">
+    <div class="product-info">
+      <div class="product-name">29. Nargis Deodorant Body Mist</div>
+      <div class="product-meta">
+        <span class="tag cat">Deodorant Mist</span><span class="tag vol">50 ml</span><span class="tag price">₹350</span>
+      </div>
+      <div class="ing-label">Full Ingredients List</div>
+      <div class="ing-text">
+        DM Water, Aloe Barbadensis Leaf Extract (Aloe Vera) 2.5%, Narcissus Poeticus (Nargis Flower Oil) 1.5%, Butyrospermum Parkii (Shea Butter) 0.5%, Denatured Ethanol, Tocopherol (Vitamin E), Menthol (Mint Crystals)
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="product" style="border-radius:0 0 6px 6px; margin-bottom:36px;">
+  <div class="product-inner">
+    <img class="product-img" src="https://sheshaayurveda.com/cdn/shop/files/shesha_ayurveda_body_mist_parijat.jpg?v=1734160568&width=400" alt="Parijatham Deodorant Body Mist">
+    <div class="product-info">
+      <div class="product-name">30. Parijatham Deodorant Body Mist</div>
+      <div class="product-meta">
+        <span class="tag cat">Deodorant Mist</span><span class="tag vol">100 ml</span><span class="tag price">₹499</span>
+      </div>
+      <div class="ing-label">Full Ingredients List</div>
+      <div class="ing-text">
+        DM Water, Aloe Barbadensis Leaf Extract (Aloe Vera), Nyctanthes Arbor-Tristis (Parijatham/Night Jasmine Flower Extract), Butyrospermum Parkii (Shea Butter), Denatured Ethanol, Tocopherol (Vitamin E), Menthol (Mint Crystals)
+      </div>
+    </div>
+  </div>
+</div>
+
+</div><!-- end page-body -->
+
+<div class="footer">
+  Shesha Ayurveda · sheshaayurveda.com · GMP Certified · Ayurvedic License T-2398/Ayur · As seen on Shark Tank India Season 5<br>
+  Ingredients sourced from official product pages · June 2026
+</div>
+
+</body>
+</html>

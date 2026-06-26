@@ -1,0 +1,691 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Kama Ayurveda — Product Ingredient Report | CheckKaro</title>
+<style>
+  :root {
+    --primary:   #2c1a0e;
+    --accent:    #c9a84c;
+    --light:     #fdf6ec;
+    --card-bg:   #ffffff;
+    --border:    #e8d8b8;
+    --text:      #1e1208;
+    --muted:     #7a6040;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'Segoe UI', system-ui, sans-serif; background: var(--light); color: var(--text); line-height: 1.55; }
+
+  /* ── COVER ── */
+  .cover {
+    min-height: 100vh; background: linear-gradient(150deg, #1a0d05 0%, #2c1a0e 50%, #4a2e18 100%);
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    text-align: center; padding: 60px 40px; page-break-after: always; position: relative; overflow: hidden;
+  }
+  .cover::before {
+    content: '';  position: absolute; inset: 0;
+    background-image: radial-gradient(ellipse at 20% 80%, rgba(201,168,76,0.18) 0%, transparent 55%),
+                      radial-gradient(ellipse at 80% 20%, rgba(201,168,76,0.12) 0%, transparent 55%);
+  }
+  .cover-icon { font-size: 72px; margin-bottom: 18px; filter: drop-shadow(0 4px 16px rgba(201,168,76,0.5)); position: relative; }
+  .cover h1 { font-size: 54px; font-weight: 800; color: #fff; letter-spacing: -1px; margin-bottom: 6px; position: relative; }
+  .cover .sub { font-size: 20px; color: var(--accent); letter-spacing: 3px; text-transform: uppercase; margin-bottom: 10px; position: relative; }
+  .cover .tagline { font-size: 15px; color: #c8b090; font-style: italic; margin-bottom: 36px; position: relative; }
+  .cover-badge { background: var(--accent); color: #1a0d05; font-size: 12px; font-weight: 800; letter-spacing: 2px; text-transform: uppercase; padding: 8px 28px; border-radius: 30px; margin-bottom: 48px; position: relative; }
+  .cover-stats { display: flex; gap: 40px; position: relative; }
+  .stat-box { background: rgba(255,255,255,0.08); border: 1px solid rgba(201,168,76,0.3); border-radius: 14px; padding: 20px 30px; backdrop-filter: blur(6px); }
+  .stat-box .num { font-size: 34px; font-weight: 800; color: var(--accent); }
+  .stat-box .lbl { font-size: 11px; color: #c8b090; text-transform: uppercase; letter-spacing: 1px; }
+  .cover-footer { position: absolute; bottom: 24px; font-size: 11px; color: rgba(255,255,255,0.35); letter-spacing: 1px; }
+
+  /* ── INDEX ── */
+  .index-page { padding: 56px 60px; page-break-after: always; background: var(--card-bg); }
+  .index-page h2 { font-size: 26px; color: var(--primary); border-bottom: 3px solid var(--accent); padding-bottom: 10px; margin-bottom: 12px; }
+  .index-subtitle { font-size: 13px; color: var(--muted); margin-bottom: 24px; }
+  .legend { display: flex; gap: 20px; flex-wrap: wrap; margin-bottom: 20px; font-size: 12px; align-items: center; }
+  .legend-item { display: flex; align-items: center; gap: 6px; }
+  .dot { width: 10px; height: 10px; border-radius: 50%; }
+  .dot-safe { background: #2d8a5a; }  .dot-worth { background: #e08a00; }  .dot-flag { background: #c82020; }
+  .grade { display: inline-block; width: 26px; height: 26px; border-radius: 50%; text-align: center; line-height: 26px; font-weight: 700; font-size: 13px; color: #fff; }
+  .g-a { background: #2d6a4f; } .g-b { background: #2472b5; } .g-c { background: #c87a10; } .g-d { background: #b82020; }
+  .tag { display: inline-block; font-size: 11px; padding: 3px 10px; border-radius: 20px; font-weight: 600; border: 1px solid; }
+  .tag-face { background: #fdf0e0; color: #8a4a00; border-color: #e8c880; }
+  .tag-hair { background: #e8f0f8; color: #1a4a7a; border-color: #a0c0e0; }
+  .index-table { width: 100%; border-collapse: collapse; }
+  .index-table th { background: var(--primary); color: #fff; font-size: 11px; text-transform: uppercase; letter-spacing: 1px; padding: 12px 16px; text-align: left; }
+  .index-table td { padding: 11px 16px; font-size: 13px; border-bottom: 1px solid #f0e8d8; vertical-align: middle; }
+  .index-table tr:nth-child(even) td { background: #fdf8f0; }
+  .flag-pill { display: inline-block; font-size: 10px; padding: 2px 8px; border-radius: 12px; font-weight: 600; margin-left: 4px; }
+  .fp-d { background: #ffe0e0; color: #8a0000; }
+  .fp-b { background: #fff3cd; color: #6a4800; }
+  .fp-a { background: #e0f5e9; color: #1a5a38; }
+
+  /* ── PRODUCT PAGES ── */
+  .product-page { padding: 44px 52px; page-break-after: always; background: var(--card-bg); }
+  .section-header { background: var(--primary); color: var(--accent); font-size: 12px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; padding: 8px 18px; border-radius: 6px; display: inline-block; margin-bottom: 28px; }
+  .product-card { display: grid; grid-template-columns: 220px 1fr; gap: 32px; border: 1px solid var(--border); border-radius: 16px; overflow: hidden; background: var(--card-bg); margin-bottom: 30px; box-shadow: 0 2px 12px rgba(44,26,14,0.07); }
+  .product-image-col { background: linear-gradient(180deg, #fdf0e0 0%, #f5e4c0 100%); display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 22px 18px; gap: 14px; }
+  .product-image-col img { width: 170px; height: 170px; object-fit: contain; border-radius: 12px; box-shadow: 0 4px 16px rgba(0,0,0,0.15); }
+  .grade-badge { font-size: 20px; font-weight: 800; width: 50px; height: 50px; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: #fff; }
+  .gb-a { background: #2d6a4f; border: 3px solid #a8d5b5; }
+  .gb-b { background: #2472b5; border: 3px solid #a0c0e0; }
+  .gb-c { background: #c87a10; border: 3px solid #f0c870; }
+  .gb-d { background: #b82020; border: 3px solid #f0a0a0; }
+  .awareness-bar { width: 100%; }
+  .bar-lbl { font-size: 10px; color: var(--muted); text-align: center; margin-bottom: 4px; }
+  .bar-track { width: 100%; height: 8px; background: #e8d8b8; border-radius: 4px; overflow: hidden; }
+  .bar-fill-a { height: 100%; background: linear-gradient(90deg,#2d6a4f,#5ab87a); border-radius:4px; }
+  .bar-fill-b { height: 100%; background: linear-gradient(90deg,#2472b5,#5a9ad9); border-radius:4px; }
+  .bar-fill-c { height: 100%; background: linear-gradient(90deg,#c87a10,#e0a830); border-radius:4px; }
+  .bar-fill-d { height: 100%; background: linear-gradient(90deg,#b82020,#e04040); border-radius:4px; }
+
+  .product-info-col { padding: 22px 26px 22px 0; }
+  .product-name { font-size: 18px; font-weight: 700; color: var(--primary); margin-bottom: 4px; }
+  .product-meta { font-size: 12px; color: var(--muted); margin-bottom: 14px; }
+  .product-meta span { margin-right: 12px; }
+
+  .ingr-section h4 { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; color: var(--muted); margin-bottom: 8px; }
+  .ingr-list { display: flex; flex-direction: column; gap: 5px; margin-bottom: 12px; }
+  .ingr-item { display: flex; align-items: flex-start; gap: 9px; padding: 7px 11px; border-radius: 7px; font-size: 12.5px; border: 1px solid transparent; }
+  .ingr-safe  { background: #f8fdf8; border-color: #c8e8c8; }
+  .ingr-worth { background: #fffbf0; border-color: #f0d880; }
+  .ingr-flag  { background: #fff5f5; border-color: #f0c0c0; }
+  .ingr-dot { width: 9px; height: 9px; border-radius: 50%; flex-shrink: 0; margin-top: 3px; }
+  .ingr-name { font-weight: 600; color: #1e1208; }
+  .ingr-note { font-size: 11px; color: #7a6040; margin-top: 1px; }
+
+  .verdict-row { margin-top: 12px; padding: 10px 14px; border-radius: 7px; font-size: 12.5px; }
+  .vr-good { background: #e8f5e9; border-left: 4px solid #2d6a4f; color: #1a3a1a; }
+  .vr-warn { background: #fff8e6; border-left: 4px solid #c87a10; color: #4a3000; }
+  .vr-bad  { background: #fff0f0; border-left: 4px solid #b82020; color: #4a0000; }
+
+  @media print {
+    body { background: #fff; }
+    .cover, .index-page, .product-page { page-break-after: always; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ══════════════════════════ COVER ══ -->
+<div class="cover">
+  <div class="cover-icon">🪷</div>
+  <div class="sub">Kama Ayurveda</div>
+  <h1>Ingredient Report</h1>
+  <div class="tagline">Premium Ayurvedic Beauty — Honest Ingredient Analysis</div>
+  <div class="cover-badge">CheckKaro · Full INCI Breakdown</div>
+  <div class="cover-stats">
+    <div class="stat-box"><div class="num">13</div><div class="lbl">Products</div></div>
+    <div class="stat-box"><div class="num">10</div><div class="lbl">Face Care</div></div>
+    <div class="stat-box"><div class="num">3</div><div class="lbl">Hair Care</div></div>
+  </div>
+  <div class="cover-footer">CHECKKARO · For educational use only · Not a substitute for professional advice</div>
+</div>
+
+<!-- ══════════════════════════ INDEX ══ -->
+<div class="index-page">
+  <h2>Product Index — Kama Ayurveda</h2>
+  <div class="index-subtitle">Ingredients sourced from INCIDecoder. Kama Ayurveda is a premium Indian Ayurvedic brand that blends traditional herb-based formulations with modern cosmetic science.</div>
+  <div class="legend">
+    <div class="legend-item"><span class="dot dot-safe"></span> Generally Safe</div>
+    <div class="legend-item"><span class="dot dot-worth"></span> Worth Knowing</div>
+    <div class="legend-item"><span class="dot dot-flag"></span> Commonly Questioned</div>
+    <div class="legend-item"><span class="grade g-a">A</span> All clean</div>
+    <div class="legend-item"><span class="grade g-b">B</span> ≤30% worth-knowing</div>
+    <div class="legend-item"><span class="grade g-c">C</span> >30% worth-knowing</div>
+    <div class="legend-item"><span class="grade g-d">D</span> Has questioned ingredient</div>
+  </div>
+  <table class="index-table">
+    <thead>
+      <tr><th>#</th><th>Product Name</th><th>Category</th><th>Key Flags</th><th>Grade</th></tr>
+    </thead>
+    <tbody>
+      <tr><td>1</td><td>Kumkumadi Facial Oil</td><td><span class="tag tag-face">Face Care</span></td><td>Fragrance allergens (Citronellol, Geraniol, Linalool)</td><td><span class="grade g-b">B</span></td></tr>
+      <tr><td>2</td><td>Kumkumadi Miraculous Beauty Fluid (Night Serum)</td><td><span class="tag tag-face">Face Care</span></td><td>None — Fragrance-free, clean formula</td><td><span class="grade g-a">A</span></td></tr>
+      <tr><td>3</td><td>Eladi Hydrating Face Cream</td><td><span class="tag tag-face">Face Care</span></td><td>Phenoxyethanol, EDTA</td><td><span class="grade g-b">B</span></td></tr>
+      <tr><td>4</td><td>Anti Acne Cleansing Foam with Neem, Tulsi & Tea Tree</td><td><span class="tag tag-face">Face Care</span></td><td>None — Very clean formula</td><td><span class="grade g-a">A</span></td></tr>
+      <tr><td>5</td><td>Kumkumadi Clarifying & Brightening Cleansing Oil</td><td><span class="tag tag-face">Face Care</span></td><td>Cocamide DEA (nitrosamine risk), Laureth-4</td><td><span class="grade g-d">D</span></td></tr>
+      <tr><td>6</td><td>Foaming Face Wash</td><td><span class="tag tag-face">Face Care</span></td><td>Potassium Sorbate (mild)</td><td><span class="grade g-b">B</span></td></tr>
+      <tr><td>7</td><td>Kumkumadi Brightening Ayurvedic Face Scrub</td><td><span class="tag tag-face">Face Care</span></td><td>BHT (antioxidant, mild controversy)</td><td><span class="grade g-b">B</span></td></tr>
+      <tr><td>8</td><td>Rose & Jasmine Face Cleanser</td><td><span class="tag tag-face">Face Care</span></td><td>None — Very clean formula</td><td><span class="grade g-a">A</span></td></tr>
+      <tr><td>9</td><td>Soap Free Face Cleanser Powder</td><td><span class="tag tag-face">Face Care</span></td><td>None — 100% natural powder</td><td><span class="grade g-a">A</span></td></tr>
+      <tr><td>10</td><td>Brightening Night Cream</td><td><span class="tag tag-face">Face Care</span></td><td>Cyclopentasiloxane, Dimethicone, Phenoxyethanol</td><td><span class="grade g-b">B</span></td></tr>
+      <tr><td>11</td><td>Bringadi Intensive Hair Treatment Oil</td><td><span class="tag tag-hair">Hair Care</span></td><td>Rosemary Oil (camphor content)</td><td><span class="grade g-b">B</span></td></tr>
+      <tr><td>12</td><td>Bringadi Hair Cleanser (Shampoo)</td><td><span class="tag tag-hair">Hair Care</span></td><td>Rosemary Oil (camphor, mild)</td><td><span class="grade g-b">B</span></td></tr>
+      <tr><td>13</td><td>Hair Conditioner</td><td><span class="tag tag-hair">Hair Care</span></td><td>Multiple fragrance allergens (Linalool, Limonene, Geraniol, Coumarin, Eugenol, Citronellol)</td><td><span class="grade g-d">D</span></td></tr>
+    </tbody>
+  </table>
+  <div style="margin-top:20px; padding:14px 18px; background:#fff8e6; border-left:4px solid #c87a10; border-radius:8px; font-size:12.5px; color:#4a3000;">
+    <strong>⚠️ Note on Kama Ayurveda:</strong> Kama is a premium brand marketed as "Ayurvedic" with natural-origin ingredients. Most products are genuinely herb-forward. However, several contain fragrance allergens (natural essential oils that oxidize into allergens), and the Cleansing Oil contains <strong>Cocamide DEA</strong> — a commonly-questioned ingredient. Fragrance-sensitive individuals should check the conditioner and facial oil carefully.
+  </div>
+</div>
+
+<!-- ══════════════════════════ FACE CARE — PAGE 1 ══ -->
+<div class="product-page">
+  <div class="section-header">🪷 Face Care</div>
+
+  <!-- 1. Kumkumadi Facial Oil -->
+  <div class="product-card">
+    <div class="product-image-col">
+      <img src="https://incidecoder-content.storage.googleapis.com/36bb8986-11ad-4cb6-90ce-1a14266281b5/products/kama-ayurveda-kumkumadi-facial-oil/kama-ayurveda-kumkumadi-facial-oil_front_photo_original.jpeg" alt="Kumkumadi Facial Oil" onerror="this.style.display='none'">
+      <div class="grade-badge gb-b">B</div>
+      <div class="awareness-bar">
+        <div class="bar-lbl">Safety Score: 76/100</div>
+        <div class="bar-track"><div class="bar-fill-b" style="width:76%"></div></div>
+      </div>
+    </div>
+    <div class="product-info-col">
+      <div class="product-name">Kama Ayurveda Kumkumadi Facial Oil</div>
+      <div class="product-meta"><span>Brand: Kama Ayurveda</span><span>Category: Face Care</span><span>Type: Facial Oil</span></div>
+      <div class="ingr-section">
+        <h4>Ingredients (19)</h4>
+        <div class="ingr-list">
+          <div class="ingr-item ingr-safe"><span class="ingr-dot dot-safe"></span><div><div class="ingr-name">Caprae Lac (Goat Milk)</div><div class="ingr-note">Nourishing, skin-softening base. Rich in lactic acid and vitamins.</div></div></div>
+          <div class="ingr-item ingr-safe"><span class="ingr-dot dot-safe"></span><div><div class="ingr-name">Sesamum Indicum Seed Oil (Sesame)</div><div class="ingr-note">Traditional Ayurvedic base oil. Penetrates deeply, antioxidant-rich.</div></div></div>
+          <div class="ingr-item ingr-safe"><span class="ingr-dot dot-safe"></span><div><div class="ingr-name">Crocus Sativus Stigma Extract (Saffron)</div><div class="ingr-note">Signature Kumkumadi ingredient. Brightening, antioxidant, traditionally used for radiance.</div></div></div>
+          <div class="ingr-item ingr-safe"><span class="ingr-dot dot-safe"></span><div><div class="ingr-name">Caesalpinia Sappan Bark Extract (Pathimugam)</div></div></div>
+          <div class="ingr-item ingr-safe"><span class="ingr-dot dot-safe"></span><div><div class="ingr-name">Glycyrrhiza Glabra Root Powder (Mulethi / Licorice)</div><div class="ingr-note">Natural brightener — inhibits melanin synthesis.</div></div></div>
+          <div class="ingr-item ingr-safe"><span class="ingr-dot dot-safe"></span><div><div class="ingr-name">Rubia Cordifolia Root Powder (Manjistha)</div></div></div>
+          <div class="ingr-item ingr-safe"><span class="ingr-dot dot-safe"></span><div><div class="ingr-name">Shellac (Lac / Laciferra Lacca)</div></div></div>
+          <div class="ingr-item ingr-safe"><span class="ingr-dot dot-safe"></span><div><div class="ingr-name">Ficus Benghalensis Bark/Bud Extract (Banyan)</div></div></div>
+          <div class="ingr-item ingr-safe"><span class="ingr-dot dot-safe"></span><div><div class="ingr-name">Eichhornia Crassipes Extract (Water Hyacinth)</div></div></div>
+          <div class="ingr-item ingr-safe"><span class="ingr-dot dot-safe"></span><div><div class="ingr-name">Nelumbo Nucifera Flower Powder (Lotus)</div></div></div>
+          <div class="ingr-item ingr-safe"><span class="ingr-dot dot-safe"></span><div><div class="ingr-name">Prunus Cerasus Extract (Cherry)</div></div></div>
+          <div class="ingr-item ingr-safe"><span class="ingr-dot dot-safe"></span><div><div class="ingr-name">Vetiveria Zizanoides Root Powder (Vetiver)</div></div></div>
+          <div class="ingr-item ingr-safe"><span class="ingr-dot dot-safe"></span><div><div class="ingr-name">Pelargonium Graveolens Oil (Geranium)</div></div></div>
+          <div class="ingr-item ingr-safe"><span class="ingr-dot dot-safe"></span><div><div class="ingr-name">Vetiveria Zizanoides Root Oil</div></div></div>
+          <div class="ingr-item ingr-safe"><span class="ingr-dot dot-safe"></span><div><div class="ingr-name">Citrus Reticulata Peel Oil (Tangerine / Mandarin)</div></div></div>
+          <div class="ingr-item ingr-safe"><span class="ingr-dot dot-safe"></span><div><div class="ingr-name">Rosa Damascena Flower Oil (Rose Otto)</div></div></div>
+          <div class="ingr-item ingr-worth"><span class="ingr-dot dot-worth"></span><div><div class="ingr-name">Citronellol ⚠</div><div class="ingr-note">Natural fragrance component. Can oxidize in air and become a contact allergen. EU required disclosure. May cause reactions in fragrance-sensitive individuals.</div></div></div>
+          <div class="ingr-item ingr-worth"><span class="ingr-dot dot-worth"></span><div><div class="ingr-name">Geraniol ⚠</div><div class="ingr-note">Fragrance allergen listed on EU 26 allergens list. Autooxidizes to irritating hydroperoxides. Patch test recommended.</div></div></div>
+          <div class="ingr-item ingr-worth"><span class="ingr-dot dot-worth"></span><div><div class="ingr-name">Linalool ⚠</div><div class="ingr-note">Common fragrance component found in lavender, rose etc. Oxidises on air exposure to form allergenic linalool hydroperoxide. One of the most common contact allergens.</div></div></div>
+        </div>
+      </div>
+      <div class="verdict-row vr-warn">⚠ Grade B — 3 fragrance allergens (Citronellol, Geraniol, Linalool) from natural essential oils. These are worth knowing about, especially for fragrance-sensitive or eczema-prone skin. Core Ayurvedic ingredient list is otherwise excellent.</div>
+    </div>
+  </div>
+</div>
+
+<!-- ── FACE PAGE 2 ── -->
+<div class="product-page">
+  <div class="section-header">🪷 Face Care (continued)</div>
+
+  <!-- 2. Kumkumadi Night Serum -->
+  <div class="product-card">
+    <div class="product-image-col">
+      <img src="https://incidecoder-content.storage.googleapis.com/6a7ebbbb-26d5-4c13-8a3c-32d6173cf0f3/products/kama-ayurveda-kumkumadi-miraculous-beauty-fluid-ayurvedic-night-serum/kama-ayurveda-kumkumadi-miraculous-beauty-fluid-ayurvedic-night-serum_front_photo_original.jpeg" alt="Kumkumadi Night Serum" onerror="this.style.display='none'">
+      <div class="grade-badge gb-a">A</div>
+      <div class="awareness-bar">
+        <div class="bar-lbl">Safety Score: 100/100</div>
+        <div class="bar-track"><div class="bar-fill-a" style="width:100%"></div></div>
+      </div>
+    </div>
+    <div class="product-info-col">
+      <div class="product-name">Kama Ayurveda Kumkumadi Miraculous Beauty Fluid (Ayurvedic Night Serum)</div>
+      <div class="product-meta"><span>Brand: Kama Ayurveda</span><span>Category: Face Care</span><span>Type: Night Serum / Facial Oil</span></div>
+      <div class="ingr-section">
+        <h4>Ingredients (12)</h4>
+        <div class="ingr-list">
+          <div class="ingr-item ingr-safe"><span class="ingr-dot dot-safe"></span><div><div class="ingr-name">Caprae Lac (Goat Milk)</div></div></div>
+          <div class="ingr-item ingr-safe"><span class="ingr-dot dot-safe"></span><div><div class="ingr-name">Sesamum Indicum Seed Oil (Sesame Oil)</div><div class="ingr-note">Lightweight, deeply penetrating base. Antioxidant-rich.</div></div></div>
+          <div class="ingr-item ingr-safe"><span class="ingr-dot dot-safe"></span><div><div class="ingr-name">Caesalpinia Sappan Bark Extract (Pathimugam / Sappanwood)</div></div></div>
+          <div class="ingr-item ingr-safe"><span class="ingr-dot dot-safe"></span><div><div class="ingr-name">Crocus Sativus Flower Extract (Saffron)</div><div class="ingr-note">Grade I saffron. Brightening, anti-hyperpigmentation, antioxidant.</div></div></div>
+          <div class="ingr-item ingr-safe"><span class="ingr-dot dot-safe"></span><div><div class="ingr-name">Glycyrrhiza Glabra Root Powder (Licorice / Mulethi)</div><div class="ingr-note">Glabridin content inhibits tyrosinase. One of the most effective natural brighteners.</div></div></div>
+          <div class="ingr-item ingr-safe"><span class="ingr-dot dot-safe"></span><div><div class="ingr-name">Rubia Cordifolia Root Powder (Manjistha)</div></div></div>
+          <div class="ingr-item ingr-safe"><span class="ingr-dot dot-safe"></span><div><div class="ingr-name">Shellac (Lac)</div></div></div>
+          <div class="ingr-item ingr-safe"><span class="ingr-dot dot-safe"></span><div><div class="ingr-name">Ficus Indica Bark (Banyan Fig Bark)</div></div></div>
+          <div class="ingr-item ingr-safe"><span class="ingr-dot dot-safe"></span><div><div class="ingr-name">Eichhornia Crassipes Extract</div></div></div>
+          <div class="ingr-item ingr-safe"><span class="ingr-dot dot-safe"></span><div><div class="ingr-name">Nelumbo Nucifera Flower Powder (Sacred Lotus)</div></div></div>
+          <div class="ingr-item ingr-safe"><span class="ingr-dot dot-safe"></span><div><div class="ingr-name">Prunus Cerasus Extract (Sour Cherry)</div></div></div>
+          <div class="ingr-item ingr-safe"><span class="ingr-dot dot-safe"></span><div><div class="ingr-name">Vetiveria Zizanoides Root Powder (Vetiver)</div></div></div>
+        </div>
+      </div>
+      <div class="verdict-row vr-good">✅ Grade A — Fragrance-free, alcohol-free, no synthetic additives. A pure Ayurvedic oil formulation. The cleaner version of the Kumkumadi Facial Oil — better suited for fragrance-sensitive skin. Suitable for all skin types including sensitive.</div>
+    </div>
+  </div>
+
+  <!-- 3. Eladi Hydrating Face Cream -->
+  <div class="product-card">
+    <div class="product-image-col">
+      <img src="https://incidecoder-content.storage.googleapis.com/db778955-9843-4fd8-87b5-b397c24eddcb/ingredients/kama-ayurveda-eladi-hydrating-face-cream/kama-ayurveda-eladi-hydrating-face-cream_original.jpeg" alt="Eladi Hydrating Face Cream" onerror="this.style.display='none'">
+      <div class="grade-badge gb-b">B</div>
+      <div class="awareness-bar">
+        <div class="bar-lbl">Safety Score: 80/100</div>
+        <div class="bar-track"><div class="bar-fill-b" style="width:80%"></div></div>
+      </div>
+    </div>
+    <div class="product-info-col">
+      <div class="product-name">Kama Ayurveda Eladi Hydrating Face Cream</div>
+      <div class="product-meta"><span>Brand: Kama Ayurveda</span><span>Category: Face Care</span><span>Type: Moisturiser</span></div>
+      <div class="ingr-section">
+        <h4>Ingredients (22)</h4>
+        <div class="ingr-list">
+          <div class="ingr-item ingr-safe"><span class="ingr-dot dot-safe"></span><div><div class="ingr-name">Aqua (Water)</div></div></div>
+          <div class="ingr-item ingr-safe"><span class="ingr-dot dot-safe"></span><div><div class="ingr-name">Stearic Acid</div><div class="ingr-note">Emulsifier and emollient. Mild comedogenic rating (2–3). Generally safe.</div></div></div>
+          <div class="ingr-item ingr-safe"><span class="ingr-dot dot-safe"></span><div><div class="ingr-name">Cetyl Alcohol</div><div class="ingr-note">Fatty alcohol emollient and thickener. Not drying. Safe.</div></div></div>
+          <div class="ingr-item ingr-safe"><span class="ingr-dot dot-safe"></span><div><div class="ingr-name">Cocos Nucifera Fruit Extract (Coconut)</div></div></div>
+          <div class="ingr-item ingr-safe"><span class="ingr-dot dot-safe"></span><div><div class="ingr-name">Cetearyl Olivate, Sorbitan Olivate (Olive-derived emulsifiers — Ecocert)</div></div></div>
+          <div class="ingr-item ingr-safe"><span class="ingr-dot dot-safe"></span><div><div class="ingr-name">Rose, Jasmine Essential Oil</div></div></div>
+          <div class="ingr-item ingr-safe"><span class="ingr-dot dot-safe"></span><div><div class="ingr-name">Vetiveria Zizanoides Extract, Shorea Robusta Leaf Extract (Sal)</div></div></div>
+          <div class="ingr-item ingr-safe"><span class="ingr-dot dot-safe"></span><div><div class="ingr-name">Sesamum Indicum Seed Oil (Sesame)</div></div></div>
+          <div class="ingr-item ingr-safe"><span class="ingr-dot dot-safe"></span><div><div class="ingr-name">Myristica Fragrans Extract (Nutmeg), Mesua Ferrea Flower Extract (Nagkesar)</div></div></div>
+          <div class="ingr-item ingr-safe"><span class="ingr-dot dot-safe"></span><div><div class="ingr-name">Cinnamomum Zeylanicum Bark Extract (Cinnamon)</div></div></div>
+          <div class="ingr-item ingr-safe"><span class="ingr-dot dot-safe"></span><div><div class="ingr-name">Cedrus Deodara Wood Extract (Himalayan Cedar), Elettaria Cardamomum Seed Powder</div></div></div>
+          <div class="ingr-item ingr-safe"><span class="ingr-dot dot-safe"></span><div><div class="ingr-name">Panthenol (Pro-Vitamin B5), Allantoin</div><div class="ingr-note">Proven skin-soothing and barrier-repair actives.</div></div></div>
+          <div class="ingr-item ingr-safe"><span class="ingr-dot dot-safe"></span><div><div class="ingr-name">Xanthan Gum (Thickener), Aloe Vera Juice</div></div></div>
+          <div class="ingr-item ingr-worth"><span class="ingr-dot dot-worth"></span><div><div class="ingr-name">Phenoxyethanol ⚠</div><div class="ingr-note">Widely used synthetic preservative. Generally considered safe at ≤1%. FDA cautions against use in nipple creams for nursing infants. Fine for face use.</div></div></div>
+          <div class="ingr-item ingr-worth"><span class="ingr-dot dot-worth"></span><div><div class="ingr-name">EDTA (Disodium EDTA) ⚠</div><div class="ingr-note">Chelating agent. Prevents metal ions from degrading the formula. Safe but synthetic — not a natural/Ayurvedic ingredient. Helps preservative systems work better.</div></div></div>
+        </div>
+      </div>
+      <div class="verdict-row vr-warn">⚠ Grade B — Excellent Ayurvedic herbal base with olive-derived emulsifiers. Phenoxyethanol and EDTA are standard cosmetic preservatives (safe). Not 100% natural but well-formulated.</div>
+    </div>
+  </div>
+</div>
+
+<!-- ── FACE PAGE 3 ── -->
+<div class="product-page">
+  <div class="section-header">🪷 Face Care (continued)</div>
+
+  <!-- 4. Anti Acne Cleansing Foam -->
+  <div class="product-card">
+    <div class="product-image-col">
+      <img src="https://incidecoder-content.storage.googleapis.com/dc5f9ce2-ea16-4108-a422-a622ccdd11b7/products/kama-ayurveda-anti-acne-cleansing-foam-with-neem-tulsi-tea-tree/kama-ayurveda-anti-acne-cleansing-foam-with-neem-tulsi-tea-tree_front_photo_original.jpeg" alt="Anti Acne Cleansing Foam" onerror="this.style.display='none'">
+      <div class="grade-badge gb-a">A</div>
+      <div class="awareness-bar">
+        <div class="bar-lbl">Safety Score: 100/100</div>
+        <div class="bar-track"><div class="bar-fill-a" style="width:100%"></div></div>
+      </div>
+    </div>
+    <div class="product-info-col">
+      <div class="product-name">Kama Ayurveda Anti Acne Cleansing Foam with Neem, Tulsi & Tea Tree</div>
+      <div class="product-meta"><span>Brand: Kama Ayurveda</span><span>Category: Face Care</span><span>Type: Face Wash / Cleanser</span></div>
+      <div class="ingr-section">
+        <h4>Ingredients (18)</h4>
+        <div class="ingr-list">
+          <div class="ingr-item ingr-safe"><span class="ingr-dot dot-safe"></span><div><div class="ingr-name">Aqua (Water)</div></div></div>
+          <div class="ingr-item ingr-safe"><span class="ingr-dot dot-safe"></span><div><div class="ingr-name">Sodium Cocoyl Glutamate, Disodium Cocoyl Glutamate</div><div class="ingr-note">Mild amino acid-derived surfactants. One of the gentlest cleansing agents. Skin-identical amino acid backbone.</div></div></div>
+          <div class="ingr-item ingr-safe"><span class="ingr-dot dot-safe"></span><div><div class="ingr-name">Sodium Cocoamphoacetate</div><div class="ingr-note">Amphoteric surfactant. Extremely mild, often used in baby products.</div></div></div>
+          <div class="ingr-item ingr-safe"><span class="ingr-dot dot-safe"></span><div><div class="ingr-name">Sodium Lauroyl Glutamate</div><div class="ingr-note">Amino acid-based cleanser. Gentle, low irritation potential.</div></div></div>
+          <div class="ingr-item ingr-safe"><span class="ingr-dot dot-safe"></span><div><div class="ingr-name">Dimethyl Isosorbide</div><div class="ingr-note">Natural-origin penetration enhancer derived from sorbitol. Helps actives absorb better.</div></div></div>
+          <div class="ingr-item ingr-safe"><span class="ingr-dot dot-safe"></span><div><div class="ingr-name">Phragmites Communis Extract (Common Reed), Poria Cocos Extract (Mushroom)</div></div></div>
+          <div class="ingr-item ingr-safe"><span class="ingr-dot dot-safe"></span><div><div class="ingr-name">Salicylic Acid (BHA)</div><div class="ingr-note">Exfoliates inside pores, reduces blackheads and acne. One of the most evidence-backed acne actives.</div></div></div>
+          <div class="ingr-item ingr-safe"><span class="ingr-dot dot-safe"></span><div><div class="ingr-name">Aloe Vera Juice (Aloe Barbadensis)</div></div></div>
+          <div class="ingr-item ingr-safe"><span class="ingr-dot dot-safe"></span><div><div class="ingr-name">Sodium Benzoate, Potassium Sorbate</div><div class="ingr-note">Natural-origin preservative system. Safe at low concentrations in rinse-off formulas.</div></div></div>
+          <div class="ingr-item ingr-safe"><span class="ingr-dot dot-safe"></span><div><div class="ingr-name">Neem Oil (Azadirachta Indica)</div><div class="ingr-note">Antibacterial, antifungal. Traditional anti-acne ingredient.</div></div></div>
+          <div class="ingr-item ingr-safe"><span class="ingr-dot dot-safe"></span><div><div class="ingr-name">Tulsi Oil (Ocimum Sanctum)</div><div class="ingr-note">Holy Basil essential oil. Antimicrobial, anti-inflammatory.</div></div></div>
+          <div class="ingr-item ingr-safe"><span class="ingr-dot dot-safe"></span><div><div class="ingr-name">Tea Tree Oil (Melaleuca Alternifolia)</div><div class="ingr-note">Well-studied anti-acne ingredient. Comparable to 5% benzoyl peroxide in some studies.</div></div></div>
+          <div class="ingr-item ingr-safe"><span class="ingr-dot dot-safe"></span><div><div class="ingr-name">Calendula Extract, Allantoin</div><div class="ingr-note">Soothing and anti-inflammatory. Allantoin promotes skin healing.</div></div></div>
+          <div class="ingr-item ingr-safe"><span class="ingr-dot dot-safe"></span><div><div class="ingr-name">Xanthan Gum</div></div></div>
+        </div>
+      </div>
+      <div class="verdict-row vr-good">✅ Grade A — One of Kama's cleanest formulas. Alcohol-free, no synthetic fragrance, no parabens. Amino acid surfactants + Salicylic Acid + Neem + Tea Tree make this a well-rounded anti-acne cleanser. Highly recommended.</div>
+    </div>
+  </div>
+
+  <!-- 5. Kumkumadi Cleansing Oil -->
+  <div class="product-card">
+    <div class="product-image-col">
+      <img src="https://incidecoder-content.storage.googleapis.com/6dfda6f3-9b22-4bea-8df0-e9f22261b99a/products/kama-ayurveda-kumkumadi-clarifying-and-brightening-cleaning-oil/kama-ayurveda-kumkumadi-clarifying-and-brightening-cleaning-oil_front_photo_original.jpeg" alt="Kumkumadi Cleansing Oil" onerror="this.style.display='none'">
+      <div class="grade-badge gb-d">D</div>
+      <div class="awareness-bar">
+        <div class="bar-lbl">Safety Score: 44/100</div>
+        <div class="bar-track"><div class="bar-fill-d" style="width:44%"></div></div>
+      </div>
+    </div>
+    <div class="product-info-col">
+      <div class="product-name">Kama Ayurveda Kumkumadi Clarifying & Brightening Cleansing Oil</div>
+      <div class="product-meta"><span>Brand: Kama Ayurveda</span><span>Category: Face Care</span><span>Type: Cleansing Oil</span></div>
+      <div class="ingr-section">
+        <h4>Ingredients (25)</h4>
+        <div class="ingr-list">
+          <div class="ingr-item ingr-safe"><span class="ingr-dot dot-safe"></span><div><div class="ingr-name">Caprylic/Capric Triglyceride (MCT Oil)</div><div class="ingr-note">Lightweight carrier oil derived from coconut. Excellent skin feel.</div></div></div>
+          <div class="ingr-item ingr-safe"><span class="ingr-dot dot-safe"></span><div><div class="ingr-name">Caprae Lac (Goat Milk)</div></div></div>
+          <div class="ingr-item ingr-safe"><span class="ingr-dot dot-safe"></span><div><div class="ingr-name">Helianthus Annuus Seed Oil (Sunflower), Simmondsia Chinensis Seed Oil (Jojoba)</div></div></div>
+          <div class="ingr-item ingr-flag"><span class="ingr-dot dot-flag"></span><div><div class="ingr-name">Laureth-4 🚩</div><div class="ingr-note">Ethoxylated emulsifier. Comedogenicity rating 5 (highly pore-clogging), irritancy rating 4. May contain ethylene oxide residues from manufacturing. Higher irritation and pore-clogging risk than expected for a premium brand.</div></div></div>
+          <div class="ingr-item ingr-safe"><span class="ingr-dot dot-safe"></span><div><div class="ingr-name">Mipa-Laureth Sulfate</div><div class="ingr-note">Cleansing agent — milder than SLS but still a sulfate derivative.</div></div></div>
+          <div class="ingr-item ingr-safe"><span class="ingr-dot dot-safe"></span><div><div class="ingr-name">Sesamum Indicum Seed Oil (Sesame)</div></div></div>
+          <div class="ingr-item ingr-flag"><span class="ingr-dot dot-flag"></span><div><div class="ingr-name">Cocamide DEA 🚩</div><div class="ingr-note">Foam booster derived from coconut oil. When combined with amines (common in formulas), can form nitrosamines — carcinogenic contaminants. California Prop 65 listed. Controversial in premium and "natural" brands. EU limits it strictly. Not expected in a premium Ayurvedic product.</div></div></div>
+          <div class="ingr-item ingr-safe"><span class="ingr-dot dot-safe"></span><div><div class="ingr-name">Tocopheryl Acetate (Vitamin E)</div></div></div>
+          <div class="ingr-item ingr-safe"><span class="ingr-dot dot-safe"></span><div><div class="ingr-name">Glycyrrhiza Glabra Root Powder (Mulethi), Rubia Cordifolia Root Powder (Manjistha), Shellac</div></div></div>
+          <div class="ingr-item ingr-safe"><span class="ingr-dot dot-safe"></span><div><div class="ingr-name">Citrus Medica Fruit Juice Extract, Caesalpinia Sappan Stem Powder, Crocus Sativus Stigma Extract (Saffron)</div></div></div>
+          <div class="ingr-item ingr-safe"><span class="ingr-dot dot-safe"></span><div><div class="ingr-name">Ficus Benghalensis Bark Extract, Monochoria Hastata Oil, Nelumbo Nucifera Flower Extract</div></div></div>
+          <div class="ingr-item ingr-safe"><span class="ingr-dot dot-safe"></span><div><div class="ingr-name">Prunus Cerasus Flower Extract, Vetiveria Zizanoides Extract, Emblica Officinalis Fruit Extract</div></div></div>
+          <div class="ingr-item ingr-safe"><span class="ingr-dot dot-safe"></span><div><div class="ingr-name">Glycine Soja Oil (Soybean), Centella Asiatica Extract, Beta-Carotene, Daucus Carota Sativa Root Extract (Carrot)</div></div></div>
+        </div>
+      </div>
+      <div class="verdict-row vr-bad">🚩 Grade D — Despite the premium Kumkumadi branding, this cleansing oil contains Cocamide DEA (nitrosamine risk) and Laureth-4 (comedogenicity 5). These are out of place in a product positioned as natural/Ayurvedic. Use with caution — especially if acne-prone.</div>
+    </div>
+  </div>
+</div>
+
+<!-- ── FACE PAGE 4 ── -->
+<div class="product-page">
+  <div class="section-header">🪷 Face Care (continued)</div>
+
+  <!-- 6. Foaming Face Wash -->
+  <div class="product-card">
+    <div class="product-image-col">
+      <img src="https://incidecoder-content.storage.googleapis.com/469907fb-a073-4199-8e37-0445f6c7548c/products/foaming-face-wash-kama-ayurveda/foaming-face-wash-kama-ayurveda_front_photo_original.jpeg" alt="Foaming Face Wash" onerror="this.style.display='none'">
+      <div class="grade-badge gb-b">B</div>
+      <div class="awareness-bar">
+        <div class="bar-lbl">Safety Score: 84/100</div>
+        <div class="bar-track"><div class="bar-fill-b" style="width:84%"></div></div>
+      </div>
+    </div>
+    <div class="product-info-col">
+      <div class="product-name">Kama Ayurveda Foaming Face Wash</div>
+      <div class="product-meta"><span>Brand: Kama Ayurveda</span><span>Category: Face Care</span><span>Type: Face Wash</span></div>
+      <div class="ingr-section">
+        <h4>Ingredients (16)</h4>
+        <div class="ingr-list">
+          <div class="ingr-item ingr-safe"><span class="ingr-dot dot-safe"></span><div><div class="ingr-name">Aqua (Water)</div></div></div>
+          <div class="ingr-item ingr-safe"><span class="ingr-dot dot-safe"></span><div><div class="ingr-name">Aloe Barbadensis Leaf Juice (Aloe Vera)</div></div></div>
+          <div class="ingr-item ingr-safe"><span class="ingr-dot dot-safe"></span><div><div class="ingr-name">Sodium Lauroyl Sarcosinate</div><div class="ingr-note">Mild amino acid-derived cleanser. Gentle, low irritation potential.</div></div></div>
+          <div class="ingr-item ingr-safe"><span class="ingr-dot dot-safe"></span><div><div class="ingr-name">Glycerin</div><div class="ingr-note">Humectant. Draws moisture to skin. One of the most well-studied skincare ingredients.</div></div></div>
+          <div class="ingr-item ingr-safe"><span class="ingr-dot dot-safe"></span><div><div class="ingr-name">Cyamopsis Tetragonoloba Gum (Guar Gum)</div></div></div>
+          <div class="ingr-item ingr-safe"><span class="ingr-dot dot-safe"></span><div><div class="ingr-name">Vetiveria Zizanoides Root Extract (Vetiver)</div></div></div>
+          <div class="ingr-item ingr-safe"><span class="ingr-dot dot-safe"></span><div><div class="ingr-name">Ocimum Sanctum Leaf Extract (Tulsi / Holy Basil)</div></div></div>
+          <div class="ingr-item ingr-safe"><span class="ingr-dot dot-safe"></span><div><div class="ingr-name">Glycyrrhiza Glabra Root Extract (Mulethi / Licorice)</div></div></div>
+          <div class="ingr-item ingr-safe"><span class="ingr-dot dot-safe"></span><div><div class="ingr-name">Cuminum Cyminum Seed Extract (Cumin), Cassia Alata Leaf Extract</div></div></div>
+          <div class="ingr-item ingr-worth"><span class="ingr-dot dot-worth"></span><div><div class="ingr-name">Potassium Sorbate ⚠</div><div class="ingr-note">Natural-origin preservative. Mild. Can be irritating at higher concentrations in leave-on products. Fine as a rinse-off preservative. Worth knowing as a standalone preservative system (may not be sufficient alone).</div></div></div>
+          <div class="ingr-item ingr-safe"><span class="ingr-dot dot-safe"></span><div><div class="ingr-name">Polianthes Tuberosa Flower Oil (Tuberose), Simmondsia Chinensis Seed Oil (Jojoba)</div></div></div>
+          <div class="ingr-item ingr-safe"><span class="ingr-dot dot-safe"></span><div><div class="ingr-name">Salicylic Acid (BHA)</div><div class="ingr-note">Exfoliates inside pores. Even in face washes it can reduce acne over time.</div></div></div>
+          <div class="ingr-item ingr-safe"><span class="ingr-dot dot-safe"></span><div><div class="ingr-name">Rose, Jasmine Essential Oil Blend</div></div></div>
+        </div>
+      </div>
+      <div class="verdict-row vr-warn">⚠ Grade B — A well-formulated gentle cleanser with Ayurvedic botanicals + Salicylic Acid. No SLS/SLES, no parabens. Potassium Sorbate is mild. Good for normal to oily skin.</div>
+    </div>
+  </div>
+
+  <!-- 7. Kumkumadi Face Scrub -->
+  <div class="product-card">
+    <div class="product-image-col">
+      <img src="https://incidecoder-content.storage.googleapis.com/916c4fd6-0b08-4f04-806a-1e96554e7d35/products/kama-ayurveda-kumkumadi-brightening-ayurvedic-face-scrub/kama-ayurveda-kumkumadi-brightening-ayurvedic-face-scrub_front_photo_original.jpeg" alt="Kumkumadi Face Scrub" onerror="this.style.display='none'">
+      <div class="grade-badge gb-b">B</div>
+      <div class="awareness-bar">
+        <div class="bar-lbl">Safety Score: 84/100</div>
+        <div class="bar-track"><div class="bar-fill-b" style="width:84%"></div></div>
+      </div>
+    </div>
+    <div class="product-info-col">
+      <div class="product-name">Kama Ayurveda Kumkumadi Brightening Ayurvedic Face Scrub</div>
+      <div class="product-meta"><span>Brand: Kama Ayurveda</span><span>Category: Face Care</span><span>Type: Exfoliating Scrub</span></div>
+      <div class="ingr-section">
+        <h4>Ingredients (22)</h4>
+        <div class="ingr-list">
+          <div class="ingr-item ingr-safe"><span class="ingr-dot dot-safe"></span><div><div class="ingr-name">Aqua (Water)</div></div></div>
+          <div class="ingr-item ingr-safe"><span class="ingr-dot dot-safe"></span><div><div class="ingr-name">Helianthus Annuus Seed Oil (Sunflower)</div></div></div>
+          <div class="ingr-item ingr-safe"><span class="ingr-dot dot-safe"></span><div><div class="ingr-name">Glyceryl Stearate (Emulsifier)</div></div></div>
+          <div class="ingr-item ingr-safe"><span class="ingr-dot dot-safe"></span><div><div class="ingr-name">Juglans Regia Shell Powder (Walnut Shell)</div><div class="ingr-note">Physical exfoliant. Note: avoid vigorous scrubbing as jagged walnut shell particles can micro-tear skin. Use gently.</div></div></div>
+          <div class="ingr-item ingr-safe"><span class="ingr-dot dot-safe"></span><div><div class="ingr-name">Stearic Acid, Glycerine, Cetyl Alcohol</div></div></div>
+          <div class="ingr-item ingr-worth"><span class="ingr-dot dot-worth"></span><div><div class="ingr-name">Phenoxyethanol ⚠</div><div class="ingr-note">Synthetic preservative. Safe at ≤1%. Standard choice for natural-positioned brands.</div></div></div>
+          <div class="ingr-item ingr-safe"><span class="ingr-dot dot-safe"></span><div><div class="ingr-name">Prunus Amygdalus Dulcis Seed Extract (Sweet Almond)</div></div></div>
+          <div class="ingr-item ingr-safe"><span class="ingr-dot dot-safe"></span><div><div class="ingr-name">Crocus Sativus Flower Extract (Saffron)</div></div></div>
+          <div class="ingr-item ingr-worth"><span class="ingr-dot dot-worth"></span><div><div class="ingr-name">BHT (Butylated Hydroxytoluene) ⚠</div><div class="ingr-note">Synthetic antioxidant preservative. Prevents oil oxidation. Controversy over endocrine disruption at high doses — but cosmetic use concentrations are very low (0.01–0.1%) and considered safe by EU, FDA, and SCCS. Worth knowing but not a major concern in a scrub.</div></div></div>
+          <div class="ingr-item ingr-safe"><span class="ingr-dot dot-safe"></span><div><div class="ingr-name">Vetiveria Zizanoides Extract, Sesamum Indicum Seed Oil</div></div></div>
+          <div class="ingr-item ingr-safe"><span class="ingr-dot dot-safe"></span><div><div class="ingr-name">Rubia Cordifolia Root Powder, Prunus Cerasoides Extract, Nelumbo Nucifera Flower Powder</div></div></div>
+          <div class="ingr-item ingr-safe"><span class="ingr-dot dot-safe"></span><div><div class="ingr-name">Monochoria Vaginalis Extract, Laciferra Lacca (Shellac), Glycyrrhiza Glabra Root Powder</div></div></div>
+          <div class="ingr-item ingr-safe"><span class="ingr-dot dot-safe"></span><div><div class="ingr-name">Ficus Benghalensis Bark Powder, Caprae Lac (Goat Milk), Caesalpinia Sappan Stem Powder</div></div></div>
+        </div>
+      </div>
+      <div class="verdict-row vr-warn">⚠ Grade B — Classic Kumkumadi botanical profile in a scrub base. BHT and Phenoxyethanol are mild flags. Use walnut shell scrub gently to avoid micro-tears. Not recommended for active acne or inflamed skin.</div>
+    </div>
+  </div>
+</div>
+
+<!-- ── FACE PAGE 5 ── -->
+<div class="product-page">
+  <div class="section-header">🪷 Face Care (continued)</div>
+
+  <!-- 8. Rose & Jasmine Cleanser -->
+  <div class="product-card">
+    <div class="product-image-col">
+      <img src="https://incidecoder-content.storage.googleapis.com/03cbc08f-2012-4b10-88c6-38f245461c9d/products/kama-ayurveda-rose-and-jasmine-cleanser/kama-ayurveda-rose-and-jasmine-cleanser_front_photo_original.jpeg" alt="Rose and Jasmine Cleanser" onerror="this.style.display='none'">
+      <div class="grade-badge gb-a">A</div>
+      <div class="awareness-bar">
+        <div class="bar-lbl">Safety Score: 96/100</div>
+        <div class="bar-track"><div class="bar-fill-a" style="width:96%"></div></div>
+      </div>
+    </div>
+    <div class="product-info-col">
+      <div class="product-name">Kama Ayurveda Rose & Jasmine Face Cleanser</div>
+      <div class="product-meta"><span>Brand: Kama Ayurveda</span><span>Category: Face Care</span><span>Type: Gel Cleanser</span></div>
+      <div class="ingr-section">
+        <h4>Ingredients (15)</h4>
+        <div class="ingr-list">
+          <div class="ingr-item ingr-safe"><span class="ingr-dot dot-safe"></span><div><div class="ingr-name">Aqua (Water)</div></div></div>
+          <div class="ingr-item ingr-safe"><span class="ingr-dot dot-safe"></span><div><div class="ingr-name">Aloe Barbadensis Leaf Juice (Aloe Vera)</div></div></div>
+          <div class="ingr-item ingr-safe"><span class="ingr-dot dot-safe"></span><div><div class="ingr-name">Sodium Lauroyl Sarcosinate</div><div class="ingr-note">Gentle amino acid-derived surfactant. Low irritation potential.</div></div></div>
+          <div class="ingr-item ingr-safe"><span class="ingr-dot dot-safe"></span><div><div class="ingr-name">Glycerine (Glycerin)</div></div></div>
+          <div class="ingr-item ingr-safe"><span class="ingr-dot dot-safe"></span><div><div class="ingr-name">Cyamopsis Tetragonoloba Gum (Guar Gum)</div></div></div>
+          <div class="ingr-item ingr-safe"><span class="ingr-dot dot-safe"></span><div><div class="ingr-name">Vetiveria Zizanoides Root Extract (Vetiver)</div></div></div>
+          <div class="ingr-item ingr-safe"><span class="ingr-dot dot-safe"></span><div><div class="ingr-name">Ocimum Sanctum Leaf Extract (Holy Basil / Tulsi)</div></div></div>
+          <div class="ingr-item ingr-safe"><span class="ingr-dot dot-safe"></span><div><div class="ingr-name">Glycyrrhiza Glabra Root Extract (Licorice / Mulethi)</div></div></div>
+          <div class="ingr-item ingr-safe"><span class="ingr-dot dot-safe"></span><div><div class="ingr-name">Cuminum Cyminum Seed Extract (Cumin)</div></div></div>
+          <div class="ingr-item ingr-safe"><span class="ingr-dot dot-safe"></span><div><div class="ingr-name">Cassia Alata Leaf Extract</div></div></div>
+          <div class="ingr-item ingr-safe"><span class="ingr-dot dot-safe"></span><div><div class="ingr-name">Potassium Sorbate (Preservative)</div></div></div>
+          <div class="ingr-item ingr-safe"><span class="ingr-dot dot-safe"></span><div><div class="ingr-name">Polianthes Tuberosa Flower Oil (Tuberose)</div></div></div>
+          <div class="ingr-item ingr-safe"><span class="ingr-dot dot-safe"></span><div><div class="ingr-name">Simmondsia Chinensis Seed Oil (Jojoba)</div></div></div>
+          <div class="ingr-item ingr-safe"><span class="ingr-dot dot-safe"></span><div><div class="ingr-name">Salicylic Acid (BHA)</div></div></div>
+          <div class="ingr-item ingr-safe"><span class="ingr-dot dot-safe"></span><div><div class="ingr-name">Rose, Jasmine Essential Oil (Natural fragrance)</div></div></div>
+        </div>
+      </div>
+      <div class="verdict-row vr-good">✅ Grade A — Clean, gentle formulation. Amino acid surfactant, Ayurvedic botanicals, Salicylic Acid for mild exfoliation. No synthetic preservatives beyond Potassium Sorbate. One of Kama's better face washes for combination and sensitive skin.</div>
+    </div>
+  </div>
+
+  <!-- 9. Soap Free Powder Cleanser -->
+  <div class="product-card">
+    <div class="product-image-col">
+      <img src="https://incidecoder-content.storage.googleapis.com/b126d4c6-48a0-4e96-93f5-f1740c6c68b6/products/kama-ayurveda-face-cleanser/kama-ayurveda-face-cleanser_front_photo_original.jpeg" alt="Soap Free Face Cleanser Powder" onerror="this.style.display='none'">
+      <div class="grade-badge gb-a">A</div>
+      <div class="awareness-bar">
+        <div class="bar-lbl">Safety Score: 100/100</div>
+        <div class="bar-track"><div class="bar-fill-a" style="width:100%"></div></div>
+      </div>
+    </div>
+    <div class="product-info-col">
+      <div class="product-name">Kama Ayurveda Soap Free Face Cleanser (Powder)</div>
+      <div class="product-meta"><span>Brand: Kama Ayurveda</span><span>Category: Face Care</span><span>Type: Powder Cleanser</span></div>
+      <div class="ingr-section">
+        <h4>Ingredients (10)</h4>
+        <div class="ingr-list">
+          <div class="ingr-item ingr-safe"><span class="ingr-dot dot-safe"></span><div><div class="ingr-name">Colloidal Oatmeal (Avena Sativa)</div><div class="ingr-note">FDA-approved skin protectant. Soothing for eczema and sensitive skin. Contains avenanthramides — powerful anti-inflammatory compounds.</div></div></div>
+          <div class="ingr-item ingr-safe"><span class="ingr-dot dot-safe"></span><div><div class="ingr-name">Vigna Radiata Seed Extract (Mung Bean)</div><div class="ingr-note">Traditional Ayurvedic skin cleanser (moong dal ubtan). Gentle exfoliant.</div></div></div>
+          <div class="ingr-item ingr-safe"><span class="ingr-dot dot-safe"></span><div><div class="ingr-name">Azadirachta Indica Leaf Extract (Neem)</div></div></div>
+          <div class="ingr-item ingr-safe"><span class="ingr-dot dot-safe"></span><div><div class="ingr-name">Cicer Arietinum Seed Powder (Chickpea / Besan)</div><div class="ingr-note">Traditional Indian skin brightening and cleansing ingredient. Gentle physical exfoliant.</div></div></div>
+          <div class="ingr-item ingr-safe"><span class="ingr-dot dot-safe"></span><div><div class="ingr-name">Foeniculum Vulgare Fruit Powder (Fennel)</div></div></div>
+          <div class="ingr-item ingr-safe"><span class="ingr-dot dot-safe"></span><div><div class="ingr-name">Prunus Amygdalus Dulcis Seedcoat Powder (Almond Skin)</div></div></div>
+          <div class="ingr-item ingr-safe"><span class="ingr-dot dot-safe"></span><div><div class="ingr-name">Rosa Damascena Flower Powder (Rose)</div></div></div>
+          <div class="ingr-item ingr-safe"><span class="ingr-dot dot-safe"></span><div><div class="ingr-name">Curcuma Longa Root Powder (Turmeric)</div></div></div>
+          <div class="ingr-item ingr-safe"><span class="ingr-dot dot-safe"></span><div><div class="ingr-name">Santalum Album (Sandalwood)</div></div></div>
+          <div class="ingr-item ingr-safe"><span class="ingr-dot dot-safe"></span><div><div class="ingr-name">Cinnamomum Camphora (Camphor)</div><div class="ingr-note">Low-concentration natural camphor. Antimicrobial and cooling. Avoid if highly sensitive.</div></div></div>
+        </div>
+      </div>
+      <div class="verdict-row vr-good">✅ Grade A — 100% natural powder formula. No preservatives needed (powder format). Traditional Ayurvedic ubtan-inspired cleanser. Excellent for all skin types, especially eczema-prone and very sensitive skin. Mix with water, milk, or rose water before use.</div>
+    </div>
+  </div>
+</div>
+
+<!-- ── FACE PAGE 6: Night Cream ── -->
+<div class="product-page">
+  <div class="section-header">🪷 Face Care (continued)</div>
+
+  <!-- 10. Brightening Night Cream -->
+  <div class="product-card">
+    <div class="product-image-col">
+      <img src="https://incidecoder-content.storage.googleapis.com/ef272af2-0bd9-4a82-918a-9bc64940a0e3/products/kama-ayurveda-brightening-night-cream/kama-ayurveda-brightening-night-cream_front_photo_original.jpeg" alt="Brightening Night Cream" onerror="this.style.display='none'">
+      <div class="grade-badge gb-b">B</div>
+      <div class="awareness-bar">
+        <div class="bar-lbl">Safety Score: 76/100</div>
+        <div class="bar-track"><div class="bar-fill-b" style="width:76%"></div></div>
+      </div>
+    </div>
+    <div class="product-info-col">
+      <div class="product-name">Kama Ayurveda Brightening Night Cream</div>
+      <div class="product-meta"><span>Brand: Kama Ayurveda</span><span>Category: Face Care</span><span>Type: Night Cream / Moisturiser</span></div>
+      <div class="ingr-section">
+        <h4>Ingredients (32)</h4>
+        <div class="ingr-list">
+          <div class="ingr-item ingr-safe"><span class="ingr-dot dot-safe"></span><div><div class="ingr-name">Aqua, Stearic Acid, Cetyl Alcohol</div></div></div>
+          <div class="ingr-item ingr-safe"><span class="ingr-dot dot-safe"></span><div><div class="ingr-name">Cetearyl Olivate, Sorbitan Olivate (Olive-derived Ecocert emulsifiers)</div></div></div>
+          <div class="ingr-item ingr-worth"><span class="ingr-dot dot-worth"></span><div><div class="ingr-name">Cyclopentasiloxane (D5 Cyclic Silicone) ⚠</div><div class="ingr-note">Silicone used for silky texture. Under EU review for environmental persistence (bioaccumulation in aquatic organisms). Not a direct health risk but a concern for eco-conscious consumers. EU has restricted it in wash-off products; leave-on products still permitted.</div></div></div>
+          <div class="ingr-item ingr-worth"><span class="ingr-dot dot-worth"></span><div><div class="ingr-name">Dimethicone ⚠</div><div class="ingr-note">Linear silicone. Safe for skin use, non-toxic. Creates a barrier that can trap heat/moisture. Some concerns about biodegradability.</div></div></div>
+          <div class="ingr-item ingr-worth"><span class="ingr-dot dot-worth"></span><div><div class="ingr-name">Dimethicone Crosspolymer, Phenyltrimethicone ⚠</div><div class="ingr-note">Silicone variants for smooth texture. Same environmental concerns as Dimethicone.</div></div></div>
+          <div class="ingr-item ingr-safe"><span class="ingr-dot dot-safe"></span><div><div class="ingr-name">D-Panthenol (Pro-Vitamin B5), Xanthan Gum, Allantoin</div></div></div>
+          <div class="ingr-item ingr-worth"><span class="ingr-dot dot-worth"></span><div><div class="ingr-name">EDTA ⚠</div><div class="ingr-note">Chelating agent. Synthetic. Not harmful but not natural/Ayurvedic.</div></div></div>
+          <div class="ingr-item ingr-safe"><span class="ingr-dot dot-safe"></span><div><div class="ingr-name">Vetiveria Extract, Symplocos Racemosa Extract (Lodhra)</div></div></div>
+          <div class="ingr-item ingr-safe"><span class="ingr-dot dot-safe"></span><div><div class="ingr-name">Shorea Robusta Leaf Extract (Sal), Sesamum Indicum Seed Oil</div></div></div>
+          <div class="ingr-item ingr-safe"><span class="ingr-dot dot-safe"></span><div><div class="ingr-name">Crocus Sativus Flower Extract (Saffron), Myristica Fragrans Extract, Mesua Ferrea Flower Extract</div></div></div>
+          <div class="ingr-item ingr-safe"><span class="ingr-dot dot-safe"></span><div><div class="ingr-name">Nelumbo Nucifera Flower Powder (Lotus), Glycyrrhiza Glabra Root Powder (Mulethi)</div></div></div>
+          <div class="ingr-item ingr-safe"><span class="ingr-dot dot-safe"></span><div><div class="ingr-name">Cocos Nucifera Fruit Extract, Cinnamomum Zeylanicum Bark Extract, Cedrus Deodara Wood Extract</div></div></div>
+          <div class="ingr-item ingr-safe"><span class="ingr-dot dot-safe"></span><div><div class="ingr-name">Elettaria Cardamomum Seed Powder, Caprae Lac (Goat Milk), Caesalpinia Sappan Stem Powder</div></div></div>
+          <div class="ingr-item ingr-safe"><span class="ingr-dot dot-safe"></span><div><div class="ingr-name">Aloe Barbadensis Leaf Juice, Callicarpa Macrophylla Flower Extract</div></div></div>
+          <div class="ingr-item ingr-worth"><span class="ingr-dot dot-worth"></span><div><div class="ingr-name">Phenoxyethanol ⚠</div></div></div>
+        </div>
+      </div>
+      <div class="verdict-row vr-warn">⚠ Grade B — Rich Ayurvedic herbal base but the silicone quartet (Cyclopentasiloxane, Dimethicone, Dimethicone Crosspolymer, Phenyltrimethicone) is unexpected in a premium "natural" brand. Silicones are safe but not natural. Phenoxyethanol and EDTA add to the worth-knowing count (5 flagged out of ~32 = 15%).</div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════ HAIR CARE ══ -->
+<div class="product-page">
+  <div class="section-header">💆 Hair Care</div>
+
+  <!-- 11. Bringadi Hair Treatment -->
+  <div class="product-card">
+    <div class="product-image-col">
+      <img src="https://incidecoder-content.storage.googleapis.com/dc14c8fa-953e-42f6-89a0-8fbcc995c4bf/products/kama-ayurveda-bringadi-hair-treatment/kama-ayurveda-bringadi-hair-treatment_front_photo_original.jpeg" alt="Bringadi Hair Treatment" onerror="this.style.display='none'">
+      <div class="grade-badge gb-b">B</div>
+      <div class="awareness-bar">
+        <div class="bar-lbl">Safety Score: 84/100</div>
+        <div class="bar-track"><div class="bar-fill-b" style="width:84%"></div></div>
+      </div>
+    </div>
+    <div class="product-info-col">
+      <div class="product-name">Kama Ayurveda Bringadi Intensive Hair Treatment Oil</div>
+      <div class="product-meta"><span>Brand: Kama Ayurveda</span><span>Category: Hair Care</span><span>Type: Hair Oil</span></div>
+      <div class="ingr-section">
+        <h4>Ingredients (10)</h4>
+        <div class="ingr-list">
+          <div class="ingr-item ingr-safe"><span class="ingr-dot dot-safe"></span><div><div class="ingr-name">Indigofera Tinctoria Leaf Extract (Indigo)</div><div class="ingr-note">Traditionally used to prevent premature greying and strengthen hair.</div></div></div>
+          <div class="ingr-item ingr-safe"><span class="ingr-dot dot-safe"></span><div><div class="ingr-name">Cardiospermum Halicacabum Leaf Extract (Balloon Vine)</div><div class="ingr-note">Anti-inflammatory, traditional anti-dandruff herb.</div></div></div>
+          <div class="ingr-item ingr-safe"><span class="ingr-dot dot-safe"></span><div><div class="ingr-name">Eclipta Prostrata Leaf Extract (Bhringraj / False Daisy)</div><div class="ingr-note">The "king of herbs for hair." Stimulates hair growth, prevents greying, strengthens roots.</div></div></div>
+          <div class="ingr-item ingr-safe"><span class="ingr-dot dot-safe"></span><div><div class="ingr-name">Phyllanthus Emblica Fruit Juice (Amla / Indian Gooseberry)</div><div class="ingr-note">Rich in Vitamin C. Excellent scalp nourisher and hair strengthener.</div></div></div>
+          <div class="ingr-item ingr-safe"><span class="ingr-dot dot-safe"></span><div><div class="ingr-name">Sesamum Indicum Seed Oil (Sesame Oil)</div><div class="ingr-note">Traditional Ayurvedic base oil — penetrating, nourishing, UV-protective.</div></div></div>
+          <div class="ingr-item ingr-safe"><span class="ingr-dot dot-safe"></span><div><div class="ingr-name">Lac (Shellac)</div></div></div>
+          <div class="ingr-item ingr-safe"><span class="ingr-dot dot-safe"></span><div><div class="ingr-name">Cocos Nucifera Fruit Extract (Coconut)</div></div></div>
+          <div class="ingr-item ingr-safe"><span class="ingr-dot dot-safe"></span><div><div class="ingr-name">Glycyrrhiza Glabra Root Powder (Licorice)</div></div></div>
+          <div class="ingr-item ingr-worth"><span class="ingr-dot dot-worth"></span><div><div class="ingr-name">Rosmarinus Officinalis Leaf Oil (Rosemary) ⚠</div><div class="ingr-note">Stimulates scalp circulation and hair growth (recent studies back this). However, contains ~15% natural camphor content — can irritate sensitive scalps. Avoid if eczema-prone or scalp-sensitive.</div></div></div>
+          <div class="ingr-item ingr-safe"><span class="ingr-dot dot-safe"></span><div><div class="ingr-name">Lavandula Hybrida Oil (Lavender / Lavandin)</div></div></div>
+        </div>
+      </div>
+      <div class="verdict-row vr-warn">⚠ Grade B — A genuinely Ayurvedic hair oil. Bhringraj, Indigo, Amla, and Coconut make this one of the best-formulated hair oils in the premium segment. Rosemary oil flag is mild — most users tolerate it well. Excellent for hair fall and scalp health.</div>
+    </div>
+  </div>
+
+  <!-- 12. Bringadi Hair Cleanser -->
+  <div class="product-card">
+    <div class="product-image-col">
+      <img src="https://incidecoder-content.storage.googleapis.com/166c00f1-77dc-4c46-9d37-2af2ecf11c08/products/kama-ayurveda-bringadi-hair-cleanser/kama-ayurveda-bringadi-hair-cleanser_front_photo_original.jpeg" alt="Bringadi Hair Cleanser" onerror="this.style.display='none'">
+      <div class="grade-badge gb-b">B</div>
+      <div class="awareness-bar">
+        <div class="bar-lbl">Safety Score: 84/100</div>
+        <div class="bar-track"><div class="bar-fill-b" style="width:84%"></div></div>
+      </div>
+    </div>
+    <div class="product-info-col">
+      <div class="product-name">Kama Ayurveda Bringadi Hair Cleanser (Shampoo)</div>
+      <div class="product-meta"><span>Brand: Kama Ayurveda</span><span>Category: Hair Care</span><span>Type: Shampoo</span></div>
+      <div class="ingr-section">
+        <h4>Ingredients (21)</h4>
+        <div class="ingr-list">
+          <div class="ingr-item ingr-safe"><span class="ingr-dot dot-safe"></span><div><div class="ingr-name">Aqua (Water)</div></div></div>
+          <div class="ingr-item ingr-safe"><span class="ingr-dot dot-safe"></span><div><div class="ingr-name">Lauryl Glucoside</div><div class="ingr-note">Very mild plant-derived (glucose + lauryl alcohol) surfactant. Often used in natural and baby products.</div></div></div>
+          <div class="ingr-item ingr-safe"><span class="ingr-dot dot-safe"></span><div><div class="ingr-name">Disodium Cocoyl Glutamate</div><div class="ingr-note">Amino acid-derived cleanser. One of the mildest surfactants available.</div></div></div>
+          <div class="ingr-item ingr-safe"><span class="ingr-dot dot-safe"></span><div><div class="ingr-name">Sodium Cocoamphoacetate</div></div></div>
+          <div class="ingr-item ingr-safe"><span class="ingr-dot dot-safe"></span><div><div class="ingr-name">Glycerine, Betaine, Citric Acid</div></div></div>
+          <div class="ingr-item ingr-safe"><span class="ingr-dot dot-safe"></span><div><div class="ingr-name">Sodium PCA, PCA Glyceryl Oleate</div><div class="ingr-note">Natural humectants. Sodium PCA is skin-identical — naturally found in skin's NMF (Natural Moisturising Factor).</div></div></div>
+          <div class="ingr-item ingr-safe"><span class="ingr-dot dot-safe"></span><div><div class="ingr-name">Hydrolyzed Soy Protein, Hydrolyzed Vegetable Protein</div><div class="ingr-note">Strengthen and repair damaged hair shaft.</div></div></div>
+          <div class="ingr-item ingr-safe"><span class="ingr-dot dot-safe"></span><div><div class="ingr-name">Sodium Benzoate, Potassium Sorbate (Preservatives)</div></div></div>
+          <div class="ingr-item ingr-worth"><span class="ingr-dot dot-worth"></span><div><div class="ingr-name">Lavender, Rosemary Essential Oil ⚠</div><div class="ingr-note">Rosemary contains camphor (~15%) — may irritate sensitive scalps. Lavender oil can be an allergen in sensitized individuals.</div></div></div>
+          <div class="ingr-item ingr-safe"><span class="ingr-dot dot-safe"></span><div><div class="ingr-name">Xanthan Gum, D-Panthenol (Pro-B5)</div></div></div>
+          <div class="ingr-item ingr-safe"><span class="ingr-dot dot-safe"></span><div><div class="ingr-name">Emblica Officinalis Extract (Amla), Indigofera Tinctoria Extract (Indigo)</div></div></div>
+          <div class="ingr-item ingr-safe"><span class="ingr-dot dot-safe"></span><div><div class="ingr-name">Glycyrrhiza Glabra Extract (Mulethi), Eclipta Alba Extract (Bhringraj)</div></div></div>
+        </div>
+      </div>
+      <div class="verdict-row vr-warn">⚠ Grade B — One of the best-formulated shampoos in the Ayurvedic premium segment. No SLS/SLES, no parabens, amino acid + glucoside surfactants, Bhringraj + Amla + Indigo + Mulethi. Rosemary oil is the only mild flag. Excellent for hair fall, scalp health, and damage repair.</div>
+    </div>
+  </div>
+</div>
+
+<!-- ── HAIR PAGE 2 ── -->
+<div class="product-page">
+  <div class="section-header">💆 Hair Care (continued)</div>
+
+  <!-- 13. Hair Conditioner -->
+  <div class="product-card">
+    <div class="product-image-col">
+      <img src="https://incidecoder-content.storage.googleapis.com/4b476cb9-18e3-4c8a-bed3-744435169327/products/kama-ayurveda-hair-conditioner/kama-ayurveda-hair-conditioner_front_photo_original.jpeg" alt="Kama Ayurveda Hair Conditioner" onerror="this.style.display='none'">
+      <div class="grade-badge gb-d">D</div>
+      <div class="awareness-bar">
+        <div class="bar-lbl">Safety Score: 25/100</div>
+        <div class="bar-track"><div class="bar-fill-d" style="width:25%"></div></div>
+      </div>
+    </div>
+    <div class="product-info-col">
+      <div class="product-name">Kama Ayurveda Hair Conditioner</div>
+      <div class="product-meta"><span>Brand: Kama Ayurveda</span><span>Category: Hair Care</span><span>Type: Conditioner</span></div>
+      <div class="ingr-section">
+        <h4>Ingredients (34)</h4>
+        <div class="ingr-list">
+          <div class="ingr-item ingr-safe"><span class="ingr-dot dot-safe"></span><div><div class="ingr-name">Aqua, Cetearyl Alcohol, Lecithin</div></div></div>
+          <div class="ingr-item ingr-safe"><span class="ingr-dot dot-safe"></span><div><div class="ingr-name">Sodium Cetearyl Sulfate (Mild emulsifier), Vegetable Oil</div></div></div>
+          <div class="ingr-item ingr-safe"><span class="ingr-dot dot-safe"></span><div><div class="ingr-name">Arachidyl Alcohol, Behenyl Alcohol, Arachidyl Glucoside (Natural fatty alcohols)</div></div></div>
+          <div class="ingr-item ingr-safe"><span class="ingr-dot dot-safe"></span><div><div class="ingr-name">Coco-Caprylate/Caprate (Natural emollient), Hydrolyzed Vegetable Protein</div></div></div>
+          <div class="ingr-item ingr-safe"><span class="ingr-dot dot-safe"></span><div><div class="ingr-name">Sodium Benzoate, Potassium Sorbate, Lac, Tocopheryl Acetate (Vit E)</div></div></div>
+          <div class="ingr-item ingr-flag"><span class="ingr-dot dot-flag"></span><div><div class="ingr-name">Linalool 🚩</div><div class="ingr-note">Fragrance allergen. Autooxidizes to linalool hydroperoxide — one of the most common contact allergens in cosmetics. EU requires mandatory disclosure on all leave-on AND rinse-off products at ≥0.001% (leave-on) / ≥0.01% (rinse-off).</div></div></div>
+          <div class="ingr-item ingr-safe"><span class="ingr-dot dot-safe"></span><div><div class="ingr-name">Rosmarinus Officinalis Leaf Extract (Rosemary), Lavandula Hybrida Oil (Lavandin)</div></div></div>
+          <div class="ingr-item ingr-safe"><span class="ingr-dot dot-safe"></span><div><div class="ingr-name">Lavandula Angustifolia Oil (True Lavender), Salvia Sclarea Oil (Clary Sage)</div></div></div>
+          <div class="ingr-item ingr-flag"><span class="ingr-dot dot-flag"></span><div><div class="ingr-name">Limonene 🚩</div><div class="ingr-note">Fragrance allergen found in citrus oils. Oxidizes to form allergenic epoxides. EU mandatory disclosure allergen.</div></div></div>
+          <div class="ingr-item ingr-flag"><span class="ingr-dot dot-flag"></span><div><div class="ingr-name">Geraniol 🚩</div><div class="ingr-note">Fragrance allergen from rose, palmarosa oils. EU mandatory disclosure allergen.</div></div></div>
+          <div class="ingr-item ingr-flag"><span class="ingr-dot dot-flag"></span><div><div class="ingr-name">Coumarin 🚩</div><div class="ingr-note">Natural fragrance compound. EU mandatory disclosure allergen. Banned in some food applications, limited in cosmetics.</div></div></div>
+          <div class="ingr-item ingr-flag"><span class="ingr-dot dot-flag"></span><div><div class="ingr-name">Eugenol 🚩</div><div class="ingr-note">Fragrance allergen from clove, cinnamon oils. EU mandatory disclosure allergen. Strong sensitizer in some individuals.</div></div></div>
+          <div class="ingr-item ingr-flag"><span class="ingr-dot dot-flag"></span><div><div class="ingr-name">Citronellol 🚩</div><div class="ingr-note">Fragrance allergen from geranium, rose oils. EU mandatory disclosure allergen.</div></div></div>
+          <div class="ingr-item ingr-safe"><span class="ingr-dot dot-safe"></span><div><div class="ingr-name">Eclipta Prostrata Extract (Bhringraj), Citric Acid, Sesamum Indicum Seed Oil</div></div></div>
+          <div class="ingr-item ingr-safe"><span class="ingr-dot dot-safe"></span><div><div class="ingr-name">Sodium Gluconate, Indigofera Tinctoria Leaf Extract, Emblica Officinalis Fruit Extract</div></div></div>
+          <div class="ingr-item ingr-safe"><span class="ingr-dot dot-safe"></span><div><div class="ingr-name">Cocos Nucifera Fruit Juice, Cardiospermum Halicacabum Extract, Glycyrrhiza Glabra Root Powder</div></div></div>
+          <div class="ingr-item ingr-safe"><span class="ingr-dot dot-safe"></span><div><div class="ingr-name">Abrus Precatorius Root Extract, Cinnamomum Camphora, Banksia Serrata Flower Extract</div></div></div>
+        </div>
+      </div>
+      <div class="verdict-row vr-bad">🚩 Grade D — Despite excellent Ayurvedic actives (Bhringraj, Amla, Indigo, Mulethi), this conditioner contains 6 EU-mandatory fragrance allergens: Linalool, Limonene, Geraniol, Coumarin, Eugenol, and Citronellol — all from natural essential oils. For fragrance-sensitive individuals, this is a high-risk product. Consider patch testing before use. Better suited for non-sensitive hair.</div>
+    </div>
+  </div>
+
+  <!-- Brand summary -->
+  <div style="background: #fdf6ec; border: 1px solid #e8d8b8; border-radius: 14px; padding: 24px 28px; margin-top: 12px;">
+    <h3 style="color:#2c1a0e; font-size:16px; margin-bottom:14px; border-bottom:2px solid #c9a84c; padding-bottom:8px;">📊 Kama Ayurveda — Brand Summary</h3>
+    <div style="display:grid; grid-template-columns:1fr 1fr; gap:16px; font-size:13px; color:#4a3000; line-height:1.6;">
+      <div>
+        <strong style="color:#2c1a0e;">Best Products (Grade A):</strong><br>
+        • Kumkumadi Night Serum — fragrance-free, pure oil<br>
+        • Anti Acne Cleansing Foam — amino acid cleanser<br>
+        • Rose & Jasmine Cleanser — gentle, botanical<br>
+        • Soap Free Powder Cleanser — 100% natural powder
+      </div>
+      <div>
+        <strong style="color:#2c1a0e;">Use with Caution (Grade D):</strong><br>
+        • Kumkumadi Cleansing Oil — Cocamide DEA + Laureth-4<br>
+        • Hair Conditioner — 6 fragrance allergens<br>
+        <br>
+        <strong style="color:#2c1a0e;">Fragrance-Sensitive? Avoid:</strong><br>
+        • Hair Conditioner, Kumkumadi Facial Oil, Brightening Night Cream
+      </div>
+    </div>
+  </div>
+</div>
+
+</body>
+</html>

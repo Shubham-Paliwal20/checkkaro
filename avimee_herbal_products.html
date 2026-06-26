@@ -1,0 +1,697 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Avimee Herbal — Product Catalogue with Ingredients</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'Segoe UI', Arial, sans-serif; background: #f9f9f9; color: #222; font-size: 13px; }
+
+  /* COVER */
+  .cover {
+    page-break-after: always;
+    height: 100vh; display: flex; flex-direction: column;
+    align-items: center; justify-content: center;
+    background: linear-gradient(135deg, #1a472a 0%, #2d7a4f 60%, #4caf50 100%);
+    color: #fff; text-align: center; padding: 40px;
+  }
+  .cover h1 { font-size: 38px; letter-spacing: 1px; margin-bottom: 12px; }
+  .cover .sub { font-size: 18px; opacity: 0.85; margin-bottom: 30px; }
+  .cover .meta { font-size: 14px; opacity: 0.7; }
+  .cover .badge {
+    display: inline-block; background: rgba(255,255,255,0.2);
+    border: 2px solid rgba(255,255,255,0.5); border-radius: 20px;
+    padding: 8px 24px; font-size: 13px; margin-top: 20px; letter-spacing: 1px;
+  }
+  .brand-logo { font-size: 52px; margin-bottom: 20px; }
+
+  /* SECTION HEADER */
+  .section-header {
+    background: #1a472a; color: #fff;
+    padding: 12px 24px; font-size: 16px; font-weight: 700;
+    letter-spacing: 1px; text-transform: uppercase;
+    margin: 24px 0 0 0; border-radius: 6px 6px 0 0;
+  }
+
+  /* PRODUCT CARD */
+  .product {
+    background: #fff; border: 1px solid #ddd;
+    border-top: none; padding: 20px 24px;
+    page-break-inside: avoid;
+  }
+  .product:last-of-type { border-radius: 0 0 6px 6px; margin-bottom: 24px; }
+  .product + .product { border-top: 1px solid #eee; }
+
+  .product-inner { display: flex; gap: 20px; }
+  .product-img {
+    width: 110px; min-width: 110px; height: 110px;
+    object-fit: contain; border-radius: 8px;
+    border: 1px solid #eee; background: #fafafa; padding: 4px;
+  }
+  .product-img-placeholder {
+    width: 110px; min-width: 110px; height: 110px;
+    border-radius: 8px; border: 1px solid #eee;
+    background: #f0f0f0; display: flex; align-items: center;
+    justify-content: center; color: #aaa; font-size: 11px; text-align: center;
+    padding: 8px;
+  }
+  .product-info { flex: 1; }
+  .product-name { font-size: 15px; font-weight: 700; color: #1a472a; margin-bottom: 4px; }
+  .product-meta { display: flex; gap: 16px; margin-bottom: 10px; flex-wrap: wrap; }
+  .tag {
+    background: #e8f5e9; color: #2d7a4f; border-radius: 12px;
+    padding: 2px 10px; font-size: 11px; font-weight: 600;
+  }
+  .tag.price { background: #fff3e0; color: #e65100; }
+  .tag.vol   { background: #e3f2fd; color: #1565c0; }
+  .tag.cat   { background: #f3e5f5; color: #6a1b9a; }
+
+  .ingredients-label {
+    font-size: 11px; font-weight: 700; color: #555;
+    text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 4px;
+  }
+  .ingredients-text {
+    font-size: 12px; color: #333; line-height: 1.6;
+    background: #f9fbe7; border-left: 3px solid #4caf50;
+    padding: 8px 12px; border-radius: 0 4px 4px 0;
+  }
+
+  /* INDEX PAGE */
+  .index-page { padding: 40px 32px; page-break-after: always; }
+  .index-page h2 { font-size: 22px; color: #1a472a; margin-bottom: 20px; border-bottom: 2px solid #4caf50; padding-bottom: 8px; }
+  .index-table { width: 100%; border-collapse: collapse; }
+  .index-table th { background: #1a472a; color: #fff; padding: 8px 12px; text-align: left; font-size: 12px; }
+  .index-table td { padding: 7px 12px; border-bottom: 1px solid #eee; font-size: 12px; }
+  .index-table tr:nth-child(even) td { background: #f5f5f5; }
+  .num { color: #aaa; font-size: 11px; }
+
+  .page-body { padding: 24px 24px 0; }
+
+  @media print {
+    body { background: #fff; }
+    .cover { height: 100vh; }
+    .section-header { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+    .tag { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+    .ingredients-text { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ═══════════════ COVER PAGE ═══════════════ -->
+<div class="cover">
+  <div class="brand-logo">🌿</div>
+  <h1>Avimee Herbal</h1>
+  <div class="sub">Complete Product Catalogue with Full Ingredients List</div>
+  <div class="meta">Modern Ayurveda · Surat, Gujarat, India · avimeeherbal.com</div>
+  <div class="badge">27 Products &nbsp;|&nbsp; Hair Care · Skin Care · Health</div>
+  <div style="margin-top:30px; opacity:0.6; font-size:12px;">Prepared for review · June 2026</div>
+</div>
+
+<!-- ═══════════════ INDEX PAGE ═══════════════ -->
+<div class="index-page">
+  <h2>Product Index</h2>
+  <table class="index-table">
+    <thead><tr><th>#</th><th>Product Name</th><th>Category</th><th>Volume</th><th>Price</th></tr></thead>
+    <tbody>
+      <tr><td class="num">1</td><td>Keshpallav Hair Oil</td><td>Hair Oil</td><td>100 ml</td><td>₹550</td></tr>
+      <tr><td class="num">2</td><td>Keshpallav Plus Daily Hair Oil</td><td>Hair Oil</td><td>100 ml</td><td>₹599</td></tr>
+      <tr><td class="num">3</td><td>Keshkrishna Grey Hair Oil</td><td>Hair Oil</td><td>100 ml</td><td>₹550</td></tr>
+      <tr><td class="num">4</td><td>Rosemary Hair Oil</td><td>Hair Oil</td><td>100 ml</td><td>₹299</td></tr>
+      <tr><td class="num">5</td><td>Maha Bhringraj Hair Oil</td><td>Hair Oil</td><td>100 ml</td><td>₹299</td></tr>
+      <tr><td class="num">6</td><td>Javakusum Hibiscus Hair Oil</td><td>Hair Oil</td><td>100 ml</td><td>₹499</td></tr>
+      <tr><td class="num">7</td><td>Pure Amla Hair Oil</td><td>Hair Oil</td><td>100 ml</td><td>₹299</td></tr>
+      <tr><td class="num">8</td><td>Cold Pressed Castor Oil</td><td>Hair Oil</td><td>200 ml</td><td>₹499</td></tr>
+      <tr><td class="num">9</td><td>Extra Virgin Coconut Oil</td><td>Hair Oil</td><td>200 ml</td><td>₹450</td></tr>
+      <tr><td class="num">10</td><td>Scalptone Hair Growth Serum</td><td>Hair Serum</td><td>25 ml</td><td>₹625</td></tr>
+      <tr><td class="num">11</td><td>Scalptone Dandruff Serum</td><td>Hair Serum</td><td>25 ml</td><td>₹550</td></tr>
+      <tr><td class="num">12</td><td>Scalptone Grey Hair Serum</td><td>Hair Serum</td><td>25 ml</td><td>₹550</td></tr>
+      <tr><td class="num">13</td><td>Hair Tonic PV1 Scalp Spray</td><td>Scalp Spray</td><td>100 ml</td><td>₹550</td></tr>
+      <tr><td class="num">14</td><td>Shakuntala Daily Use Hair Cleanser</td><td>Shampoo</td><td>50/200/400 ml</td><td>₹125+</td></tr>
+      <tr><td class="num">15</td><td>Sakshi Hair Shampoo</td><td>Shampoo</td><td>200 ml</td><td>₹399</td></tr>
+      <tr><td class="num">16</td><td>Radha Hair Conditioner</td><td>Conditioner</td><td>200 ml</td><td>₹550</td></tr>
+      <tr><td class="num">17</td><td>Pure Aloe Vera Gel</td><td>Skincare</td><td>100 ml</td><td>₹199</td></tr>
+      <tr><td class="num">18</td><td>Gulabo Pure Rose Water</td><td>Skincare</td><td>110 ml</td><td>₹99</td></tr>
+      <tr><td class="num">19</td><td>Kunwar Charcoal Face Wash</td><td>Face Wash</td><td>50 ml</td><td>₹199</td></tr>
+      <tr><td class="num">20</td><td>Vitamin C Face Wash</td><td>Face Wash</td><td>—</td><td>₹125</td></tr>
+      <tr><td class="num">21</td><td>Salicylic Acid Face Wash</td><td>Face Wash</td><td>—</td><td>₹125</td></tr>
+      <tr><td class="num">22</td><td>Niacinamide Face Wash</td><td>Face Wash</td><td>—</td><td>₹125</td></tr>
+      <tr><td class="num">23</td><td>Vitamin C Face Serum</td><td>Face Serum</td><td>25 ml</td><td>₹550</td></tr>
+      <tr><td class="num">24</td><td>Salicylic Acid Face Serum</td><td>Face Serum</td><td>25 ml</td><td>₹550</td></tr>
+      <tr><td class="num">25</td><td>Niacinamide Face Serum</td><td>Face Serum</td><td>25 ml</td><td>₹550</td></tr>
+      <tr><td class="num">26</td><td>Soorya Kawach SPF 50 Sunscreen</td><td>Sunscreen</td><td>50 ml</td><td>₹299</td></tr>
+      <tr><td class="num">27</td><td>Keshmadhu Hair Growth Capsule</td><td>Health</td><td>60 caps</td><td>₹999</td></tr>
+    </tbody>
+  </table>
+</div>
+
+<!-- ═══════════════ PRODUCTS ═══════════════ -->
+<div class="page-body">
+
+<!-- ── HAIR OILS ── -->
+<div class="section-header">Hair Oils (Products 1–9)</div>
+
+<!-- 1 -->
+<div class="product">
+  <div class="product-inner">
+    <img class="product-img" src="https://avimeeherbal.com/cdn/shop/files/1_ea13a123-3a1c-4e51-9c67-b4b015e1390b.png?v=1776662994&width=400" alt="Keshpallav Hair Oil" onerror="this.style.display='none'">
+    <div class="product-info">
+      <div class="product-name">1. Keshpallav Hair Oil</div>
+      <div class="product-meta">
+        <span class="tag cat">Hair Oil</span>
+        <span class="tag vol">100 ml</span>
+        <span class="tag price">₹550</span>
+      </div>
+      <div class="ingredients-label">Full Ingredients List</div>
+      <div class="ingredients-text">
+        Nansyl, Sunflower Seed Oil, Pumpkin Seed Oil, Coconut MCT Oil, Black Sesame Seed Oil, Flax Seed Oil, Amla Oil, Bhringraj Oil, Brahmi Oil, Hibiscus Oil, Curry Leaf Oil, Saw Palmetto Oil, Camellia Seed Oil, Pecan Nut Oil, Soyabean Oil, Macadamia Nut Oil, Marula Oil, Walnut Oil, Mustard Seed Oil, Castor Oil, Arnica Oil, Almond Oil, Apricot Kernel Oil, Cucumber Oil, Pomegranate Seed Oil, Shea Oil, Malkangni Oil, Karanja Oil, Wheat Grass Oil, Bergamot Oil, Cedarwood Oil, Stinging Nettle Oil, Bottle Gourd Oil, Borage Seed Oil, Bakuchi Oil, Bamboo Oil, Wheat Germ Oil, Halim Oil, Plum Kernel Oil, Avocado Oil, Carrot Oil, Grapeseed Oil, Hazel Nut Oil, Passion Fruit Oil, Clary Sage Oil, Tea Tree Oil, Birch Oil, Argan Oil, Clove Oil, Rosemary Oil, Jojoba Oil, Tamanu Oil, Lemongrass Oil, Lavender Oil, Eucalyptus Oil, Helichrysum Oil, Myrrh Oil, Nutmeg Oil, Ylang Ylang Oil, Kalonji Oil
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- 2 -->
+<div class="product">
+  <div class="product-inner">
+    <img class="product-img" src="https://avimeeherbal.com/cdn/shop/files/1_53008127-fc08-44d6-9d6a-5d2a694d9bb7.png?v=1781776488&width=400" alt="Keshpallav Plus Daily Hair Oil" onerror="this.style.display='none'">
+    <div class="product-info">
+      <div class="product-name">2. Keshpallav Plus Daily Hair Oil</div>
+      <div class="product-meta">
+        <span class="tag cat">Hair Oil</span>
+        <span class="tag vol">100 ml</span>
+        <span class="tag price">₹599</span>
+      </div>
+      <div class="ingredients-label">Full Ingredients List</div>
+      <div class="ingredients-text">
+        Coconut MCT Oil, Sunflower Seed Oil, Pumpkin Seed Oil, Cold Pressed Coconut Oil, Black Sesame Seed Oil, Flax Seed Oil, Amla Oil, Bhringraj Oil, Brahmi Oil, Hibiscus Oil, Curry Leaf Oil, Saw Palmetto Oil, Camellia Seed Oil, Pecan Nut Oil, Soybean Oil, Macadamia Nut Oil, Marula Oil, Walnut Oil, Mustard Seed Oil, Castor Oil, Arnica Oil, Almond Oil, Apricot Kernel Oil, Cucumber Oil, Pomegranate Seed Oil, Shea Oil, Malkangni Oil, Karanja Oil, Wheat Grass Oil, Bergamot Oil, Cedarwood Oil, Stinging Nettle Oil, Bottle Gourd Oil, Borage Seed Oil, Bakuchi Oil, Bamboo Oil, Wheat Germ Oil, Halim Oil, Plum Kernel Oil, Avocado Oil, Carrot Oil, Grapeseed Oil, Hazel Nut Oil, Passion Fruit Oil, Clary Sage Oil, Tea Tree Oil, Birch Oil, Argan Oil, Clove Oil, Rosemary Oil, Jojoba Oil, Tamanu Oil, Lemongrass Oil, Lavender Oil, Eucalyptus Oil, Helichrysum Oil, Myrrh Oil, Nutmeg Oil, Ylang Ylang Oil, Kalonji Oil
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- 3 -->
+<div class="product">
+  <div class="product-inner">
+    <img class="product-img" src="https://avimeeherbal.com/cdn/shop/files/fran_faf185ea-c5c7-4e09-a081-bc07b385db36.png?v=1743850444&width=400" alt="Keshkrishna Grey Hair Oil" onerror="this.style.display='none'">
+    <div class="product-info">
+      <div class="product-name">3. Keshkrishna Grey Hair Oil</div>
+      <div class="product-meta">
+        <span class="tag cat">Hair Oil</span>
+        <span class="tag vol">100 ml</span>
+        <span class="tag price">₹550</span>
+      </div>
+      <div class="ingredients-label">Full Ingredients List</div>
+      <div class="ingredients-text">
+        Melaina, Henna Oil, Cassia Obovata Oil, Indigo Oil, Amla Oil, Catechu Oil, Curry Leaves Oil, Manjistha Oil, Hibiscus Oil, Black Tea Oil, Spinach Oil, Shikakai, Amaranthus Oil, Black Coffee Oil, Dalchini Oil, Jatamansi Oil, Bhringraj Oil, Wheatgrass Oil, Pineapple Oil, Watermelon Oil, Sweet Potato Oil, Pomegranate Peel Oil, Carrot Oil, Beet Root Oil, Kalonji Oil, BHT
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- 4 -->
+<div class="product">
+  <div class="product-inner">
+    <img class="product-img" src="https://avimeeherbal.com/cdn/shop/files/1_602faf76-ef48-4fc3-aaf4-2fa257c2b7de.png?v=1776683771&width=400" alt="Rosemary Hair Oil" onerror="this.style.display='none'">
+    <div class="product-info">
+      <div class="product-name">4. Rosemary Hair Oil</div>
+      <div class="product-meta">
+        <span class="tag cat">Hair Oil</span>
+        <span class="tag vol">100 ml</span>
+        <span class="tag price">₹299</span>
+      </div>
+      <div class="ingredients-label">Full Ingredients List</div>
+      <div class="ingredients-text">
+        Rosemary Oil Extract, Rosemary Essential Oil, Pumpkin Seed Oil, Chia Seed Oil, Flax Seed Oil, Jatamansi Oil, Pomegranate Seed Oil, Neem Oil Extract, Amla Oil Extract, Curry Leaves Oil Extract, Methidana Oil Extract, Bhringraj Oil Extract, Brahmi Oil Extract, Punarnava Oil Extract, Jatamansi Oil Extract, Onion Oil Extract, Coconut Oil, Mushroom Oil Extract, Clove Oil, Sandal Oil, Tempus, Grapeseed Oil, BHT
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- 5 -->
+<div class="product">
+  <div class="product-inner">
+    <img class="product-img" src="https://avimeeherbal.com/cdn/shop/files/1_07a8a5e1-27e1-48dc-946d-83caa37be3bb.png?v=1777019118&width=400" alt="Maha Bhringraj Hair Oil" onerror="this.style.display='none'">
+    <div class="product-info">
+      <div class="product-name">5. Maha Bhringraj Hair Oil</div>
+      <div class="product-meta">
+        <span class="tag cat">Hair Oil</span>
+        <span class="tag vol">100 ml</span>
+        <span class="tag price">₹299</span>
+      </div>
+      <div class="ingredients-label">Full Ingredients List</div>
+      <div class="ingredients-text">
+        Shweta Bhringraj Oil, Neel Bhringraj Oil, Peet Bhringraj Oil, Brahmi Oil, Mandukparni Oil, Coconut Oil, BHT
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- 6 -->
+<div class="product">
+  <div class="product-inner">
+    <img class="product-img" src="https://avimeeherbal.com/cdn/shop/files/1_b66a73bc-e40e-4602-a6f6-499d0b5f5596.png?v=1781777676&width=400" alt="Javakusum Hibiscus Hair Oil" onerror="this.style.display='none'">
+    <div class="product-info">
+      <div class="product-name">6. Javakusum Hibiscus Hair Oil</div>
+      <div class="product-meta">
+        <span class="tag cat">Hair Oil</span>
+        <span class="tag vol">100 ml</span>
+        <span class="tag price">₹499</span>
+      </div>
+      <div class="ingredients-label">Full Ingredients List</div>
+      <div class="ingredients-text">
+        Hibiscus Flower Oil Soluble Extract, Hibiscus Leaves Oil Soluble Extract, Coconut Oil, Hibiscus Flower Essential Oil, Grape Seed Oil, Pomegranate Seed Oil, Lotus Seeds Oil, Jatamansi Seeds Oil, Saw Palmetto Oil, Curry Leaves Oil, Amla Oil, Green Tea Oil, Lotus Petal Oil, Pumpkin Seeds Oil, Nettle Leaves Oil, Spinach Oil, Vitamin E, Vitamin B12
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- 7 -->
+<div class="product">
+  <div class="product-inner">
+    <img class="product-img" src="https://avimeeherbal.com/cdn/shop/files/1_18cfb30e-1f66-446a-b3e0-f94b2ac9f200.png?v=1777019013&width=400" alt="Pure Amla Hair Oil" onerror="this.style.display='none'">
+    <div class="product-info">
+      <div class="product-name">7. Pure Amla Hair Oil</div>
+      <div class="product-meta">
+        <span class="tag cat">Hair Oil</span>
+        <span class="tag vol">100 ml</span>
+        <span class="tag price">₹299</span>
+      </div>
+      <div class="ingredients-label">Full Ingredients List</div>
+      <div class="ingredients-text">
+        Amla Fruit Oil, Amla Seed Oil, Acerola Fruit Oil, Kakadu Plum Oil, Orange Peel Oil, Vitamin E, BHT
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- 8 -->
+<div class="product">
+  <div class="product-inner">
+    <img class="product-img" src="https://avimeeherbal.com/cdn/shop/files/1_c83907ba-4c38-44c5-ada9-72350466e0d4.png?v=1777018935&width=400" alt="Cold Pressed Castor Oil" onerror="this.style.display='none'">
+    <div class="product-info">
+      <div class="product-name">8. Cold Pressed Castor Oil</div>
+      <div class="product-meta">
+        <span class="tag cat">Hair Oil</span>
+        <span class="tag vol">200 ml</span>
+        <span class="tag price">₹499</span>
+      </div>
+      <div class="ingredients-label">Full Ingredients List</div>
+      <div class="ingredients-text">
+        Castor Oil, Vitamin E
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- 9 -->
+<div class="product">
+  <div class="product-inner">
+    <img class="product-img" src="https://avimeeherbal.com/cdn/shop/files/1_8_ba503cbd-21dd-4370-ac74-4c620bd8fc20.png" alt="Extra Virgin Coconut Oil" onerror="this.style.display='none'">
+    <div class="product-info">
+      <div class="product-name">9. Extra Virgin Coconut Oil</div>
+      <div class="product-meta">
+        <span class="tag cat">Hair Oil</span>
+        <span class="tag vol">200 ml</span>
+        <span class="tag price">₹450</span>
+      </div>
+      <div class="ingredients-label">Full Ingredients List</div>
+      <div class="ingredients-text">
+        Extra Virgin Coconut Oil, Vitamin E
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ── HAIR SERUMS & SPRAYS ── -->
+<div class="section-header">Hair Serums &amp; Scalp Sprays (Products 10–13)</div>
+
+<!-- 10 -->
+<div class="product">
+  <div class="product-inner">
+    <img class="product-img" src="https://avimeeherbal.com/cdn/shop/files/1_3d8c7e36-d2e9-4b06-b0a5-3367733b0a09.png?v=1775636150&width=400" alt="Scalptone Hair Growth Serum" onerror="this.style.display='none'">
+    <div class="product-info">
+      <div class="product-name">10. Scalptone Hair Growth Serum</div>
+      <div class="product-meta">
+        <span class="tag cat">Hair Serum</span>
+        <span class="tag vol">25 ml</span>
+        <span class="tag price">₹625</span>
+      </div>
+      <div class="ingredients-label">Full Ingredients List</div>
+      <div class="ingredients-text">
+        Nansyl [Aqua, Propylene Glycol, Caffeine, Epigallocatechin-3-Gallate, Epicatechin, Epigallocatechin, Epicatechin-3-Gallate, Chlorogenic Acid, Zinc Chloride, Glycine, Cysteine, Arginine, Methionine, Lysine, Asiaticoside, Bacoside, Proanthocyanidin, Punicalagins, DHQG, Sodium Metabisulfite], Aloe Vera Juice, Pomegranate (Punica Granatum) Extract, Green Tea (Camellia Sinensis) Extract, Grapeseed (Vitis Vinifera) Extract, Ashwagandha (Withania Somnifera) Extract, Jatamansi (Nardostachys Jatamansi) Extract, Bala (Sida Cordifolia) Extract, Pea Sprout (Pisum Sativum) Extract, Olive Leaf (Olea Europaea) Extract, Sodium Gluconate, 2-Phenoxyethanol, Ethylhexylglycerin, DM Water
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- 11 -->
+<div class="product">
+  <div class="product-inner">
+    <img class="product-img" src="https://avimeeherbal.com/cdn/shop/files/1_08e59c36-fc46-4753-9b87-9d975ec9d827.png?v=1781774701&width=400" alt="Scalptone Dandruff Serum" onerror="this.style.display='none'">
+    <div class="product-info">
+      <div class="product-name">11. Scalptone Dandruff Serum</div>
+      <div class="product-meta">
+        <span class="tag cat">Hair Serum</span>
+        <span class="tag vol">25 ml</span>
+        <span class="tag price">₹550</span>
+      </div>
+      <div class="ingredients-label">Full Ingredients List</div>
+      <div class="ingredients-text">
+        Nilscurf, Aloe Vera Juice, Caffeine, Black Tea Extract, Zinc PCA, Niacinamide, Hyaluronic Acid, Piperine, Eugenol, Cinnamaldehyde, Bacoside, Asiaticoside, Sodium Hydroxide, Sodium Gluconate, Fragrance, 2-Phenoxyethanol, Ethylhexyl Glycerin, DM Water
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- 12 -->
+<div class="product">
+  <div class="product-inner">
+    <img class="product-img" src="https://avimeeherbal.com/cdn/shop/files/1_ba653fb2-cdcb-40df-badf-063c7b17ad88.png?v=1781774971&width=400" alt="Scalptone Grey Hair Serum" onerror="this.style.display='none'">
+    <div class="product-info">
+      <div class="product-name">12. Scalptone Grey Hair Serum</div>
+      <div class="product-meta">
+        <span class="tag cat">Hair Serum</span>
+        <span class="tag vol">25 ml</span>
+        <span class="tag price">₹550</span>
+      </div>
+      <div class="ingredients-label">Full Ingredients List</div>
+      <div class="ingredients-text">
+        Melaina, Aloe Vera Juice, Acetyl Tyrosine, Hyaluronic Acid, Catalase, Melanin, Epigallocatechin-3-Gallate, Caffeine, Apple Cider Vinegar, Sodium Gluconate, 2-Phenoxyethanol, Ethylhexyl Glycerin, Fragrance, DM Water
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- 13 -->
+<div class="product">
+  <div class="product-inner">
+    <img class="product-img" src="https://avimeeherbal.com/cdn/shop/files/1_85a1bbc0-1390-419c-95f6-286f3644d19d.png?v=1761578224&width=400" alt="Hair Tonic PV1 Scalp Spray" onerror="this.style.display='none'">
+    <div class="product-info">
+      <div class="product-name">13. Hair Tonic PV1 Scalp Spray</div>
+      <div class="product-meta">
+        <span class="tag cat">Scalp Spray</span>
+        <span class="tag vol">100 ml</span>
+        <span class="tag price">₹550</span>
+      </div>
+      <div class="ingredients-label">Full Ingredients List</div>
+      <div class="ingredients-text">
+        Coiffure, Tempus, Arnica Extract, Jaborandi Extract, Saw Palmetto Extract, Amla Extract, Bhringraj Extract, Methi Daana Extract, Harad Extract, Baheda Extract
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ── SHAMPOOS & CONDITIONERS ── -->
+<div class="section-header">Shampoos &amp; Conditioner (Products 14–16)</div>
+
+<!-- 14 -->
+<div class="product">
+  <div class="product-inner">
+    <img class="product-img" src="https://avimeeherbal.com/cdn/shop/files/1_b92d688f-2ec3-49c9-8a1f-bfcb1f614686.png?v=1781773834&width=400" alt="Shakuntala Hair Cleanser" onerror="this.style.display='none'">
+    <div class="product-info">
+      <div class="product-name">14. Shakuntala Daily Use Hair Cleanser</div>
+      <div class="product-meta">
+        <span class="tag cat">Shampoo</span>
+        <span class="tag vol">50 / 200 / 400 ml</span>
+        <span class="tag price">₹125 / ₹550 / ₹999</span>
+      </div>
+      <div class="ingredients-label">Full Ingredients List</div>
+      <div class="ingredients-text">
+        Coconut Water, Sodium Lauryl Sarcosinate, Decyl Glucoside, Aloe Vera Juice, Tempus [Propylene Glycol, Apple Cider Vinegar, Arnica, Hibiscus, Triphala, Methi, Kalonji, Gallic Acid, Ursolic Acid, Bacoside, Tannin, Satavarin], Sodium PCA, Polyquaternium-7, Cetrimonium Chloride, PEG-150 Distearate, Betaine, Glycolic Acid, Dipropylene Glycol, Polysilicone-29, D-Panthenol, Ethylene Glycol Monostearate, IFRA Certified Fragrance, 2-Phenoxyethanol, Ethyl Hexyl Glycerin, Polyquaternium-10, Guar Hydroxy Trimonium Chloride, Clove Oil, Argan Oil, Hydrolyzed Keratin Protein, Onion Oil, Tea Tree Oil, Sodium Gluconate
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- 15 -->
+<div class="product">
+  <div class="product-inner">
+    <img class="product-img" src="https://avimeeherbal.com/cdn/shop/files/frantimage_1f93b20d-80f2-43a3-88cf-b513238f2c11.png?v=1733213651&width=400" alt="Sakshi Hair Shampoo" onerror="this.style.display='none'">
+    <div class="product-info">
+      <div class="product-name">15. Sakshi Hair Shampoo</div>
+      <div class="product-meta">
+        <span class="tag cat">Shampoo</span>
+        <span class="tag vol">200 ml</span>
+        <span class="tag price">₹399</span>
+      </div>
+      <div class="ingredients-label">Full Ingredients List</div>
+      <div class="ingredients-text">
+        Decyl Glucoside, Coco Glucoside, Aloe Vera Juice, Almond Oil, Coconut Water, Apple Cider Vinegar, SLS, Keratin Protein, Natural Fragrance, Aloe Vera Powder 200x, Guar Gum, EGMS, PQ 10, Saw Palmetto Extract, Soapnut Extract, Neem Oil, Sodium Benzoate, Rice Protein, Vitamin E, Green Coffee Derivative, Argan Oil, Tea Tree Oil, DM Water
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- 16 -->
+<div class="product">
+  <div class="product-inner">
+    <img class="product-img" src="https://avimeeherbal.com/cdn/shop/files/1_9b986cd2-399e-4e46-8d2f-b68ad52134d4.png?v=1781787830&width=400" alt="Radha Hair Conditioner" onerror="this.style.display='none'">
+    <div class="product-info">
+      <div class="product-name">16. Radha Hair Conditioner</div>
+      <div class="product-meta">
+        <span class="tag cat">Conditioner</span>
+        <span class="tag vol">200 ml</span>
+        <span class="tag price">₹550</span>
+      </div>
+      <div class="ingredients-label">Full Ingredients List</div>
+      <div class="ingredients-text">
+        Aloe Vera Juice, Curd, Milk, Corn Starch, Castor Oil, Almond Oil, Sodium Lauryl Sarcosinate, Keratin Powder, Veg Glycerine, Rice Maad, Coconut Water, Emulsifying Wax, Cetyl Alcohol, Rice Protein, Hibiscus Water, Green Tea Water, Guar Gum, Polyquaternium 10, Apple Cider Vinegar, D-Panthenol, Tea Tree Oil, Whey Protein, Argan Oil, Merquat 3330, Fragrance, Red Onion Seed Powder, Sandal Water, Aloe Vera Powder 200x, Potassium Sorbate, Potato Juice, Apple Juice, Papaya Juice, Carrot Juice, Tomato Juice, Vitamin E, DM Water
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ── SKINCARE ── -->
+<div class="section-header">Skincare (Products 17–18)</div>
+
+<!-- 17 -->
+<div class="product">
+  <div class="product-inner">
+    <img class="product-img" src="https://avimeeherbal.com/cdn/shop/files/frantimage_b71fe5ff-bb30-4e66-80e7-53e0177d088f.png?v=1708752599&width=400" alt="Pure Aloe Vera Gel" onerror="this.style.display='none'">
+    <div class="product-info">
+      <div class="product-name">17. Pure Aloe Vera Gel</div>
+      <div class="product-meta">
+        <span class="tag cat">Skincare</span>
+        <span class="tag vol">100 ml / 400 ml</span>
+        <span class="tag price">₹199 / ₹299</span>
+      </div>
+      <div class="ingredients-label">Full Ingredients List</div>
+      <div class="ingredients-text">
+        Aloe Vera Juice, Aloe Vera Powder 200X, Sodium Benzoate, Potassium Sorbate
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- 18 -->
+<div class="product">
+  <div class="product-inner">
+    <img class="product-img" src="https://avimeeherbal.com/cdn/shop/files/01_a16fc329-1313-4936-801e-27ce6c7b336c.png?v=1740064605&width=400" alt="Gulabo Pure Rose Water" onerror="this.style.display='none'">
+    <div class="product-info">
+      <div class="product-name">18. Gulabo Pure Rose Water</div>
+      <div class="product-meta">
+        <span class="tag cat">Skincare / Toner</span>
+        <span class="tag vol">110 ml</span>
+        <span class="tag price">₹99</span>
+      </div>
+      <div class="ingredients-label">Full Ingredients List</div>
+      <div class="ingredients-text">
+        Rose Distillate, Rose Oil, Glucan P 20 Humectant
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ── FACE WASHES ── -->
+<div class="section-header">Face Washes (Products 19–22)</div>
+
+<!-- 19 -->
+<div class="product">
+  <div class="product-inner">
+    <img class="product-img" src="https://avimeeherbal.com/cdn/shop/files/1_9fec05f1-8529-4482-87b3-2ad099bee014.png?v=1740645873&width=400" alt="Kunwar Charcoal Face Wash" onerror="this.style.display='none'">
+    <div class="product-info">
+      <div class="product-name">19. Kunwar Charcoal Face Wash</div>
+      <div class="product-meta">
+        <span class="tag cat">Face Wash</span>
+        <span class="tag vol">50 ml</span>
+        <span class="tag price">₹199</span>
+      </div>
+      <div class="ingredients-label">Full Ingredients List</div>
+      <div class="ingredients-text">
+        Decyl Glucoside, Aloe Vera Juice, Coco Glucoside, Sodium Lauryl Sarcosinate, Pomegranate Extract, Carrot Extract, Propolis Extract, Lemon Extract, Apple Extract, Dragon Fruit Extract, Coconut Water, Beet Root Extract, PEG 150 Distearate, Carbomer 940, Triethanolamine, Spinach Extract, Neem Extract, Aloe Vera Powder 200x, Activated Charcoal, Curcumin Extract, Citric Acid, Tea Tree Oil, Sodium Benzoate, Potassium Sorbate, DM Water
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- 20 -->
+<div class="product">
+  <div class="product-inner">
+    <img class="product-img" src="https://avimeeherbal.com/cdn/shop/files/1_17605c5c-0285-40ca-8bfa-8529dd67f804.png?v=1713160901&width=400" alt="Vitamin C Face Wash" onerror="this.style.display='none'">
+    <div class="product-info">
+      <div class="product-name">20. Vitamin C Face Wash</div>
+      <div class="product-meta">
+        <span class="tag cat">Face Wash</span>
+        <span class="tag vol">—</span>
+        <span class="tag price">₹125</span>
+      </div>
+      <div class="ingredients-label">Full Ingredients List</div>
+      <div class="ingredients-text">
+        Coco Apple Amino Acid, Ascorbic Acid, Disodium Cocoamphoacetate, Coco Amino Propyl Betaine, Aloe Vera Juice, Acerola Fruit Extract, Kakadu Plum Extract, Kiwi Extract, Orange Peel Extract, Amla Extract, Pineapple Extract, Rose Water, Red Sandal Extract, Niacinamide, Hyaluronic Acid, Beet Root Extract, Cucumber Extract, Manjistha Extract, Green Tea Extract, Neem Water, Red Sandal Water, Tween 80, Fragrance, Potassium Sorbate, DM Water
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- 21 -->
+<div class="product">
+  <div class="product-inner">
+    <img class="product-img" src="https://avimeeherbal.com/cdn/shop/files/1_a34ac65b-a24b-419f-8a29-fc7ac85dd595.png?v=1713161609&width=400" alt="Salicylic Acid Face Wash" onerror="this.style.display='none'">
+    <div class="product-info">
+      <div class="product-name">21. Salicylic Acid Face Wash</div>
+      <div class="product-meta">
+        <span class="tag cat">Face Wash</span>
+        <span class="tag vol">—</span>
+        <span class="tag price">₹125</span>
+      </div>
+      <div class="ingredients-label">Full Ingredients List</div>
+      <div class="ingredients-text">
+        Coco Apple Amino Acid, Disodium Cocoamphoacetate, Coco Amino Propyl Betaine, Salix Alba Extract, Filipendula Ulmaria Extract, Betula Lenta Extract, Gaultheria Procumbens Extract, Spirea Extract, Watermelon Extract, Cucurbita Pepo Extract, Salicylic Acid, Aloe Vera Juice, Hyaluronic Acid, PEG 7 Glyceryl Cocoate, Rose Water, Allantoin, Glycolic Acid, 2-Phenoxyethanol, Ethylhexyl Glycerin, Polysorbate 80, PEG-40 Hydrogenated Castor Oil, Glycerin, 1,3-Propanediol, Sodium Gluconate, Fragrance, DM Water
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- 22 -->
+<div class="product">
+  <div class="product-inner">
+    <img class="product-img" src="https://avimeeherbal.com/cdn/shop/files/1_32f04551-3238-4799-9809-fa2e4e8d07d6.jpg" alt="Niacinamide Face Wash" onerror="this.style.display='none'">
+    <div class="product-info">
+      <div class="product-name">22. Niacinamide Face Wash</div>
+      <div class="product-meta">
+        <span class="tag cat">Face Wash</span>
+        <span class="tag vol">—</span>
+        <span class="tag price">₹125</span>
+      </div>
+      <div class="ingredients-label">Full Ingredients List</div>
+      <div class="ingredients-text">
+        Coco Apple Amino Acid, Niacinamide, Aloe Vera Juice, Disodium Cocoamphoacetate, Coco Amino Propyl Betaine, Sodium PCA, Zinc PCA, PEG 7 Glyceryl Cocoate, Seabuckthorn Extract, Cinnamon Extract, Rosemary Extract, Tomato Extract, Tea Tree Extract, Eucalyptus Extract, Lemongrass Extract, Neem Extract, Honey, Ascorbic Acid, Tween 80, Perfume, Potassium Sorbate, Vitamin E, Sodium Gluconate, Fragrance, DM Water
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ── FACE SERUMS ── -->
+<div class="section-header">Face Serums (Products 23–25)</div>
+
+<!-- 23 -->
+<div class="product">
+  <div class="product-inner">
+    <img class="product-img" src="https://avimeeherbal.com/cdn/shop/files/1_103e0c1c-6f25-49b6-b7a9-65db8dc268b9.png?v=1781775079&width=400" alt="Vitamin C Face Serum" onerror="this.style.display='none'">
+    <div class="product-info">
+      <div class="product-name">23. Vitamin C Face Serum</div>
+      <div class="product-meta">
+        <span class="tag cat">Face Serum</span>
+        <span class="tag vol">25 ml</span>
+        <span class="tag price">₹550</span>
+      </div>
+      <div class="ingredients-label">Full Ingredients List</div>
+      <div class="ingredients-text">
+        Ascorbic Acid, Aloe Vera Juice, Acerola Fruit Extract, Kakadu Plum Extract, Kiwi Extract, Orange Peel Extract, Amla Extract, Sodium PCA, Pineapple Extract, Rose Water, Niacinamide, Hyaluronic Acid, Beet Root Extract, Cucumber Extract, Manjistha Extract, Green Tea Extract, Neem Water, Red Sandal Water, Tween 80, Fragrance, Potassium Sorbate, DM Water
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- 24 -->
+<div class="product">
+  <div class="product-inner">
+    <img class="product-img" src="https://avimeeherbal.com/cdn/shop/files/1_a7b871e0-9013-4ebe-ad32-86b0039e39e7.png?v=1781775626&width=400" alt="Salicylic Acid Face Serum" onerror="this.style.display='none'">
+    <div class="product-info">
+      <div class="product-name">24. Salicylic Acid Face Serum</div>
+      <div class="product-meta">
+        <span class="tag cat">Face Serum</span>
+        <span class="tag vol">25 ml</span>
+        <span class="tag price">₹550</span>
+      </div>
+      <div class="ingredients-label">Full Ingredients List</div>
+      <div class="ingredients-text">
+        Salix Alba Extract, Filipendula Ulmaria Extract, Betula Lenta Extract, Gaultheria Procumbens Extract, Spirea Extract, Watermelon Extract, Cucurbita Pepo Extract, Salicylic Acid, Aloe Vera Juice, Hyaluronic Acid, Hydroxyethyl Cellulose, Rose Water, Allantoin, Glycolic Acid, 2-Phenoxyethanol, Ethylhexyl Glycerin, Polysorbate 80, PEG-40 Hydrogenated Castor Oil, Glycerin, 1,3-Propanediol, Sodium Gluconate, Fragrance, DM Water
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- 25 -->
+<div class="product">
+  <div class="product-inner">
+    <img class="product-img" src="https://avimeeherbal.com/cdn/shop/files/1_2c4cb5bc-4c70-4d7c-a038-16ac051e5dfa.png?v=1781775320&width=400" alt="Niacinamide Face Serum" onerror="this.style.display='none'">
+    <div class="product-info">
+      <div class="product-name">25. Niacinamide Face Serum</div>
+      <div class="product-meta">
+        <span class="tag cat">Face Serum</span>
+        <span class="tag vol">25 ml</span>
+        <span class="tag price">₹550</span>
+      </div>
+      <div class="ingredients-label">Full Ingredients List</div>
+      <div class="ingredients-text">
+        DM Water, Aloe Vera Juice, Niacinamide, Haldi Extract, Sea Buckthorn Extract, Cinnamon Extract, Rosemary Extract, Tomato Extract, Tea Tree Extract, Matmarine, Eucalyptus Extract, Lemongrass Extract, Neem Extract, Honey, Ascorbic Acid, Tween 80, Perfume, Potassium Sorbate, Hyaluronic Acid
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ── SUNSCREEN ── -->
+<div class="section-header">Sunscreen (Product 26)</div>
+
+<!-- 26 -->
+<div class="product">
+  <div class="product-inner">
+    <img class="product-img" src="https://avimeeherbal.com/cdn/shop/files/1_f6577cbf-72d1-4cae-b7a8-a629e54c73fe.png?v=1715593416&width=400" alt="Soorya Kawach SPF 50 Sunscreen" onerror="this.style.display='none'">
+    <div class="product-info">
+      <div class="product-name">26. Soorya Kawach SPF 50 PA++++ Sunscreen</div>
+      <div class="product-meta">
+        <span class="tag cat">Sunscreen</span>
+        <span class="tag vol">50 ml</span>
+        <span class="tag price">₹299</span>
+      </div>
+      <div class="ingredients-label">Full Ingredients List</div>
+      <div class="ingredients-text">
+        DM Water, Octocrylene, Octyl Methoxy Cinnamate, Aloe Vera Juice, Octyl Salicylate, Zinc Oxide, De-tan Extract (Propylene Glycol, Almond, Pomegranate, Coconut, Jojoba, Olive, Ginseng, Rhatany, Mulethi, Black Tea, Beet Root, Cotton Seed), Isopropyl Myristate, Polyglyceryl-2 Stearate, Glyceryl Stearate, Stearyl Alcohol, Cetostearyl Alcohol, Emulsifying Wax, Betaine, Hyaluronic Acid, Allantoin, IFRA Certified Fragrance, Sapt Beej Oil (Pomegranate Oil, Halim Oil, Chia Seed Oil, Flax Seed Oil, Pumpkin Seed Oil, Moringa Seed Oil, Sunflower Seed Oil), Vitamin E, 2-Phenoxyethanol, Potassium Sorbate, Sodium Gluconate
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ── HEALTH ── -->
+<div class="section-header">Health Supplements (Product 27)</div>
+
+<!-- 27 -->
+<div class="product" style="border-radius:0 0 6px 6px; margin-bottom:40px;">
+  <div class="product-inner">
+    <img class="product-img" src="https://avimeeherbal.com/cdn/shop/files/2_e9303c6d-a051-4418-82ad-42c9237ce3cc.png?v=1741611221&width=400" alt="Keshmadhu Hair Growth Capsule" onerror="this.style.display='none'">
+    <div class="product-info">
+      <div class="product-name">27. Keshmadhu Hair Growth Capsule</div>
+      <div class="product-meta">
+        <span class="tag cat">Health Supplement</span>
+        <span class="tag vol">60 Capsules</span>
+        <span class="tag price">₹999</span>
+      </div>
+      <div class="ingredients-label">Full Ingredients List (Herbal Extracts)</div>
+      <div class="ingredients-text">
+        Sesbania Extract (0.5% Biotin), Curry Leaves Extract (3.6% Iron), Indrajaw Extract (12% Calcium), Basil Extract (Niacin 3.6%), Lemon Peel Extract (Folic Acid 5%), Amla Extract (Vitamin C 50%), Hadjod Extract (Ketosteroids 5%), Moringa Extract (Saponin 20%), Bamboo Extract (Silica 70%), Shilajit Extract (Fulvic Acid 20%), Bhringraj Extract (Wedelactone 5%), Mandukparni Extract (Asiaticoside 20%), Brahmi Extract (Bacoside 50%), Jatamansi Extract, Black Sesame Seed Powder, Sweet Potato Extract, Grapeseed Extract 95%, Ashwagandha Extract (Withanolide 5%), Soya Extract (95% Phytosterol), Lichen Extract (1 Lakh IU Vitamin D3/GM), Chlorella Extract (Vitamin B12 0.3%), Vanslochan, Guava Extract (Zinc 4%), Sage Leaves Extracts (Magnesium 4%), Stinging Nettle Leaves Extract, Spirulina Extract (Protein 80%), Saw Palmetto Extract, Ginseng Extract (10% Ginsenoside)
+      </div>
+    </div>
+  </div>
+</div>
+
+</div><!-- end page-body -->
+
+<div style="text-align:center; padding: 20px; font-size:11px; color:#999; border-top:1px solid #eee; margin-top:20px;">
+  Avimee Herbal Pvt Ltd · Surat, Gujarat, India · avimeeherbal.com<br>
+  Ingredients sourced from official product pages · For review purposes · June 2026
+</div>
+
+</body>
+</html>

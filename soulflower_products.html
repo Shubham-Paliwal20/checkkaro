@@ -1,0 +1,477 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Soulflower — Product Catalogue with Ingredients</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'Segoe UI', Arial, sans-serif; background: #f5f4f0; color: #1a1a1a; font-size: 13px; }
+
+  .cover {
+    page-break-after: always;
+    height: 100vh; display: flex; flex-direction: column;
+    align-items: center; justify-content: center;
+    background: linear-gradient(150deg, #1a2e1a 0%, #2d4a2d 50%, #4a7c4a 100%);
+    color: #fff; text-align: center; padding: 40px;
+  }
+  .cover .logo { font-size: 52px; margin-bottom: 14px; }
+  .cover h1 { font-size: 50px; font-weight: 800; letter-spacing: 5px; margin-bottom: 4px; }
+  .cover .tagline { font-size: 13px; color: #b8d4a0; letter-spacing: 3px; text-transform: uppercase; margin-bottom: 22px; }
+  .cover .badge { display: inline-block; background: rgba(255,255,255,0.12); border: 2px solid rgba(255,255,255,0.35); border-radius: 24px; padding: 10px 28px; font-size: 13px; letter-spacing: 1px; margin-bottom: 18px; }
+  .cover .claims { display: flex; gap: 22px; margin-top: 18px; flex-wrap: wrap; justify-content: center; }
+  .cover .claim { background: rgba(255,255,255,0.08); border-radius: 10px; padding: 10px 18px; font-size: 11.5px; color: #c8e0b0; }
+  .cover .note { font-size: 11px; opacity: 0.55; margin-top: 18px; line-height: 1.8; }
+
+  .index-page { padding: 32px 26px; page-break-after: always; }
+  .index-page h2 { font-size: 20px; color: #2d4a2d; margin-bottom: 14px; border-bottom: 3px solid #4a7c4a; padding-bottom: 8px; }
+  .index-table { width: 100%; border-collapse: collapse; }
+  .index-table th { background: #2d4a2d; color: #fff; padding: 8px 10px; text-align: left; font-size: 11px; }
+  .index-table td { padding: 6px 10px; border-bottom: 1px solid #e8e8e0; font-size: 11px; }
+  .index-table tr:nth-child(even) td { background: #f0f5ec; }
+
+  .section-header { background: #2d4a2d; color: #fff; padding: 11px 22px; font-size: 13.5px; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; margin: 22px 0 0 0; border-radius: 6px 6px 0 0; }
+
+  .product { background: #fff; border: 1px solid #d8ddd0; border-top: none; padding: 14px 18px; page-break-inside: avoid; }
+  .product:last-of-type { border-radius: 0 0 6px 6px; margin-bottom: 22px; }
+  .product + .product { border-top: 1px solid #e8ece0; }
+  .product-inner { display: flex; gap: 14px; }
+  .product-img { width: 100px; min-width: 100px; height: 100px; object-fit: contain; border-radius: 8px; border: 1px solid #dce0d4; background: #f8faf5; padding: 4px; }
+  .product-info { flex: 1; }
+  .product-name { font-size: 13.5px; font-weight: 700; color: #2d4a2d; margin-bottom: 5px; }
+  .product-meta { display: flex; gap: 7px; margin-bottom: 8px; flex-wrap: wrap; }
+  .tag { border-radius: 12px; padding: 2px 9px; font-size: 10.5px; font-weight: 600; }
+  .tag.cat   { background: #e8f0e0; color: #2d4a2d; }
+  .tag.vol   { background: #e3f2fd; color: #1565c0; }
+  .tag.price { background: #fff8e0; color: #b85c00; }
+  .tag.note  { background: #f3e8ff; color: #5b2d8a; }
+  .tag.warn  { background: #fff0e0; color: #b05800; }
+  .ing-label { font-size: 10px; font-weight: 700; color: #888; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 3px; }
+  .ing-text  { font-size: 11.5px; color: #333; line-height: 1.65; background: #f4f8f0; border-left: 3px solid #4a7c4a; padding: 7px 11px; border-radius: 0 4px 4px 0; }
+  .ing-text .flagged { color: #b05800; font-weight: 600; }
+
+  /* Grid for single-ingredient oils */
+  .grid-section { background: #fff; border: 1px solid #d8ddd0; border-top: none; border-radius: 0 0 6px 6px; margin-bottom: 22px; }
+  .grid-inner { display: grid; grid-template-columns: repeat(3, 1fr); }
+  .grid-item { padding: 13px 15px; border-right: 1px solid #e8ece0; border-bottom: 1px solid #e8ece0; }
+  .grid-item:nth-child(3n) { border-right: none; }
+  .grid-item-img { width: 72px; height: 72px; object-fit: contain; border-radius: 6px; border: 1px solid #dce0d4; background: #f8faf5; padding: 3px; margin-bottom: 7px; }
+  .grid-item-name { font-size: 11.5px; font-weight: 700; color: #2d4a2d; margin-bottom: 3px; }
+  .grid-item-meta { font-size: 10px; color: #888; margin-bottom: 5px; }
+  .grid-item-ing { font-size: 10.5px; color: #333; background: #f4f8f0; border-left: 2px solid #4a7c4a; padding: 4px 8px; border-radius: 0 3px 3px 0; }
+
+  .page-body { padding: 18px 18px 0; }
+  .footer { text-align: center; padding: 16px; font-size: 11px; color: #999; border-top: 1px solid #e0e0d8; margin-top: 16px; }
+
+  @media print {
+    body { background: #fff; }
+    .section-header, .tag, .ing-text, .grid-item-ing { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  }
+</style>
+</head>
+<body>
+
+<!-- COVER -->
+<div class="cover">
+  <div class="logo">🌿</div>
+  <h1>SOULFLOWER</h1>
+  <div class="tagline">Farm to Face · Clean Science · India</div>
+  <div class="badge">31 Products &nbsp;|&nbsp; Hair · Skin · Soaps · Essential Oils</div>
+  <div class="claims">
+    <div class="claim">🌱 100% Organic & Natural</div>
+    <div class="claim">✓ Zero Mineral Oil</div>
+    <div class="claim">✓ Vegan & Cruelty-Free</div>
+    <div class="claim">✓ Farm to Face</div>
+  </div>
+  <div class="note">
+    No Parabens · No Sulphates · No Silicones · No Artificial Fragrance · No Petroleum<br>
+    soulflower.in &nbsp;|&nbsp; Certified Organic Farm · Backed by Wipro<br>
+    Prepared for review · June 2026
+  </div>
+</div>
+
+<!-- INDEX -->
+<div class="index-page">
+  <h2>Product Index — 31 Products</h2>
+  <table class="index-table">
+    <thead><tr><th>#</th><th>Product Name</th><th>Category</th><th>Volume</th><th>Price</th></tr></thead>
+    <tbody>
+      <tr><td>1</td><td>100% Pure Castor Oil</td><td>Carrier Oil</td><td>—</td><td>₹540</td></tr>
+      <tr><td>2</td><td>100% Pure Olive Oil</td><td>Carrier Oil</td><td>120 ml</td><td>₹540</td></tr>
+      <tr><td>3</td><td>100% Pure Moroccan Argan Oil</td><td>Carrier Oil</td><td>—</td><td>₹495</td></tr>
+      <tr><td>4</td><td>Jojoba Oil for Clean & Moisturized Skin</td><td>Carrier Oil</td><td>—</td><td>₹385</td></tr>
+      <tr><td>5</td><td>Rosehip Oil for Skin Hydration & Moisturization</td><td>Carrier Oil</td><td>—</td><td>₹560</td></tr>
+      <tr><td>6</td><td>100% Pure Sesame Oil</td><td>Carrier Oil</td><td>—</td><td>₹270</td></tr>
+      <tr><td>7</td><td>Pure Avocado Oil For Hair & Skin</td><td>Carrier Oil</td><td>—</td><td>₹455</td></tr>
+      <tr><td>8</td><td>Grapeseed Oil For Hair & Skin</td><td>Carrier Oil</td><td>—</td><td>₹455</td></tr>
+      <tr><td>9</td><td>Bhringraj Hair Growth Oil</td><td>Hair Oil Blend</td><td>—</td><td>₹270</td></tr>
+      <tr><td>10</td><td>Tea Tree Anti Dandruff Scalp Oil</td><td>Hair Oil Blend</td><td>—</td><td>₹585</td></tr>
+      <tr><td>11</td><td>Rosemary Mint Light Hair Growth Oil</td><td>Hair Oil Blend</td><td>225 ml</td><td>₹315</td></tr>
+      <tr><td>12</td><td>Rosemary Lavender Baby Hair Growth Oil</td><td>Hair Oil Blend</td><td>—</td><td>₹315</td></tr>
+      <tr><td>13</td><td>Onion Amla Hair Growth Oil (20-in-1)</td><td>Hair Oil Blend</td><td>220 ml</td><td>₹385</td></tr>
+      <tr><td>14</td><td>Rosemary Redensyl Hair Serum</td><td>Hair Serum</td><td>—</td><td>₹975</td></tr>
+      <tr><td>15</td><td>Rosemary Hair Spray Strength Boost + Hair Refresh</td><td>Hair Spray</td><td>100 ml</td><td>₹300</td></tr>
+      <tr><td>16</td><td>Rosemary Tea Tree Shampoo</td><td>Shampoo</td><td>—</td><td>₹315</td></tr>
+      <tr><td>17</td><td>100% Pure Rosemary Essential Oil</td><td>Essential Oil</td><td>—</td><td>₹845</td></tr>
+      <tr><td>18</td><td>Lavender Essential Oil for Good Sleep</td><td>Essential Oil</td><td>—</td><td>₹455</td></tr>
+      <tr><td>19</td><td>Peppermint Essential Oil to Stop Hair Shedding</td><td>Essential Oil</td><td>15 ml</td><td>₹315</td></tr>
+      <tr><td>20</td><td>Tea Tree Essential Oil</td><td>Essential Oil</td><td>15 ml</td><td>₹422</td></tr>
+      <tr><td>21</td><td>Eucalyptus (Nilgiri) Essential Oil</td><td>Essential Oil</td><td>15 ml</td><td>₹315</td></tr>
+      <tr><td>22</td><td>Frankincense Essential Oil for Scars & Age Spots</td><td>Essential Oil</td><td>15 ml</td><td>₹385</td></tr>
+      <tr><td>23</td><td>Pure Kumkumadi Oil</td><td>Skincare Oil</td><td>12 ml</td><td>₹1,170</td></tr>
+      <tr><td>24</td><td>Deep Pores Cleansing & Brightening Ubtan Face Mask</td><td>Face Mask</td><td>100 g</td><td>₹125</td></tr>
+      <tr><td>25</td><td>Glycolic Acid Exfoliating Acne & Zits Soap</td><td>Soap</td><td>100 g</td><td>₹175</td></tr>
+      <tr><td>26</td><td>Niacinamide Mango Matcha Vitamin C Soap</td><td>Soap</td><td>100 g</td><td>₹250</td></tr>
+      <tr><td>27</td><td>Kojic Acid Anti Pigmentation Kumkumadi Soap</td><td>Soap</td><td>100 g</td><td>₹490</td></tr>
+      <tr><td>28</td><td>Niacinamide + Rice Water Soap</td><td>Soap</td><td>100 g</td><td>₹490</td></tr>
+      <tr><td>29</td><td>Gentle Calming Moisturizing Lavender Soap</td><td>Soap</td><td>150 g</td><td>₹780</td></tr>
+      <tr><td>30</td><td>Activated Charcoal Soap for Pollution Protection</td><td>Soap</td><td>150 g</td><td>₹780</td></tr>
+      <tr><td>31</td><td>Deodorizing Charcoal Soap (100g)</td><td>Soap</td><td>100 g</td><td>₹175</td></tr>
+    </tbody>
+  </table>
+</div>
+
+<!-- PRODUCTS -->
+<div class="page-body">
+
+<!-- ── CARRIER OILS ── -->
+<div class="section-header">Carrier Oils — 100% Pure Cold Pressed (Products 1–8)</div>
+<div class="grid-section">
+  <div class="grid-inner">
+
+    <div class="grid-item">
+      <img class="grid-item-img" src="https://www.soulflower.in/cdn/shop/files/Castor-oil.webp?v=1775568186&width=300" alt="Castor Oil">
+      <div class="grid-item-name">1. 100% Pure Castor Oil</div>
+      <div class="grid-item-meta">₹540</div>
+      <div class="grid-item-ing">Ricinus Communis (Castor) Seed Oil — 100% pure cold-pressed, hexane-free</div>
+    </div>
+
+    <div class="grid-item">
+      <img class="grid-item-img" src="https://www.soulflower.in/cdn/shop/files/bcnrlvbbgbgnpkg8wnve.webp?v=1775631822&width=300" alt="Olive Oil">
+      <div class="grid-item-name">2. 100% Pure Olive Oil</div>
+      <div class="grid-item-meta">120 ml &nbsp;·&nbsp; ₹540</div>
+      <div class="grid-item-ing">Olea Europaea (Olive) Fruit Oil — 100% pure cold-pressed, hexane-free</div>
+    </div>
+
+    <div class="grid-item">
+      <img class="grid-item-img" src="https://www.soulflower.in/cdn/shop/files/Argan-09.webp?v=1780126446&width=300" alt="Argan Oil">
+      <div class="grid-item-name">3. 100% Pure Moroccan Argan Oil</div>
+      <div class="grid-item-meta">₹495</div>
+      <div class="grid-item-ing">Argania Spinosa (Argan) Kernel Oil — 100% pure cold-pressed, undiluted</div>
+    </div>
+
+    <div class="grid-item">
+      <img class="grid-item-img" src="https://www.soulflower.in/cdn/shop/files/Jojoba-09.webp?v=1780126446&width=300" alt="Jojoba Oil">
+      <div class="grid-item-name">4. Jojoba Oil</div>
+      <div class="grid-item-meta">₹385</div>
+      <div class="grid-item-ing">Simmondsia Chinensis (Jojoba) Seed Oil — 100% pure cold-pressed</div>
+    </div>
+
+    <div class="grid-item">
+      <img class="grid-item-img" src="https://www.soulflower.in/cdn/shop/files/Rosehip-7.webp?v=1775568448&width=300" alt="Rosehip Oil">
+      <div class="grid-item-name">5. Rosehip Oil</div>
+      <div class="grid-item-meta">₹560</div>
+      <div class="grid-item-ing">Rosa Canina (Rosehip) Seed Oil — 100% pure cold-pressed, rich in Omega-6 & Vitamin A</div>
+    </div>
+
+    <div class="grid-item">
+      <img class="grid-item-img" src="https://www.soulflower.in/cdn/shop/files/aqcd68omrsdqbzhucyvd.webp?v=1773135416&width=300" alt="Sesame Oil">
+      <div class="grid-item-name">6. 100% Pure Sesame Oil</div>
+      <div class="grid-item-meta">₹270</div>
+      <div class="grid-item-ing">Sesamum Indicum (Sesame) Seed Oil — 100% pure cold-pressed, hexane-free</div>
+    </div>
+
+    <div class="grid-item">
+      <img class="grid-item-img" src="https://www.soulflower.in/cdn/shop/files/Avocado_Oil_For_Hair_Skin_8.webp?v=1780126446&width=300" alt="Avocado Oil">
+      <div class="grid-item-name">7. Pure Avocado Oil</div>
+      <div class="grid-item-meta">₹455</div>
+      <div class="grid-item-ing">Persea Gratissima (Avocado) Oil — 100% pure cold-pressed</div>
+    </div>
+
+    <div class="grid-item">
+      <img class="grid-item-img" src="https://www.soulflower.in/cdn/shop/files/Grapeseesd-8.webp?v=1775568374&width=300" alt="Grapeseed Oil">
+      <div class="grid-item-name">8. Grapeseed Oil</div>
+      <div class="grid-item-meta">₹455</div>
+      <div class="grid-item-ing">Vitis Vinifera (Grape) Seed Oil — 100% pure cold-pressed, lightweight</div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ── HAIR OIL BLENDS ── -->
+<div class="section-header">Hair Oil Blends (Products 9–13)</div>
+
+<div class="product">
+  <div class="product-inner">
+    <img class="product-img" src="https://www.soulflower.in/cdn/shop/files/bhringraj-hair-oil-main.webp?v=1780126387&width=400" alt="Bhringraj Hair Growth Oil">
+    <div class="product-info">
+      <div class="product-name">9. Bhringraj Hair Growth Oil</div>
+      <div class="product-meta"><span class="tag cat">Hair Oil Blend</span><span class="tag price">₹270</span><span class="tag note">Cold Pressed</span></div>
+      <div class="ing-label">Full Ingredients List</div>
+      <div class="ing-text">Cocos Nucifera (Coconut) Oil, Eclipta Prostrata (Bhringraj) Extract, Sesamum Indicum (Sesame) Oil, Phyllanthus Emblica (Amla) Extract, Azadirachta Indica (Neem) Extract, Bacopa Monnieri (Brahmi) Extract, Murraya Koenigii (Curry Leaves) Extract</div>
+    </div>
+  </div>
+</div>
+
+<div class="product">
+  <div class="product-inner">
+    <img class="product-img" src="https://www.soulflower.in/cdn/shop/files/Tea-tree-oil-3_03e36bfd-3a80-4402-abfe-a8498aa0eaea.webp?v=1775569066&width=400" alt="Tea Tree Anti Dandruff Scalp Oil">
+    <div class="product-info">
+      <div class="product-name">10. Tea Tree Anti Dandruff Scalp Oil</div>
+      <div class="product-meta"><span class="tag cat">Hair Oil Blend</span><span class="tag price">₹585</span><span class="tag note">7 Oils</span></div>
+      <div class="ing-label">Full Ingredients List</div>
+      <div class="ing-text">Oryza Sativa (Rice Bran) Oil, Ricinus Communis (Castor) Seed Oil, Sesamum Indicum (Sesame) Oil, Olea Europaea (Olive) Fruit Oil, Melaleuca Alternifolia (Tea Tree) Leaf Oil, Simmondsia Chinensis (Jojoba) Seed Oil, Tocopherol (Vitamin E)</div>
+    </div>
+  </div>
+</div>
+
+<div class="product">
+  <div class="product-inner">
+    <img class="product-img" src="https://www.soulflower.in/cdn/shop/files/Rosemary-mint-2.webp?v=1776517273&width=400" alt="Rosemary Mint Light Hair Growth Oil">
+    <div class="product-info">
+      <div class="product-name">11. Rosemary Mint Light Hair Growth Oil</div>
+      <div class="product-meta"><span class="tag cat">Hair Oil Blend</span><span class="tag vol">225 ml</span><span class="tag price">₹315</span><span class="tag note">13 Cold Pressed Oils</span></div>
+      <div class="ing-label">Full Ingredients List</div>
+      <div class="ing-text">Oryza Sativa (Rice Bran) Oil, Helianthus Annuus (Sunflower) Seed Oil, Rosmarinus Officinalis (Rosemary) Oil, Nigella Sativa (Kalonji) Seed Oil, Phyllanthus Emblica (Amla) Oil, Ricinus Communis (Castor) Seed Oil, Vitis Vinifera (Grapeseed) Oil, Argania Spinosa (Argan) Kernel Oil, Persea Gratissima (Avocado) Oil, Mentha Piperita (Peppermint) Oil, Mentha Spicata (Spearmint) Oil, Hibiscus Rosa-Sinensis (Hibiscus) Oil, Tocopherol (Vitamin E)</div>
+    </div>
+  </div>
+</div>
+
+<div class="product">
+  <div class="product-inner">
+    <img class="product-img" src="https://www.soulflower.in/cdn/shop/files/Baby-hair-oil_3_9b9dbe5b-f880-4f06-a7e9-7aa68d863d2a.jpg?v=1773127742&width=400" alt="Rosemary Lavender Baby Hair Growth Oil">
+    <div class="product-info">
+      <div class="product-name">12. Rosemary Lavender Baby Hair Growth Oil</div>
+      <div class="product-meta"><span class="tag cat">Hair Oil Blend</span><span class="tag price">₹315</span><span class="tag note">Dermatologist & Paediatrician Tested</span></div>
+      <div class="ing-label">Full Ingredients List</div>
+      <div class="ing-text">Cocos Nucifera (Coconut) Oil, Olea Europaea (Olive) Fruit Oil, Sesamum Indicum (Sesame) Oil, Oryza Sativa (Rice Bran) Oil, Prunus Dulcis (Almond) Oil, Ricinus Communis (Castor) Seed Oil, Rosmarinus Officinalis (Rosemary) Oil, Phyllanthus Emblica (Amla) Oil, Simmondsia Chinensis (Jojoba) Seed Oil, Persea Gratissima (Avocado) Oil, Argania Spinosa (Argan) Kernel Oil, Lavandula Angustifolia (Lavender) Oil</div>
+    </div>
+  </div>
+</div>
+
+<div class="product">
+  <div class="product-inner">
+    <img class="product-img" src="https://www.soulflower.in/cdn/shop/files/onion-hair-oil-12ml.webp?v=1780126386&width=400" alt="Onion Amla Hair Growth Oil">
+    <div class="product-info">
+      <div class="product-name">13. Onion Amla Hair Growth Oil (Blend of 20 Oils)</div>
+      <div class="product-meta"><span class="tag cat">Hair Oil Blend</span><span class="tag vol">220 ml</span><span class="tag price">₹385</span><span class="tag note">20-in-1 Blend</span></div>
+      <div class="ing-label">Full Ingredients List</div>
+      <div class="ing-text">Cocos Nucifera (Coconut) Oil, Sesamum Indicum (Sesame) Oil, Olea Europaea (Olive) Oil, Ricinus Communis (Castor) Oil, Allium Cepa (Onion) Oil, Vetiveria Zizanioides (Vetiver) Root Oil, Vitis Vinifera (Grapeseed) Oil, Citrus Sinensis (Orange) Peel Oil, Santalum Album (Sandalwood) Oil, Alkanna Tinctoria (Ratanjot) Extract, Argania Spinosa (Argan) Kernel Oil, Prunus Dulcis (Almond) Oil, Azadirachta Indica (Neem) Oil, Phyllanthus Emblica (Amla) Oil, Bacopa Monnieri (Brahmi) Oil, Hibiscus Rosa-Sinensis (Hibiscus) Oil, Moringa Oleifera (Moringa) Seed Oil, Calophyllum Inophyllum (Tamanu) Seed Oil, Pelargonium Graveolens (Geranium) Oil, Lawsonia Inermis (Henna) Oil, Withania Somnifera (Ashwagandha) Oil, Gaultheria Procumbens (Wintergreen) Oil, Cedrus Deodara (Cedarwood) Oil, Mentha Piperita (Peppermint) Oil, Tocopherol (Vitamin E)</div>
+    </div>
+  </div>
+</div>
+
+<!-- ── HAIR SERUMS & SPRAYS ── -->
+<div class="section-header">Hair Serums & Sprays (Products 14–15)</div>
+
+<div class="product">
+  <div class="product-inner">
+    <img class="product-img" src="https://www.soulflower.in/cdn/shop/files/Redesyl-serum_1fd40ad2-0f14-467b-9304-b96cd09b88e2.webp?v=1775654405&width=400" alt="Rosemary Redensyl Hair Serum">
+    <div class="product-info">
+      <div class="product-name">14. Rosemary Redensyl Hair Serum</div>
+      <div class="product-meta"><span class="tag cat">Hair Serum</span><span class="tag price">₹975</span><span class="tag warn">Contains Phenoxyethanol & Sodium Benzoate</span></div>
+      <div class="ing-label">Full Ingredients List</div>
+      <div class="ing-text">Aqua, <span class="flagged">Anagain</span> (Pisum Sativum Sprout Extract, <span class="flagged">Phenoxyethanol</span>, <span class="flagged">Sodium Benzoate</span>, Aqua), Redensyl (Glycerin, Aqua, <span class="flagged">Sodium Metabisulfite</span>, Larix Europaea Wood Extract, Glycine, Zinc Chloride, Camellia Sinensis Leaf Extract), Glycerin, Oryza Sativa (Rice) Water Extract, Xylishine (Xylitylglucoside, Anhydroxylitol, Maltitol, Xylitol, Pelvetia Canaliculata Extract), <span class="flagged">PEG-40 Hydrogenated Castor Oil</span>, Salvia Hispanica (Chia) Seeds Extract, Melanogray (Citrus Reticulata Extract, Acetyl Tyrosine, Pentylene Glycol, <span class="flagged">Gluconolactone</span>, <span class="flagged">Sodium Benzoate</span>, Aqua), Rosmarinus Officinalis (Rosemary) Oil, <span class="flagged">Euxyl K 712</span>, Xanthan Gum, Propanediol, Caffeine, Hydrolysed Keratin, <span class="flagged">Sodium Gluconate</span>, Biotin 0.1%, Allantoin, Melaleuca Alternifolia (Tea Tree) Oil</div>
+    </div>
+  </div>
+</div>
+
+<div class="product">
+  <div class="product-inner">
+    <img class="product-img" src="https://www.soulflower.in/cdn/shop/files/200ml_Rosemary_water_1_97933dec-1647-4ee3-a9c3-7dab10f597ce.webp?v=1775810856&width=400" alt="Rosemary Hair Spray">
+    <div class="product-info">
+      <div class="product-name">15. Rosemary Hair Spray Strength Boost + Hair Refresh</div>
+      <div class="product-meta"><span class="tag cat">Hair Spray</span><span class="tag vol">100 ml</span><span class="tag price">₹300</span><span class="tag note">95.5% Rosemary Distillate</span></div>
+      <div class="ing-label">Full Ingredients List</div>
+      <div class="ing-text">Rosemary Distillate (Rosmarinus Officinalis Hydrosol), Niacinamide, Rosmarinus Officinalis (Rosemary) Oil, D-Panthenol (Provitamin B5), Heptyl Glucoside, Betaine, <span class="flagged">Phenoxyethanol</span>, <span class="flagged">Sodium Benzoate</span>, Mentha Piperita (Peppermint) Oil, Allantoin, <span class="flagged">Disodium EDTA</span>, <span class="flagged">Sodium Gluconate</span></div>
+    </div>
+  </div>
+</div>
+
+<!-- ── SHAMPOO ── -->
+<div class="section-header">Shampoo (Product 16)</div>
+
+<div class="product">
+  <div class="product-inner">
+    <img class="product-img" src="https://www.soulflower.in/cdn/shop/files/Rosemary-tea-tree-shampoo-2.webp?v=1775810434&width=400" alt="Rosemary Tea Tree Shampoo">
+    <div class="product-info">
+      <div class="product-name">16. Rosemary Tea Tree Shampoo</div>
+      <div class="product-meta"><span class="tag cat">Shampoo</span><span class="tag price">₹315</span><span class="tag warn">Contains Fragrance & Synthetic Additives</span></div>
+      <div class="ing-label">Full Ingredients List</div>
+      <div class="ing-text">Aqua, <span class="flagged">Sodium Cocoyl Isethionate</span>, Phyllanthus Emblica (Amla) Extract, Lauryl Glucoside, Cocoyl Glucoside, Aloe Barbadensis (Aloevera) Extract, Vegetable Glycerin, Salicylic Acid, Hibiscus Rosa-Sinensis (Hibiscus) Extract, Sapindus Mukorossi (Reetha) Extract, <span class="flagged">Ethylene Glycol Distearate</span>, Salix Alba (Willow Bark) Extract, <span class="flagged">Polyquaternium-37</span>, Ginkgo Biloba Extract, Cocos Nucifera (Coconut Milk), Niacinamide, D-Panthenol (Vitamin B5), Hydrolysed Soya Protein, <span class="flagged">Euxyl K 712</span> (Sodium Benzoate, Potassium Sorbate, Aqua), <span class="flagged">Fragrance</span>, Rosmarinus Officinalis (Rosemary) Oil, Hyaluronic Acid, Melaleuca Alternifolia (Tea Tree) Oil, <span class="flagged">Guar Hydroxypropyl Trimonium Chloride</span>, Tocopherol (Vitamin E)</div>
+    </div>
+  </div>
+</div>
+
+<!-- ── ESSENTIAL OILS ── -->
+<div class="section-header">Essential Oils — 100% Pure (Products 17–22)</div>
+<div class="grid-section">
+  <div class="grid-inner">
+
+    <div class="grid-item">
+      <img class="grid-item-img" src="https://www.soulflower.in/cdn/shop/files/Essential-oil-pack-1_5c2093b6-2913-4fad-9c7e-9ed64788cede.webp?v=1780565448&width=300" alt="Rosemary Essential Oil">
+      <div class="grid-item-name">17. 100% Pure Rosemary Essential Oil</div>
+      <div class="grid-item-meta">₹845</div>
+      <div class="grid-item-ing">Rosmarinus Officinalis (Rosemary) Essential Oil — 100% pure, undiluted, steam distilled</div>
+    </div>
+
+    <div class="grid-item">
+      <img class="grid-item-img" src="https://www.soulflower.in/cdn/shop/files/LavenderEssentialOil.webp?v=1780126446&width=300" alt="Lavender Essential Oil">
+      <div class="grid-item-name">18. Lavender Essential Oil</div>
+      <div class="grid-item-meta">₹455</div>
+      <div class="grid-item-ing">Lavandula Angustifolia (Lavender) Essential Oil — 100% pure, undiluted, steam distilled</div>
+    </div>
+
+    <div class="grid-item">
+      <img class="grid-item-img" src="https://www.soulflower.in/cdn/shop/files/Peppermint.webp?v=1780126446&width=300" alt="Peppermint Essential Oil">
+      <div class="grid-item-name">19. Peppermint Essential Oil</div>
+      <div class="grid-item-meta">15 ml &nbsp;·&nbsp; ₹315</div>
+      <div class="grid-item-ing">Mentha Piperita (Peppermint) Essential Oil — 100% pure, undiluted, steam distilled</div>
+    </div>
+
+    <div class="grid-item">
+      <img class="grid-item-img" src="https://www.soulflower.in/cdn/shop/files/Tea-tree-oil-10_4edf7708-26ed-4709-adbe-11e8a978af00.webp?v=1775569066&width=300" alt="Tea Tree Essential Oil">
+      <div class="grid-item-name">20. Tea Tree Essential Oil</div>
+      <div class="grid-item-meta">15 ml &nbsp;·&nbsp; ₹422</div>
+      <div class="grid-item-ing">Melaleuca Alternifolia (Tea Tree) Essential Oil — 100% pure, undiluted, steam distilled</div>
+    </div>
+
+    <div class="grid-item">
+      <img class="grid-item-img" src="https://www.soulflower.in/cdn/shop/files/Eucalyptus15ml_8.webp?v=1780126445&width=300" alt="Eucalyptus Essential Oil">
+      <div class="grid-item-name">21. Eucalyptus (Nilgiri) Essential Oil</div>
+      <div class="grid-item-meta">15 ml &nbsp;·&nbsp; ₹315</div>
+      <div class="grid-item-ing">Eucalyptus Globulus (Eucalyptus) Leaf Oil — 100% pure, undiluted, steam distilled</div>
+    </div>
+
+    <div class="grid-item">
+      <img class="grid-item-img" src="https://www.soulflower.in/cdn/shop/files/Frankincense.webp?v=1780126445&width=300" alt="Frankincense Essential Oil">
+      <div class="grid-item-name">22. Frankincense Essential Oil</div>
+      <div class="grid-item-meta">15 ml &nbsp;·&nbsp; ₹385</div>
+      <div class="grid-item-ing">Boswellia Carterii (Frankincense) Essential Oil — 100% pure, undiluted, steam distilled</div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ── SKIN CARE ── -->
+<div class="section-header">Skincare — Oils & Face Masks (Products 23–24)</div>
+
+<div class="product">
+  <div class="product-inner">
+    <img class="product-img" src="https://www.soulflower.in/cdn/shop/files/kumkumadi_30ml-08.webp?v=1780126386&width=400" alt="Pure Kumkumadi Oil">
+    <div class="product-info">
+      <div class="product-name">23. Pure Kumkumadi Oil</div>
+      <div class="product-meta"><span class="tag cat">Skincare Oil</span><span class="tag vol">12 ml</span><span class="tag price">₹1,170</span><span class="tag note">AYUSH Certified · 26 Botanicals</span></div>
+      <div class="ing-label">Full Ingredients List</div>
+      <div class="ing-text">Prunus Amygdalus Dulcis (Sweet Almond) Seed Oil, Pterocarpus Santalinus (Red Sandalwood) Heartwood Extract, Rubia Cordifolia (Indian Madder) Stem Extract, Glycyrrhiza Glabra (Licorice) Root Extract, Berberis Aristata (Barberry) Stem Bark Extract, Vetiveria Zizanioides (Vetiver) Root Extract, Prunus Cerasus (Sour Cherry) Fruit Extract, Nymphaea Caerulea (Blue Lotus) Flower Extract, Ficus Benghalensis (Banyan) Root Extract, Ficus Lacor (Plaksa) Stem Bark Extract, Nelumbo Nucifera (Lotus) Flower Extract, Aegle Marmelos (Bael) Fruit Extract, Clerodendrum Phlomidis (Agnimanth) Root Extract, Calendula Officinalis (Marigold) Flower Extract, Gmelina Arborea (Gambhari) Root Extract, Chamomilla Recutita (Chamomile) Flower Extract, Desmodium Gangeticum (Shalparni) Root Extract, Althaea Officinalis (Marshmallow) Root Extract, Tribulus Terrestris (Gokshur) Fruit Extract, Solanum Nigrum (Black Nightshade) Root Extract, Solanum Xanthocarpum (Yellow Nightshade) Root Extract, Madhuca Longifolia (Mahua) Seed Extract, Crocus Sativus (Saffron) Stigma Extract, Crocus Sativus (Saffron) Oil, Sesamum Indicum (Sesame) Seed Oil, Goat Milk</div>
+    </div>
+  </div>
+</div>
+
+<div class="product">
+  <div class="product-inner">
+    <img class="product-img" src="https://www.soulflower.in/cdn/shop/files/UbtanFaceMaskforCleansing_Brightening.webp?v=1780126266&width=400" alt="Ubtan Face Mask">
+    <div class="product-info">
+      <div class="product-name">24. Deep Pores Cleansing & Brightening Ubtan Face Mask</div>
+      <div class="product-meta"><span class="tag cat">Face Mask</span><span class="tag vol">100 g</span><span class="tag price">₹125</span><span class="tag note">With Vitamin C & Manjistha</span></div>
+      <div class="ing-label">Full Ingredients List</div>
+      <div class="ing-text">Solum Fullonum (Multani Mitti / Fuller's Earth), Citrus Aurantium (Orange Peel) Powder, Santalum Album (Sandalwood) Powder, Carica Papaya (Papaya) Fruit Powder, Ascorbic Acid (Vitamin C), Rubia Cordifolia (Manjistha) Powder, Punica Granatum (Pomegranate) Peel Powder, Glycyrrhiza Glabra (Licorice) Root Powder, Curcuma Amada (Amba Haldi) Powder, Citrus Aurantium (Orange) Essential Oil</div>
+    </div>
+  </div>
+</div>
+
+<!-- ── SOAPS ── -->
+<div class="section-header">Glow Soaps (Products 25–31)</div>
+
+<div class="product">
+  <div class="product-inner">
+    <img class="product-img" src="https://www.soulflower.in/cdn/shop/files/Acne-soap.webp?v=1780667116&width=400" alt="Glycolic Acid Soap">
+    <div class="product-info">
+      <div class="product-name">25. Glycolic Acid Exfoliating Acne & Zits Soap</div>
+      <div class="product-meta"><span class="tag cat">Soap</span><span class="tag vol">100 g</span><span class="tag price">₹175</span><span class="tag warn">Contains Glycolic Acid & Salicylic Acid</span></div>
+      <div class="ing-label">Full Ingredients List</div>
+      <div class="ing-text">Aqua, Cocos Nucifera (Coconut Palm Kernel/Coconut) Oil, Sodium Palmate (Palm Oil Saponified / NaOH), Ricinus Communis (Castor) Seed Oil, Kaolin (White Clay), Olea Europaea (Olive) Fruit Oil, <span class="flagged">Salicylic Acid</span>, Ocimum Basilicum (Basil) Leaf Extract, Melaleuca Alternifolia (Tea Tree) Leaf Oil, <span class="flagged">Glycolic Acid</span>, Niacinamide, Tocopherol (Vitamin E)</div>
+    </div>
+  </div>
+</div>
+
+<div class="product">
+  <div class="product-inner">
+    <img class="product-img" src="https://www.soulflower.in/cdn/shop/files/Mango_Matcha_Soap_Ingredients.webp?v=1780224247&width=400" alt="Niacinamide Mango Matcha Soap">
+    <div class="product-info">
+      <div class="product-name">26. Niacinamide Mango Matcha Vitamin C Soap</div>
+      <div class="product-meta"><span class="tag cat">Soap</span><span class="tag vol">100 g</span><span class="tag price">₹250</span><span class="tag warn">Contains Fragrance & Colorants</span></div>
+      <div class="ing-label">Full Ingredients List</div>
+      <div class="ing-text">Elaeis Guineensis (Palm) Oil, Sodium Palmate (Palm Kernel Saponified), Cocos Nucifera (Coconut) Oil, Mangifera Indica (Mango) Extract, Aqua, Sodium Hydroxide (NaOH), Ricinus Communis (Castor) Oil, Olea Europaea (Olive) Oil, Mangifera Indica (Mango) Butter, <span class="flagged">Fragrance</span>, Niacinamide, Ascorbic Acid (Vitamin C), Camellia Sinensis (Matcha) Leaf Powder, Tocopherol (Natural Vitamin E), <span class="flagged">CI 15510</span>, <span class="flagged">CI 61565</span>, Curcuma Longa (Turmeric) Powder</div>
+    </div>
+  </div>
+</div>
+
+<div class="product">
+  <div class="product-inner">
+    <img class="product-img" src="https://www.soulflower.in/cdn/shop/files/3_9360188f-5475-4294-9100-c1830773ce14.webp?v=1775121684&width=400" alt="Kojic Acid Kumkumadi Soap">
+    <div class="product-info">
+      <div class="product-name">27. Kojic Acid Anti Pigmentation Kumkumadi Soap</div>
+      <div class="product-meta"><span class="tag cat">Soap</span><span class="tag vol">100 g × 4</span><span class="tag price">₹490</span><span class="tag warn">Contains Kojic Acid & Fragrance</span></div>
+      <div class="ing-label">Full Ingredients List</div>
+      <div class="ing-text">Crocus Sativus (Kesar/Saffron) Extract, Curcuma Longa (Turmeric), <span class="flagged">Kojic Acid</span>, Glutathione, Niacinamide, Elaeis Guineensis (Palm) Oil, Aqua, Cocos Nucifera (Coconut) Oil, Sodium Palmate (Palm Kernel Saponified), Sodium Hydroxide (NaOH), Ricinus Communis (Castor) Oil, Kaolin (White Clay), <span class="flagged">Fragrance</span>, Olea Europaea (Olive) Oil, Prunus Dulcis (Almond) Oil, Tocopherol (Vitamin E)</div>
+    </div>
+  </div>
+</div>
+
+<div class="product">
+  <div class="product-inner">
+    <img class="product-img" src="https://www.soulflower.in/cdn/shop/files/4_89fd827c-a40e-4cf2-9349-9f6c380cb7f4.webp?v=1775132681&width=400" alt="Niacinamide Rice Water Soap">
+    <div class="product-info">
+      <div class="product-name">28. Niacinamide + Rice Water Soap</div>
+      <div class="product-meta"><span class="tag cat">Soap</span><span class="tag vol">100 g × 4</span><span class="tag price">₹490</span><span class="tag warn">Contains Fragrance & Alpha Arbutin</span></div>
+      <div class="ing-label">Full Ingredients List</div>
+      <div class="ing-text">Elaeis Guineensis (Palm) Oil, Cocos Nucifera (Coconut) Oil, Sodium Palmate (Palm Kernel Saponified), Aqua, Sodium Hydroxide (NaOH), Oryza Sativa (Rice) Water, Ricinus Communis (Castor) Oil, Kaolin (White Clay), <span class="flagged">Fragrance</span>, Olea Europaea (Olive) Oil, Alpha Arbutin, Niacinamide, Argania Spinosa (Argan) Kernel Oil, Tocopherol (Vitamin E)</div>
+    </div>
+  </div>
+</div>
+
+<div class="product">
+  <div class="product-inner">
+    <img class="product-img" src="https://www.soulflower.in/cdn/shop/files/Gentle-Calming-Moisturizing-Lavender-Soap.webp?v=1780126085&width=400" alt="Lavender Soap">
+    <div class="product-info">
+      <div class="product-name">29. Gentle Calming Moisturizing Lavender Soap</div>
+      <div class="product-meta"><span class="tag cat">Soap</span><span class="tag vol">150 g</span><span class="tag price">₹780</span><span class="tag note">Cold Processed Handmade · Contains CI 61565</span></div>
+      <div class="ing-label">Full Ingredients List</div>
+      <div class="ing-text">Elaeis Guineensis (Palm) Oil, Cocos Nucifera (Coconut) Oil, Sodium Palmate (Palm Kernel Saponified), Sodium Hydroxide (NaOH), Ricinus Communis (Castor) Oil, Olea Europaea (Olive) Oil, Lavandula Angustifolia (Lavender) Essential Oil, Lavandula Angustifolia (Lavender) Herb, <span class="flagged">CI 61565</span>, Tocopherol (Vitamin E)</div>
+    </div>
+  </div>
+</div>
+
+<div class="product">
+  <div class="product-inner">
+    <img class="product-img" src="https://www.soulflower.in/cdn/shop/files/Activated-Charcoal-Soap-for-clogged-pores.webp?v=1780126085&width=400" alt="Activated Charcoal Soap">
+    <div class="product-info">
+      <div class="product-name">30. Activated Charcoal Soap for Pollution Protection</div>
+      <div class="product-meta"><span class="tag cat">Soap</span><span class="tag vol">150 g</span><span class="tag price">₹780</span><span class="tag note">Cold Processed Handmade</span></div>
+      <div class="ing-label">Full Ingredients List</div>
+      <div class="ing-text">Elaeis Guineensis (Palm) Oil, Cocos Nucifera (Coconut) Oil, Sodium Palmate (Palm Kernel Saponified), Sodium Hydroxide (NaOH), Ricinus Communis (Castor) Oil, Brassica Napus (Turnip) Root Extract, Olea Europaea (Olive) Oil, Mentha Piperita (Peppermint) Essential Oil, Melaleuca Alternifolia (Tea Tree) Leaf Oil, Styrax Benzoin (Benzoin) Oil, Activated Charcoal (Charcoal Powder), Tocopherol (Vitamin E)</div>
+    </div>
+  </div>
+</div>
+
+<div class="product">
+  <div class="product-inner">
+    <img class="product-img" src="https://www.soulflower.in/cdn/shop/files/Acne-soap.webp?v=1780667116&width=400" alt="Deodorizing Charcoal Soap">
+    <div class="product-info">
+      <div class="product-name">31. Deodorizing Charcoal Soap</div>
+      <div class="product-meta"><span class="tag cat">Soap</span><span class="tag vol">100 g</span><span class="tag price">₹175</span><span class="tag note">Cold Processed · Budget Friendly</span></div>
+      <div class="ing-label">Full Ingredients List</div>
+      <div class="ing-text">Elaeis Guineensis (Palm) Oil, Cocos Nucifera (Coconut) Oil, Sodium Palmate (Palm Kernel Saponified), Sodium Hydroxide (NaOH), Ricinus Communis (Castor) Oil, Olea Europaea (Olive) Oil, Activated Charcoal (Charcoal Powder), Melaleuca Alternifolia (Tea Tree) Leaf Oil, Tocopherol (Vitamin E)</div>
+    </div>
+  </div>
+</div>
+
+</div><!-- end page-body -->
+
+<div class="footer">
+  Soulflower · soulflower.in · Farm to Face Clean Beauty · Backed by Wipro · Certified Organic<br>
+  <span style="color:#b05800; font-weight:600;">Orange highlights</span> = ingredients worth checking · Ingredients sourced from official product pages · June 2026
+</div>
+
+</body>
+</html>

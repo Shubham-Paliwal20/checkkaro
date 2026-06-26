@@ -1,0 +1,894 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Parkho — Full Project Documentation</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: 'Segoe UI', Arial, sans-serif; font-size: 13px; color: #1a1a2e; line-height: 1.6; background: #fff; }
+
+  /* ── Cover page ── */
+  .cover { height: 100vh; background: linear-gradient(135deg, #1B3F8A 0%, #0f2460 100%); display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; page-break-after: always; }
+  .cover h1 { font-size: 48px; font-weight: 800; color: #FF9933; letter-spacing: -1px; margin-bottom: 12px; }
+  .cover .sub { font-size: 20px; color: #93c5fd; margin-bottom: 40px; }
+  .cover .meta { font-size: 13px; color: #94a3b8; line-height: 2; }
+  .cover .badge { display: inline-block; background: #FF9933; color: #fff; font-size: 11px; font-weight: 700; padding: 4px 14px; border-radius: 20px; margin-bottom: 32px; letter-spacing: 1px; text-transform: uppercase; }
+  .cover .pill { display: inline-block; background: rgba(255,255,255,0.08); color: #cbd5e1; font-size: 12px; padding: 5px 16px; border-radius: 20px; margin: 4px; border: 1px solid rgba(255,255,255,0.1); }
+
+  /* ── Layout ── */
+  .page { max-width: 900px; margin: 0 auto; padding: 48px 56px; }
+  @media print {
+    .page { padding: 32px 48px; }
+    section { page-break-inside: avoid; }
+  }
+
+  /* ── Section headings ── */
+  h1.section-title { font-size: 28px; font-weight: 800; color: #1B3F8A; border-bottom: 3px solid #FF9933; padding-bottom: 10px; margin: 48px 0 24px; }
+  h2 { font-size: 18px; font-weight: 700; color: #1B3F8A; margin: 32px 0 12px; }
+  h3 { font-size: 14px; font-weight: 700; color: #374151; margin: 20px 0 8px; }
+  h4 { font-size: 12px; font-weight: 700; color: #6b7280; text-transform: uppercase; letter-spacing: 0.5px; margin: 14px 0 6px; }
+
+  /* ── Text ── */
+  p { margin-bottom: 10px; color: #374151; }
+  ul, ol { padding-left: 20px; margin-bottom: 10px; }
+  li { margin-bottom: 4px; color: #374151; }
+  a { color: #1B3F8A; }
+  strong { color: #111827; }
+
+  /* ── Code ── */
+  code { font-family: 'Consolas', 'Courier New', monospace; font-size: 11.5px; background: #f1f5f9; color: #1e3a5f; padding: 1px 5px; border-radius: 4px; }
+  pre { background: #0f172a; color: #e2e8f0; font-family: 'Consolas', 'Courier New', monospace; font-size: 11.5px; padding: 16px 20px; border-radius: 8px; overflow-x: auto; margin: 12px 0; line-height: 1.7; }
+  pre .kw { color: #93c5fd; } pre .str { color: #86efac; } pre .cm { color: #64748b; } pre .fn { color: #fbbf24; }
+
+  /* ── Cards ── */
+  .card { background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 10px; padding: 16px 20px; margin: 12px 0; }
+  .card-orange { background: #fff7ed; border-color: #fed7aa; }
+  .card-blue { background: #eff6ff; border-color: #bfdbfe; }
+  .card-green { background: #f0fdf4; border-color: #bbf7d0; }
+  .card-red { background: #fef2f2; border-color: #fecaca; }
+
+  /* ── Tables ── */
+  table { width: 100%; border-collapse: collapse; margin: 12px 0; font-size: 12px; }
+  th { background: #1B3F8A; color: #fff; padding: 8px 12px; text-align: left; font-weight: 600; }
+  td { padding: 7px 12px; border-bottom: 1px solid #e5e7eb; vertical-align: top; }
+  tr:nth-child(even) td { background: #f8fafc; }
+
+  /* ── Pills / badges ── */
+  .pill { display: inline-block; padding: 2px 10px; border-radius: 12px; font-size: 11px; font-weight: 600; margin: 2px; }
+  .pill-orange { background: #fff7ed; color: #c2410c; border: 1px solid #fed7aa; }
+  .pill-blue { background: #eff6ff; color: #1d4ed8; border: 1px solid #bfdbfe; }
+  .pill-green { background: #f0fdf4; color: #15803d; border: 1px solid #bbf7d0; }
+  .pill-red { background: #fef2f2; color: #dc2626; border: 1px solid #fecaca; }
+  .pill-gray { background: #f3f4f6; color: #374151; border: 1px solid #d1d5db; }
+
+  /* ── Architecture diagram ── */
+  .arch { display: flex; gap: 16px; margin: 20px 0; flex-wrap: wrap; }
+  .arch-box { flex: 1; min-width: 200px; background: #fff; border: 2px solid #1B3F8A; border-radius: 10px; padding: 14px 16px; text-align: center; }
+  .arch-box .icon { font-size: 28px; margin-bottom: 6px; }
+  .arch-box .title { font-weight: 700; color: #1B3F8A; font-size: 13px; }
+  .arch-box .sub { font-size: 11px; color: #6b7280; margin-top: 4px; }
+  .arrow { display: flex; align-items: center; color: #9ca3af; font-size: 24px; flex-shrink: 0; }
+
+  /* ── TOC ── */
+  .toc { background: #eff6ff; border: 1px solid #bfdbfe; border-radius: 10px; padding: 20px 28px; margin: 24px 0; }
+  .toc h2 { margin-top: 0; color: #1d4ed8; font-size: 16px; }
+  .toc ol { counter-reset: toc; }
+  .toc li { margin-bottom: 5px; font-weight: 500; }
+  .toc li a { color: #1d4ed8; text-decoration: none; }
+
+  /* ── Endpoint rows ── */
+  .endpoint { display: flex; gap: 10px; align-items: flex-start; margin: 8px 0; padding: 8px 12px; background: #f8fafc; border-radius: 6px; border-left: 3px solid #1B3F8A; }
+  .method { font-size: 10px; font-weight: 800; padding: 2px 7px; border-radius: 4px; flex-shrink: 0; margin-top: 1px; letter-spacing: 0.5px; }
+  .get { background: #dcfce7; color: #15803d; }
+  .post { background: #fef3c7; color: #92400e; }
+  .patch { background: #ede9fe; color: #6d28d9; }
+  .delete { background: #fee2e2; color: #991b1b; }
+  .ep-path { font-family: 'Consolas', monospace; font-size: 12px; font-weight: 600; color: #1B3F8A; }
+  .ep-desc { font-size: 12px; color: #6b7280; margin-top: 2px; }
+
+  /* ── Grade badges ── */
+  .grade { display: inline-block; width: 28px; height: 28px; border-radius: 6px; font-size: 14px; font-weight: 800; text-align: center; line-height: 28px; }
+  .grade-A { background: #dcfce7; color: #15803d; }
+  .grade-B { background: #dbeafe; color: #1d4ed8; }
+  .grade-C { background: #fef3c7; color: #92400e; }
+  .grade-D { background: #fee2e2; color: #991b1b; }
+
+  /* ── Divider ── */
+  hr { border: none; border-top: 1px solid #e5e7eb; margin: 32px 0; }
+
+  /* ── Print ── */
+  @media print {
+    .cover { height: auto; min-height: 60vh; padding: 80px 40px; }
+    .cover h1 { font-size: 36px; }
+    a { text-decoration: none; }
+    pre { white-space: pre-wrap; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ═══════════════════════════ COVER PAGE ═══════════════════════════ -->
+<div class="cover">
+  <div class="badge">Technical Documentation</div>
+  <h1>Parkho</h1>
+  <div class="sub">Know What's Inside — Full Project Documentation</div>
+  <div style="margin-bottom: 32px;">
+    <span class="pill">React 18</span>
+    <span class="pill">FastAPI</span>
+    <span class="pill">Supabase</span>
+    <span class="pill">Vercel</span>
+    <span class="pill">Render</span>
+    <span class="pill">Google Gemini</span>
+    <span class="pill">Tailwind CSS</span>
+  </div>
+  <div class="meta">
+    <div>🌐 Production URL: <strong style="color:#fff">https://www.parkho.in</strong></div>
+    <div>📦 Backend API: <strong style="color:#fff">https://checkkaro.onrender.com</strong></div>
+    <div>🗄️ Database: <strong style="color:#fff">Supabase (PostgreSQL)</strong></div>
+    <div style="margin-top: 16px; color: #64748b;">Version 1.0 &nbsp;|&nbsp; May 2026</div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════ MAIN CONTENT ═══════════════════════════ -->
+<div class="page">
+
+  <!-- TABLE OF CONTENTS -->
+  <div class="toc">
+    <h2>📋 Table of Contents</h2>
+    <ol>
+      <li><a href="#overview">Project Overview</a></li>
+      <li><a href="#architecture">System Architecture</a></li>
+      <li><a href="#database">Database Structure (Supabase)</a></li>
+      <li><a href="#backend">Backend (FastAPI / Python)</a></li>
+      <li><a href="#frontend">Frontend (React / Vite)</a></li>
+      <li><a href="#pages">Pages & Features</a></li>
+      <li><a href="#seo">SEO Setup</a></li>
+      <li><a href="#deployment">Deployment & Infrastructure</a></li>
+      <li><a href="#env">Environment Variables</a></li>
+      <li><a href="#git">Git Workflow</a></li>
+    </ol>
+  </div>
+
+  <!-- ─── 1. OVERVIEW ─── -->
+  <h1 class="section-title" id="overview">1. Project Overview</h1>
+
+  <p><strong>Parkho</strong> (formerly CheckKaro) is an Indian consumer-facing web application that lets users look up ingredients in any packaged food or cosmetic product. Each ingredient is classified into one of four safety tiers, products are given an A–D grade, and all data is backed by FSSAI, WHO, and EU regulatory sources.</p>
+
+  <div class="card card-orange">
+    <strong>Core Value Proposition:</strong> Type any Indian product name (e.g. "Maggi 2-Minute Masala Noodles") and instantly see every ingredient explained in plain English — whether it's safe, questionable, or harmful — with regulatory context.
+  </div>
+
+  <h2>Key Numbers</h2>
+  <table>
+    <tr><th>Metric</th><th>Value</th></tr>
+    <tr><td>Products in database</td><td>570+ (ai_extracted_products table)</td></tr>
+    <tr><td>Ingredient entries</td><td>672 (ingredient_database.py)</td></tr>
+    <tr><td>E/INS number entries</td><td>167 indexed E-numbers</td></tr>
+    <tr><td>Ingredient classification tiers</td><td>4 (generally_recognised, worth_knowing, commonly_questioned, banned)</td></tr>
+    <tr><td>Product grade system</td><td>A / B / C / D</td></tr>
+    <tr><td>Frontend pages</td><td>9 routes</td></tr>
+    <tr><td>API endpoints</td><td>~20</td></tr>
+  </table>
+
+  <!-- ─── 2. ARCHITECTURE ─── -->
+  <h1 class="section-title" id="architecture">2. System Architecture</h1>
+
+  <div class="arch">
+    <div class="arch-box">
+      <div class="icon">🌐</div>
+      <div class="title">Frontend</div>
+      <div class="sub">React 18 + Vite<br>Deployed on Vercel<br>www.parkho.in</div>
+    </div>
+    <div class="arrow">⟷</div>
+    <div class="arch-box">
+      <div class="icon">⚡</div>
+      <div class="title">Backend API</div>
+      <div class="sub">FastAPI (Python)<br>Deployed on Render<br>checkkaro.onrender.com</div>
+    </div>
+    <div class="arrow">⟷</div>
+    <div class="arch-box">
+      <div class="icon">🗄️</div>
+      <div class="title">Database</div>
+      <div class="sub">Supabase<br>(PostgreSQL + Auth<br>+ Storage)</div>
+    </div>
+  </div>
+
+  <div class="arch">
+    <div class="arch-box" style="border-color: #16a34a;">
+      <div class="icon">🤖</div>
+      <div class="title">AI Services</div>
+      <div class="sub">Google Gemini 1.5 Flash<br>Groq (LLaMA)<br>Anthropic Claude</div>
+    </div>
+    <div class="arrow">⟷</div>
+    <div class="arch-box" style="border-color: #16a34a;">
+      <div class="icon">🔍</div>
+      <div class="title">External Data</div>
+      <div class="sub">Open Food Facts API<br>FSSAI guidelines<br>WHO/EFSA databases</div>
+    </div>
+    <div class="arrow">⟷</div>
+    <div class="arch-box" style="border-color: #16a34a;">
+      <div class="icon">🔐</div>
+      <div class="title">Auth</div>
+      <div class="sub">Supabase Auth<br>Email + Google OAuth<br>JWT tokens</div>
+    </div>
+  </div>
+
+  <h2>Request Flow</h2>
+  <pre><span class="cm"># User searches for "Maggi Masala Noodles"</span>
+
+1. React frontend → GET /api/product/search?name=Maggi+Masala+Noodles
+2. Backend checks in-memory browse cache (2-min TTL)
+3. If miss → multi-strategy search in Supabase (ai_extracted_products)
+   - exact static_key match
+   - exact name (ilike)
+   - prefix match
+   - word-by-word pattern match
+   - substring match
+4. Product found → classify each ingredient → compute A/B/C/D grade
+5. Return ProductResponse JSON to frontend
+6. Frontend caches result locally (10-min TTL)
+7. React renders ingredient cards with classification badges</pre>
+
+  <!-- ─── 3. DATABASE ─── -->
+  <h1 class="section-title" id="database">3. Database Structure (Supabase)</h1>
+
+  <p>Supabase provides a hosted PostgreSQL database with built-in Auth and Storage. The project uses two Supabase clients:</p>
+  <ul>
+    <li><code>supabase</code> — public anon key, subject to Row Level Security (RLS)</li>
+    <li><code>supabase_admin</code> — service role key, bypasses RLS for admin writes</li>
+  </ul>
+
+  <h2>Tables</h2>
+
+  <h3>1. <code>ai_extracted_products</code> — Core Product Table</h3>
+  <p>The main table storing all products and their ingredient analysis.</p>
+  <table>
+    <tr><th>Column</th><th>Type</th><th>Description</th></tr>
+    <tr><td><code>id</code></td><td>UUID (PK)</td><td>Auto-generated unique identifier</td></tr>
+    <tr><td><code>name</code></td><td>TEXT</td><td>Full product name (e.g. "Maggi 2-Minute Masala Noodles")</td></tr>
+    <tr><td><code>brand</code></td><td>TEXT</td><td>Brand name (e.g. "Nestlé")</td></tr>
+    <tr><td><code>category</code></td><td>TEXT</td><td>Product category (Snacks, Skincare, Beverages, etc.)</td></tr>
+    <tr><td><code>image_url</code></td><td>TEXT</td><td>Primary product image URL</td></tr>
+    <tr><td><code>images</code></td><td>TEXT[]</td><td>Array of additional image URLs</td></tr>
+    <tr><td><code>grade</code></td><td>TEXT</td><td>Computed safety grade: A, B, C, or D</td></tr>
+    <tr><td><code>awareness_score</code></td><td>INTEGER</td><td>Legacy numeric score (0–100)</td></tr>
+    <tr><td><code>summary</code></td><td>TEXT</td><td>AI-generated product summary</td></tr>
+    <tr><td><code>verdict</code></td><td>TEXT</td><td>Short verdict string</td></tr>
+    <tr><td><code>recommendation</code></td><td>TEXT</td><td>Usage recommendation</td></tr>
+    <tr><td><code>fssai_note</code></td><td>TEXT</td><td>FSSAI-specific regulatory note</td></tr>
+    <tr><td><code>ingredients</code></td><td>JSONB</td><td>Array of classified ingredient objects (name, classification, one_line_note, regulatory_note)</td></tr>
+    <tr><td><code>ingredients_raw</code></td><td>TEXT</td><td>Raw ingredients string as printed on label</td></tr>
+    <tr><td><code>static_key</code></td><td>TEXT</td><td>Normalized search key (e.g. "maggi2minutemasalanoodles"). NULL for community entries.</td></tr>
+    <tr><td><code>data_source</code></td><td>TEXT</td><td>"database_verified" or "community_verified"</td></tr>
+    <tr><td><code>confidence</code></td><td>TEXT</td><td>"high" (admin-verified) or "medium"</td></tr>
+    <tr><td><code>is_complete</code></td><td>BOOLEAN</td><td>Whether the ingredient data is complete</td></tr>
+    <tr><td><code>created_at</code></td><td>TIMESTAMPTZ</td><td>Auto-set creation timestamp</td></tr>
+    <tr><td><code>updated_at</code></td><td>TIMESTAMPTZ</td><td>Last update timestamp</td></tr>
+  </table>
+
+  <h3>2. <code>products_catalog</code> — Sitemap & Browse Index</h3>
+  <p>A lighter-weight table used for sitemap generation and browse listing. Mirrors key fields from <code>ai_extracted_products</code>.</p>
+  <table>
+    <tr><th>Column</th><th>Type</th><th>Description</th></tr>
+    <tr><td><code>id</code></td><td>UUID (PK)</td><td>Unique identifier</td></tr>
+    <tr><td><code>name</code></td><td>TEXT</td><td>Product name</td></tr>
+    <tr><td><code>brand</code></td><td>TEXT</td><td>Brand name</td></tr>
+    <tr><td><code>category</code></td><td>TEXT</td><td>Category</td></tr>
+    <tr><td><code>grade</code></td><td>TEXT</td><td>A/B/C/D grade</td></tr>
+    <tr><td><code>image_url</code></td><td>TEXT</td><td>Product image</td></tr>
+    <tr><td><code>updated_at</code></td><td>TIMESTAMPTZ</td><td>Used for sitemap lastmod dates</td></tr>
+  </table>
+
+  <h3>3. <code>blogs</code> — Blog Posts</h3>
+  <table>
+    <tr><th>Column</th><th>Type</th><th>Description</th></tr>
+    <tr><td><code>id</code></td><td>UUID (PK)</td><td>Unique identifier</td></tr>
+    <tr><td><code>title</code></td><td>TEXT</td><td>Blog post title (max 120 chars)</td></tr>
+    <tr><td><code>slug</code></td><td>TEXT</td><td>URL slug: slugified title + timestamp (unique)</td></tr>
+    <tr><td><code>content</code></td><td>TEXT</td><td>Full markdown-style blog content (max 50,000 chars)</td></tr>
+    <tr><td><code>excerpt</code></td><td>TEXT</td><td>Auto-generated 200-char excerpt</td></tr>
+    <tr><td><code>category</code></td><td>TEXT</td><td>Food / Cosmetics / Health / Lifestyle / Product Review</td></tr>
+    <tr><td><code>cover_image</code></td><td>TEXT</td><td>Cover image URL (optional)</td></tr>
+    <tr><td><code>author_id</code></td><td>UUID</td><td>FK → auth.users.id</td></tr>
+    <tr><td><code>author_name</code></td><td>TEXT</td><td>Display name shown on blog</td></tr>
+    <tr><td><code>author_bio</code></td><td>TEXT</td><td>Short author bio (max 250 chars)</td></tr>
+    <tr><td><code>author_avatar</code></td><td>TEXT</td><td>Author photo URL</td></tr>
+    <tr><td><code>status</code></td><td>TEXT</td><td>pending / approved / rejected</td></tr>
+    <tr><td><code>created_at</code></td><td>TIMESTAMPTZ</td><td>Submission timestamp</td></tr>
+    <tr><td><code>updated_at</code></td><td>TIMESTAMPTZ</td><td>Last edit / approval timestamp</td></tr>
+  </table>
+
+  <h3>4. <code>user_profiles</code> — User Data</h3>
+  <table>
+    <tr><th>Column</th><th>Type</th><th>Description</th></tr>
+    <tr><td><code>id</code></td><td>UUID (PK)</td><td>FK → auth.users.id</td></tr>
+    <tr><td><code>quiz_completed</code></td><td>BOOLEAN</td><td>Whether user has completed the onboarding quiz</td></tr>
+    <tr><td><code>age_group</code></td><td>TEXT</td><td>Quiz answer: Under 18 / 18–25 / 26–35 / 36–45 / 46+</td></tr>
+    <tr><td><code>health_concern</code></td><td>TEXT</td><td>Quiz answer: Fitness / Nutrition / Skincare / etc.</td></tr>
+    <tr><td><code>diet_type</code></td><td>TEXT</td><td>Quiz answer: Vegan / Vegetarian / Non-vegetarian / etc.</td></tr>
+    <tr><td><code>check_frequency</code></td><td>TEXT</td><td>Quiz answer: how often they check ingredients</td></tr>
+    <tr><td><code>product_category</code></td><td>TEXT</td><td>Quiz answer: which product types they care about</td></tr>
+  </table>
+
+  <h3>5. <code>product_photos</code> — User-Submitted Product Images</h3>
+  <table>
+    <tr><th>Column</th><th>Type</th><th>Description</th></tr>
+    <tr><td><code>id</code></td><td>UUID (PK)</td><td>Unique identifier</td></tr>
+    <tr><td><code>product_id</code></td><td>UUID</td><td>FK → ai_extracted_products.id</td></tr>
+    <tr><td><code>image_url</code></td><td>TEXT</td><td>Public URL from Supabase Storage</td></tr>
+    <tr><td><code>uploaded_by</code></td><td>UUID</td><td>FK → auth.users.id</td></tr>
+    <tr><td><code>storage_path</code></td><td>TEXT</td><td>Path inside the "product-images" storage bucket</td></tr>
+    <tr><td><code>created_at</code></td><td>TIMESTAMPTZ</td><td>Upload timestamp</td></tr>
+  </table>
+
+  <h3>6. <code>correction_reports</code> — User Ingredient Corrections</h3>
+  <table>
+    <tr><th>Column</th><th>Type</th><th>Description</th></tr>
+    <tr><td><code>id</code></td><td>UUID (PK)</td><td>Unique identifier</td></tr>
+    <tr><td><code>product_id</code></td><td>TEXT</td><td>Product ID or name being corrected</td></tr>
+    <tr><td><code>product_name</code></td><td>TEXT</td><td>Product name</td></tr>
+    <tr><td><code>reported_ingredients</code></td><td>TEXT</td><td>User-submitted correct ingredient list</td></tr>
+    <tr><td><code>report_reason</code></td><td>TEXT</td><td>wrong_ingredients / missing_product / outdated / other</td></tr>
+    <tr><td><code>additional_notes</code></td><td>TEXT</td><td>Free-form notes from user</td></tr>
+    <tr><td><code>status</code></td><td>TEXT</td><td>pending / approved / rejected</td></tr>
+    <tr><td><code>created_at</code></td><td>TIMESTAMPTZ</td><td>Submission timestamp</td></tr>
+  </table>
+
+  <h3>7. <code>product_reviews</code> — User Reviews</h3>
+  <table>
+    <tr><th>Column</th><th>Type</th><th>Description</th></tr>
+    <tr><td><code>id</code></td><td>UUID (PK)</td><td>Unique identifier</td></tr>
+    <tr><td><code>product_id</code></td><td>UUID</td><td>FK → ai_extracted_products.id</td></tr>
+    <tr><td><code>user_id</code></td><td>UUID</td><td>FK → auth.users.id</td></tr>
+    <tr><td><code>rating</code></td><td>INTEGER</td><td>1–5 star rating</td></tr>
+    <tr><td><code>comment</code></td><td>TEXT</td><td>Review text</td></tr>
+    <tr><td><code>created_at</code></td><td>TIMESTAMPTZ</td><td>Review timestamp</td></tr>
+  </table>
+
+  <h3>Supabase Storage Buckets</h3>
+  <table>
+    <tr><th>Bucket</th><th>Access</th><th>Purpose</th></tr>
+    <tr><td><code>product-images</code></td><td>Public</td><td>User-uploaded product photos. Path: <code>products/{product_id}/{uuid}.{ext}</code></td></tr>
+  </table>
+
+  <h3>Supabase Auth</h3>
+  <ul>
+    <li><strong>Email + Password</strong> — with email confirmation flow</li>
+    <li><strong>Google OAuth</strong> — one-click sign-in via Google</li>
+    <li>JWT tokens issued by Supabase, passed as <code>Authorization: Bearer {token}</code> to backend admin endpoints</li>
+    <li>Session refresh on tab visibility change (if away &gt;4 minutes)</li>
+  </ul>
+
+  <!-- ─── 4. BACKEND ─── -->
+  <h1 class="section-title" id="backend">4. Backend (FastAPI / Python)</h1>
+
+  <h2>Tech Stack</h2>
+  <table>
+    <tr><th>Package</th><th>Version</th><th>Purpose</th></tr>
+    <tr><td><code>fastapi</code></td><td>0.111.0</td><td>Web framework — async HTTP, routing, validation</td></tr>
+    <tr><td><code>uvicorn[standard]</code></td><td>0.29.0</td><td>ASGI server</td></tr>
+    <tr><td><code>supabase</code></td><td>2.4.2</td><td>Supabase Python client (DB + Auth)</td></tr>
+    <tr><td><code>google-generativeai</code></td><td>0.8.3</td><td>Google Gemini API for ingredient extraction from images</td></tr>
+    <tr><td><code>groq</code></td><td>0.9.0</td><td>Groq API (LLaMA) — fast AI inference</td></tr>
+    <tr><td><code>anthropic</code></td><td>≥0.40.0</td><td>Claude API — ingredient analysis</td></tr>
+    <tr><td><code>httpx</code></td><td>0.27.0</td><td>Async HTTP client for external API calls</td></tr>
+    <tr><td><code>pydantic</code></td><td>2.7.1</td><td>Request/response data validation and schemas</td></tr>
+    <tr><td><code>python-multipart</code></td><td>0.0.9</td><td>File upload handling (product images)</td></tr>
+    <tr><td><code>beautifulsoup4</code></td><td>4.12.3</td><td>HTML parsing for web scraping data sources</td></tr>
+    <tr><td><code>python-dotenv</code></td><td>1.0.1</td><td>Load environment variables from .env file</td></tr>
+  </table>
+
+  <h2>Project Structure</h2>
+  <pre>backend/
+├── main.py                  <span class="cm"># FastAPI app, middleware, sitemap endpoints</span>
+├── requirements.txt
+├── grading.py               <span class="cm"># A/B/C/D grade calculation logic</span>
+├── db/
+│   ├── supabase_client.py   <span class="cm"># Supabase client init (public + admin)</span>
+├── routes/
+│   ├── product_new.py       <span class="cm"># Product search, browse, verify, correct</span>
+│   ├── ingredient.py        <span class="cm"># Ingredient search and suggestions</span>
+│   ├── ingredient_database.py <span class="cm"># 672-entry ingredient knowledge base</span>
+│   ├── admin_extract.py     <span class="cm"># Admin: AI extraction, product CRUD</span>
+│   ├── reports.py           <span class="cm"># Admin: approve/reject correction reports</span>
+│   └── history.py           <span class="cm"># Search history tracking</span>
+├── models/
+│   └── schemas.py           <span class="cm"># Pydantic models (ProductResponse, IngredientItem, etc.)</span>
+└── services/
+    ├── gemini_service.py    <span class="cm"># Gemini: extract ingredients from product images</span>
+    ├── groq_service.py      <span class="cm"># Groq LLaMA: fast ingredient analysis</span>
+    ├── claude_service.py    <span class="cm"># Claude: detailed ingredient explanations</span>
+    ├── ingredient_service.py <span class="cm"># Orchestrates AI ingredient lookup</span>
+    ├── openfoodfacts_service.py <span class="cm"># Open Food Facts API integration</span>
+    ├── data_pipeline.py     <span class="cm"># Data processing pipeline</span>
+    └── product_cache.py     <span class="cm"># In-memory product cache layer</span></pre>
+
+  <h2>Middleware Stack</h2>
+  <div class="card">
+    <ol>
+      <li><strong>GZipMiddleware</strong> — compresses responses &gt;500 bytes</li>
+      <li><strong>SecurityHeadersMiddleware</strong> — adds X-Frame-Options, X-Content-Type-Options, HSTS, Referrer-Policy</li>
+      <li><strong>RateLimitMiddleware</strong> — 60 req/min per IP (in-memory, respects X-Forwarded-For)</li>
+      <li><strong>CORSMiddleware</strong> — allows www.parkho.in, parkho.in, and *.vercel.app origins</li>
+    </ol>
+  </div>
+
+  <h2>API Endpoints</h2>
+
+  <h3>Product Endpoints &nbsp;<code>prefix: /api/product</code></h3>
+  <div class="endpoint"><span class="method get">GET</span><div><div class="ep-path">/api/product/search?name={query}</div><div class="ep-desc">Multi-strategy product search. Returns full ProductResponse with classified ingredients. Cached 2 min.</div></div></div>
+  <div class="endpoint"><span class="method get">GET</span><div><div class="ep-path">/api/product/browse?page=1&amp;per_page=20&amp;category=Snacks&amp;brand=Nestlé&amp;q=maggi&amp;sort=grade</div><div class="ep-desc">Paginated product browse with filters. Category, brand, search query, sort supported.</div></div></div>
+  <div class="endpoint"><span class="method get">GET</span><div><div class="ep-path">/api/product/brands</div><div class="ep-desc">List of all unique brands for filter dropdown.</div></div></div>
+  <div class="endpoint"><span class="method get">GET</span><div><div class="ep-path">/api/product/categories</div><div class="ep-desc">List of all unique categories.</div></div></div>
+  <div class="endpoint"><span class="method post">POST</span><div><div class="ep-path">/api/product/verify?product_name=X&amp;is_correct=true</div><div class="ep-desc">User verifies a product's ingredient data is correct.</div></div></div>
+  <div class="endpoint"><span class="method post">POST</span><div><div class="ep-path">/api/product/correct?product_name=X&amp;ingredients=Y</div><div class="ep-desc">User submits corrected ingredient list. Creates a correction_report entry.</div></div></div>
+  <div class="endpoint"><span class="method post">POST</span><div><div class="ep-path">/api/product/report</div><div class="ep-desc">User reports a product issue (wrong data, missing product, outdated info).</div></div></div>
+
+  <h3>Ingredient Endpoints &nbsp;<code>prefix: /api/ingredient</code></h3>
+  <div class="endpoint"><span class="method get">GET</span><div><div class="ep-path">/api/ingredient/search?name={ingredient}</div><div class="ep-desc">Search ingredient by name, E-number, or INS number. Returns classification, health effects, regulatory data.</div></div></div>
+  <div class="endpoint"><span class="method get">GET</span><div><div class="ep-path">/api/ingredient/suggestions?q={query}&amp;limit=10</div><div class="ep-desc">Autocomplete suggestions for ingredient search. Cached 5 min.</div></div></div>
+  <div class="endpoint"><span class="method get">GET</span><div><div class="ep-path">/api/ingredient/popular</div><div class="ep-desc">Returns popular/featured ingredients list for homepage display.</div></div></div>
+
+  <h3>Admin Endpoints &nbsp;<code>prefix: /api/admin</code></h3>
+  <p style="color:#dc2626; font-size:12px;">⚠ All admin endpoints require <code>Authorization: Bearer {supabase_jwt}</code> where the JWT belongs to the admin email.</p>
+  <div class="endpoint"><span class="method post">POST</span><div><div class="ep-path">/api/admin/extract-from-image</div><div class="ep-desc">Upload product image → Gemini AI extracts ingredients → saves to Supabase. Runs as background task.</div></div></div>
+  <div class="endpoint"><span class="method get">GET</span><div><div class="ep-path">/api/admin/task-status/{task_id}</div><div class="ep-desc">Poll background extraction task status.</div></div></div>
+  <div class="endpoint"><span class="method post">POST</span><div><div class="ep-path">/api/admin/save-product</div><div class="ep-desc">Save or update a product with manually entered data.</div></div></div>
+  <div class="endpoint"><span class="method delete">DELETE</span><div><div class="ep-path">/api/admin/delete-product/{id}</div><div class="ep-desc">Delete a product from the database.</div></div></div>
+  <div class="endpoint"><span class="method post">POST</span><div><div class="ep-path">/api/admin/reports/approve</div><div class="ep-desc">Approve a correction report — updates product ingredients in DB.</div></div></div>
+  <div class="endpoint"><span class="method post">POST</span><div><div class="ep-path">/api/admin/reports/reject</div><div class="ep-desc">Reject a correction report.</div></div></div>
+
+  <h3>Utility Endpoints</h3>
+  <div class="endpoint"><span class="method get">GET</span><div><div class="ep-path">/health</div><div class="ep-desc">Health check — returns {"status": "ok"}. Used by UptimeRobot and frontend keep-alive ping.</div></div></div>
+  <div class="endpoint"><span class="method get">GET</span><div><div class="ep-path">/sitemap-products.xml</div><div class="ep-desc">Dynamic XML sitemap of all products from Supabase. Used by Google for indexing.</div></div></div>
+  <div class="endpoint"><span class="method get">GET</span><div><div class="ep-path">/sitemap-blogs.xml</div><div class="ep-desc">Dynamic XML sitemap of all approved blog posts from Supabase.</div></div></div>
+
+  <h2>Ingredient Classification System</h2>
+  <p>Every ingredient is classified into one of four tiers, determined by matching ingredient names against keyword lists:</p>
+
+  <table>
+    <tr><th>Tier</th><th>Badge</th><th>Meaning</th><th>Example Ingredients</th></tr>
+    <tr><td><strong>generally_recognised</strong></td><td><span class="pill pill-green">Safe</span></td><td>Approved by FSSAI, WHO, CODEX. No known significant concern.</td><td>Water, Salt, Wheat Flour, Turmeric, Aloe Vera</td></tr>
+    <tr><td><strong>worth_knowing</strong></td><td><span class="pill pill-blue">Worth Knowing</span></td><td>Permitted but worth being aware of. May cause sensitivity or have environmental concerns.</td><td>MSG, Sugar, Palm Oil, Sucralose, Phenoxyethanol</td></tr>
+    <tr><td><strong>commonly_questioned</strong></td><td><span class="pill pill-orange">Questioned</span></td><td>Subject to regulatory bans in some countries, or linked to health concerns.</td><td>Tartrazine (E102), Sodium Benzoate, Parabens, TBHQ, Titanium Dioxide</td></tr>
+    <tr><td><strong>banned</strong></td><td><span class="pill pill-red">Banned</span></td><td>Banned or restricted in multiple major jurisdictions.</td><td>Potassium Bromate, Triclosan, Azodicarbonamide, Sudan Red</td></tr>
+  </table>
+
+  <h2>A/B/C/D Grading System</h2>
+  <div class="card card-blue">
+    <table>
+      <tr><th>Grade</th><th>Score Range</th><th>Meaning</th></tr>
+      <tr><td><span class="grade grade-A">A</span></td><td>85–100</td><td>All or nearly all ingredients are generally recognised as safe. Best choice.</td></tr>
+      <tr><td><span class="grade grade-B">B</span></td><td>70–84</td><td>Mostly safe with a few worth-knowing ingredients. Good choice.</td></tr>
+      <tr><td><span class="grade grade-C">C</span></td><td>50–69</td><td>Has some commonly questioned ingredients. Use with awareness.</td></tr>
+      <tr><td><span class="grade grade-D">D</span></td><td>0–49</td><td>Multiple commonly questioned or banned ingredients. Reconsider.</td></tr>
+    </table>
+    <p style="margin-top:8px; font-size:12px; color:#6b7280;">Scoring: Start at 100. Each commonly_questioned ingredient −20 points. Each banned ingredient −40 points. Minimum 5.</p>
+  </div>
+
+  <h2>Ingredient Database (ingredient_database.py)</h2>
+  <p>A hand-curated Python dictionary with 672 entries. Each entry provides:</p>
+  <pre><span class="str">'sorbic acid'</span>: {
+    <span class="str">'what_it_is'</span>:          <span class="str">'Natural preservative, also produced synthetically'</span>,
+    <span class="str">'commonly_found_in'</span>:   <span class="str">'Cheese, baked goods, wine, fruit products'</span>,
+    <span class="str">'one_line_note'</span>:       <span class="str">'GRAS by FDA; approved by FSSAI and EU'</span>,
+    <span class="str">'regulatory_note'</span>:     <span class="str">'Permitted in India (FSSAI), EU (E200), USA (FDA)'</span>,
+    <span class="str">'classification'</span>:      <span class="str">'generally_recognised'</span>,
+    <span class="str">'health_effects'</span>:      <span class="str">'No known adverse effects at regulated levels'</span>,
+    <span class="str">'countries_restricted'</span>: [],
+    <span class="str">'fssai_position'</span>:      <span class="str">'Permitted preservative'</span>,
+}</pre>
+  <p>Entries are indexed by: common name, E-number (e.g. <code>e200</code>), INS number, and alternate spellings. The <code>_normalize_ins()</code> function converts "INS 200" → "E200" for unified lookup.</p>
+
+  <h2>AI Services</h2>
+  <table>
+    <tr><th>Service</th><th>Model</th><th>Use Case</th></tr>
+    <tr><td>Google Gemini</td><td>gemini-1.5-flash</td><td>Extract ingredients from product label images uploaded by admin</td></tr>
+    <tr><td>Groq</td><td>LLaMA 3 70B</td><td>Fast ingredient analysis and explanation generation</td></tr>
+    <tr><td>Anthropic Claude</td><td>claude-3-haiku</td><td>Detailed regulatory analysis for complex ingredients</td></tr>
+  </table>
+
+  <!-- ─── 5. FRONTEND ─── -->
+  <h1 class="section-title" id="frontend">5. Frontend (React / Vite)</h1>
+
+  <h2>Tech Stack</h2>
+  <table>
+    <tr><th>Package</th><th>Version</th><th>Purpose</th></tr>
+    <tr><td><code>react</code></td><td>18.3.1</td><td>UI framework</td></tr>
+    <tr><td><code>react-dom</code></td><td>18.3.1</td><td>DOM rendering</td></tr>
+    <tr><td><code>react-router-dom</code></td><td>6.23.1</td><td>Client-side routing (9 routes)</td></tr>
+    <tr><td><code>@supabase/supabase-js</code></td><td>2.103.3</td><td>Supabase client — DB queries, auth, storage</td></tr>
+    <tr><td><code>axios</code></td><td>1.7.2</td><td>HTTP client for backend API calls</td></tr>
+    <tr><td><code>framer-motion</code></td><td>11.2.10</td><td>Page transitions and micro-animations</td></tr>
+    <tr><td><code>react-helmet-async</code></td><td>3.0.0</td><td>Dynamic &lt;head&gt; management for SEO</td></tr>
+    <tr><td><code>vite</code></td><td>5.2.12</td><td>Build tool and dev server</td></tr>
+    <tr><td><code>tailwindcss</code></td><td>3.4.4</td><td>Utility-first CSS framework</td></tr>
+  </table>
+
+  <h2>Project Structure</h2>
+  <pre>frontend/
+├── index.html               <span class="cm"># Root HTML with meta tags, OG tags, structured data</span>
+├── vite.config.js
+├── tailwind.config.js
+├── vercel.json              <span class="cm"># SPA rewrites + security headers + cache headers</span>
+├── public/
+│   ├── sitemap.xml          <span class="cm"># Sitemap index pointing to 3 child sitemaps</span>
+│   ├── sitemap-static.xml   <span class="cm"># Static pages + popular products</span>
+│   ├── robots.txt           <span class="cm"># Allow /, Disallow /admin, /blog/write</span>
+│   ├── favicon.svg
+│   ├── og-image.png         <span class="cm"># 1200×630 Open Graph social preview image</span>
+│   └── site.webmanifest     <span class="cm"># PWA manifest</span>
+└── src/
+    ├── main.jsx             <span class="cm"># Entry point — HelmetProvider wrapper</span>
+    ├── App.jsx              <span class="cm"># Router, AuthProvider, Navbar, Footer, keep-alive ping</span>
+    ├── index.css            <span class="cm"># Global styles, Tailwind directives</span>
+    ├── context/
+    │   └── AuthContext.jsx  <span class="cm"># Global auth state, openAuthModal(), signOut()</span>
+    ├── lib/
+    │   └── supabaseClient.js <span class="cm"># Supabase client + session refresh on tab visibility</span>
+    ├── pages/
+    │   ├── Home.jsx
+    │   ├── Result.jsx       <span class="cm"># Product detail page — core feature</span>
+    │   ├── Products.jsx     <span class="cm"># Browse/filter product directory</span>
+    │   ├── CheckIngredient.jsx <span class="cm"># Individual ingredient lookup</span>
+    │   ├── Blog.jsx
+    │   ├── BlogPost.jsx
+    │   ├── WriteBlog.jsx
+    │   ├── Admin.jsx        <span class="cm"># Admin dashboard (protected)</span>
+    │   └── About.jsx
+    └── components/
+        ├── Navbar.jsx
+        ├── Footer.jsx
+        ├── SEO.jsx          <span class="cm"># Helmet wrapper for meta tags + structured data</span>
+        ├── AuthModal.jsx    <span class="cm"># Login/signup modal (email + Google OAuth)</span>
+        ├── SearchBar.jsx    <span class="cm"># Home search with debounced suggestions</span>
+        ├── GradeBadge.jsx   <span class="cm"># A/B/C/D grade display component</span>
+        ├── DisclaimerBox.jsx
+        ├── ProductNotFound.jsx
+        ├── PhotoUploadModal.jsx <span class="cm"># Product image upload (user + admin)</span>
+        ├── ProductReviews.jsx   <span class="cm"># Star ratings and review display</span>
+        └── ReviewsSection.jsx</pre>
+
+  <h2>Routing</h2>
+  <table>
+    <tr><th>Path</th><th>Component</th><th>Description</th></tr>
+    <tr><td><code>/</code></td><td>Home</td><td>Landing page with search bar and quick-access chips</td></tr>
+    <tr><td><code>/result/:productName</code></td><td>Result</td><td>Full product ingredient breakdown</td></tr>
+    <tr><td><code>/products</code></td><td>Products</td><td>Paginated, filterable product directory</td></tr>
+    <tr><td><code>/check-ingredient</code></td><td>CheckIngredient</td><td>Individual ingredient search by name or E-number</td></tr>
+    <tr><td><code>/blog</code></td><td>Blog</td><td>Blog listing with static + DB posts</td></tr>
+    <tr><td><code>/blog/:slug</code></td><td>BlogPost</td><td>Single blog post reader</td></tr>
+    <tr><td><code>/blog/write</code></td><td>WriteBlog</td><td>Write and submit blog (requires login)</td></tr>
+    <tr><td><code>/admin</code></td><td>Admin</td><td>Admin dashboard (restricted to admin email)</td></tr>
+    <tr><td><code>/about</code></td><td>About</td><td>About page</td></tr>
+  </table>
+
+  <h2>Key Patterns</h2>
+
+  <h3>Module-Level Cache (Result.jsx)</h3>
+  <p>Product data is cached at module level (survives component re-mounts, shared across navigations). Cache has 10-minute TTL to match Render's 15-min idle window.</p>
+  <pre><span class="kw">const</span> _productCache = <span class="kw">new</span> Map()  <span class="cm">// key → { data, ts }</span>
+<span class="kw">const</span> CACHE_TTL_MS = <span class="fn">10</span> * <span class="fn">60</span> * <span class="fn">1000</span>
+
+<span class="kw">function</span> <span class="fn">cacheGet</span>(key) {
+  <span class="kw">const</span> entry = _productCache.<span class="fn">get</span>(key)
+  <span class="kw">if</span> (!entry) <span class="kw">return null</span>
+  <span class="kw">if</span> (Date.<span class="fn">now</span>() - entry.ts > CACHE_TTL_MS) { _productCache.<span class="fn">delete</span>(key); <span class="kw">return null</span> }
+  <span class="kw">return</span> entry.data
+}</pre>
+
+  <h3>Render Cold Start Retry</h3>
+  <p>Backend on Render free tier sleeps after 15 min. First request after sleep can take 30–60s. Frontend retries once with extended timeout:</p>
+  <pre><span class="kw">try</span> { response = <span class="kw">await</span> <span class="fn">tryBackend</span>(<span class="fn">10000</span>) }
+<span class="kw">catch</span> (firstErr) {
+  <span class="kw">if</span> (firstErr.code === <span class="str">'ECONNABORTED'</span> || firstErr.code === <span class="str">'ERR_NETWORK'</span>) {
+    <span class="kw">await</span> <span class="kw">new</span> <span class="fn">Promise</span>(r => <span class="fn">setTimeout</span>(r, <span class="fn">2000</span>))
+    response = <span class="kw">await</span> <span class="fn">tryBackend</span>(<span class="fn">25000</span>)
+  }
+}</pre>
+
+  <h3>Client-Side Classification Overrides</h3>
+  <p>Some ingredients are stored in Supabase with outdated classifications from old analysis runs. These are corrected client-side without touching the DB:</p>
+  <pre><span class="kw">const</span> CLASSIFICATION_OVERRIDES = [
+  { pattern: <span class="str">/disodium\s+5['-]?\s*ribonucleotides/i</span>, classification: <span class="str">'worth_knowing'</span> },
+  { pattern: <span class="str">/tbhq|tertiary\s+butylhydroquinone/i</span>, classification: <span class="str">'commonly_questioned'</span> },
+  { pattern: <span class="str">/titanium\s+dioxide|\be171\b/i</span>, classification: <span class="str">'commonly_questioned'</span> },
+]</pre>
+
+  <h3>Supabase Multi-Strategy Search (Result.jsx)</h3>
+  <p>When the backend is unavailable, the frontend falls back to querying Supabase directly using 5 progressively-broader search strategies:</p>
+  <pre><span class="cm">// 1. Exact name   2. Prefix   3. Word pattern   4. Substring   5. Alphanumeric-only words</span>
+<span class="kw">for</span> (<span class="kw">const</span> fn <span class="kw">of</span> strategies) {
+  <span class="kw">const</span> { data } = <span class="kw">await</span> <span class="fn">fn</span>()
+  <span class="kw">if</span> (data && data.length > <span class="fn">0</span>) <span class="kw">return</span> data[<span class="fn">0</span>]
+}</pre>
+
+  <!-- ─── 6. PAGES ─── -->
+  <h1 class="section-title" id="pages">6. Pages & Features</h1>
+
+  <h2>Home Page (<code>/</code>)</h2>
+  <ul>
+    <li>Full-width search bar with debounced autocomplete suggestions (backed by <code>/api/ingredient/suggestions</code>)</li>
+    <li>8 quick-access product chips (Maggi, Parle-G, Thums Up, Dove, etc.)</li>
+    <li>How-it-works section, grade explanation, reviews section</li>
+    <li>FAQ structured data for Google rich snippets</li>
+  </ul>
+
+  <h2>Result Page (<code>/result/:productName</code>)</h2>
+  <p>The core feature page. Displays complete ingredient analysis for a product.</p>
+  <ul>
+    <li>Product image gallery (swipeable, supports up to 5 images)</li>
+    <li>Grade badge (A/B/C/D) with animated display</li>
+    <li>Three-panel ingredient breakdown: Commonly Questioned / Worth Knowing / Generally Recognised</li>
+    <li>Each ingredient is expandable — shows one-line note, regulatory note, and links to full ingredient lookup</li>
+    <li>FSSAI note and product summary</li>
+    <li>User photo upload (earn ₹1 incentive shown)</li>
+    <li>Correction submission form — users can report wrong ingredients</li>
+    <li>Star rating / reviews</li>
+    <li>Admin controls: edit name, edit ingredients, delete product, regrade</li>
+  </ul>
+
+  <h2>Products Page (<code>/products</code>)</h2>
+  <ul>
+    <li>Infinite-scroll grid of all products (20 per page)</li>
+    <li>Filter by: category, brand, grade (A/B/C/D), search query</li>
+    <li>Sort by: grade, name, newest</li>
+    <li>Session storage preserves scroll position and filters on back-navigation</li>
+    <li>AbortController cancels stale API requests when filters change</li>
+    <li>Memoized BrowseCard component prevents unnecessary re-renders</li>
+  </ul>
+
+  <h2>Check Ingredient Page (<code>/check-ingredient</code>)</h2>
+  <ul>
+    <li>Search any food additive, E-number, or INS number</li>
+    <li>Autocomplete from 672-entry ingredient database</li>
+    <li>Results show: what it is, classification, health effects, regulatory status, countries where restricted</li>
+    <li>Auto-scrolls to result on mobile</li>
+    <li>Popular ingredients displayed on load</li>
+  </ul>
+
+  <h2>Blog System (<code>/blog</code>, <code>/blog/:slug</code>, <code>/blog/write</code>)</h2>
+  <ul>
+    <li><strong>6 built-in static blog posts</strong> (hardcoded in Blog.jsx, always available)</li>
+    <li><strong>Dynamic DB posts</strong> from Supabase (status = 'approved') loaded in background</li>
+    <li>Categories: Food, Cosmetics, Health, Lifestyle, Product Review</li>
+    <li>Featured post layout + sidebar + grid</li>
+    <li>Blog submission form — requires login, goes to admin for approval</li>
+    <li>BlogPost renders markdown-like formatting (bold, bullets, headings) with XSS protection</li>
+  </ul>
+
+  <h2>Admin Dashboard (<code>/admin</code>)</h2>
+  <p>Restricted to <code>shubhampaliwal5@gmail.com</code> only. Redirects all others to <code>/</code>.</p>
+  <ul>
+    <li><strong>Pending tab</strong> — review and approve/reject correction reports</li>
+    <li><strong>Approved tab</strong> — browse verified products</li>
+    <li><strong>Extracted tab</strong> — products from AI extraction pipeline</li>
+    <li><strong>Photos tab</strong> — manage user-submitted product photos</li>
+    <li><strong>Reports tab</strong> — ingredient correction reports from users</li>
+    <li><strong>Blogs tab</strong> — approve/reject user blog submissions</li>
+    <li>AI extraction from image URL: paste URL → Gemini extracts ingredients → saves to DB</li>
+    <li>Manual product entry form with live ingredient classification preview</li>
+    <li>Bulk regrade button — recomputes A/B/C/D grades for all products</li>
+  </ul>
+
+  <h2>Auth Modal</h2>
+  <ul>
+    <li>Multi-step modal: main → email form → check email / quiz → done</li>
+    <li>Steps: Sign In / Sign Up / Forgot Password / Reset Done / Onboarding Quiz</li>
+    <li>Google OAuth one-click login</li>
+    <li>Email + password with show/hide toggle</li>
+    <li>Enter key submits form on all inputs</li>
+    <li>Onboarding quiz (5 questions) shown once per user after first login</li>
+  </ul>
+
+  <!-- ─── 7. SEO ─── -->
+  <h1 class="section-title" id="seo">7. SEO Setup</h1>
+
+  <h2>Meta Tags</h2>
+  <p>Every page uses the <code>SEO.jsx</code> component (backed by <code>react-helmet-async</code>) to set dynamic:</p>
+  <ul>
+    <li><code>&lt;title&gt;</code>, <code>&lt;meta name="description"&gt;</code>, <code>&lt;meta name="keywords"&gt;</code></li>
+    <li><code>&lt;link rel="canonical"&gt;</code> — always using <code>https://www.parkho.in</code></li>
+    <li>Open Graph tags (<code>og:title</code>, <code>og:description</code>, <code>og:image</code>, <code>og:url</code>)</li>
+    <li>Twitter Card tags</li>
+    <li>Schema.org structured data (JSON-LD)</li>
+  </ul>
+
+  <h2>Structured Data by Page</h2>
+  <table>
+    <tr><th>Page</th><th>Schema Types</th></tr>
+    <tr><td>Home</td><td>FAQPage, WebSite (in index.html), WebApplication, Organization</td></tr>
+    <tr><td>Product Result</td><td>Product (with additionalProperty), BreadcrumbList</td></tr>
+    <tr><td>Products</td><td>CollectionPage, BreadcrumbList</td></tr>
+    <tr><td>Check Ingredient</td><td>FAQPage (5 Q&amp;As about E-numbers/MSG), BreadcrumbList</td></tr>
+    <tr><td>Blog</td><td>CollectionPage with hasPart BlogPosting array</td></tr>
+    <tr><td>Blog Post</td><td>BlogPosting (Article), BreadcrumbList</td></tr>
+  </table>
+
+  <h2>Sitemap Structure</h2>
+  <pre><span class="cm"># /sitemap.xml (served from Vercel — always fast)</span>
+&lt;sitemapindex&gt;
+  &lt;sitemap&gt;&lt;loc&gt;https://www.parkho.in/sitemap-static.xml&lt;/loc&gt;&lt;/sitemap&gt;
+  &lt;sitemap&gt;&lt;loc&gt;https://checkkaro.onrender.com/sitemap-products.xml&lt;/loc&gt;&lt;/sitemap&gt;
+  &lt;sitemap&gt;&lt;loc&gt;https://checkkaro.onrender.com/sitemap-blogs.xml&lt;/loc&gt;&lt;/sitemap&gt;
+&lt;/sitemapindex&gt;
+
+<span class="cm"># sitemap-static.xml — all core pages + 20 popular Indian products</span>
+<span class="cm"># sitemap-products.xml — dynamically generated from products_catalog table</span>
+<span class="cm"># sitemap-blogs.xml — dynamically generated from approved blogs</span></pre>
+
+  <h2>Domain Configuration</h2>
+  <div class="card card-orange">
+    <strong>Primary domain:</strong> <code>www.parkho.in</code> (served by Vercel)<br>
+    <code>parkho.in</code> → 308 permanent redirect → <code>www.parkho.in</code> (handled by Vercel dashboard, not vercel.json)<br>
+    <strong>Important:</strong> Do NOT add redirect rules in vercel.json — Vercel dashboard handles parkho.in → www automatically.
+  </div>
+
+  <h2>robots.txt</h2>
+  <pre>User-agent: *
+Allow: /
+Disallow: /admin
+Disallow: /blog/write
+Sitemap: https://www.parkho.in/sitemap.xml</pre>
+
+  <!-- ─── 8. DEPLOYMENT ─── -->
+  <h1 class="section-title" id="deployment">8. Deployment & Infrastructure</h1>
+
+  <h2>Frontend — Vercel</h2>
+  <div class="card">
+    <ul>
+      <li><strong>Platform:</strong> Vercel (free tier)</li>
+      <li><strong>Framework:</strong> Vite (detected automatically)</li>
+      <li><strong>Build command:</strong> <code>npm run build</code></li>
+      <li><strong>Output directory:</strong> <code>dist/</code></li>
+      <li><strong>Auto-deploy:</strong> Every push to <code>main</code> branch triggers a new deployment</li>
+      <li><strong>SPA routing:</strong> <code>vercel.json</code> rewrites all paths to <code>/index.html</code></li>
+      <li><strong>Security headers:</strong> X-Frame-Options DENY, X-Content-Type-Options, HSTS, CSP</li>
+      <li><strong>Cache headers:</strong> Static assets (JS/CSS/images) cached 1 year (immutable)</li>
+    </ul>
+  </div>
+
+  <h2>Backend — Render</h2>
+  <div class="card">
+    <ul>
+      <li><strong>Platform:</strong> Render (free tier — Web Service)</li>
+      <li><strong>Runtime:</strong> Python 3.11</li>
+      <li><strong>Start command:</strong> <code>uvicorn main:app --host 0.0.0.0 --port $PORT</code></li>
+      <li><strong>Auto-deploy:</strong> Every push to <code>main</code> branch</li>
+      <li><strong>Cold start:</strong> Sleeps after 15 min idle. Frontend pings <code>/health</code> every 4 min to keep awake. UptimeRobot pings every 5 min as backup.</li>
+      <li><strong>URL:</strong> <code>https://checkkaro.onrender.com</code></li>
+    </ul>
+  </div>
+
+  <h2>Database — Supabase</h2>
+  <div class="card">
+    <ul>
+      <li><strong>Platform:</strong> Supabase (free tier)</li>
+      <li><strong>Database:</strong> PostgreSQL (managed)</li>
+      <li><strong>Auth:</strong> Built-in (email + Google OAuth)</li>
+      <li><strong>Storage:</strong> S3-compatible file storage for product images</li>
+      <li><strong>Project URL:</strong> Set in <code>SUPABASE_URL</code> env var</li>
+      <li><strong>RLS:</strong> Row Level Security enabled on sensitive tables</li>
+    </ul>
+  </div>
+
+  <h2>Keep-Alive Strategy</h2>
+  <table>
+    <tr><th>Mechanism</th><th>Interval</th><th>Purpose</th></tr>
+    <tr><td>App.jsx <code>usePrewarm()</code></td><td>Every 4 min (while app is open)</td><td>Pings <code>/health</code> to prevent Render sleep during active session</td></tr>
+    <tr><td>UptimeRobot</td><td>Every 5 min (always)</td><td>External monitor — keeps Render awake 24/7 even when no users are online</td></tr>
+    <tr><td>Frontend retry</td><td>On first cold-start timeout</td><td>Retries with 25s timeout if initial request times out</td></tr>
+  </table>
+
+  <!-- ─── 9. ENV VARIABLES ─── -->
+  <h1 class="section-title" id="env">9. Environment Variables</h1>
+
+  <h3>Backend (.env on Render)</h3>
+  <table>
+    <tr><th>Variable</th><th>Required</th><th>Description</th></tr>
+    <tr><td><code>SUPABASE_URL</code></td><td>Yes</td><td>Supabase project URL (e.g. https://xxx.supabase.co)</td></tr>
+    <tr><td><code>SUPABASE_ANON_KEY</code></td><td>Yes</td><td>Public anon key — used for regular DB queries</td></tr>
+    <tr><td><code>SUPABASE_SERVICE_ROLE_KEY</code></td><td>Yes</td><td>Service role key — bypasses RLS for admin writes</td></tr>
+    <tr><td><code>ADMIN_EMAIL</code></td><td>Yes</td><td>Email of the admin user (shubhampaliwal5@gmail.com)</td></tr>
+    <tr><td><code>GEMINI_API_KEY</code></td><td>Yes</td><td>Google Gemini API key for image-based ingredient extraction</td></tr>
+    <tr><td><code>GROQ_API_KEY</code></td><td>Optional</td><td>Groq API key for LLaMA-based ingredient analysis</td></tr>
+    <tr><td><code>ANTHROPIC_API_KEY</code></td><td>Optional</td><td>Claude API key for detailed analysis</td></tr>
+    <tr><td><code>ENV</code></td><td>Optional</td><td>Set to "production" to disable /docs and /redoc endpoints</td></tr>
+  </table>
+
+  <h3>Frontend (.env on Vercel)</h3>
+  <table>
+    <tr><th>Variable</th><th>Required</th><th>Description</th></tr>
+    <tr><td><code>VITE_SUPABASE_URL</code></td><td>Yes</td><td>Supabase project URL (same as backend)</td></tr>
+    <tr><td><code>VITE_SUPABASE_ANON_KEY</code></td><td>Yes</td><td>Public anon key (same as backend SUPABASE_ANON_KEY)</td></tr>
+    <tr><td><code>VITE_API_BASE_URL</code></td><td>Optional</td><td>Backend URL. Defaults to https://checkkaro.onrender.com</td></tr>
+  </table>
+
+  <div class="card card-red">
+    <strong>⚠ Security Note:</strong> Never commit <code>.env</code> files to Git. The anon key is safe to expose in frontend (it's public). The service role key must NEVER be in frontend code — it bypasses all security rules.
+  </div>
+
+  <!-- ─── 10. GIT WORKFLOW ─── -->
+  <h1 class="section-title" id="git">10. Git Workflow</h1>
+
+  <h2>Branch Strategy</h2>
+  <table>
+    <tr><th>Branch</th><th>Purpose</th></tr>
+    <tr><td><code>main</code></td><td>Production. Auto-deploys to Vercel (frontend) and Render (backend). Only merge here after testing.</td></tr>
+    <tr><td><code>testing</code></td><td>Staging. All changes go here first. Deploy to Render manually or via Render preview to verify.</td></tr>
+    <tr><td><code>develop</code></td><td>Experimental / long-running feature work.</td></tr>
+  </table>
+
+  <h2>Workflow</h2>
+  <pre><span class="cm"># 1. Make changes locally</span>
+git checkout testing
+git add &lt;files&gt;
+git commit -m "feat: describe your change"
+git push origin testing
+
+<span class="cm"># 2. Test on Render preview / staging</span>
+<span class="cm"># 3. Once confirmed working, merge to main</span>
+git checkout main
+git merge testing --no-edit
+git push origin main
+<span class="cm"># → Vercel and Render auto-deploy from main</span></pre>
+
+  <h2>Commit Message Convention</h2>
+  <table>
+    <tr><th>Prefix</th><th>Use For</th></tr>
+    <tr><td><code>feat:</code></td><td>New feature or user-visible change</td></tr>
+    <tr><td><code>fix:</code></td><td>Bug fix</td></tr>
+    <tr><td><code>chore:</code></td><td>Maintenance, cleanup, removing debug code</td></tr>
+    <tr><td><code>seo:</code></td><td>SEO, metadata, sitemap changes</td></tr>
+    <tr><td><code>db:</code></td><td>Database schema or data changes</td></tr>
+  </table>
+
+  <hr>
+
+  <!-- QUICK REFERENCE -->
+  <h1 class="section-title">Quick Reference</h1>
+
+  <div class="card card-blue">
+    <h3 style="margin-top:0">Important URLs</h3>
+    <table>
+      <tr><td><strong>Production site</strong></td><td><code>https://www.parkho.in</code></td></tr>
+      <tr><td><strong>Backend API</strong></td><td><code>https://checkkaro.onrender.com</code></td></tr>
+      <tr><td><strong>API docs</strong></td><td><code>https://checkkaro.onrender.com/docs</code> (dev only)</td></tr>
+      <tr><td><strong>Supabase dashboard</strong></td><td>app.supabase.com → your project</td></tr>
+      <tr><td><strong>Vercel dashboard</strong></td><td>vercel.com → checkkaro project</td></tr>
+      <tr><td><strong>Render dashboard</strong></td><td>render.com → checkkaro service</td></tr>
+      <tr><td><strong>Google Search Console</strong></td><td>search.google.com/search-console → www.parkho.in</td></tr>
+    </table>
+  </div>
+
+  <div class="card card-green" style="margin-top:16px">
+    <h3 style="margin-top:0">New Developer Checklist</h3>
+    <ol>
+      <li>Clone the repo &amp; <code>cd checkkaro</code></li>
+      <li>Backend: <code>cd backend &amp;&amp; pip install -r requirements.txt</code></li>
+      <li>Backend: Create <code>.env</code> with SUPABASE_URL, SUPABASE_ANON_KEY, SUPABASE_SERVICE_ROLE_KEY, ADMIN_EMAIL, GEMINI_API_KEY</li>
+      <li>Backend: <code>uvicorn main:app --reload</code> → runs on localhost:8000</li>
+      <li>Frontend: <code>cd frontend &amp;&amp; npm install</code></li>
+      <li>Frontend: Create <code>.env.local</code> with VITE_SUPABASE_URL, VITE_SUPABASE_ANON_KEY, VITE_API_BASE_URL=http://localhost:8000</li>
+      <li>Frontend: <code>npm run dev</code> → runs on localhost:5173</li>
+      <li>To add products: Use Admin dashboard at /admin (must be logged in as admin email)</li>
+    </ol>
+  </div>
+
+  <p style="text-align:center; color:#9ca3af; font-size:11px; margin-top:48px; padding-top:24px; border-top: 1px solid #e5e7eb;">
+    Parkho Technical Documentation — Generated May 2026<br>
+    Internal use only. Do not distribute publicly.
+  </p>
+
+</div>
+
+<script>
+// Auto-trigger print dialog so user can Save as PDF
+window.addEventListener('load', function() {
+  // Small delay so styles render first
+  document.title = 'Parkho - Project Documentation';
+});
+</script>
+</body>
+</html>

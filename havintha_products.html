@@ -1,0 +1,531 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Havintha — Product Catalogue with Ingredients</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'Segoe UI', Arial, sans-serif; background: #f8f5f0; color: #222; font-size: 13px; }
+
+  .cover {
+    page-break-after: always;
+    height: 100vh; display: flex; flex-direction: column;
+    align-items: center; justify-content: center;
+    background: linear-gradient(135deg, #5b3a29 0%, #8b5e3c 50%, #c49a6c 100%);
+    color: #fff; text-align: center; padding: 40px;
+  }
+  .cover .logo { font-size: 56px; margin-bottom: 16px; }
+  .cover h1 { font-size: 46px; font-weight: 800; letter-spacing: 4px; margin-bottom: 6px; }
+  .cover .sub { font-size: 15px; font-weight: 300; letter-spacing: 2px; margin-bottom: 20px; opacity: 0.85; }
+  .cover .badge { display: inline-block; background: rgba(255,255,255,0.15); border: 2px solid rgba(255,255,255,0.45); border-radius: 24px; padding: 10px 28px; font-size: 13px; letter-spacing: 1px; margin-bottom: 16px; }
+  .cover .note { font-size: 12px; opacity: 0.65; margin-top: 14px; line-height: 1.7; }
+
+  .index-page { padding: 32px 26px; page-break-after: always; }
+  .index-page h2 { font-size: 20px; color: #5b3a29; margin-bottom: 14px; border-bottom: 3px solid #c49a6c; padding-bottom: 8px; }
+  .index-table { width: 100%; border-collapse: collapse; }
+  .index-table th { background: #5b3a29; color: #fff; padding: 8px 10px; text-align: left; font-size: 11px; }
+  .index-table td { padding: 6px 10px; border-bottom: 1px solid #e8e0d6; font-size: 11px; }
+  .index-table tr:nth-child(even) td { background: #fdf6ee; }
+
+  .section-header { background: #5b3a29; color: #fff; padding: 11px 22px; font-size: 14px; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; margin: 22px 0 0 0; border-radius: 6px 6px 0 0; }
+
+  /* Standard product card */
+  .product { background: #fff; border: 1px solid #ddd5c8; border-top: none; padding: 14px 18px; page-break-inside: avoid; }
+  .product:last-of-type { border-radius: 0 0 6px 6px; margin-bottom: 22px; }
+  .product + .product { border-top: 1px solid #ede5d8; }
+  .product-inner { display: flex; gap: 14px; }
+  .product-img { width: 100px; min-width: 100px; height: 100px; object-fit: contain; border-radius: 8px; border: 1px solid #e0d8cc; background: #faf7f2; padding: 4px; }
+  .product-info { flex: 1; }
+  .product-name { font-size: 13.5px; font-weight: 700; color: #5b3a29; margin-bottom: 5px; }
+  .product-meta { display: flex; gap: 7px; margin-bottom: 8px; flex-wrap: wrap; }
+  .tag { border-radius: 12px; padding: 2px 9px; font-size: 10.5px; font-weight: 600; }
+  .tag.cat   { background: #f3e8d8; color: #5b3a29; }
+  .tag.vol   { background: #e3f2fd; color: #1565c0; }
+  .tag.price { background: #fff3e0; color: #e65100; }
+  .tag.herb  { background: #e8f5e9; color: #2e7d32; }
+  .ing-label { font-size: 10px; font-weight: 700; color: #777; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 3px; }
+  .ing-text { font-size: 11.5px; color: #333; line-height: 1.6; background: #fdf6ee; border-left: 3px solid #c49a6c; padding: 7px 11px; border-radius: 0 4px 4px 0; }
+
+  /* Compact grid for single-ingredient products */
+  .grid-section { background: #fff; border: 1px solid #ddd5c8; border-top: none; border-radius: 0 0 6px 6px; margin-bottom: 22px; }
+  .grid-inner { display: grid; grid-template-columns: repeat(3, 1fr); gap: 0; }
+  .grid-item { padding: 12px 14px; border-right: 1px solid #ede5d8; border-bottom: 1px solid #ede5d8; }
+  .grid-item:nth-child(3n) { border-right: none; }
+  .grid-item-img { width: 70px; height: 70px; object-fit: contain; border-radius: 6px; border: 1px solid #e0d8cc; background: #faf7f2; padding: 3px; margin-bottom: 7px; }
+  .grid-item-name { font-size: 11.5px; font-weight: 700; color: #5b3a29; margin-bottom: 3px; }
+  .grid-item-meta { font-size: 10px; color: #888; margin-bottom: 4px; }
+  .grid-item-ing { font-size: 10.5px; color: #333; background: #fdf6ee; border-left: 2px solid #c49a6c; padding: 4px 8px; border-radius: 0 3px 3px 0; }
+
+  .page-body { padding: 18px 18px 0; }
+  .footer { text-align: center; padding: 16px; font-size: 11px; color: #999; border-top: 1px solid #e0d8cc; margin-top: 16px; }
+
+  @media print {
+    body { background: #fff; }
+    .section-header, .tag, .ing-text, .grid-item-ing { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  }
+</style>
+</head>
+<body>
+
+<!-- COVER -->
+<div class="cover">
+  <div class="logo">🌾</div>
+  <h1>HAVINTHA</h1>
+  <div class="sub">Natural · Herbal · Pure</div>
+  <div class="badge">41 Products &nbsp;|&nbsp; Hair · Skin · Oils · Colour</div>
+  <div class="note">
+    ✦ 100% Natural Herbal Formulations · No Parabens · No Sulphates · No Synthetic Additives<br>
+    ✦ Shade-Dried Ingredients · Sustainably Harvested<br>
+    ✦ havintha.in &nbsp;|&nbsp; Prepared for review · June 2026
+  </div>
+</div>
+
+<!-- INDEX -->
+<div class="index-page">
+  <h2>Product Index — 41 Products</h2>
+  <table class="index-table">
+    <thead><tr><th>#</th><th>Product Name</th><th>Category</th><th>Size</th><th>Price</th></tr></thead>
+    <tbody>
+      <tr><td>1</td><td>Natural Hair Shampoo – Amla, Reetha, Shikakai, Methi Dana</td><td>Powder Shampoo</td><td>227 g</td><td>₹299</td></tr>
+      <tr><td>2</td><td>Bhringraj & Brahmi Powder Shampoo</td><td>Powder Shampoo</td><td>250 g</td><td>₹299</td></tr>
+      <tr><td>3</td><td>Natural Hibiscus Powder Shampoo</td><td>Powder Shampoo</td><td>227 g</td><td>₹299</td></tr>
+      <tr><td>4</td><td>Natural Aloevera Powder Shampoo</td><td>Powder Shampoo</td><td>227 g</td><td>₹299</td></tr>
+      <tr><td>5</td><td>Jata Amrit Hair Oil</td><td>Hair Oil</td><td>100 ml</td><td>₹599</td></tr>
+      <tr><td>6</td><td>Organic Rosemary Hair Oil</td><td>Hair Oil</td><td>—</td><td>₹599</td></tr>
+      <tr><td>7</td><td>Natural Rosemary Water Spray</td><td>Hair Spray</td><td>200 ml</td><td>₹349</td></tr>
+      <tr><td>8</td><td>Natural Indigo Powder</td><td>Hair Colour</td><td>200 g</td><td>₹299</td></tr>
+      <tr><td>9</td><td>Natural Henna Powder (Lawsonia Inermis)</td><td>Hair Colour</td><td>200 g</td><td>₹299</td></tr>
+      <tr><td>10</td><td>Natural Herbal Henna Hair Pack (11 herbs)</td><td>Hair Colour</td><td>227 g</td><td>₹299</td></tr>
+      <tr><td>11</td><td>Natural Amla Powder</td><td>Herb Powder</td><td>250 g</td><td>₹299</td></tr>
+      <tr><td>12</td><td>Organic Shikakai Powder</td><td>Herb Powder</td><td>250 g</td><td>₹299</td></tr>
+      <tr><td>13</td><td>Natural Reetha Powder</td><td>Herb Powder</td><td>250 g</td><td>₹299</td></tr>
+      <tr><td>14</td><td>Natural Bhringraj Powder</td><td>Herb Powder</td><td>250 g</td><td>₹299</td></tr>
+      <tr><td>15</td><td>Natural Brahmi Powder</td><td>Herb Powder</td><td>250 g</td><td>₹299</td></tr>
+      <tr><td>16</td><td>Natural Methidana (Fenugreek) Powder</td><td>Herb Powder</td><td>250 g</td><td>₹299</td></tr>
+      <tr><td>17</td><td>Natural Hibiscus Powder</td><td>Herb Powder</td><td>250 g</td><td>₹299</td></tr>
+      <tr><td>18</td><td>Natural Jatamansi Powder</td><td>Herb Powder</td><td>80 g</td><td>₹299</td></tr>
+      <tr><td>19</td><td>Natural Ratanjot Powder</td><td>Herb Powder</td><td>80 g</td><td>₹299</td></tr>
+      <tr><td>20</td><td>Natural Curry Leaves Powder</td><td>Herb Powder</td><td>100 g</td><td>₹299</td></tr>
+      <tr><td>21</td><td>Natural Neem Leaf Powder</td><td>Herb Powder</td><td>100 g</td><td>₹299</td></tr>
+      <tr><td>22</td><td>Natural Tulsi Powder</td><td>Herb Powder</td><td>100 g</td><td>₹299</td></tr>
+      <tr><td>23</td><td>Natural Mulethi (Licorice) Powder</td><td>Herb Powder</td><td>250 g</td><td>₹299</td></tr>
+      <tr><td>24</td><td>Natural Kalonji (Black Seed) Powder</td><td>Herb Powder</td><td>227 g</td><td>₹299</td></tr>
+      <tr><td>25</td><td>Natural Rosemary Powder</td><td>Herb Powder</td><td>100 g</td><td>₹299</td></tr>
+      <tr><td>26</td><td>Natural Face & Body Ubtan Powder</td><td>Face Pack</td><td>227 g</td><td>₹299</td></tr>
+      <tr><td>27</td><td>Natural Orange Peel Powder</td><td>Face Pack</td><td>227 g</td><td>₹299</td></tr>
+      <tr><td>28</td><td>Natural Sandalwood Powder</td><td>Face Pack</td><td>100 g</td><td>₹299</td></tr>
+      <tr><td>29</td><td>Natural Multani Mitti Powder</td><td>Face Pack</td><td>250 g</td><td>₹199</td></tr>
+      <tr><td>30</td><td>Natural Activated Charcoal Powder</td><td>Face Pack</td><td>100 g</td><td>₹199</td></tr>
+      <tr><td>31</td><td>Natural Rose Petals Powder</td><td>Face Pack</td><td>250 g</td><td>₹299</td></tr>
+      <tr><td>32</td><td>Natural Amba Haldi (Mango Ginger) Powder</td><td>Face Pack</td><td>100 g</td><td>₹299</td></tr>
+      <tr><td>33</td><td>Natural Masoor Dal Powder</td><td>Face Pack</td><td>100 g</td><td>₹199</td></tr>
+      <tr><td>34</td><td>Natural Lemon Peel Powder</td><td>Face Pack</td><td>100 g</td><td>₹299</td></tr>
+      <tr><td>35</td><td>Natural Anar (Pomegranate) Peel Powder</td><td>Face Pack</td><td>250 g</td><td>₹299</td></tr>
+      <tr><td>36</td><td>Natural Beet Root Powder</td><td>Face Pack</td><td>250 g</td><td>₹299</td></tr>
+      <tr><td>37</td><td>Natural Rice Powder Mask</td><td>Face Pack</td><td>100 g</td><td>₹299</td></tr>
+      <tr><td>38</td><td>Natural Aloevera Powder</td><td>Face Pack</td><td>250 g</td><td>₹299</td></tr>
+      <tr><td>39</td><td>Natural Rosemary Essential Oil</td><td>Essential Oil</td><td>15 ml</td><td>₹299</td></tr>
+      <tr><td>40</td><td>Tea Tree Essential Oil</td><td>Essential Oil</td><td>15 ml</td><td>₹299</td></tr>
+      <tr><td>41</td><td>Lavender Essential Oil</td><td>Essential Oil</td><td>15 ml</td><td>₹499</td></tr>
+    </tbody>
+  </table>
+</div>
+
+<!-- PRODUCTS -->
+<div class="page-body">
+
+<!-- ── POWDER SHAMPOOS ── -->
+<div class="section-header">Powder Shampoos — Multi-Herb Blends (Products 1–4)</div>
+
+<div class="product">
+  <div class="product-inner">
+    <img class="product-img" src="https://havintha.in/cdn/shop/files/4_in_1_3e0f3c7a-751f-4ae6-9ca1-e305fc1b3309.png?v=1778912932&width=400" alt="4-in-1 Powder Shampoo">
+    <div class="product-info">
+      <div class="product-name">1. Natural Hair Shampoo – Amla, Reetha, Shikakai & Methi Dana (4-in-1)</div>
+      <div class="product-meta"><span class="tag cat">Powder Shampoo</span><span class="tag vol">227 g</span><span class="tag price">₹299</span><span class="tag herb">Sulphate & Paraben Free</span></div>
+      <div class="ing-label">Full Ingredients List</div>
+      <div class="ing-text">Sapindus Mukorossi (Reetha Fruit Powder), Trigonella Foenum-Graecum (Methi Dana / Fenugreek Powder), Acacia Concinna (Shikakai Fruit Pod Powder), Phyllanthus Emblica (Amla Fruit Powder)</div>
+    </div>
+  </div>
+</div>
+
+<div class="product">
+  <div class="product-inner">
+    <img class="product-img" src="https://havintha.in/cdn/shop/files/Website_front_page_27.png?v=1780662354&width=400" alt="Bhringraj Brahmi Shampoo">
+    <div class="product-info">
+      <div class="product-name">2. Natural Bhringraj & Brahmi Powder Shampoo</div>
+      <div class="product-meta"><span class="tag cat">Powder Shampoo</span><span class="tag vol">250 g</span><span class="tag price">₹299</span><span class="tag herb">Anti-Dandruff</span></div>
+      <div class="ing-label">Full Ingredients List</div>
+      <div class="ing-text">Acacia Concinna (Shikakai Powder), Sapindus Mukorossi (Reetha Powder), Hibiscus Rosa-Sinensis (Hibiscus Powder), Trigonella Foenum-Graecum (Methidana/Fenugreek Powder), Eclipta Prostrata (Bhringraj), Linum Usitatissimum (Alsi/Flaxseed Powder), Bacopa Monnieri (Brahmi Powder), Phyllanthus Emblica (Amla)</div>
+    </div>
+  </div>
+</div>
+
+<div class="product">
+  <div class="product-inner">
+    <img class="product-img" src="https://havintha.in/cdn/shop/files/Website_front_page_26.png?v=1779882549&width=400" alt="Hibiscus Powder Shampoo">
+    <div class="product-info">
+      <div class="product-name">3. Natural Hibiscus Powder Shampoo</div>
+      <div class="product-meta"><span class="tag cat">Powder Shampoo</span><span class="tag vol">227 g</span><span class="tag price">₹299</span><span class="tag herb">Sulphate & Paraben Free</span></div>
+      <div class="ing-label">Full Ingredients List</div>
+      <div class="ing-text">Sapindus Mukorossi (Reetha Powder), Acacia Concinna (Shikakai Powder), Trigonella Foenum-Graecum (Methidana/Fenugreek Powder), Hibiscus Rosa-Sinensis (Hibiscus Powder), Phyllanthus Emblica (Amla)</div>
+    </div>
+  </div>
+</div>
+
+<div class="product">
+  <div class="product-inner">
+    <img class="product-img" src="https://havintha.in/cdn/shop/files/Face_BOdy_wash_6.png?v=1779192535&width=400" alt="Aloevera Powder Shampoo">
+    <div class="product-info">
+      <div class="product-name">4. Natural Aloevera Powder Shampoo (for Oily Hair)</div>
+      <div class="product-meta"><span class="tag cat">Powder Shampoo</span><span class="tag vol">227 g</span><span class="tag price">₹299</span><span class="tag herb">For Oily Hair</span></div>
+      <div class="ing-label">Full Ingredients List</div>
+      <div class="ing-text">Sapindus Mukorossi (Reetha Powder), Acacia Concinna (Shikakai Powder), Trigonella Foenum-Graecum (Methidana/Fenugreek Powder), Aloe Barbadensis Miller (Aloevera Powder)</div>
+    </div>
+  </div>
+</div>
+
+<!-- ── HAIR OILS & SPRAYS ── -->
+<div class="section-header">Hair Oils & Sprays (Products 5–7)</div>
+
+<div class="product">
+  <div class="product-inner">
+    <img class="product-img" src="https://havintha.in/cdn/shop/files/jata_amrit_5371d524-05f8-4427-8e80-3c591ad62d4d.png?v=1778913400&width=400" alt="Jata Amrit Hair Oil">
+    <div class="product-info">
+      <div class="product-name">5. Jata Amrit Hair Oil</div>
+      <div class="product-meta"><span class="tag cat">Hair Oil</span><span class="tag vol">100 ml</span><span class="tag price">₹599</span><span class="tag herb">27-Herb Handmade Blend</span></div>
+      <div class="ing-label">Full Ingredients List</div>
+      <div class="ing-text">Cocos Nucifera (Coconut Oil), Olea Europaea (Olive Oil), Sesamum Indicum (Sesame Oil), Aloe Barbadensis (Aloe Vera), Eclipta Prostrata (Bhringraj), Rosmarinus Officinalis (Rosemary), Phyllanthus Emblica (Amla), Acacia Concinna (Shikakai), Bacopa Monnieri (Brahmi), Trigonella Foenum-Graecum (Methidana/Fenugreek), Hibiscus Rosa-Sinensis (Hibiscus), Nigella Sativa (Kalonji/Black Seed), Nardostachys Jatamansi (Jatamansi), Luffa Cylindrica (Turai/Ridge Gourd), Azadirachta Indica (Neem), Murraya Koenigii (Curry Leaves), Cinnamomum Camphora (Kapoor/Camphor), Ricinus Communis (Castor Oil), Prunus Dulcis (Almond Oil), Alkanna Tinctoria (Ratanjot), Olea Europaea Raw (Olive Raw), Tocopherol (Vitamin E Oil), Melaleuca Alternifolia (Tea Tree Oil), Simmondsia Chinensis (Jojoba Oil), Argania Spinosa (Argan Oil), Rosmarinus Officinalis (Rosemary Essential Oil), Lavandula Angustifolia (Lavender Oil)</div>
+    </div>
+  </div>
+</div>
+
+<div class="product">
+  <div class="product-inner">
+    <img class="product-img" src="https://havintha.in/cdn/shop/files/Website_front_page_9.png?v=1779098566&width=400" alt="Organic Rosemary Hair Oil">
+    <div class="product-info">
+      <div class="product-name">6. Organic Rosemary Hair Oil</div>
+      <div class="product-meta"><span class="tag cat">Hair Oil</span><span class="tag vol">100 ml</span><span class="tag price">₹599</span><span class="tag herb">Lightweight Formula</span></div>
+      <div class="ing-label">Full Ingredients List</div>
+      <div class="ing-text">Fractionated Cocos Nucifera (Fractionated Coconut Oil), Ricinus Communis (Castor Oil), Olea Europaea (Olive Oil), Rosmarinus Officinalis Raw (Rosemary Herb Infused), Rosmarinus Officinalis (Rosemary Essential Oil), Tocopherol (Vitamin E Oil), Lavandula Angustifolia (Lavender Essential Oil)</div>
+    </div>
+  </div>
+</div>
+
+<div class="product">
+  <div class="product-inner">
+    <img class="product-img" src="https://havintha.in/cdn/shop/files/1_24a3e9ab-3ab3-46f9-bdf4-69a777655f26.png?v=1776860240&width=400" alt="Natural Rosemary Water Spray">
+    <div class="product-info">
+      <div class="product-name">7. Natural Rosemary Water Spray</div>
+      <div class="product-meta"><span class="tag cat">Hair Spray</span><span class="tag vol">200 ml</span><span class="tag price">₹349</span><span class="tag herb">Daily Use</span></div>
+      <div class="ing-label">Ingredients</div>
+      <div class="ing-text">Rosmarinus Officinalis (Rosemary Herb Water / Rosemary Hydrosol)</div>
+    </div>
+  </div>
+</div>
+
+<!-- ── HAIR COLOUR ── -->
+<div class="section-header">Hair Colour (Products 8–10)</div>
+
+<div class="product">
+  <div class="product-inner">
+    <img class="product-img" src="https://havintha.in/cdn/shop/files/Website_front_page_19.png?v=1779796422&width=400" alt="Natural Indigo Powder">
+    <div class="product-info">
+      <div class="product-name">8. Natural Indigo Powder</div>
+      <div class="product-meta"><span class="tag cat">Hair Colour</span><span class="tag vol">200 g</span><span class="tag price">₹299</span><span class="tag herb">100% Natural Black</span></div>
+      <div class="ing-label">Full Ingredients List</div>
+      <div class="ing-text">Indigofera Tinctoria (Indigo Leaves Powder) — 100% pure, no additives</div>
+    </div>
+  </div>
+</div>
+
+<div class="product">
+  <div class="product-inner">
+    <img class="product-img" src="https://havintha.in/cdn/shop/files/Website_front_page_20.png?v=1779798530&width=400" alt="Natural Henna Powder">
+    <div class="product-info">
+      <div class="product-name">9. Natural Henna Powder (Lawsonia Inermis)</div>
+      <div class="product-meta"><span class="tag cat">Hair Colour</span><span class="tag vol">200 g</span><span class="tag price">₹299</span><span class="tag herb">100% Pure</span></div>
+      <div class="ing-label">Full Ingredients List</div>
+      <div class="ing-text">Lawsonia Inermis (Pure Henna Leaves Powder) — 100% pure, no additives, no chemicals</div>
+    </div>
+  </div>
+</div>
+
+<div class="product">
+  <div class="product-inner">
+    <img class="product-img" src="https://havintha.in/cdn/shop/files/herbal_henna.png?v=1779097500&width=400" alt="Herbal Henna Hair Pack">
+    <div class="product-info">
+      <div class="product-name">10. Natural Herbal Henna Hair Pack (11 Herbs)</div>
+      <div class="product-meta"><span class="tag cat">Hair Pack / Colour</span><span class="tag vol">227 g</span><span class="tag price">₹299</span><span class="tag herb">11-Herb Blend</span></div>
+      <div class="ing-label">Full Ingredients List</div>
+      <div class="ing-text">Lawsonia Inermis (Henna Leaves), Trigonella Foenum-Graecum (Methidana/Fenugreek), Acacia Concinna (Shikakai), Phyllanthus Emblica (Amla), Hibiscus Rosa-Sinensis (Hibiscus), Senegalia Catechu (Kattha/Catechu), Eclipta Prostrata (Bhringraj), Azadirachta Indica (Neem), Bacopa Monnieri (Brahmi), Camellia Sinensis (Tea Leaves), Indigofera Tinctoria (Indigo Leaf)</div>
+    </div>
+  </div>
+</div>
+
+<!-- ── HAIR HERB POWDERS ── -->
+<div class="section-header">Hair Care — Single Herb Powders (Products 11–25)</div>
+<div class="grid-section">
+  <div class="grid-inner">
+
+    <div class="grid-item">
+      <img class="grid-item-img" src="https://havintha.in/cdn/shop/files/47_240a12ce-6fbb-4c6b-8bf5-863bcffae339.png?v=1775197821&width=300" alt="Amla Powder">
+      <div class="grid-item-name">11. Natural Amla Powder</div>
+      <div class="grid-item-meta">250 g &nbsp;·&nbsp; ₹299</div>
+      <div class="grid-item-ing">Phyllanthus Emblica (Indian Gooseberry / Amla) — 100% pure shade-dried</div>
+    </div>
+
+    <div class="grid-item">
+      <img class="grid-item-img" src="https://havintha.in/cdn/shop/files/Shikakaipowder_8c9aa40c-b760-44b9-9373-f8520e77ca9b.png?v=1749459457&width=300" alt="Shikakai Powder">
+      <div class="grid-item-name">12. Organic Shikakai Powder</div>
+      <div class="grid-item-meta">250 g &nbsp;·&nbsp; ₹299</div>
+      <div class="grid-item-ing">Acacia Concinna (Shikakai Fruit Pod Powder) — 100% pure</div>
+    </div>
+
+    <div class="grid-item">
+      <img class="grid-item-img" src="https://havintha.in/cdn/shop/files/Reethapowder.png?v=1749126990&width=300" alt="Reetha Powder">
+      <div class="grid-item-name">13. Natural Reetha Powder</div>
+      <div class="grid-item-meta">250 g &nbsp;·&nbsp; ₹299</div>
+      <div class="grid-item-ing">Sapindus Mukorossi (Soapnut / Reetha Fruit Powder) — 100% pure</div>
+    </div>
+
+    <div class="grid-item">
+      <img class="grid-item-img" src="https://havintha.in/cdn/shop/files/38_5c3271e9-72a1-41a5-8951-f0eba9da604b.png?v=1775197131&width=300" alt="Bhringraj Powder">
+      <div class="grid-item-name">14. Natural Bhringraj Powder</div>
+      <div class="grid-item-meta">250 g &nbsp;·&nbsp; ₹299</div>
+      <div class="grid-item-ing">Eclipta Prostrata (Bhringraj / False Daisy Leaf Powder) — 100% pure</div>
+    </div>
+
+    <div class="grid-item">
+      <img class="grid-item-img" src="https://havintha.in/cdn/shop/files/101.png?v=1775199706&width=300" alt="Brahmi Powder">
+      <div class="grid-item-name">15. Natural Brahmi Powder</div>
+      <div class="grid-item-meta">250 g &nbsp;·&nbsp; ₹299</div>
+      <div class="grid-item-ing">Bacopa Monnieri (Brahmi / Water Hyssop Leaf Powder) — 100% pure</div>
+    </div>
+
+    <div class="grid-item">
+      <img class="grid-item-img" src="https://havintha.in/cdn/shop/files/83_176c9184-2f99-4701-bee2-a460b098fd10.png?v=1775198237&width=300" alt="Methidana Powder">
+      <div class="grid-item-name">16. Natural Methidana Powder</div>
+      <div class="grid-item-meta">250 g &nbsp;·&nbsp; ₹299</div>
+      <div class="grid-item-ing">Trigonella Foenum-Graecum (Fenugreek / Methi Seed Powder) — 100% pure</div>
+    </div>
+
+    <div class="grid-item">
+      <img class="grid-item-img" src="https://havintha.com/cdn/shop/files/Hibiscuspowderfront_c5f4487c-8298-44ac-a07f-cb0093c2edb5.png?v=1750161080&width=300" alt="Hibiscus Powder">
+      <div class="grid-item-name">17. Natural Hibiscus Powder</div>
+      <div class="grid-item-meta">250 g &nbsp;·&nbsp; ₹299</div>
+      <div class="grid-item-ing">Hibiscus Rosa-Sinensis (Hibiscus Flower Powder) — 100% pure</div>
+    </div>
+
+    <div class="grid-item">
+      <img class="grid-item-img" src="https://havintha.in/cdn/shop/files/56_ac0c4a1e-7e94-4161-82de-0df555d9426e.png?v=1775197979&width=300" alt="Jatamansi Powder">
+      <div class="grid-item-name">18. Natural Jatamansi Powder</div>
+      <div class="grid-item-meta">80 g &nbsp;·&nbsp; ₹299</div>
+      <div class="grid-item-ing">Nardostachys Jatamansi (Spikenard Root Powder) — 100% pure</div>
+    </div>
+
+    <div class="grid-item">
+      <img class="grid-item-img" src="https://havintha.in/cdn/shop/files/92.png?v=1775199082&width=300" alt="Ratanjot Powder">
+      <div class="grid-item-name">19. Natural Ratanjot Powder</div>
+      <div class="grid-item-meta">80 g &nbsp;·&nbsp; ₹299</div>
+      <div class="grid-item-ing">Alkanna Tinctoria / Onosma Echioides (Ratanjot / Alkanet Root Powder) — 100% pure</div>
+    </div>
+
+    <div class="grid-item">
+      <img class="grid-item-img" src="https://havintha.in/cdn/shop/files/Hair_Powder_Sub-images_6.png?v=1775201818&width=300" alt="Curry Leaves Powder">
+      <div class="grid-item-name">20. Natural Curry Leaves Powder</div>
+      <div class="grid-item-meta">100 g &nbsp;·&nbsp; ₹299</div>
+      <div class="grid-item-ing">Murraya Koenigii (Curry Leaf / Kadi Patta Powder) — 100% pure shade-dried</div>
+    </div>
+
+    <div class="grid-item">
+      <img class="grid-item-img" src="https://havintha.in/cdn/shop/files/74_60274161-9344-4d7f-83cb-f7db2eff06fd.png?v=1775198149&width=300" alt="Neem Powder">
+      <div class="grid-item-name">21. Natural Neem Leaf Powder</div>
+      <div class="grid-item-meta">100 g &nbsp;·&nbsp; ₹299</div>
+      <div class="grid-item-ing">Azadirachta Indica (Neem Leaf Powder) — 100% pure</div>
+    </div>
+
+    <div class="grid-item">
+      <img class="grid-item-img" src="https://havintha.in/cdn/shop/files/110.png?v=1776244534&width=300" alt="Tulsi Powder">
+      <div class="grid-item-name">22. Natural Tulsi Powder</div>
+      <div class="grid-item-meta">100 g &nbsp;·&nbsp; ₹299</div>
+      <div class="grid-item-ing">Ocimum Tenuiflorum (Holy Basil / Tulsi Leaf Powder) — 100% pure</div>
+    </div>
+
+    <div class="grid-item">
+      <img class="grid-item-img" src="https://havintha.in/cdn/shop/files/94_aaebd7c7-02d7-4b10-ae75-262d8ebc4cda.jpg?v=1776504973&width=300" alt="Mulethi Powder">
+      <div class="grid-item-name">23. Natural Mulethi Powder</div>
+      <div class="grid-item-meta">250 g &nbsp;·&nbsp; ₹299</div>
+      <div class="grid-item-ing">Glycyrrhiza Glabra (Licorice / Mulethi Root Powder) — 100% pure</div>
+    </div>
+
+    <div class="grid-item">
+      <img class="grid-item-img" src="https://havintha.in/cdn/shop/files/250.jpg?v=1775219201&width=300" alt="Kalonji Powder">
+      <div class="grid-item-name">24. Natural Kalonji Powder</div>
+      <div class="grid-item-meta">227 g &nbsp;·&nbsp; ₹299</div>
+      <div class="grid-item-ing">Nigella Sativa (Black Seed / Kalonji Seed Powder) — 100% pure</div>
+    </div>
+
+    <div class="grid-item">
+      <img class="grid-item-img" src="https://havintha.in/cdn/shop/files/119.png?v=1775199871&width=300" alt="Rosemary Powder">
+      <div class="grid-item-name">25. Natural Rosemary Powder</div>
+      <div class="grid-item-meta">100 g &nbsp;·&nbsp; ₹299</div>
+      <div class="grid-item-ing">Rosmarinus Officinalis (Rosemary Leaf Powder) — 100% pure shade-dried</div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ── FACE PACKS & UBTANS ── -->
+<div class="section-header">Face Packs, Ubtans & Skin Powders (Products 26–38)</div>
+
+<div class="product">
+  <div class="product-inner">
+    <img class="product-img" src="https://havintha.in/cdn/shop/files/Face_BOdy_wash_5.png?v=1779086438&width=400" alt="Face Body Ubtan Powder">
+    <div class="product-info">
+      <div class="product-name">26. Natural Face & Body Ubtan Powder</div>
+      <div class="product-meta"><span class="tag cat">Ubtan / Face Wash</span><span class="tag vol">227 g</span><span class="tag price">₹299</span><span class="tag herb">All Skin Types</span></div>
+      <div class="ing-label">Full Ingredients List</div>
+      <div class="ing-text">Besan (Chickpea Flour), Solum Fullonum (Multani Mitti / Fuller's Earth), Curcuma Amada (Amba Haldi / Mango Ginger), Santalum Album (Sandalwood Powder), Milk Powder, Lens Culinaris (Masoor Dal / Red Lentil Powder), Rosa Damascena (Rose Petal Powder), Aloe Barbadensis (Aloe Vera Extract), Glycyrrhiza Glabra (Licorice / Mulethi), Oryza Sativa (Rice Powder), Prunus Dulcis (Almond Oil)</div>
+    </div>
+  </div>
+</div>
+
+<div class="grid-section">
+  <div class="grid-inner">
+
+    <div class="grid-item">
+      <img class="grid-item-img" src="https://havintha.in/cdn/shop/files/Website_front_page_14.png?v=1779366588&width=300" alt="Orange Peel Powder">
+      <div class="grid-item-name">27. Natural Orange Peel Powder</div>
+      <div class="grid-item-meta">227 g &nbsp;·&nbsp; ₹299</div>
+      <div class="grid-item-ing">Citrus Aurantium / Citrus Sinensis (Orange Peel Powder) — 100% pure</div>
+    </div>
+
+    <div class="grid-item">
+      <img class="grid-item-img" src="https://havintha.in/cdn/shop/files/Website_front_page_15.png?v=1779704489&width=300" alt="Sandalwood Powder">
+      <div class="grid-item-name">28. Natural Sandalwood Powder</div>
+      <div class="grid-item-meta">100 g &nbsp;·&nbsp; ₹299</div>
+      <div class="grid-item-ing">Santalum Album (White Sandalwood Powder) — 100% pure</div>
+    </div>
+
+    <div class="grid-item">
+      <img class="grid-item-img" src="https://havintha.in/cdn/shop/files/47.jpg?v=1775215616&width=300" alt="Multani Mitti">
+      <div class="grid-item-name">29. Natural Multani Mitti Powder</div>
+      <div class="grid-item-meta">250 g &nbsp;·&nbsp; ₹199</div>
+      <div class="grid-item-ing">Solum Fullonum (Fuller's Earth / Multani Mitti) — 100% pure mineral clay</div>
+    </div>
+
+    <div class="grid-item">
+      <img class="grid-item-img" src="https://havintha.in/cdn/shop/files/Website_front_page_18.png?v=1779790977&width=300" alt="Activated Charcoal">
+      <div class="grid-item-name">30. Natural Activated Charcoal Powder</div>
+      <div class="grid-item-meta">100 g &nbsp;·&nbsp; ₹199</div>
+      <div class="grid-item-ing">Activated Charcoal (Carbon / Charcoal Powder, food-grade) — 100% natural</div>
+    </div>
+
+    <div class="grid-item">
+      <img class="grid-item-img" src="https://havintha.in/cdn/shop/files/29.jpg?v=1775215189&width=300" alt="Rose Petals Powder">
+      <div class="grid-item-name">31. Natural Rose Petals Powder</div>
+      <div class="grid-item-meta">250 g &nbsp;·&nbsp; ₹299</div>
+      <div class="grid-item-ing">Rosa Damascena (Damask Rose Petal Powder) — 100% pure shade-dried</div>
+    </div>
+
+    <div class="grid-item">
+      <img class="grid-item-img" src="https://havintha.in/cdn/shop/files/20_c4f4285d-0768-40aa-827f-a6de2443bb71.jpg?v=1776416995&width=300" alt="Amba Haldi Powder">
+      <div class="grid-item-name">32. Natural Amba Haldi Powder</div>
+      <div class="grid-item-meta">100 g &nbsp;·&nbsp; ₹299</div>
+      <div class="grid-item-ing">Curcuma Amada (Mango Ginger / Amba Haldi Rhizome Powder) — 100% pure</div>
+    </div>
+
+    <div class="grid-item">
+      <img class="grid-item-img" src="https://havintha.in/cdn/shop/files/241.jpg?v=1775219488&width=300" alt="Masoor Dal Powder">
+      <div class="grid-item-name">33. Natural Masoor Dal Powder</div>
+      <div class="grid-item-meta">100 g &nbsp;·&nbsp; ₹199</div>
+      <div class="grid-item-ing">Lens Culinaris (Red Lentil / Masoor Dal Powder) — 100% pure finely ground</div>
+    </div>
+
+    <div class="grid-item">
+      <img class="grid-item-img" src="https://havintha.in/cdn/shop/files/2_ad7a6c95-3480-4930-bf17-8f6384d5fefa.jpg?v=1775214922&width=300" alt="Lemon Peel Powder">
+      <div class="grid-item-name">34. Natural Lemon Peel Powder</div>
+      <div class="grid-item-meta">100 g &nbsp;·&nbsp; ₹299</div>
+      <div class="grid-item-ing">Citrus Limon (Lemon Peel Powder) — 100% pure shade-dried</div>
+    </div>
+
+    <div class="grid-item">
+      <img class="grid-item-img" src="https://havintha.in/cdn/shop/files/184_987dfb0e-b650-41b5-a12d-3acab7d5cbe9.jpg?v=1776425584&width=300" alt="Anar Peel Powder">
+      <div class="grid-item-name">35. Natural Anar Peel Powder</div>
+      <div class="grid-item-meta">250 g &nbsp;·&nbsp; ₹299</div>
+      <div class="grid-item-ing">Punica Granatum (Pomegranate Peel Powder) — 100% pure dried & ground</div>
+    </div>
+
+    <div class="grid-item">
+      <img class="grid-item-img" src="https://havintha.in/cdn/shop/files/67_d0e87972-ae0d-4c75-824b-ef4cc7d01ec4.jpg?v=1775215797&width=300" alt="Beet Root Powder">
+      <div class="grid-item-name">36. Natural Beet Root Powder</div>
+      <div class="grid-item-meta">250 g &nbsp;·&nbsp; ₹299</div>
+      <div class="grid-item-ing">Beta Vulgaris (Beetroot Powder) — 100% pure natural</div>
+    </div>
+
+    <div class="grid-item">
+      <img class="grid-item-img" src="https://havintha.in/cdn/shop/files/103.png?v=1774526692&width=300" alt="Rice Powder Mask">
+      <div class="grid-item-name">37. Natural Rice Powder Mask</div>
+      <div class="grid-item-meta">100 g &nbsp;·&nbsp; ₹299</div>
+      <div class="grid-item-ing">Oryza Sativa (Finely Milled Rice Powder) — 100% pure</div>
+    </div>
+
+    <div class="grid-item">
+      <img class="grid-item-img" src="https://havintha.in/cdn/shop/files/130.jpg?v=1775217297&width=300" alt="Aloevera Powder">
+      <div class="grid-item-name">38. Natural Aloevera Powder</div>
+      <div class="grid-item-meta">250 g &nbsp;·&nbsp; ₹299</div>
+      <div class="grid-item-ing">Aloe Barbadensis Miller (Aloe Vera Leaf Powder) — 100% pure spray-dried</div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ── ESSENTIAL OILS ── -->
+<div class="section-header">Essential Oils (Products 39–41)</div>
+
+<div class="product">
+  <div class="product-inner">
+    <img class="product-img" src="https://havintha.in/cdn/shop/files/9_e2ea45be-fb64-4a00-8179-a6c4ca8cb5a6.png?v=1775300965&width=400" alt="Rosemary Essential Oil">
+    <div class="product-info">
+      <div class="product-name">39. Natural Rosemary Essential Oil</div>
+      <div class="product-meta"><span class="tag cat">Essential Oil</span><span class="tag vol">15 ml</span><span class="tag price">₹299</span><span class="tag herb">100% Pure</span></div>
+      <div class="ing-label">Ingredients</div>
+      <div class="ing-text">Rosmarinus Officinalis (Rosemary) Essential Oil — 100% pure, undiluted</div>
+    </div>
+  </div>
+</div>
+
+<div class="product">
+  <div class="product-inner">
+    <img class="product-img" src="https://havintha.in/cdn/shop/files/9_b21fc3b4-e916-4ded-baa1-484a6c0f84a4.png?v=1775298404&width=400" alt="Tea Tree Essential Oil">
+    <div class="product-info">
+      <div class="product-name">40. Tea Tree Essential Oil</div>
+      <div class="product-meta"><span class="tag cat">Essential Oil</span><span class="tag vol">15 ml</span><span class="tag price">₹299</span><span class="tag herb">100% Pure</span></div>
+      <div class="ing-label">Ingredients</div>
+      <div class="ing-text">Melaleuca Alternifolia (Tea Tree) Essential Oil — 100% pure, undiluted</div>
+    </div>
+  </div>
+</div>
+
+<div class="product">
+  <div class="product-inner">
+    <img class="product-img" src="https://havintha.in/cdn/shop/files/49_c9b20e14-1ab3-4495-a33f-ede8afc543b0.png?v=1775298685&width=400" alt="Lavender Essential Oil">
+    <div class="product-info">
+      <div class="product-name">41. Lavender Essential Oil</div>
+      <div class="product-meta"><span class="tag cat">Essential Oil</span><span class="tag vol">15 ml</span><span class="tag price">₹499</span><span class="tag herb">100% Pure</span></div>
+      <div class="ing-label">Ingredients</div>
+      <div class="ing-text">Lavandula Angustifolia (Lavender) Essential Oil — 100% pure, undiluted</div>
+    </div>
+  </div>
+</div>
+
+</div><!-- end page-body -->
+
+<div class="footer">
+  Havintha Natural &nbsp;·&nbsp; havintha.in &nbsp;·&nbsp; 100% Natural · No Parabens · No Sulphates · No Synthetic Additives<br>
+  Ingredients sourced from official product pages · June 2026
+</div>
+
+</body>
+</html>

@@ -1,0 +1,806 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ohria Ayurveda — Product Ingredient Report | CheckKaro</title>
+<style>
+  :root {
+    --primary: #1a3a2a;
+    --accent:  #9a7d4a;
+    --light:   #f7f4ef;
+    --card:    #ffffff;
+    --border:  #ddd5c0;
+    --text:    #1c1a14;
+    --muted:   #6a5c40;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'Segoe UI', system-ui, sans-serif; background: var(--light); color: var(--text); line-height: 1.55; }
+
+  /* COVER */
+  .cover {
+    min-height: 100vh; background: linear-gradient(150deg, #0d2218 0%, #1a3a2a 55%, #2d5c3f 100%);
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    text-align: center; padding: 60px 40px; page-break-after: always; position: relative; overflow: hidden;
+  }
+  .cover::before {
+    content: ''; position: absolute; inset: 0;
+    background-image: radial-gradient(ellipse at 25% 75%, rgba(154,125,74,0.2) 0%, transparent 55%),
+                      radial-gradient(ellipse at 75% 25%, rgba(154,125,74,0.12) 0%, transparent 55%);
+  }
+  .cover-icon { font-size: 72px; margin-bottom: 18px; position: relative; }
+  .cover h1 { font-size: 52px; font-weight: 800; color: #fff; letter-spacing: -1px; margin-bottom: 6px; position: relative; }
+  .cover .sub { font-size: 18px; color: var(--accent); letter-spacing: 3px; text-transform: uppercase; margin-bottom: 10px; position: relative; }
+  .cover .tagline { font-size: 14px; color: #a8c8b0; font-style: italic; margin-bottom: 36px; position: relative; }
+  .cover-badge { background: var(--accent); color: #fff; font-size: 11px; font-weight: 800; letter-spacing: 2px; text-transform: uppercase; padding: 8px 28px; border-radius: 30px; margin-bottom: 48px; position: relative; }
+  .cover-stats { display: flex; gap: 30px; position: relative; }
+  .stat-box { background: rgba(255,255,255,0.08); border: 1px solid rgba(154,125,74,0.35); border-radius: 14px; padding: 18px 28px; }
+  .stat-box .num { font-size: 32px; font-weight: 800; color: var(--accent); }
+  .stat-box .lbl { font-size: 11px; color: #a8c8b0; text-transform: uppercase; letter-spacing: 1px; }
+  .cover-footer { position: absolute; bottom: 24px; font-size: 11px; color: rgba(255,255,255,0.3); }
+
+  /* INDEX */
+  .index-page { padding: 52px 56px; page-break-after: always; background: var(--card); }
+  .index-page h2 { font-size: 24px; color: var(--primary); border-bottom: 3px solid var(--accent); padding-bottom: 10px; margin-bottom: 10px; }
+  .index-subtitle { font-size: 13px; color: var(--muted); margin-bottom: 18px; }
+  .brand-box { background: #f0f7f2; border-left: 4px solid var(--primary); border-radius: 8px; padding: 14px 18px; margin-bottom: 20px; font-size: 13px; color: #1a3a2a; }
+  .legend { display: flex; gap: 18px; flex-wrap: wrap; margin-bottom: 18px; font-size: 12px; align-items: center; }
+  .dot { width: 10px; height: 10px; border-radius: 50%; display: inline-block; }
+  .dot-safe { background: #2d8a5a; } .dot-worth { background: #e08a00; }
+  .grade { display: inline-block; width: 24px; height: 24px; border-radius: 50%; text-align: center; line-height: 24px; font-weight: 700; font-size: 12px; color: #fff; }
+  .g-a { background: #2d6a4f; } .g-b { background: #2472b5; } .g-c { background: #c87a10; } .g-d { background: #b82020; }
+  .tag { display: inline-block; font-size: 11px; padding: 2px 9px; border-radius: 20px; font-weight: 600; border: 1px solid; }
+  .tag-face { background: #fdf0e0; color: #8a4a00; border-color: #e8c880; }
+  .tag-hair { background: #e8f0f8; color: #1a4a7a; border-color: #a0c0e0; }
+  .tag-body { background: #f0f7f0; color: #1a5a30; border-color: #90c8a0; }
+  .index-table { width: 100%; border-collapse: collapse; }
+  .index-table th { background: var(--primary); color: #fff; font-size: 11px; text-transform: uppercase; letter-spacing: 1px; padding: 11px 14px; text-align: left; }
+  .index-table td { padding: 10px 14px; font-size: 13px; border-bottom: 1px solid #f0e8d4; vertical-align: middle; }
+  .index-table tr:nth-child(even) td { background: #faf7f2; }
+
+  /* PRODUCT PAGE */
+  .product-page { padding: 40px 50px; page-break-after: always; background: var(--card); }
+  .section-header { background: var(--primary); color: var(--accent); font-size: 12px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; padding: 7px 16px; border-radius: 6px; display: inline-block; margin-bottom: 26px; }
+  .product-card { display: grid; grid-template-columns: 210px 1fr; gap: 28px; border: 1px solid var(--border); border-radius: 14px; overflow: hidden; background: var(--card); margin-bottom: 26px; box-shadow: 0 2px 10px rgba(26,58,42,0.07); }
+  .img-col { background: linear-gradient(180deg, #eef6f0 0%, #d8eed8 100%); display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 20px 16px; gap: 12px; }
+  .img-col img { width: 160px; height: 160px; object-fit: contain; border-radius: 10px; box-shadow: 0 4px 14px rgba(0,0,0,0.12); }
+  .img-placeholder { width: 160px; height: 160px; background: linear-gradient(135deg, #c8e8c8, #a8d8a8); border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 48px; }
+  .grade-badge { font-size: 20px; font-weight: 800; width: 48px; height: 48px; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: #fff; }
+  .gb-a { background: #2d6a4f; border: 3px solid #a0d8b0; }
+  .gb-b { background: #2472b5; border: 3px solid #a0c0e0; }
+  .gb-c { background: #c87a10; border: 3px solid #f0c870; }
+  .gb-d { background: #b82020; border: 3px solid #f0a0a0; }
+  .bar-lbl { font-size: 10px; color: var(--muted); text-align: center; margin-bottom: 4px; }
+  .bar-track { width: 100%; height: 7px; background: #c8e0c8; border-radius: 4px; overflow: hidden; }
+  .bar-a { height: 100%; background: linear-gradient(90deg,#2d6a4f,#5ab87a); border-radius: 4px; }
+  .bar-b { height: 100%; background: linear-gradient(90deg,#2472b5,#5a9ad9); border-radius: 4px; }
+
+  .info-col { padding: 20px 22px 20px 0; }
+  .pname { font-size: 17px; font-weight: 700; color: var(--primary); margin-bottom: 4px; }
+  .pmeta { font-size: 12px; color: var(--muted); margin-bottom: 12px; }
+  .pmeta span { margin-right: 12px; }
+  .ingr-label { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; color: var(--muted); margin-bottom: 7px; }
+  .ingr-list { display: flex; flex-direction: column; gap: 4px; margin-bottom: 10px; }
+  .ii { display: flex; align-items: flex-start; gap: 8px; padding: 6px 10px; border-radius: 6px; font-size: 12px; border: 1px solid transparent; }
+  .ii-safe  { background: #f4fdf6; border-color: #c0e8c0; }
+  .ii-worth { background: #fffbf0; border-color: #f0d880; }
+  .idot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; margin-top: 3px; }
+  .idot-safe  { background: #2d8a5a; }
+  .idot-worth { background: #e08a00; }
+  .iname { font-weight: 600; color: #1c1a14; }
+  .inote { font-size: 11px; color: #7a6040; margin-top: 1px; }
+  .verdict { margin-top: 10px; padding: 9px 12px; border-radius: 6px; font-size: 12px; }
+  .v-good { background: #e8f5e9; border-left: 4px solid #2d6a4f; color: #1a3a1a; }
+  .v-warn { background: #fff8e6; border-left: 4px solid #c87a10; color: #4a3000; }
+
+  @media print { .cover, .index-page, .product-page { page-break-after: always; } }
+</style>
+</head>
+<body>
+
+<!-- COVER -->
+<div class="cover">
+  <div class="cover-icon">🌿</div>
+  <div class="sub">Ohria Ayurveda</div>
+  <h1>Ingredient Report</h1>
+  <div class="tagline">Classical Ayurveda · Zero Synthetics · Full Transparency</div>
+  <div class="cover-badge">CheckKaro · Full Ingredient Breakdown</div>
+  <div class="cover-stats">
+    <div class="stat-box"><div class="num">20</div><div class="lbl">Products</div></div>
+    <div class="stat-box"><div class="num">10</div><div class="lbl">Face Care</div></div>
+    <div class="stat-box"><div class="num">7</div><div class="lbl">Hair Care</div></div>
+    <div class="stat-box"><div class="num">3</div><div class="lbl">Body Care</div></div>
+  </div>
+  <div class="cover-footer">CHECKKARO · For educational use only · Not a substitute for professional advice</div>
+</div>
+
+<!-- INDEX -->
+<div class="index-page">
+  <h2>Product Index — Ohria Ayurveda</h2>
+  <div class="index-subtitle">Ingredients sourced from Ohria Ayurveda official website. Not yet listed on INCIDecoder.</div>
+  <div class="brand-box">
+    <strong>About Ohria Ayurveda:</strong> Founded in 2018 by Rajni Ohri. 100% Ayurvedic formulations — no PEGs, no silicones, no sulfates, no parabens, no mineral oils, no synthetic fragrances. Products are inspired by classical Ayurvedic texts and use traceable Indian herbs including Kashmiri saffron. One of India's cleanest premium Ayurvedic brands.
+  </div>
+  <div class="legend">
+    <div style="display:flex;align-items:center;gap:6px"><span class="dot dot-safe"></span> Generally Safe</div>
+    <div style="display:flex;align-items:center;gap:6px"><span class="dot dot-worth"></span> Worth Knowing</div>
+    <div style="display:flex;align-items:center;gap:6px"><span class="grade g-a">A</span> All clean</div>
+    <div style="display:flex;align-items:center;gap:6px"><span class="grade g-b">B</span> ≤30% worth-knowing</div>
+  </div>
+  <table class="index-table">
+    <thead>
+      <tr><th>#</th><th>Product Name</th><th>Category</th><th>Key Notes</th><th>Grade</th></tr>
+    </thead>
+    <tbody>
+      <tr><td>1</td><td>Kumkumadi Skin Brightening Elixir (Face Oil)</td><td><span class="tag tag-face">Face Care</span></td><td>Pure Ayurvedic botanical oil blend</td><td><span class="grade g-a">A</span></td></tr>
+      <tr><td>2</td><td>Shata Dhauta Ghrita Ghee Cream</td><td><span class="tag tag-face">Face Care</span></td><td>3-ingredient pure A2 ghee cream</td><td><span class="grade g-a">A</span></td></tr>
+      <tr><td>3</td><td>Papaya & Yoghurt Facial Cleanser</td><td><span class="tag tag-face">Face Care</span></td><td>Gentle, enzyme-based cleanser</td><td><span class="grade g-a">A</span></td></tr>
+      <tr><td>4</td><td>Neem & Tulsi Face Wash</td><td><span class="tag tag-face">Face Care</span></td><td>Sulfate-free, antibacterial botanicals</td><td><span class="grade g-a">A</span></td></tr>
+      <tr><td>5</td><td>Tej Vardak Skin Glow Ubtan Powder</td><td><span class="tag tag-face">Face Care</span></td><td>100% natural powder, grain-based</td><td><span class="grade g-a">A</span></td></tr>
+      <tr><td>6</td><td>Rose & Pomegranate Cream</td><td><span class="tag tag-face">Face Care</span></td><td>Natural oils + antioxidant pomegranate</td><td><span class="grade g-a">A</span></td></tr>
+      <tr><td>7</td><td>Turmeric & Saffron Moisturizing Lotion</td><td><span class="tag tag-face">Face Care</span></td><td>Yashad Bhasma (zinc calx) — Ayurvedic mineral</td><td><span class="grade g-b">B</span></td></tr>
+      <tr><td>8</td><td>Himalayan Clay Masque</td><td><span class="tag tag-face">Face Care</span></td><td>Detoxifying clay + Tea Tree Oil</td><td><span class="grade g-a">A</span></td></tr>
+      <tr><td>9</td><td>Avbhasini Face Pack (Herbal Powder)</td><td><span class="tag tag-face">Face Care</span></td><td>100% natural powder with saffron</td><td><span class="grade g-a">A</span></td></tr>
+      <tr><td>10</td><td>Rose & Pomegranate Jaggery Lip Balm</td><td><span class="tag tag-face">Face Care</span></td><td>Beeswax + 5 natural oils</td><td><span class="grade g-a">A</span></td></tr>
+      <tr><td>11</td><td>Japa Pushpa Thailam (Anti Hair Fall Oil)</td><td><span class="tag tag-hair">Hair Care</span></td><td>Abrus precatorius (traditional herb, use as directed)</td><td><span class="grade g-b">B</span></td></tr>
+      <tr><td>12</td><td>Banyan Root Hair Tonic</td><td><span class="tag tag-hair">Hair Care</span></td><td>Vitamin-rich botanical tonic</td><td><span class="grade g-a">A</span></td></tr>
+      <tr><td>13</td><td>Japa Hair Cleanser (Shampoo)</td><td><span class="tag tag-hair">Hair Care</span></td><td>Sulfate-free, Amla + Shikakai + Reetha</td><td><span class="grade g-a">A</span></td></tr>
+      <tr><td>14</td><td>Keshya Hair Vitalizer (Rosemary)</td><td><span class="tag tag-hair">Hair Care</span></td><td>Hair growth serum with Rosemary</td><td><span class="grade g-a">A</span></td></tr>
+      <tr><td>15</td><td>Keshya Anti Frizz Hair Oil</td><td><span class="tag tag-hair">Hair Care</span></td><td>Mustard oil (erucic acid — worth noting)</td><td><span class="grade g-b">B</span></td></tr>
+      <tr><td>16</td><td>Moringa & Ylang Ylang Hair Serum</td><td><span class="tag tag-hair">Hair Care</span></td><td>Silicone-free heat protection</td><td><span class="grade g-a">A</span></td></tr>
+      <tr><td>17</td><td>Nimba Karanj Thailam (Anti-Dandruff Oil)</td><td><span class="tag tag-hair">Hair Care</span></td><td>Bakuchi Oil (photosensitising, avoid sun after use)</td><td><span class="grade g-b">B</span></td></tr>
+      <tr><td>18</td><td>Rose & Pomegranate Shower Oil</td><td><span class="tag tag-body">Body Care</span></td><td>Pure botanical oil blend</td><td><span class="grade g-a">A</span></td></tr>
+      <tr><td>19</td><td>Amrit Ras Shower Wash</td><td><span class="tag tag-body">Body Care</span></td><td>Ghee + Honey + Coconut-derived cleansers</td><td><span class="grade g-a">A</span></td></tr>
+      <tr><td>20</td><td>Amrit Ras Foot Balm</td><td><span class="tag tag-body">Body Care</span></td><td>Mustard + Frankincense + Castor</td><td><span class="grade g-b">B</span></td></tr>
+    </tbody>
+  </table>
+  <div style="margin-top:18px;padding:12px 16px;background:#e8f5ec;border-left:4px solid #2d6a4f;border-radius:8px;font-size:12.5px;color:#1a3a1a;">
+    <strong>✅ Ohria Ayurveda Brand Verdict:</strong> One of India's cleanest premium Ayurvedic brands. <strong>18 out of 20 products score Grade A</strong>. Zero synthetic preservatives, no sulfates, no parabens, no silicones, no PEGs. The 3 Grade B flags are for traditional Ayurvedic ingredients (Yashad Bhasma, Abrus precatorius, Bakuchi Oil) or Mustard Oil — all used in classical texts but worth knowing for modern context.
+  </div>
+</div>
+
+<!-- ═══ FACE CARE PAGE 1 ═══ -->
+<div class="product-page">
+  <div class="section-header">🌿 Face Care</div>
+
+  <!-- 1. Kumkumadi Elixir -->
+  <div class="product-card">
+    <div class="img-col">
+      <img src="https://www.ohriaayurveda.com/cdn/shop/files/face_page-03.jpg?v=1760519263&width=400" alt="Kumkumadi Elixir" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
+      <div class="img-placeholder" style="display:none">🌸</div>
+      <div class="grade-badge gb-a">A</div>
+      <div style="width:100%"><div class="bar-lbl">Safety: 100/100</div><div class="bar-track"><div class="bar-a" style="width:100%"></div></div></div>
+    </div>
+    <div class="info-col">
+      <div class="pname">Ohria Kumkumadi Skin Brightening Elixir</div>
+      <div class="pmeta"><span>Brand: Ohria Ayurveda</span><span>Category: Face Care</span><span>Type: Face Oil</span></div>
+      <div class="ingr-label">Ingredients (15)</div>
+      <div class="ingr-list">
+        <div class="ii ii-safe"><span class="idot idot-safe"></span><div><div class="iname">Sesamum Indicum (Sesame Oil)</div><div class="inote">Penetrating base oil — classic Ayurvedic carrier. Lightweight, antioxidant-rich.</div></div></div>
+        <div class="ii ii-safe"><span class="idot idot-safe"></span><div><div class="iname">Capra Aegagrus Hircus (Goat Milk)</div><div class="inote">Lactic acid exfoliant, skin-soothing, nourishing.</div></div></div>
+        <div class="ii ii-safe"><span class="idot idot-safe"></span><div><div class="iname">Crocus Sativus (Kashmiri Saffron)</div><div class="inote">Authentic Kashmiri-sourced. Brightens hyperpigmentation, powerful antioxidant.</div></div></div>
+        <div class="ii ii-safe"><span class="idot idot-safe"></span><div><div class="iname">Pterocarpus Santalinus (Lal Chandan / Red Sandalwood)</div></div></div>
+        <div class="ii ii-safe"><span class="idot idot-safe"></span><div><div class="iname">Rubia Cordifolia (Manjistha)</div><div class="inote">Blood purifier, anti-inflammatory, brightening.</div></div></div>
+        <div class="ii ii-safe"><span class="idot idot-safe"></span><div><div class="iname">Glycyrrhiza Glabra (Yashtimadhu / Licorice)</div><div class="inote">Inhibits tyrosinase — natural brightener, anti-inflammatory.</div></div></div>
+        <div class="ii ii-safe"><span class="idot idot-safe"></span><div><div class="iname">Laccifera Lacca (Laksha / Lac)</div></div></div>
+        <div class="ii ii-safe"><span class="idot idot-safe"></span><div><div class="iname">Ficus Benghalensis (Vat-Vriksha / Banyan)</div></div></div>
+        <div class="ii ii-safe"><span class="idot idot-safe"></span><div><div class="iname">Ficus Religiosa (Pakar)</div></div></div>
+        <div class="ii ii-safe"><span class="idot idot-safe"></span><div><div class="iname">Desmodium Gangeticum (Nilkand)</div></div></div>
+        <div class="ii ii-safe"><span class="idot idot-safe"></span><div><div class="iname">Nelumbo Nucifera (Kamal Kesar / Lotus)</div></div></div>
+        <div class="ii ii-safe"><span class="idot idot-safe"></span><div><div class="iname">Berberis Aristata (Daruhaldi / Tree Turmeric)</div><div class="inote">Berberine-rich — antimicrobial, brightening.</div></div></div>
+        <div class="ii ii-safe"><span class="idot idot-safe"></span><div><div class="iname">Vetiveria Zizanioides (Ushira / Vetiver)</div></div></div>
+        <div class="ii ii-safe"><span class="idot idot-safe"></span><div><div class="iname">Padmaka (Prunus Cerasoides)</div></div></div>
+        <div class="ii ii-safe"><span class="idot idot-safe"></span><div><div class="iname">Dashmool (10-Root Herbal Blend)</div><div class="inote">Classical Ayurvedic compound of 10 medicinal roots. Anti-inflammatory, rejuvenating.</div></div></div>
+      </div>
+      <div class="verdict v-good">✅ Grade A — Pure Ayurvedic oil. No synthetic additives, no fragrance allergens, no preservatives needed (oil format). This is Ohria's signature hero product — formulated per classical Kumkumadi text. Suitable for all skin types; best as overnight treatment.</div>
+    </div>
+  </div>
+
+  <!-- 2. Shata Dhauta Ghrita -->
+  <div class="product-card">
+    <div class="img-col">
+      <img src="https://www.ohriaayurveda.com/cdn/shop/files/WhatsApp_Image_2026-06-19_at_11.33.25_AM.jpg?v=1781849481&width=400" alt="Shata Dhauta Ghrita" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
+      <div class="img-placeholder" style="display:none">🧈</div>
+      <div class="grade-badge gb-a">A</div>
+      <div style="width:100%"><div class="bar-lbl">Safety: 100/100</div><div class="bar-track"><div class="bar-a" style="width:100%"></div></div></div>
+    </div>
+    <div class="info-col">
+      <div class="pname">Ohria Shata Dhauta Ghrita Harshringar Ghee Cream</div>
+      <div class="pmeta"><span>Brand: Ohria Ayurveda</span><span>Category: Face Care</span><span>Type: Face Cream</span></div>
+      <div class="ingr-label">Ingredients (3)</div>
+      <div class="ingr-list">
+        <div class="ii ii-safe"><span class="idot idot-safe"></span><div><div class="iname">A2 Clarified Cow's Butter (A2 Ghee) — 80%</div><div class="inote">"Shata Dhauta" = washed 100 times with water to create a silky, whipped texture. A2 ghee (Gir cow) contains conjugated linoleic acid, butyric acid, fat-soluble vitamins A, D, E, K. Ancient Ayurvedic face cream base.</div></div></div>
+        <div class="ii ii-safe"><span class="idot idot-safe"></span><div><div class="iname">Harshringar Flower Distillate (Nyctanthes Arbortristis) — 19%</div><div class="inote">Night-blooming jasmine water. Anti-inflammatory, analgesic, antioxidant. Traditionally used for joint pain and skin conditions.</div></div></div>
+        <div class="ii ii-safe"><span class="idot idot-safe"></span><div><div class="iname">Harshringar Flower Oil (Nyctanthes Arbortristis) — 1%</div></div></div>
+      </div>
+      <div class="verdict v-good">✅ Grade A — Possibly the simplest and purest face cream on this list. Just 3 ingredients, all 100% natural. A living example of classical Ayurvedic skincare. No water, no emulsifiers, no preservatives. Not suitable for vegan users (dairy).</div>
+    </div>
+  </div>
+</div>
+
+<!-- FACE PAGE 2 -->
+<div class="product-page">
+  <div class="section-header">🌿 Face Care (continued)</div>
+
+  <!-- 3. Papaya Yoghurt Cleanser -->
+  <div class="product-card">
+    <div class="img-col">
+      <img src="https://www.ohriaayurveda.com/cdn/shop/files/Untitled-3-19.jpg?v=1762244852&width=400" alt="Papaya Yoghurt Cleanser" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
+      <div class="img-placeholder" style="display:none">🍈</div>
+      <div class="grade-badge gb-a">A</div>
+      <div style="width:100%"><div class="bar-lbl">Safety: 100/100</div><div class="bar-track"><div class="bar-a" style="width:100%"></div></div></div>
+    </div>
+    <div class="info-col">
+      <div class="pname">Ohria Papaya & Yoghurt Facial Cleanser</div>
+      <div class="pmeta"><span>Brand: Ohria Ayurveda</span><span>Category: Face Care</span><span>Type: Liquid Cleanser</span></div>
+      <div class="ingr-label">Ingredients (11)</div>
+      <div class="ingr-list">
+        <div class="ii ii-safe"><span class="idot idot-safe"></span><div><div class="iname">Carica Papaya (Papaya) — 6%</div><div class="inote">Contains papain enzyme — natural chemical exfoliant. Breaks down dead skin cells gently.</div></div></div>
+        <div class="ii ii-safe"><span class="idot idot-safe"></span><div><div class="iname">Lactobacillus Acidophilus (Yoghurt) — 4%</div><div class="inote">Lactic acid source. Natural AHA exfoliant. Probiotics soothe skin barrier.</div></div></div>
+        <div class="ii ii-safe"><span class="idot idot-safe"></span><div><div class="iname">Glycerin — 5%</div><div class="inote">Plant-derived humectant. Draws moisture to skin.</div></div></div>
+        <div class="ii ii-safe"><span class="idot idot-safe"></span><div><div class="iname">Helianthus Annuus (Sunflower Oil) — 3%</div></div></div>
+        <div class="ii ii-safe"><span class="idot idot-safe"></span><div><div class="iname">Rosa Sinensis (Rose Water) — 10%</div></div></div>
+        <div class="ii ii-safe"><span class="idot idot-safe"></span><div><div class="iname">Floral Water (Base) — 62.8%</div></div></div>
+        <div class="ii ii-safe"><span class="idot idot-safe"></span><div><div class="iname">Cocos Nucifera Derivatives (Coconut-derived Surfactant) — 6%</div><div class="inote">Natural coconut-derived cleansing agent. Mild, biodegradable.</div></div></div>
+        <div class="ii ii-safe"><span class="idot idot-safe"></span><div><div class="iname">Xanthomonas Camprestris (Xanthan Gum) — 0.2%</div></div></div>
+        <div class="ii ii-safe"><span class="idot idot-safe"></span><div><div class="iname">Rosa Sinensis Flower Extract (Rose Extract) — 1%</div></div></div>
+        <div class="ii ii-safe"><span class="idot idot-safe"></span><div><div class="iname">Prunus Armeniaca (Apricot Oil) — 1%</div></div></div>
+        <div class="ii ii-safe"><span class="idot idot-safe"></span><div><div class="iname">Glycine Soja (Soya Extract) — 1%</div></div></div>
+      </div>
+      <div class="verdict v-good">✅ Grade A — Enzyme-based gentle cleanser. Papain + Lactic acid provide dual chemical exfoliation. No sulfates, no synthetic fragrances. Excellent for dull, dry, or sensitive skin.</div>
+    </div>
+  </div>
+
+  <!-- 4. Neem Tulsi Face Wash -->
+  <div class="product-card">
+    <div class="img-col">
+      <img src="https://www.ohriaayurveda.com/cdn/shop/files/WhatsApp_Image_2026-01-23_at_11.06.40_1.jpg?v=1774086597&width=400" alt="Neem Tulsi Face Wash" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
+      <div class="img-placeholder" style="display:none">🌱</div>
+      <div class="grade-badge gb-a">A</div>
+      <div style="width:100%"><div class="bar-lbl">Safety: 100/100</div><div class="bar-track"><div class="bar-a" style="width:100%"></div></div></div>
+    </div>
+    <div class="info-col">
+      <div class="pname">Ohria Neem & Tulsi Face Wash</div>
+      <div class="pmeta"><span>Brand: Ohria Ayurveda</span><span>Category: Face Care</span><span>Type: Liquid Cleanser</span></div>
+      <div class="ingr-label">Ingredients (12)</div>
+      <div class="ingr-list">
+        <div class="ii ii-safe"><span class="idot idot-safe"></span><div><div class="iname">Azadirachta Indica (Neem Oil) — 3%</div><div class="inote">Antibacterial, antifungal. Effective for acne-causing bacteria (P. acnes).</div></div></div>
+        <div class="ii ii-safe"><span class="idot idot-safe"></span><div><div class="iname">Ocimum Tenuiflorum (Tulsi / Holy Basil Extract) — 9%</div><div class="inote">Antimicrobial, anti-inflammatory, adaptogenic.</div></div></div>
+        <div class="ii ii-safe"><span class="idot idot-safe"></span><div><div class="iname">Cocos Nucifera Derivatives (Coconut Cleansers) — 24%</div><div class="inote">Mild natural surfactants derived from coconut. Sulfate-free.</div></div></div>
+        <div class="ii ii-safe"><span class="idot idot-safe"></span><div><div class="iname">Aloe Barbadensis Gel (Aloe Vera Gel) — 10%</div></div></div>
+        <div class="ii ii-safe"><span class="idot idot-safe"></span><div><div class="iname">Triticum Sativum (Wheat Extract) — 2%</div></div></div>
+        <div class="ii ii-safe"><span class="idot idot-safe"></span><div><div class="iname">Cyamopsis Tetragonoloba (Guar Gum) — 0.5%</div></div></div>
+        <div class="ii ii-safe"><span class="idot idot-safe"></span><div><div class="iname">Azadirachta Indica (Neem Water) — 15%</div></div></div>
+        <div class="ii ii-safe"><span class="idot idot-safe"></span><div><div class="iname">Aloe Barbadensis (Aloe Vera Juice) — 10%</div></div></div>
+        <div class="ii ii-safe"><span class="idot idot-safe"></span><div><div class="iname">Mentha Sp. (Peppermint Essential Oil) — 0.5%</div></div></div>
+        <div class="ii ii-safe"><span class="idot idot-safe"></span><div><div class="iname">Hemidesmus Indicus (Anantmool Extract) — 4%</div><div class="inote">Traditional blood purifier. Anti-inflammatory for oily/acne skin.</div></div></div>
+        <div class="ii ii-safe"><span class="idot idot-safe"></span><div><div class="iname">Camellia Sinensis (Green Tea Extract) — 13%</div><div class="inote">Antioxidant. EGCG reduces sebum production.</div></div></div>
+        <div class="ii ii-safe"><span class="idot idot-safe"></span><div><div class="iname">Rosa Sinensis (Rose Extract) — 1%</div></div></div>
+      </div>
+      <div class="verdict v-good">✅ Grade A — Antibacterial, anti-acne face wash with zero synthetic additives. Neem + Tulsi + Green Tea triple action against acne bacteria. No SLS, no parabens, no artificial colors or fragrance. Ideal for oily, combination, and acne-prone skin.</div>
+    </div>
+  </div>
+</div>
+
+<!-- FACE PAGE 3 -->
+<div class="product-page">
+  <div class="section-header">🌿 Face Care (continued)</div>
+
+  <!-- 5. Tej Vardak Ubtan -->
+  <div class="product-card">
+    <div class="img-col">
+      <img src="https://www.ohriaayurveda.com/cdn/shop/products/Tej-Vardak-Ubtan.jpg" alt="Tej Vardak Ubtan" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
+      <div class="img-placeholder" style="display:none">🌾</div>
+      <div class="grade-badge gb-a">A</div>
+      <div style="width:100%"><div class="bar-lbl">Safety: 100/100</div><div class="bar-track"><div class="bar-a" style="width:100%"></div></div></div>
+    </div>
+    <div class="info-col">
+      <div class="pname">Ohria Tej Vardak Skin Glow Face Wash Ubtan Powder</div>
+      <div class="pmeta"><span>Brand: Ohria Ayurveda</span><span>Category: Face Care</span><span>Type: Dry Powder Cleanser</span></div>
+      <div class="ingr-label">Ingredients (15)</div>
+      <div class="ingr-list">
+        <div class="ii ii-safe"><span class="idot idot-safe"></span><div><div class="iname">Curcuma Longa (Haridra / Turmeric)</div><div class="inote">Anti-inflammatory, antibacterial, brightening. Curcumin inhibits melanin.</div></div></div>
+        <div class="ii ii-safe"><span class="idot idot-safe"></span><div><div class="iname">Rosa Sinensis (Rose Petal Powder)</div></div></div>
+        <div class="ii ii-safe"><span class="idot idot-safe"></span><div><div class="iname">Musa Sapientum (Banana Extract Powder)</div><div class="inote">Rich in potassium and vitamins. Softening, moisturising.</div></div></div>
+        <div class="ii ii-safe"><span class="idot idot-safe"></span><div><div class="iname">Lactobacillus Acidophilus (Yoghurt Powder)</div><div class="inote">Natural AHA source. Gentle exfoliation.</div></div></div>
+        <div class="ii ii-safe"><span class="idot idot-safe"></span><div><div class="iname">Carica Papaya (Papaya Powder)</div><div class="inote">Papain enzyme — natural chemical exfoliant.</div></div></div>
+        <div class="ii ii-safe"><span class="idot idot-safe"></span><div><div class="iname">Azadirachta Indica (Neem Powder)</div></div></div>
+        <div class="ii ii-safe"><span class="idot idot-safe"></span><div><div class="iname">Cicer Arietinum (Gram Flour / Besan)</div><div class="inote">Traditional Indian skin cleanser and brightener.</div></div></div>
+        <div class="ii ii-safe"><span class="idot idot-safe"></span><div><div class="iname">Capra Aegagrus Hircus (Goat Milk Powder)</div></div></div>
+        <div class="ii ii-safe"><span class="idot idot-safe"></span><div><div class="iname">Citrus Sinensis (Orange Peel Powder)</div><div class="inote">Vitamin C source. Brightening, natural AHA.</div></div></div>
+        <div class="ii ii-safe"><span class="idot idot-safe"></span><div><div class="iname">Lens Culinaris (Masoor Dal / Red Lentil)</div></div></div>
+        <div class="ii ii-safe"><span class="idot idot-safe"></span><div><div class="iname">Cocos Nucifera (Coconut Powder)</div></div></div>
+        <div class="ii ii-safe"><span class="idot idot-safe"></span><div><div class="iname">Calcium Bentonite (Multani Mitti Powder)</div><div class="inote">Clay. Absorbs excess oil and impurities.</div></div></div>
+        <div class="ii ii-safe"><span class="idot idot-safe"></span><div><div class="iname">Oryza Sativa (Navara Rice Powder)</div><div class="inote">Ayurvedic medicinal rice variety. Skin brightening.</div></div></div>
+        <div class="ii ii-safe"><span class="idot idot-safe"></span><div><div class="iname">Hordeum Vulgare (Barley Flour)</div></div></div>
+        <div class="ii ii-safe"><span class="idot idot-safe"></span><div><div class="iname">Santalum Album (Sveta Chandana / White Sandalwood)</div></div></div>
+      </div>
+      <div class="verdict v-good">✅ Grade A — A full-spectrum ubtan powder cleanser. Mix with milk, rose water, or water. No preservatives needed (dry powder). 15 Ayurvedic ingredients — this is kitchen chemistry elevated. Excellent for weekly glow treatment.</div>
+    </div>
+  </div>
+
+  <!-- 6. Rose Pomegranate Cream -->
+  <div class="product-card">
+    <div class="img-col">
+      <img src="https://www.ohriaayurveda.com/cdn/shop/files/Artboard1copy26.png?v=1751961898&width=400" alt="Rose Pomegranate Cream" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
+      <div class="img-placeholder" style="display:none">🌹</div>
+      <div class="grade-badge gb-a">A</div>
+      <div style="width:100%"><div class="bar-lbl">Safety: 100/100</div><div class="bar-track"><div class="bar-a" style="width:100%"></div></div></div>
+    </div>
+    <div class="info-col">
+      <div class="pname">Ohria Rose & Pomegranate Cream</div>
+      <div class="pmeta"><span>Brand: Ohria Ayurveda</span><span>Category: Face Care</span><span>Type: Face Moisturiser</span></div>
+      <div class="ingr-label">Ingredients (11)</div>
+      <div class="ingr-list">
+        <div class="ii ii-safe"><span class="idot idot-safe"></span><div><div class="iname">Punica Granatum (Pomegranate Extract)</div><div class="inote">Rich in Punicalagins and Punicic Acid. Anti-ageing, stimulates collagen, high antioxidant.</div></div></div>
+        <div class="ii ii-safe"><span class="idot idot-safe"></span><div><div class="iname">Triticum Sativum (Wheat Germ Oil)</div><div class="inote">Natural Vitamin E source. Repairs and nourishes.</div></div></div>
+        <div class="ii ii-safe"><span class="idot idot-safe"></span><div><div class="iname">Cocos Nucifera Derivatives (Coconut-based emulsifier)</div></div></div>
+        <div class="ii ii-safe"><span class="idot idot-safe"></span><div><div class="iname">Triticum Sativum (Wheat Germ Extract)</div></div></div>
+        <div class="ii ii-safe"><span class="idot idot-safe"></span><div><div class="iname">Rosa Damascena (Rose Water)</div></div></div>
+        <div class="ii ii-safe"><span class="idot idot-safe"></span><div><div class="iname">Prunus Armeniaca (Apricot Oil)</div><div class="inote">Lightweight, absorbs quickly. Rich in oleic acid.</div></div></div>
+        <div class="ii ii-safe"><span class="idot idot-safe"></span><div><div class="iname">Prunus Amygdalus (Sweet Almond Oil)</div></div></div>
+        <div class="ii ii-safe"><span class="idot idot-safe"></span><div><div class="iname">Withania Somnifera (Ashwagandha Oil)</div><div class="inote">Adaptogen. Anti-stress, anti-ageing for skin.</div></div></div>
+        <div class="ii ii-safe"><span class="idot idot-safe"></span><div><div class="iname">Rosa Damascena (Rose Extract)</div></div></div>
+        <div class="ii ii-safe"><span class="idot idot-safe"></span><div><div class="iname">Xanthan Gum (Natural Thickener)</div></div></div>
+        <div class="ii ii-safe"><span class="idot idot-safe"></span><div><div class="iname">Glycerin</div></div></div>
+      </div>
+      <div class="verdict v-good">✅ Grade A — Pomegranate + Ashwagandha + Wheat Germ = potent anti-ageing combination. No synthetic preservatives, no fragrance additives. Suitable for dry, mature, and normal skin.</div>
+    </div>
+  </div>
+</div>
+
+<!-- FACE PAGE 4 -->
+<div class="product-page">
+  <div class="section-header">🌿 Face Care (continued)</div>
+
+  <!-- 7. Turmeric Saffron Lotion -->
+  <div class="product-card">
+    <div class="img-col">
+      <img src="https://www.ohriaayurveda.com/cdn/shop/files/face_page-06_5ac8f1b3-c431-4b85-9606-1309ddc98efe.jpg?v=1762330385&width=400" alt="Turmeric Saffron Lotion" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
+      <div class="img-placeholder" style="display:none">🌼</div>
+      <div class="grade-badge gb-b">B</div>
+      <div style="width:100%"><div class="bar-lbl">Safety: 84/100</div><div class="bar-track"><div class="bar-b" style="width:84%"></div></div></div>
+    </div>
+    <div class="info-col">
+      <div class="pname">Ohria Turmeric & Saffron Moisturizing Lotion</div>
+      <div class="pmeta"><span>Brand: Ohria Ayurveda</span><span>Category: Face Care</span><span>Type: Face Lotion</span></div>
+      <div class="ingr-label">Ingredients (17)</div>
+      <div class="ingr-list">
+        <div class="ii ii-safe"><span class="idot idot-safe"></span><div><div class="iname">Aloe Barbadensis (Aloe Vera Gel + Juice) — 10%</div></div></div>
+        <div class="ii ii-safe"><span class="idot idot-safe"></span><div><div class="iname">Garcinia Indica (Kokum) — 2%</div><div class="inote">Kokum butter — deeply moisturising, non-comedogenic.</div></div></div>
+        <div class="ii ii-safe"><span class="idot idot-safe"></span><div><div class="iname">Curcuma Longa (Turmeric) — 2%</div></div></div>
+        <div class="ii ii-safe"><span class="idot idot-safe"></span><div><div class="iname">Glycerin — 4%</div></div></div>
+        <div class="ii ii-safe"><span class="idot idot-safe"></span><div><div class="iname">Glycine Soja (Soya Extract) — 1%</div></div></div>
+        <div class="ii ii-safe"><span class="idot idot-safe"></span><div><div class="iname">Rosa Damascena (Rose Extract) — 2%</div></div></div>
+        <div class="ii ii-safe"><span class="idot idot-safe"></span><div><div class="iname">Floral Water Base — 51.8%</div></div></div>
+        <div class="ii ii-safe"><span class="idot idot-safe"></span><div><div class="iname">Curcumin Extract — 0.2%</div></div></div>
+        <div class="ii ii-safe"><span class="idot idot-safe"></span><div><div class="iname">Cocos Nucifera Derivatives (Coconut) — 7%</div></div></div>
+        <div class="ii ii-safe"><span class="idot idot-safe"></span><div><div class="iname">Sesamum Indicum (Sesame Oil) — 3%</div></div></div>
+        <div class="ii ii-safe"><span class="idot idot-safe"></span><div><div class="iname">Triphala (Amalaki + Bibhitaki + Haritaki) — 1%</div><div class="inote">Classical Ayurvedic antioxidant triple-fruit compound.</div></div></div>
+        <div class="ii ii-safe"><span class="idot idot-safe"></span><div><div class="iname">Santalum Album (Sandalwood) — 1%</div></div></div>
+        <div class="ii ii-safe"><span class="idot idot-safe"></span><div><div class="iname">Crocus Sativus Water (Saffron Water) — 10%</div></div></div>
+        <div class="ii ii-safe"><span class="idot idot-safe"></span><div><div class="iname">Rubia Cordifolia (Manjistha) — 2%</div></div></div>
+        <div class="ii ii-worth"><span class="idot idot-worth"></span><div><div class="iname">Yashad Bhasma (Zinc Calx) — 2% ⚠</div><div class="inote">Classical Ayurvedic calcined zinc preparation. Antimicrobial, skin-healing. Regulated under ASU (Ayurveda, Siddha, Unani) medicine in India. Heavy metal preparations (Bhasma) undergo purification (Shodhana) before use. Safe as directed in classical texts; worth knowing for those unfamiliar with Ayurvedic minerals.</div></div></div>
+        <div class="ii ii-safe"><span class="idot idot-safe"></span><div><div class="iname">Kulanjana (Alpinia Galanga) — 1%</div></div></div>
+      </div>
+      <div class="verdict v-warn">⚠ Grade B — 16 clean ingredients + Yashad Bhasma (Ayurvedic zinc preparation). Bhasma is a legal, regulated ingredient under Indian Ayurvedic medicine — safe when properly prepared and used. Worth knowing if you prefer strictly non-mineral formulations.</div>
+    </div>
+  </div>
+
+  <!-- 8. Himalayan Clay Masque -->
+  <div class="product-card">
+    <div class="img-col">
+      <img src="https://www.ohriaayurveda.com/cdn/shop/products/Himalayan-Clay-Masque.jpg" alt="Himalayan Clay Masque" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
+      <div class="img-placeholder" style="display:none">🏔</div>
+      <div class="grade-badge gb-a">A</div>
+      <div style="width:100%"><div class="bar-lbl">Safety: 100/100</div><div class="bar-track"><div class="bar-a" style="width:100%"></div></div></div>
+    </div>
+    <div class="info-col">
+      <div class="pname">Ohria Himalayan Clay Masque</div>
+      <div class="pmeta"><span>Brand: Ohria Ayurveda</span><span>Category: Face Care</span><span>Type: Face Mask</span></div>
+      <div class="ingr-label">Ingredients (7)</div>
+      <div class="ingr-list">
+        <div class="ii ii-safe"><span class="idot idot-safe"></span><div><div class="iname">Himalayan Clay</div><div class="inote">Mineral-rich smectite clay from Himalayan deposits. Deep pore-cleansing, absorbs oil and toxins.</div></div></div>
+        <div class="ii ii-safe"><span class="idot idot-safe"></span><div><div class="iname">Azadirachta Indica (Neem Extract)</div></div></div>
+        <div class="ii ii-safe"><span class="idot idot-safe"></span><div><div class="iname">Cinnamomum Camphora (Camphor Extract)</div><div class="inote">Antiseptic, cooling. At low concentrations in rinse-off masks, well-tolerated.</div></div></div>
+        <div class="ii ii-safe"><span class="idot idot-safe"></span><div><div class="iname">Calendula Officinalis (Calendula Extract)</div><div class="inote">Anti-inflammatory, skin-soothing. Reduces redness post-masking.</div></div></div>
+        <div class="ii ii-safe"><span class="idot idot-safe"></span><div><div class="iname">Glycerin</div></div></div>
+        <div class="ii ii-safe"><span class="idot idot-safe"></span><div><div class="iname">Kaolin (White Clay)</div><div class="inote">Gentler than Himalayan clay. Combination of clays = effective without over-drying.</div></div></div>
+        <div class="ii ii-safe"><span class="idot idot-safe"></span><div><div class="iname">Bamboo Charcoal</div><div class="inote">Adsorbs impurities and excess sebum from pores.</div></div></div>
+        <div class="ii ii-safe"><span class="idot idot-safe"></span><div><div class="iname">Melaleuca Leucadendron (Tea Tree Essential Oil)</div><div class="inote">Clinically proven antibacterial. Effective against acne-causing P. acnes bacteria.</div></div></div>
+      </div>
+      <div class="verdict v-good">✅ Grade A — Clean detoxifying mask. Dual-clay + Charcoal + Tea Tree = effective deep cleanse. No synthetic additives. Use 1–2x per week. Avoid if skin is very dry or sensitised.</div>
+    </div>
+  </div>
+</div>
+
+<!-- FACE PAGE 5 -->
+<div class="product-page">
+  <div class="section-header">🌿 Face Care (continued)</div>
+
+  <!-- 9. Avbhasini Face Pack -->
+  <div class="product-card">
+    <div class="img-col">
+      <img src="https://www.ohriaayurveda.com/cdn/shop/products/Avbhasini-Face-Pack.jpg" alt="Avbhasini Face Pack" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
+      <div class="img-placeholder" style="display:none">🌺</div>
+      <div class="grade-badge gb-a">A</div>
+      <div style="width:100%"><div class="bar-lbl">Safety: 100/100</div><div class="bar-track"><div class="bar-a" style="width:100%"></div></div></div>
+    </div>
+    <div class="info-col">
+      <div class="pname">Ohria Avbhasini Face Pack (Herbal Powder)</div>
+      <div class="pmeta"><span>Brand: Ohria Ayurveda</span><span>Category: Face Care</span><span>Type: Dry Powder Face Pack</span></div>
+      <div class="ingr-label">Ingredients (11)</div>
+      <div class="ingr-list">
+        <div class="ii ii-safe"><span class="idot idot-safe"></span><div><div class="iname">Crocus Sativus (Saffron)</div><div class="inote">Kashmiri saffron. Brightening, antioxidant, anti-hyperpigmentation.</div></div></div>
+        <div class="ii ii-safe"><span class="idot idot-safe"></span><div><div class="iname">Rosa Damascena (Rose Petals)</div></div></div>
+        <div class="ii ii-safe"><span class="idot idot-safe"></span><div><div class="iname">Curcuma Longa (Haridra / Turmeric)</div></div></div>
+        <div class="ii ii-safe"><span class="idot idot-safe"></span><div><div class="iname">Inula Racemosa (Pushkar Mool)</div><div class="inote">Ayurvedic herb with anti-inflammatory properties.</div></div></div>
+        <div class="ii ii-safe"><span class="idot idot-safe"></span><div><div class="iname">Prunus Armeniaca (Apricot Khal / Kernel Powder)</div><div class="inote">Physical exfoliant. Softer than walnut shell.</div></div></div>
+        <div class="ii ii-safe"><span class="idot idot-safe"></span><div><div class="iname">Capra Aegagrus Hircus (Goat Milk Powder)</div></div></div>
+        <div class="ii ii-safe"><span class="idot idot-safe"></span><div><div class="iname">Santalum Album (Sveta Chandana / Sandalwood)</div></div></div>
+        <div class="ii ii-safe"><span class="idot idot-safe"></span><div><div class="iname">Citrus Sinensis (Orange Peel Powder)</div></div></div>
+        <div class="ii ii-safe"><span class="idot idot-safe"></span><div><div class="iname">Lens Culinaris (Masoor Dal / Red Lentil)</div></div></div>
+        <div class="ii ii-safe"><span class="idot idot-safe"></span><div><div class="iname">Prunus Amygdalus (Almond Powder)</div></div></div>
+        <div class="ii ii-safe"><span class="idot idot-safe"></span><div><div class="iname">Buchanania Lanzan (Chironji)</div><div class="inote">Ayurvedic ingredient — moisturising and brightening.</div></div></div>
+      </div>
+      <div class="verdict v-good">✅ Grade A — Saffron-powered Ayurvedic face pack. 100% natural powder — no preservatives needed. Mix with rose water, milk, or honey. Excellent for glow, brightening, and radiance. Use 1–2x per week.</div>
+    </div>
+  </div>
+
+  <!-- 10. Lip Balm -->
+  <div class="product-card">
+    <div class="img-col">
+      <img src="https://www.ohriaayurveda.com/cdn/shop/files/Artboard1_5a8f5153-40ca-4ea8-9c76-9fbb147b5430.png?v=1751962992&width=400" alt="Jaggery Lip Balm" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
+      <div class="img-placeholder" style="display:none">💋</div>
+      <div class="grade-badge gb-a">A</div>
+      <div style="width:100%"><div class="bar-lbl">Safety: 100/100</div><div class="bar-track"><div class="bar-a" style="width:100%"></div></div></div>
+    </div>
+    <div class="info-col">
+      <div class="pname">Ohria Rose & Pomegranate Jaggery Lip Balm</div>
+      <div class="pmeta"><span>Brand: Ohria Ayurveda</span><span>Category: Face Care</span><span>Type: Lip Care</span></div>
+      <div class="ingr-label">Ingredients (12)</div>
+      <div class="ingr-list">
+        <div class="ii ii-safe"><span class="idot idot-safe"></span><div><div class="iname">Cera Alba (Beeswax) — 12%</div><div class="inote">Natural emollient and lip barrier. Locks in moisture.</div></div></div>
+        <div class="ii ii-safe"><span class="idot idot-safe"></span><div><div class="iname">Prunus Persica (Peach Oil) — 15%</div></div></div>
+        <div class="ii ii-safe"><span class="idot idot-safe"></span><div><div class="iname">Sesamum Indicum (Sesame Oil) — 15%</div></div></div>
+        <div class="ii ii-safe"><span class="idot idot-safe"></span><div><div class="iname">Prunus Amygdalus (Sweet Almond Oil) — 10%</div></div></div>
+        <div class="ii ii-safe"><span class="idot idot-safe"></span><div><div class="iname">Juglans Regia (Walnut Oil) — 10%</div></div></div>
+        <div class="ii ii-safe"><span class="idot idot-safe"></span><div><div class="iname">Garcinia Indica (Ghruta / Clarified Cow's Butter) — 6%</div></div></div>
+        <div class="ii ii-safe"><span class="idot idot-safe"></span><div><div class="iname">Garcinia Indica (Kokum Butter) — 4%</div></div></div>
+        <div class="ii ii-safe"><span class="idot idot-safe"></span><div><div class="iname">Rosa Damascena (Rose Extract) — 5%</div></div></div>
+        <div class="ii ii-safe"><span class="idot idot-safe"></span><div><div class="iname">Punica Granatum (Pomegranate Extract) — 5%</div></div></div>
+        <div class="ii ii-safe"><span class="idot idot-safe"></span><div><div class="iname">Saccharum Officinarum (Jaggery / Natural Sugar) — 5%</div><div class="inote">Natural humectant and gentle lip exfoliant. Ayurvedic sweetener with trace minerals.</div></div></div>
+        <div class="ii ii-safe"><span class="idot idot-safe"></span><div><div class="iname">Prunus Armeniaca (Apricot Oil) — 5%</div></div></div>
+        <div class="ii ii-safe"><span class="idot idot-safe"></span><div><div class="iname">Triticum Aestivum (Wheat Germ Oil / Vitamin E) — 3%</div></div></div>
+      </div>
+      <div class="verdict v-good">✅ Grade A — Zero synthetic ingredients. 5 oils + Beeswax + Ghee + Kokum Butter = deeply nourishing lip balm. Jaggery as a natural humectant is a unique Ayurvedic touch. Not suitable for vegans (beeswax, ghee).</div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ HAIR CARE ═══ -->
+<div class="product-page">
+  <div class="section-header">💆 Hair Care</div>
+
+  <!-- 11. Japa Pushpa Thailam -->
+  <div class="product-card">
+    <div class="img-col">
+      <img src="https://www.ohriaayurveda.com/cdn/shop/files/HAIR-03.jpg?v=1760008370&width=400" alt="Japa Pushpa Thailam" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
+      <div class="img-placeholder" style="display:none">🌺</div>
+      <div class="grade-badge gb-b">B</div>
+      <div style="width:100%"><div class="bar-lbl">Safety: 84/100</div><div class="bar-track"><div class="bar-b" style="width:84%"></div></div></div>
+    </div>
+    <div class="info-col">
+      <div class="pname">Ohria Japa Pushpa Thailam (Anti Hair Fall Oil)</div>
+      <div class="pmeta"><span>Brand: Ohria Ayurveda</span><span>Category: Hair Care</span><span>Type: Hair Oil</span></div>
+      <div class="ingr-label">Ingredients (13)</div>
+      <div class="ingr-list">
+        <div class="ii ii-safe"><span class="idot idot-safe"></span><div><div class="iname">Sesamum Indicum Til Taila (Sesame Oil) — 10%</div><div class="inote">Penetrating base oil. UV protective, strengthening.</div></div></div>
+        <div class="ii ii-safe"><span class="idot idot-safe"></span><div><div class="iname">Indigofera Tinctoria (Neeli / Indigo) — 10%</div><div class="inote">Prevents premature greying, strengthens hair shaft.</div></div></div>
+        <div class="ii ii-safe"><span class="idot idot-safe"></span><div><div class="iname">Eclipta Prostrata (Bringaraja / Bhringraj) — 10%</div><div class="inote">The "king of herbs for hair" — promotes hair growth, prevents greying.</div></div></div>
+        <div class="ii ii-safe"><span class="idot idot-safe"></span><div><div class="iname">Cardiospermum Halicacabum (Sathakrathulatha / Balloon Vine) — 10%</div><div class="inote">Anti-inflammatory, anti-dandruff.</div></div></div>
+        <div class="ii ii-safe"><span class="idot idot-safe"></span><div><div class="iname">Phyllanthus Emblica (Dhatriphala / Amla) — 10%</div><div class="inote">Vitamin C-rich. Strengthens roots, prevents breakage.</div></div></div>
+        <div class="ii ii-safe"><span class="idot idot-safe"></span><div><div class="iname">Glycyrrhiza Glabra (Madhuka / Licorice) — 1%</div></div></div>
+        <div class="ii ii-worth"><span class="idot idot-worth"></span><div><div class="iname">Abrus Precatorius (Gunja) — 1% ⚠</div><div class="inote">Traditional Ayurvedic herb (wild licorice root extract). The SEEDS contain abrin (a toxin), but the root extract used in classical formulations is considered safe at therapeutic concentrations. Used in Ayurvedic practice for centuries. Regulated ASU ingredient.</div></div></div>
+        <div class="ii ii-safe"><span class="idot idot-safe"></span><div><div class="iname">Capra Aegagrus Hircus (Ajaksheera / Goat Milk) — 10%</div></div></div>
+        <div class="ii ii-safe"><span class="idot idot-safe"></span><div><div class="iname">Bubalus Bubalis (Mahisheeksheera / Buffalo Milk) — 10%</div></div></div>
+        <div class="ii ii-safe"><span class="idot idot-safe"></span><div><div class="iname">Bos Taurus (Goksira / Cow Milk) — 10%</div></div></div>
+        <div class="ii ii-safe"><span class="idot idot-safe"></span><div><div class="iname">Cocos Nucifera (Keraksheera / Coconut Milk) — 10%</div></div></div>
+        <div class="ii ii-safe"><span class="idot idot-safe"></span><div><div class="iname">Berberis Aristata (Anjana / Tree Turmeric) — 1%</div></div></div>
+        <div class="ii ii-safe"><span class="idot idot-safe"></span><div><div class="iname">Hibiscus Rosa-Sinensis (Japa Pushpa / Hibiscus) — 7%</div><div class="inote">Keratin protectant. Reduces hair fall, adds shine.</div></div></div>
+      </div>
+      <div class="verdict v-warn">⚠ Grade B — Classical Ayurvedic formulation with 4 types of milk base (Goat + Buffalo + Cow + Coconut). Excellent for hair fall. Abrus precatorius root extract (not seeds) is the traditional Ayurvedic use — safe in formulated products. Avoid if allergic to legumes.</div>
+    </div>
+  </div>
+
+  <!-- 12. Banyan Root Hair Tonic -->
+  <div class="product-card">
+    <div class="img-col">
+      <img src="https://www.ohriaayurveda.com/cdn/shop/files/Artboard1copy22.png?v=1751967609&width=400" alt="Banyan Root Hair Tonic" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
+      <div class="img-placeholder" style="display:none">🌳</div>
+      <div class="grade-badge gb-a">A</div>
+      <div style="width:100%"><div class="bar-lbl">Safety: 100/100</div><div class="bar-track"><div class="bar-a" style="width:100%"></div></div></div>
+    </div>
+    <div class="info-col">
+      <div class="pname">Ohria Banyan Root Hair Tonic</div>
+      <div class="pmeta"><span>Brand: Ohria Ayurveda</span><span>Category: Hair Care</span><span>Type: Hair Growth Tonic / Serum</span></div>
+      <div class="ingr-label">Ingredients (10)</div>
+      <div class="ingr-list">
+        <div class="ii ii-safe"><span class="idot idot-safe"></span><div><div class="iname">Ficus Benghalensis (Banyan Root) — 25%</div><div class="inote">Highest proportion. Astringent, scalp-tightening, root-strengthening. Classical Ayurvedic hair tonic ingredient.</div></div></div>
+        <div class="ii ii-safe"><span class="idot idot-safe"></span><div><div class="iname">Hibiscus Rosa-Sinensis (Hibiscus Leaves Extract) — 15%</div><div class="inote">Rich in Vitamin C. Keratin protectant. Reduces hair fall and thinning.</div></div></div>
+        <div class="ii ii-safe"><span class="idot idot-safe"></span><div><div class="iname">Azadirachta Indica (Neem Extract) — 14%</div></div></div>
+        <div class="ii ii-safe"><span class="idot idot-safe"></span><div><div class="iname">Trigonella Foenum-Graecum (Methi / Fenugreek) — 10%</div><div class="inote">Rich in nicotinic acid and protein. Reduces hair fall significantly.</div></div></div>
+        <div class="ii ii-safe"><span class="idot idot-safe"></span><div><div class="iname">Emblica Officinalis (Amla) — 10%</div></div></div>
+        <div class="ii ii-safe"><span class="idot idot-safe"></span><div><div class="iname">Aloe Barbadensis (Aloe Vera Extract) — 10%</div></div></div>
+        <div class="ii ii-safe"><span class="idot idot-safe"></span><div><div class="iname">Centella Asiatica (Brahmi) — 5%</div><div class="inote">Promotes hair follicle proliferation. Strengthens scalp skin.</div></div></div>
+        <div class="ii ii-safe"><span class="idot idot-safe"></span><div><div class="iname">Triticum Sativum (Wheat Germ Extract) — 1%</div></div></div>
+        <div class="ii ii-safe"><span class="idot idot-safe"></span><div><div class="iname">Vitamin E (from Green Tea)</div></div></div>
+        <div class="ii ii-safe"><span class="idot idot-safe"></span><div><div class="iname">Vitamin B5 / Panthenol (from Aloe Vera)</div></div></div>
+      </div>
+      <div class="verdict v-good">✅ Grade A — Completely botanical, vitamin-rich hair tonic. Banyan Root + Methi + Brahmi + Amla = a comprehensive anti-hair fall treatment. No synthetic actives, no alcohol, no silicones. Apply to scalp, leave on, or use as a pre-wash treatment.</div>
+    </div>
+  </div>
+</div>
+
+<!-- HAIR PAGE 2 -->
+<div class="product-page">
+  <div class="section-header">💆 Hair Care (continued)</div>
+
+  <!-- 13. Japa Hair Cleanser -->
+  <div class="product-card">
+    <div class="img-col">
+      <img src="https://www.ohriaayurveda.com/cdn/shop/files/WhatsApp_Image_2026-03-20_at_11.52.35_AM.jpg?v=1773988037&width=400" alt="Japa Hair Cleanser" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
+      <div class="img-placeholder" style="display:none">🌴</div>
+      <div class="grade-badge gb-a">A</div>
+      <div style="width:100%"><div class="bar-lbl">Safety: 100/100</div><div class="bar-track"><div class="bar-a" style="width:100%"></div></div></div>
+    </div>
+    <div class="info-col">
+      <div class="pname">Ohria Japa Hair Cleanser (Shampoo)</div>
+      <div class="pmeta"><span>Brand: Ohria Ayurveda</span><span>Category: Hair Care</span><span>Type: Shampoo</span></div>
+      <div class="ingr-label">Ingredients (13)</div>
+      <div class="ingr-list">
+        <div class="ii ii-safe"><span class="idot idot-safe"></span><div><div class="iname">Hibiscus Rosa-Sinensis (Hibiscus Extract) — 25%</div><div class="inote">Largest proportion. Provides natural slip and shine. Reduces hair fall.</div></div></div>
+        <div class="ii ii-safe"><span class="idot idot-safe"></span><div><div class="iname">Cocos Nucifera Derivatives (Coconut Cleansers) — 35%</div><div class="inote">Mild coconut-derived surfactants — sulfate-free base.</div></div></div>
+        <div class="ii ii-safe"><span class="idot idot-safe"></span><div><div class="iname">Apis Indica (Honey) — 10%</div><div class="inote">Natural humectant. Adds moisture and shine.</div></div></div>
+        <div class="ii ii-safe"><span class="idot idot-safe"></span><div><div class="iname">Cocos Nucifera (Coconut Milk) — 7%</div></div></div>
+        <div class="ii ii-safe"><span class="idot idot-safe"></span><div><div class="iname">Aloe Barbadensis (Aloe Vera Gel) — 5%</div></div></div>
+        <div class="ii ii-safe"><span class="idot idot-safe"></span><div><div class="iname">Glycerin — 5%</div></div></div>
+        <div class="ii ii-safe"><span class="idot idot-safe"></span><div><div class="iname">Emblica Officinalis (Amla) — 1.5%</div></div></div>
+        <div class="ii ii-safe"><span class="idot idot-safe"></span><div><div class="iname">Acacia Concinna (Shikakai) — 5%</div><div class="inote">Natural saponin-based cleanser. Traditional Indian shampoo herb.</div></div></div>
+        <div class="ii ii-safe"><span class="idot idot-safe"></span><div><div class="iname">Sapindus Mukorossi (Reetha / Soapnut) — 2%</div><div class="inote">Natural lathering agent with saponins. Traditional shampoo ingredient.</div></div></div>
+        <div class="ii ii-safe"><span class="idot idot-safe"></span><div><div class="iname">Prunus Armeniaca (Apricot Oil) — 2%</div></div></div>
+        <div class="ii ii-safe"><span class="idot idot-safe"></span><div><div class="iname">Juglans Regia (Walnut Extract) — 2%</div></div></div>
+        <div class="ii ii-safe"><span class="idot idot-safe"></span><div><div class="iname">Cyamopsis Tetragonoloba (Guar Gum) — 0.2%</div></div></div>
+        <div class="ii ii-safe"><span class="idot idot-safe"></span><div><div class="iname">Triticum Sativum (Wheat Germ Extract) — 0.3%</div></div></div>
+      </div>
+      <div class="verdict v-good">✅ Grade A — One of the cleanest shampoos reviewed. No SLS/SLES, no parabens, no silicones, no fragrance allergens. Amla + Shikakai + Reetha = traditional Indian hair-cleansing trio. Hibiscus as the base adds conditioning. Excellent for all hair types.</div>
+    </div>
+  </div>
+
+  <!-- 14. Keshya Hair Vitalizer -->
+  <div class="product-card">
+    <div class="img-col">
+      <img src="https://www.ohriaayurveda.com/cdn/shop/files/Artboard1copy19.png?v=1751962204&width=400" alt="Keshya Hair Vitalizer" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
+      <div class="img-placeholder" style="display:none">🌿</div>
+      <div class="grade-badge gb-a">A</div>
+      <div style="width:100%"><div class="bar-lbl">Safety: 100/100</div><div class="bar-track"><div class="bar-a" style="width:100%"></div></div></div>
+    </div>
+    <div class="info-col">
+      <div class="pname">Ohria Keshya Hair Vitalizer (Rosemary)</div>
+      <div class="pmeta"><span>Brand: Ohria Ayurveda</span><span>Category: Hair Care</span><span>Type: Hair Growth Serum</span></div>
+      <div class="ingr-label">Ingredients (9)</div>
+      <div class="ingr-list">
+        <div class="ii ii-safe"><span class="idot idot-safe"></span><div><div class="iname">Lepidium Sativum (Halim / Garden Cress Seeds) — 30%</div><div class="inote">Rich in folate, iron, and protein. Studies show significant reduction in hair loss. Largest ingredient by proportion.</div></div></div>
+        <div class="ii ii-safe"><span class="idot idot-safe"></span><div><div class="iname">Ziziphus Mauritiana (Ber / Indian Jujube) — 25%</div><div class="inote">Saponin-rich. Scalp-cleansing, nourishing.</div></div></div>
+        <div class="ii ii-safe"><span class="idot idot-safe"></span><div><div class="iname">Trigonella Foenum-Graecum (Methi / Fenugreek) — 20%</div></div></div>
+        <div class="ii ii-safe"><span class="idot idot-safe"></span><div><div class="iname">Hibiscus Rosa-Sinensis (Hibiscus) — 10%</div></div></div>
+        <div class="ii ii-safe"><span class="idot idot-safe"></span><div><div class="iname">Linum Usitatissimum (Flaxseed) — 5%</div><div class="inote">Omega-3 rich. Reduces scalp inflammation.</div></div></div>
+        <div class="ii ii-safe"><span class="idot idot-safe"></span><div><div class="iname">Rosmarinus Officinalis (Rosemary Oil) — 1%</div><div class="inote">Strong evidence for hair growth — comparable to 2% minoxidil in a 2023 study. Improves scalp circulation.</div></div></div>
+        <div class="ii ii-safe"><span class="idot idot-safe"></span><div><div class="iname">Lavandula Stoechas (Lavender Oil) — 1%</div></div></div>
+        <div class="ii ii-safe"><span class="idot idot-safe"></span><div><div class="iname">Melaleuca Leucadendron (Tea Tree Oil) — 1%</div></div></div>
+        <div class="ii ii-safe"><span class="idot idot-safe"></span><div><div class="iname">Glycerin — 7%</div></div></div>
+      </div>
+      <div class="verdict v-good">✅ Grade A — Halim seeds + Rosemary + Methi is a powerful, evidence-backed hair growth combination. Rosemary at 1% is above the threshold shown in clinical studies. No synthetic fragrances, no alcohol. Excellent leave-on scalp treatment.</div>
+    </div>
+  </div>
+</div>
+
+<!-- HAIR PAGE 3 -->
+<div class="product-page">
+  <div class="section-header">💆 Hair Care (continued)</div>
+
+  <!-- 15. Anti Frizz Hair Oil -->
+  <div class="product-card">
+    <div class="img-col">
+      <img src="https://www.ohriaayurveda.com/cdn/shop/products/Keshya-Anti-Frizz-Hair-Oil.jpg" alt="Keshya Anti Frizz Hair Oil" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
+      <div class="img-placeholder" style="display:none">✨</div>
+      <div class="grade-badge gb-b">B</div>
+      <div style="width:100%"><div class="bar-lbl">Safety: 84/100</div><div class="bar-track"><div class="bar-b" style="width:84%"></div></div></div>
+    </div>
+    <div class="info-col">
+      <div class="pname">Ohria Keshya Anti Frizz Hair Oil</div>
+      <div class="pmeta"><span>Brand: Ohria Ayurveda</span><span>Category: Hair Care</span><span>Type: Hair Oil</span></div>
+      <div class="ingr-label">Ingredients (10)</div>
+      <div class="ingr-list">
+        <div class="ii ii-safe"><span class="idot idot-safe"></span><div><div class="iname">Sesamum Indicum (Sesame Oil)</div></div></div>
+        <div class="ii ii-safe"><span class="idot idot-safe"></span><div><div class="iname">Ziziphus Mauritiana (Jujube Leaves)</div></div></div>
+        <div class="ii ii-safe"><span class="idot idot-safe"></span><div><div class="iname">Ricinus Communis (Castor Oil)</div><div class="inote">Ricinoleic acid — promotes hair thickness and moisture retention.</div></div></div>
+        <div class="ii ii-worth"><span class="idot idot-worth"></span><div><div class="iname">Brassica Juncea (Mustard Oil) ⚠</div><div class="inote">High in erucic acid — studies have raised concerns about cardiac effects at very high dietary intake (though topical use is different). Traditional Indian hair oil ingredient. Can cause scalp irritation in sensitive individuals. Worth knowing; used safely in traditional hair care for centuries.</div></div></div>
+        <div class="ii ii-safe"><span class="idot idot-safe"></span><div><div class="iname">Emblica Officinalis (Amla Extract)</div></div></div>
+        <div class="ii ii-safe"><span class="idot idot-safe"></span><div><div class="iname">Vitis Vinifera (Grapeseed Oil)</div></div></div>
+        <div class="ii ii-safe"><span class="idot idot-safe"></span><div><div class="iname">Hibiscus Rosa-Sinensis (Hibiscus Flower)</div></div></div>
+        <div class="ii ii-safe"><span class="idot idot-safe"></span><div><div class="iname">Nigella Sativa (Kalonji / Black Seed)</div><div class="inote">Thymoquinone content — anti-inflammatory, promotes hair thickness.</div></div></div>
+        <div class="ii ii-safe"><span class="idot idot-safe"></span><div><div class="iname">Trigonella Foenum-Graecum (Methi / Fenugreek)</div></div></div>
+        <div class="ii ii-safe"><span class="idot idot-safe"></span><div><div class="iname">Azadirachta Indica (Neem Leaves)</div></div></div>
+      </div>
+      <div class="verdict v-warn">⚠ Grade B — Traditional Ayurvedic anti-frizz oil. Mustard oil is the only flag — centuries of use in Indian hair care with no reported issues at topical application concentrations. Castor + Sesame + Grapeseed make this excellent for frizzy, dry hair. Avoid if sensitive to strong-smelling oils.</div>
+    </div>
+  </div>
+
+  <!-- 16. Moringa Ylang Ylang Serum -->
+  <div class="product-card">
+    <div class="img-col">
+      <img src="https://www.ohriaayurveda.com/cdn/shop/files/HAIR-11.jpg?v=1759999480&width=400" alt="Moringa Ylang Ylang Serum" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
+      <div class="img-placeholder" style="display:none">🌸</div>
+      <div class="grade-badge gb-a">A</div>
+      <div style="width:100%"><div class="bar-lbl">Safety: 100/100</div><div class="bar-track"><div class="bar-a" style="width:100%"></div></div></div>
+    </div>
+    <div class="info-col">
+      <div class="pname">Ohria Moringa & Ylang Ylang Hair Serum</div>
+      <div class="pmeta"><span>Brand: Ohria Ayurveda</span><span>Category: Hair Care</span><span>Type: Hair Serum (Silicone-free)</span></div>
+      <div class="ingr-label">Ingredients (8)</div>
+      <div class="ingr-list">
+        <div class="ii ii-safe"><span class="idot idot-safe"></span><div><div class="iname">Argania Spinosa (Argan Oil) — 25%</div><div class="inote">Liquid gold. High in Vitamin E and oleic/linoleic acids. Heat protectant, frizz control.</div></div></div>
+        <div class="ii ii-safe"><span class="idot idot-safe"></span><div><div class="iname">Moringa Oleifera (Moringa Oil) — 25%</div><div class="inote">Behenic acid content makes it exceptionally stable. Silky, fast-absorbing. Rich in antioxidants.</div></div></div>
+        <div class="ii ii-safe"><span class="idot idot-safe"></span><div><div class="iname">Juglans Regia (Walnut Oil) — 18%</div></div></div>
+        <div class="ii ii-safe"><span class="idot idot-safe"></span><div><div class="iname">Linum Usitatissimum (Flaxseed Oil) — 15%</div><div class="inote">Omega-3 rich. Reduces hair breakage and scalp inflammation.</div></div></div>
+        <div class="ii ii-safe"><span class="idot idot-safe"></span><div><div class="iname">Vitis Vinifera (Grapeseed Oil) — 10%</div></div></div>
+        <div class="ii ii-safe"><span class="idot idot-safe"></span><div><div class="iname">Sesamum Indicum (Sesame Oil) — 5%</div></div></div>
+        <div class="ii ii-safe"><span class="idot idot-safe"></span><div><div class="iname">Triticum Sativum (Wheat Germ Oil / Vitamin E) — 1.5%</div></div></div>
+        <div class="ii ii-safe"><span class="idot idot-safe"></span><div><div class="iname">Cananga Odorata (Ylang Ylang Essential Oil) — 0.5%</div><div class="inote">Mild fragrance, promotes relaxation. Known for stimulating hair growth.</div></div></div>
+      </div>
+      <div class="verdict v-good">✅ Grade A — A silicone-free alternative to conventional hair serums. Argan + Moringa + Flaxseed = lightweight oils that mimic what silicones do without the environmental downsides. Suitable for frizzy, colour-treated, and heat-styled hair.</div>
+    </div>
+  </div>
+
+  <!-- 17. Nimba Karanj Thailam -->
+  <div class="product-card">
+    <div class="img-col">
+      <img src="https://www.ohriaayurveda.com/cdn/shop/products/Nimba-Karanj-Thailam.jpg" alt="Nimba Karanj Thailam" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
+      <div class="img-placeholder" style="display:none">🍃</div>
+      <div class="grade-badge gb-b">B</div>
+      <div style="width:100%"><div class="bar-lbl">Safety: 84/100</div><div class="bar-track"><div class="bar-b" style="width:84%"></div></div></div>
+    </div>
+    <div class="info-col">
+      <div class="pname">Ohria Nimba Karanj Thailam (Anti-Dandruff Hair Oil)</div>
+      <div class="pmeta"><span>Brand: Ohria Ayurveda</span><span>Category: Hair Care</span><span>Type: Anti-Dandruff Hair Oil</span></div>
+      <div class="ingr-label">Ingredients (14)</div>
+      <div class="ingr-list">
+        <div class="ii ii-safe"><span class="idot idot-safe"></span><div><div class="iname">Sesamum Indicum (Cold Pressed Til Oil)</div></div></div>
+        <div class="ii ii-safe"><span class="idot idot-safe"></span><div><div class="iname">Millettia Pinnata (Karanj / Pongamia Oil)</div><div class="inote">Powerful antifungal. Traditionally used against dandruff-causing Malassezia fungi.</div></div></div>
+        <div class="ii ii-safe"><span class="idot idot-safe"></span><div><div class="iname">Azadirachta Indica (Neem Extract + Oil)</div></div></div>
+        <div class="ii ii-safe"><span class="idot idot-safe"></span><div><div class="iname">Triphala (Amla + Bibhitaki + Haritaki)</div></div></div>
+        <div class="ii ii-safe"><span class="idot idot-safe"></span><div><div class="iname">Cyperus Scariosus (Nagarmotha)</div></div></div>
+        <div class="ii ii-safe"><span class="idot idot-safe"></span><div><div class="iname">Trigonella Foenum-Graecum (Methi / Fenugreek)</div></div></div>
+        <div class="ii ii-safe"><span class="idot idot-safe"></span><div><div class="iname">Rubia Cordifolia (Manjistha)</div></div></div>
+        <div class="ii ii-safe"><span class="idot idot-safe"></span><div><div class="iname">Hemidesmus Indicus (Sariva / Indian Sarsaparilla)</div></div></div>
+        <div class="ii ii-safe"><span class="idot idot-safe"></span><div><div class="iname">Acacia Catechu (Khadira / Catechu)</div></div></div>
+        <div class="ii ii-worth"><span class="idot idot-worth"></span><div><div class="iname">Psoralea Corylifolia (Bakuchi / Babchi Oil) ⚠</div><div class="inote">Photosensitising ingredient — contains psoralen compounds which can make skin sensitive to UV light. Effective anti-dandruff and anti-fungal in Ayurveda. Avoid sun exposure on scalp immediately after application, or use at night. Do not use on irritated/broken scalp skin.</div></div></div>
+        <div class="ii ii-safe"><span class="idot idot-safe"></span><div><div class="iname">Cinnamomum Camphora (Karpur / Camphor)</div></div></div>
+        <div class="ii ii-safe"><span class="idot idot-safe"></span><div><div class="iname">Murraya Koenigii (Curry Leaves)</div><div class="inote">Rich in beta-carotene. Prevents greying, strengthens hair.</div></div></div>
+        <div class="ii ii-safe"><span class="idot idot-safe"></span><div><div class="iname">Millettia Pinnata (Karanja Extract)</div></div></div>
+      </div>
+      <div class="verdict v-warn">⚠ Grade B — Highly effective anti-dandruff oil. Karanj + Neem + Bakuchi = powerful antifungal trio. Key caution: Bakuchi Oil is photosensitising — apply at night or avoid scalp sun exposure for 12–24 hours after use. Best used as an overnight treatment.</div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ BODY CARE ═══ -->
+<div class="product-page">
+  <div class="section-header">🛁 Body Care</div>
+
+  <!-- 18. Rose Pomegranate Shower Oil -->
+  <div class="product-card">
+    <div class="img-col">
+      <img src="https://www.ohriaayurveda.com/cdn/shop/files/body-01_bcfc70b9-ee9e-42cf-8090-19da2e1c1ac2.jpg?v=1775297272&width=400" alt="Rose Pomegranate Shower Oil" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
+      <div class="img-placeholder" style="display:none">🌹</div>
+      <div class="grade-badge gb-a">A</div>
+      <div style="width:100%"><div class="bar-lbl">Safety: 100/100</div><div class="bar-track"><div class="bar-a" style="width:100%"></div></div></div>
+    </div>
+    <div class="info-col">
+      <div class="pname">Ohria Rose & Pomegranate Shower Oil</div>
+      <div class="pmeta"><span>Brand: Ohria Ayurveda</span><span>Category: Body Care</span><span>Type: Shower / Bath Oil</span></div>
+      <div class="ingr-label">Ingredients (8)</div>
+      <div class="ingr-list">
+        <div class="ii ii-safe"><span class="idot idot-safe"></span><div><div class="iname">Prunus Armeniaca (Apricot Oil)</div><div class="inote">Lightweight carrier. Rich in vitamins A, C, E.</div></div></div>
+        <div class="ii ii-safe"><span class="idot idot-safe"></span><div><div class="iname">Vitis Vinifera (Grapeseed Oil)</div></div></div>
+        <div class="ii ii-safe"><span class="idot idot-safe"></span><div><div class="iname">Juglans Regia (Walnut Oil)</div></div></div>
+        <div class="ii ii-safe"><span class="idot idot-safe"></span><div><div class="iname">Tocopherol (Vitamin E)</div></div></div>
+        <div class="ii ii-safe"><span class="idot idot-safe"></span><div><div class="iname">Rosa Damascena (Rose Essential Oil / Extract)</div></div></div>
+        <div class="ii ii-safe"><span class="idot idot-safe"></span><div><div class="iname">Punica Granatum (Pomegranate Extract)</div></div></div>
+        <div class="ii ii-safe"><span class="idot idot-safe"></span><div><div class="iname">Prunus Amygdalus (Almond Oil)</div></div></div>
+        <div class="ii ii-safe"><span class="idot idot-safe"></span><div><div class="iname">Butyrospermum Parkii (Shea Butter Extract)</div></div></div>
+      </div>
+      <div class="verdict v-good">✅ Grade A — Pure botanical bath oil. Apply before or during shower — emulsifies with water to leave skin soft without greasiness. No surfactants, no preservatives (oil base). Excellent for dry, sensitive, and mature skin.</div>
+    </div>
+  </div>
+
+  <!-- 19. Amrit Ras Shower Wash -->
+  <div class="product-card">
+    <div class="img-col">
+      <img src="https://www.ohriaayurveda.com/cdn/shop/products/Amrit-Ras-Shower-Wash.jpg" alt="Amrit Ras Shower Wash" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
+      <div class="img-placeholder" style="display:none">🍯</div>
+      <div class="grade-badge gb-a">A</div>
+      <div style="width:100%"><div class="bar-lbl">Safety: 100/100</div><div class="bar-track"><div class="bar-a" style="width:100%"></div></div></div>
+    </div>
+    <div class="info-col">
+      <div class="pname">Ohria Amrit Ras Shower Wash</div>
+      <div class="pmeta"><span>Brand: Ohria Ayurveda</span><span>Category: Body Care</span><span>Type: Body Wash</span></div>
+      <div class="ingr-label">Ingredients (8)</div>
+      <div class="ingr-list">
+        <div class="ii ii-safe"><span class="idot idot-safe"></span><div><div class="iname">Ocimum Sanctum (Tulsi / Holy Basil)</div><div class="inote">Antimicrobial, anti-inflammatory. Natural skin purifier.</div></div></div>
+        <div class="ii ii-safe"><span class="idot idot-safe"></span><div><div class="iname">Cocos Nucifera Derivatives (Coconut-derived Cleansers)</div><div class="inote">Mild sulfate-free surfactant system from coconut.</div></div></div>
+        <div class="ii ii-safe"><span class="idot idot-safe"></span><div><div class="iname">Apis Indica (Honey)</div><div class="inote">Natural humectant, antibacterial. Leaves skin soft.</div></div></div>
+        <div class="ii ii-safe"><span class="idot idot-safe"></span><div><div class="iname">Ghruta (Clarified Cow's Butter / Ghee)</div><div class="inote">Deeply nourishing, moisture-sealing.</div></div></div>
+        <div class="ii ii-safe"><span class="idot idot-safe"></span><div><div class="iname">Rosa Damascena (Rose Extract)</div></div></div>
+        <div class="ii ii-safe"><span class="idot idot-safe"></span><div><div class="iname">Musa Sapientum (Banana Extract)</div></div></div>
+        <div class="ii ii-safe"><span class="idot idot-safe"></span><div><div class="iname">Glycerin</div></div></div>
+        <div class="ii ii-safe"><span class="idot idot-safe"></span><div><div class="iname">Plant-derived Natural Base</div></div></div>
+      </div>
+      <div class="verdict v-good">✅ Grade A — Sulfate-free, ghee-enriched body wash. Honey + Ghee make this deeply nourishing — more like a skin treatment than a standard wash. No synthetic fragrance, no parabens, no harsh cleansers. Excellent for dry skin.</div>
+    </div>
+  </div>
+
+  <!-- 20. Amrit Ras Foot Balm -->
+  <div class="product-card">
+    <div class="img-col">
+      <img src="https://www.ohriaayurveda.com/cdn/shop/files/Artboard1copy4.png?v=1751962952&width=400" alt="Amrit Ras Foot Balm" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
+      <div class="img-placeholder" style="display:none">🦶</div>
+      <div class="grade-badge gb-b">B</div>
+      <div style="width:100%"><div class="bar-lbl">Safety: 84/100</div><div class="bar-track"><div class="bar-b" style="width:84%"></div></div></div>
+    </div>
+    <div class="info-col">
+      <div class="pname">Ohria Amrit Ras Foot Balm</div>
+      <div class="pmeta"><span>Brand: Ohria Ayurveda</span><span>Category: Body Care</span><span>Type: Foot Cream / Balm</span></div>
+      <div class="ingr-label">Ingredients (12)</div>
+      <div class="ingr-list">
+        <div class="ii ii-safe"><span class="idot idot-safe"></span><div><div class="iname">Sesamum Indicum (Sesame Oil) — 35%</div></div></div>
+        <div class="ii ii-safe"><span class="idot idot-safe"></span><div><div class="iname">Ricinus Communis (Castor Oil) — 13.5%</div><div class="inote">Ricinoleic acid — intense moisturising, antifungal. Classic foot care oil.</div></div></div>
+        <div class="ii ii-safe"><span class="idot idot-safe"></span><div><div class="iname">Cera Alba (Beeswax) — 13%</div></div></div>
+        <div class="ii ii-worth"><span class="idot idot-worth"></span><div><div class="iname">Brassica Juncea (Mustard Oil) — 16% ⚠</div><div class="inote">High erucic acid. Traditional Indian foot care ingredient (pedicure and cracked heel remedy for centuries). Avoid open skin/wounds. Patch test if using on broken skin. Fine for intact, thickened foot skin.</div></div></div>
+        <div class="ii ii-safe"><span class="idot idot-safe"></span><div><div class="iname">Prunus Amygdalus (Almond Oil) — 10%</div></div></div>
+        <div class="ii ii-safe"><span class="idot idot-safe"></span><div><div class="iname">Garcinia Indica (Kokum Butter) — 5%</div></div></div>
+        <div class="ii ii-safe"><span class="idot idot-safe"></span><div><div class="iname">Ghruta (Clarified Cow's Butter) — 4%</div></div></div>
+        <div class="ii ii-safe"><span class="idot idot-safe"></span><div><div class="iname">Saccharum Officinarum (Cane Sugar) — 0.5%</div></div></div>
+        <div class="ii ii-safe"><span class="idot idot-safe"></span><div><div class="iname">Apis Indica (Honey) — 1%</div></div></div>
+        <div class="ii ii-safe"><span class="idot idot-safe"></span><div><div class="iname">Triticum Sativum (Wheat Germ Oil / Vitamin E) — 0.5%</div></div></div>
+        <div class="ii ii-safe"><span class="idot idot-safe"></span><div><div class="iname">Boswellia Carterii (Frankincense Essential Oil) — 1%</div><div class="inote">Anti-inflammatory, antiseptic. Traditionally used for cracked heels.</div></div></div>
+        <div class="ii ii-safe"><span class="idot idot-safe"></span><div><div class="iname">Cedrus Deodara (Himalayan Cedarwood Essential Oil) — 0.5%</div></div></div>
+      </div>
+      <div class="verdict v-warn">⚠ Grade B — Rich Ayurvedic foot balm. Mustard Oil is the worth-knowing flag — at 16% it's a significant portion, but this is applied on thick foot skin where it's traditionally safe and effective. Frankincense + Castor = antiseptic and healing for cracked heels. Not suitable for broken skin.</div>
+    </div>
+  </div>
+
+  <!-- Brand Summary -->
+  <div style="background:#f0f7f2;border:1px solid #b8d8c0;border-radius:14px;padding:22px 26px;margin-top:14px;">
+    <h3 style="color:#1a3a2a;font-size:16px;margin-bottom:12px;border-bottom:2px solid #9a7d4a;padding-bottom:8px;">📊 Ohria Ayurveda — Brand Summary</h3>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;font-size:13px;color:#1a3a2a;line-height:1.7;">
+      <div>
+        <strong>Grade A Products (18/20):</strong><br>
+        Kumkumadi Elixir · Ghee Cream · Papaya Cleanser · Neem Tulsi Wash · Ubtan Powder · Rose Cream · Clay Masque · Avbhasini Pack · Lip Balm · Banyan Tonic · Japa Shampoo · Keshya Vitalizer · Moringa Serum · Rose Shower Oil · Amrit Shower Wash
+      </div>
+      <div>
+        <strong>Grade B Products (Mild flags only):</strong><br>
+        • Turmeric Lotion — Yashad Bhasma (Ayurvedic zinc)<br>
+        • Japa Pushpa Oil — Abrus precatorius (root, not seed)<br>
+        • Anti Frizz Oil — Mustard Oil (traditional use)<br>
+        • Nimba Karanj Oil — Bakuchi (use at night)<br>
+        • Foot Balm — Mustard Oil (for thick foot skin)<br><br>
+        <strong>✅ Zero Grade D products.</strong> No synthetic chemicals flagged.
+      </div>
+    </div>
+  </div>
+</div>
+
+</body>
+</html>
