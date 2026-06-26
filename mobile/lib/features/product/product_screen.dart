@@ -48,12 +48,8 @@ class ProductScreen extends ConsumerWidget {
             mainAxisSize: MainAxisSize.min,
             children: [
               CircularProgressIndicator(),
-              SizedBox(height: 16),
+              SizedBox(height: 14),
               Text('Loading product…', style: TextStyle(color: AppColors.textMuted, fontSize: 13)),
-              SizedBox(height: 6),
-              Text('Server may be starting up — this can take\nup to 30 seconds on first visit.',
-                  textAlign: TextAlign.center,
-                  style: TextStyle(color: AppColors.textMuted, fontSize: 11)),
             ],
           ),
         ),
