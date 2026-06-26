@@ -1,0 +1,2 @@
+const supabaseUrl     = 'https://ecyuhdegovjhhqvasiez.supabase.co';
+const supabaseAnonKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImVjeXVoZGVnb3ZqaGhxdmFzaWV6Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzU4OTI5MzIsImV4cCI6MjA5MTQ2ODkzMn0.Kqjqp0hvkRLAGuKCY1g202sUD74YD2wEixM8r0Ka5GA';

@@ -4,7 +4,7 @@ import { supabase } from '../lib/supabaseClient'
 const ADMIN_EMAIL = 'shubhampaliwal5@gmail.com'
 const MAX_SIZE_MB = 8
 const MIN_PHOTOS = 2
-const API = import.meta.env.VITE_API_BASE_URL || ''
+const API = import.meta.env.VITE_API_BASE_URL || 'https://checkkaro.onrender.com'
 
 export default function PhotoUploadModal({ productId, productName, currentCount, user, onClose, onSuccess }) {
   const [files, setFiles] = useState([])

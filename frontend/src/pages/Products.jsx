@@ -193,6 +193,8 @@ export default function Products() {
   // Read initial filter values from URL — browser back button restores the URL automatically
   const [products, setProducts]       = useState([])
   const [loading, setLoading]         = useState(true)
+  const [slowLoad, setSlowLoad]       = useState(false)
+  const [loadError, setLoadError]     = useState('')
   const [allCategories, setAllCats]   = useState([])
   const [brands, setBrands]           = useState([])
   const [category, setCategory]       = useState(searchParams.get('cat') || '')
@@ -248,8 +250,13 @@ export default function Products() {
     const controller = new AbortController()
     let active = true
 
+    // Show "slow connection" hint after 5 seconds, clear on success
+    const slowTimer = setTimeout(() => { if (active) setSlowLoad(true) }, 5000)
+
     const run = async () => {
       setLoading(true)
+      setLoadError('')
+      setSlowLoad(false)
       try {
         const params = { page, limit, sort }
         if (category) params.category = category
@@ -258,12 +265,14 @@ export default function Products() {
         const res = await axios.get(`${API_BASE_URL}/api/product/browse`, {
           params,
           signal: controller.signal,
+          timeout: 60000,
         })
         if (!active) return
+        clearTimeout(slowTimer)
+        setSlowLoad(false)
         const data = res.data
         const pageProducts = data.products || []
 
-        // Show products immediately — don't wait for photos
         setProducts(pageProducts)
         setTotal(data.total || 0)
         setPages(data.pages || 1)
@@ -271,17 +280,12 @@ export default function Products() {
         if (data.brands?.length)     setBrands(data.brands)
         setLoading(false)
 
-        // Fetch uploaded photos in background and fill in missing image_urls.
-        // product_photos.product_id can store either the static_key ("kinley-water")
-        // for newer uploads or the numeric id ("12345") for older uploads — query both
-        // so every product gets its image regardless of which format was used.
         if (active && pageProducts.length > 0) {
           const staticKeys = pageProducts.map(p => p.static_key).filter(Boolean)
           const numericIds = pageProducts.map(p => p.id).filter(Boolean)
           const allKeys = [...new Set([...staticKeys, ...numericIds])]
           if (allKeys.length > 0) {
-            const API = import.meta.env.VITE_API_BASE_URL || ''
-            fetch(`${API}/api/photos/batch`, {
+            fetch(`${API_BASE_URL}/api/photos/batch`, {
               method: 'POST',
               headers: { 'Content-Type': 'application/json' },
               body: JSON.stringify({ ids: allKeys }),
@@ -304,15 +308,20 @@ export default function Products() {
         }
       } catch (err) {
         if (axios.isCancel(err) || !active) return
-        console.error('Browse error:', err)
-        setProducts([])
+        clearTimeout(slowTimer)
+        if (active) {
+          setSlowLoad(false)
+          setLoadError('Could not connect. The server may be starting up — please try again in a few seconds.')
+          setProducts([])
+        }
       } finally {
+        clearTimeout(slowTimer)
         if (active) setLoading(false)
       }
     }
 
     run()
-    return () => { active = false; controller.abort() }
+    return () => { active = false; controller.abort(); clearTimeout(slowTimer) }
   }, [category, brand, q, page, sort])
 
   // When category changes → reset brand + page
@@ -493,17 +502,36 @@ export default function Products() {
 
         {/* ── Grid ── */}
         {loading ? (
-          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6 gap-4">
-            {[...Array(12)].map((_, i) => (
-              <div key={i} className="bg-white rounded-2xl overflow-hidden border border-gray-100 animate-pulse">
-                <div className="aspect-square bg-gray-100" />
-                <div className="p-3 space-y-2">
-                  <div className="h-2 bg-gray-100 rounded w-1/2" />
-                  <div className="h-3 bg-gray-100 rounded" />
-                  <div className="h-3 bg-gray-100 rounded w-3/4" />
-                </div>
+          <>
+            {slowLoad && (
+              <div style={{ textAlign: 'center', padding: '12px 16px', marginBottom: 16, background: '#fffbeb', border: '1px solid #fde68a', borderRadius: 10, fontSize: 13, color: '#92400e' }}>
+                ⏳ Server is starting up — this takes up to 30 seconds on the first visit. Please wait...
               </div>
-            ))}
+            )}
+            <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6 gap-4">
+              {[...Array(12)].map((_, i) => (
+                <div key={i} className="bg-white rounded-2xl overflow-hidden border border-gray-100 animate-pulse">
+                  <div className="aspect-square bg-gray-100" />
+                  <div className="p-3 space-y-2">
+                    <div className="h-2 bg-gray-100 rounded w-1/2" />
+                    <div className="h-3 bg-gray-100 rounded" />
+                    <div className="h-3 bg-gray-100 rounded w-3/4" />
+                  </div>
+                </div>
+              ))}
+            </div>
+          </>
+        ) : loadError ? (
+          <div style={{ textAlign: 'center', padding: '48px 20px' }}>
+            <p style={{ fontSize: 40, marginBottom: 12 }}>⚡</p>
+            <h3 style={{ fontSize: 16, fontWeight: 700, color: '#374151', marginBottom: 6 }}>Server is waking up</h3>
+            <p style={{ fontSize: 13, color: '#9ca3af', marginBottom: 20 }}>{loadError}</p>
+            <button
+              onClick={() => { setLoadError(''); setQ(q => q) }}
+              style={{ padding: '10px 24px', background: BRAND_BLUE, color: '#fff', border: 'none', borderRadius: 10, fontSize: 13, fontWeight: 700, cursor: 'pointer' }}
+            >
+              Retry
+            </button>
           </div>
         ) : products.length === 0 ? (
           <div className="text-center py-20">

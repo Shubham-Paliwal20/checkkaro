@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Herbal Essences — Product Catalogue with Ingredients</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'Segoe UI', Arial, sans-serif; background: #f5f0fa; color: #1a1a1a; font-size: 13px; }
+
+  .cover {
+    page-break-after: always;
+    height: 100vh; display: flex; flex-direction: column;
+    align-items: center; justify-content: center;
+    background: linear-gradient(150deg, #3b0764 0%, #6d28a8 55%, #a855f7 100%);
+    color: #fff; text-align: center; padding: 40px;
+  }
+  .cover .logo { font-size: 54px; margin-bottom: 14px; }
+  .cover h1 { font-size: 44px; font-weight: 900; letter-spacing: 3px; margin-bottom: 4px; text-transform: uppercase; }
+  .cover .tagline { font-size: 13px; color: #e9d5ff; letter-spacing: 2px; text-transform: uppercase; margin-bottom: 22px; }
+  .cover .badge { display: inline-block; background: rgba(255,255,255,0.14); border: 2px solid rgba(255,255,255,0.38); border-radius: 24px; padding: 10px 28px; font-size: 13px; letter-spacing: 1px; margin-bottom: 18px; }
+  .cover .claims { display: flex; gap: 16px; margin-top: 18px; flex-wrap: wrap; justify-content: center; }
+  .cover .claim { background: rgba(255,255,255,0.10); border-radius: 10px; padding: 10px 16px; font-size: 11.5px; color: #e9d5ff; }
+  .cover .note { font-size: 11px; opacity: 0.55; margin-top: 18px; line-height: 1.8; }
+
+  .index-page { padding: 32px 26px; page-break-after: always; }
+  .index-page h2 { font-size: 20px; color: #3b0764; margin-bottom: 14px; border-bottom: 3px solid #6d28a8; padding-bottom: 8px; }
+  .index-table { width: 100%; border-collapse: collapse; }
+  .index-table th { background: #3b0764; color: #fff; padding: 8px 10px; text-align: left; font-size: 11px; }
+  .index-table td { padding: 6px 10px; border-bottom: 1px solid #e8d5f8; font-size: 11px; }
+  .index-table tr:nth-child(even) td { background: #f3ecfc; }
+
+  .section-header { background: #3b0764; color: #fff; padding: 11px 22px; font-size: 13.5px; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; margin: 22px 0 0 0; border-radius: 6px 6px 0 0; }
+
+  .product { background: #fff; border: 1px solid #d8b4f8; border-top: none; padding: 14px 18px; page-break-inside: avoid; }
+  .product:last-of-type { border-radius: 0 0 6px 6px; margin-bottom: 22px; }
+  .product + .product { border-top: 1px solid #e5d5f8; }
+  .product-inner { display: flex; gap: 14px; }
+  .product-img { width: 100px; min-width: 100px; height: 100px; object-fit: contain; border-radius: 8px; border: 1px solid #d8b4f8; background: #faf5ff; padding: 4px; }
+  .product-info { flex: 1; }
+  .product-name { font-size: 13.5px; font-weight: 700; color: #3b0764; margin-bottom: 5px; }
+  .product-meta { display: flex; gap: 7px; margin-bottom: 8px; flex-wrap: wrap; }
+  .tag { border-radius: 12px; padding: 2px 9px; font-size: 10.5px; font-weight: 600; }
+  .tag.cat   { background: #ede9fe; color: #3b0764; }
+  .tag.vol   { background: #f3ecfc; color: #6d28a8; }
+  .tag.price { background: #fff8e0; color: #b85c00; }
+  .tag.note  { background: #d1fae5; color: #065f46; }
+  .tag.warn  { background: #fff0e0; color: #b05800; }
+  .tag.alert { background: #fce8e8; color: #8b1a1a; }
+  .ing-label { font-size: 10px; font-weight: 700; color: #888; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 3px; }
+  .ing-text  { font-size: 11.5px; color: #333; line-height: 1.65; background: #faf5ff; border-left: 3px solid #6d28a8; padding: 7px 11px; border-radius: 0 4px 4px 0; }
+  .ing-text .flagged { color: #b05800; font-weight: 600; }
+  .ing-text .danger  { color: #8b1a1a; font-weight: 600; }
+  .partial-note { font-size: 10.5px; color: #888; font-style: italic; margin-top: 4px; }
+
+  .page-body { padding: 18px 18px 0; }
+  .footer { text-align: center; padding: 16px; font-size: 11px; color: #999; border-top: 1px solid #e5d5f8; margin-top: 16px; }
+
+  @media print {
+    body { background: #fff; }
+    .section-header, .tag, .ing-text { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  }
+</style>
+</head>
+<body>
+
+<!-- COVER -->
+<div class="cover">
+  <div class="logo">🌸</div>
+  <h1>Herbal Essences</h1>
+  <div class="tagline">bio:renew · Royal Botanic Gardens Kew Certified Botanicals</div>
+  <div class="badge">6 Products &nbsp;|&nbsp; Shampoos & Conditioners</div>
+  <div class="claims">
+    <div class="claim">✓ Certified Botanicals (Kew)</div>
+    <div class="claim">✓ Paraben Free (Bio:Renew)</div>
+    <div class="claim">✓ pH Balanced</div>
+    <div class="claim">✓ Colour Safe</div>
+  </div>
+  <div class="note">
+    Available in India on Nykaa · Amazon.in · Flipkart<br>
+    Ingredients sourced from INCIDecoder &amp; SkinSafe · June 2026<br>
+    ⚠ Older variants (Argan Oil) contain SLS/SLES and MIT/CMIT — see product details
+  </div>
+</div>
+
+<!-- INDEX -->
+<div class="index-page">
+  <h2>Product Index — 6 Products</h2>
+  <table class="index-table">
+    <thead><tr><th>#</th><th>Product Name</th><th>Type</th><th>Volume</th><th>Approx. Price</th></tr></thead>
+    <tbody>
+      <tr><td>1</td><td>Argan Oil of Morocco Shampoo (Repair & Shine)</td><td>Shampoo</td><td>400 ml</td><td>₹549</td></tr>
+      <tr><td>2</td><td>Argan Oil of Morocco Conditioner (Repair & Shine)</td><td>Conditioner</td><td>400 ml</td><td>₹549</td></tr>
+      <tr><td>3</td><td>Bio:Renew Coconut Milk Shampoo (Hydrate)</td><td>Shampoo</td><td>400 ml</td><td>₹449</td></tr>
+      <tr><td>4</td><td>Bio:Renew Sulfate Free Shampoo (Potent Aloe + Mango)</td><td>Shampoo</td><td>400 ml</td><td>₹699</td></tr>
+      <tr><td>5</td><td>Bio:Renew Potent Aloe + Honey Shampoo (Sulfate Free)</td><td>Shampoo</td><td>400 ml</td><td>₹699</td></tr>
+      <tr><td>6</td><td>Bio:Renew Avocado & Pequi Shampoo (Sulfate Free)</td><td>Shampoo</td><td>400 ml</td><td>₹699</td></tr>
+    </tbody>
+  </table>
+
+  <br>
+  <div style="background:#fff4e0; border-left:4px solid #b85c00; padding:10px 14px; border-radius:0 6px 6px 0; font-size:11.5px; color:#5a3200;">
+    <strong>Ingredient Grade Key:</strong> Products 1 &amp; 2 (Argan Oil classic line) contain <strong>SLS + SLES</strong> (strong cleansers), <strong>MIT/CMIT</strong> (preservatives with sensitization concerns in Europe), and <strong>Methylisothiazolinone</strong>. Products 3–6 (Bio:Renew line) are sulfate-free with gentler surfactants and no MIT/CMIT, using Sodium Benzoate as preservative instead.
+  </div>
+</div>
+
+<!-- PRODUCTS -->
+<div class="page-body">
+
+<!-- ── ARGAN OIL LINE ── -->
+<div class="section-header">Argan Oil of Morocco — Classic Line (Products 1–2)</div>
+
+<div class="product">
+  <div class="product-inner">
+    <img class="product-img" src="https://incidecoder-content.storage.googleapis.com/9df6ebd3-9086-4e12-a847-22c93382624f/products/herbal-essences-argan-oil-of-morocco-shampoo/herbal-essences-argan-oil-of-morocco-shampoo_front_photo_original.jpeg" alt="Argan Oil of Morocco Shampoo">
+    <div class="product-info">
+      <div class="product-name">1. Argan Oil of Morocco Shampoo (Repair & Shine)</div>
+      <div class="product-meta">
+        <span class="tag cat">Shampoo</span><span class="tag vol">400 ml</span><span class="tag price">₹549</span>
+        <span class="tag alert">SLS + SLES · MIT/CMIT Preservatives</span>
+      </div>
+      <div class="ing-label">Full Ingredients List</div>
+      <div class="ing-text">Water, <span class="danger">Sodium Lauryl Sulfate (SLS)</span>, <span class="danger">Sodium Laureth Sulfate (SLES)</span>, Cocamidopropyl Betaine, Glycol Distearate, Dimethicone, Parfum, Argania Spinosa (Argan) Kernel Oil, Histidine, Aloe Barbadensis Leaf Juice, Ecklonia Radiata Extract, Sodium Citrate, Cocamide MEA, <span class="flagged">Sodium Xylenesulfonate</span>, Citric Acid, Sodium Benzoate, Sodium Chloride, <span class="flagged">Guar Hydroxypropyltrimonium Chloride</span>, <span class="flagged">Tetrasodium EDTA</span>, <span class="flagged">Polyquaternium-6</span>, <span class="danger">Methylchloroisothiazolinone (CMIT)</span>, <span class="danger">Methylisothiazolinone (MIT)</span></div>
+      <div class="partial-note">⚠ MIT/CMIT: Methylisothiazolinone and Methylchloroisothiazolinone are preservatives banned in leave-on products in EU (2016), restricted in rinse-off products. Common sensitizers — may cause contact allergy.</div>
+    </div>
+  </div>
+</div>
+
+<div class="product">
+  <div class="product-inner">
+    <img class="product-img" src="https://incidecoder-content.storage.googleapis.com/1baf58ff-7a72-4fd3-a497-5746f1bc663a/products/herbal-essences-argan-oil-of-morocco-conditioner/herbal-essences-argan-oil-of-morocco-conditioner_front_photo_original.jpeg" alt="Argan Oil of Morocco Conditioner">
+    <div class="product-info">
+      <div class="product-name">2. Argan Oil of Morocco Conditioner (Repair & Shine)</div>
+      <div class="product-meta">
+        <span class="tag cat">Conditioner</span><span class="tag vol">400 ml</span><span class="tag price">₹549</span>
+        <span class="tag alert">MIT/CMIT Preservatives</span>
+      </div>
+      <div class="ing-label">Full Ingredients List</div>
+      <div class="ing-text">Water, Stearyl Alcohol, <span class="flagged">Behentrimonium Methosulfate</span>, <span class="flagged">Bis-Aminopropyl Dimethicone</span>, Argania Spinosa (Argan) Kernel Oil, Histidine, Aloe Barbadensis Leaf Juice, Ecklonia Radiata Extract, Parfum, Cetyl Alcohol, Benzyl Alcohol, <span class="flagged">Dicetyldimonium Chloride</span>, Disodium EDTA, Citric Acid, <span class="danger">Methylchloroisothiazolinone (CMIT)</span>, <span class="danger">Methylisothiazolinone (MIT)</span></div>
+      <div class="partial-note">⚠ MIT/CMIT: Same sensitization concerns as Product 1. This is the conditioner variant — rinse off thoroughly. Behentrimonium Methosulfate is a gentler conditioning agent derived from rapeseed.</div>
+    </div>
+  </div>
+</div>
+
+<!-- ── BIO:RENEW LINE ── -->
+<div class="section-header">Bio:Renew Line — Sulfate Free, No MIT/CMIT (Products 3–6)</div>
+
+<div class="product">
+  <div class="product-inner">
+    <img class="product-img" src="https://incidecoder-content.storage.googleapis.com/69ab1631-3a3a-40f4-849e-2d1b077866da/ingredients/herbal-essences-coconut-milk-shampoo/herbal-essences-coconut-milk-shampoo_original.jpeg" alt="Bio:Renew Coconut Milk Shampoo">
+    <div class="product-info">
+      <div class="product-name">3. Bio:Renew Coconut Milk Shampoo (Hydrate)</div>
+      <div class="product-meta">
+        <span class="tag cat">Shampoo</span><span class="tag vol">400 ml</span><span class="tag price">₹449</span>
+        <span class="tag warn">Contains SLS + SLES · MIT/CMIT</span>
+      </div>
+      <div class="ing-label">Full Ingredients List</div>
+      <div class="ing-text">Water, <span class="danger">Sodium Laureth Sulfate (SLES)</span>, Cocamidopropyl Betaine, <span class="danger">Sodium Lauryl Sulfate (SLS)</span>, Sodium Citrate, <span class="flagged">Sodium Xylenesulfonate</span>, Sodium Chloride, Parfum, Cocos Nucifera (Coconut) Fruit Extract, Histidine, Aloe Barbadensis Leaf Juice, Ecklonia Radiata Extract, Zea Mays (Corn) Silk Extract, Orchis Mascula Flower Extract, Stearyl Alcohol, Cetyl Alcohol, Glycol Distearate, Glycerin, <span class="flagged">Dimethiconol</span>, Citric Acid, Sodium Benzoate, <span class="flagged">Dimethicone</span>, <span class="flagged">Guar Hydroxypropyltrimonium Chloride</span>, <span class="flagged">Tetrasodium EDTA</span>, <span class="flagged">Polyquaternium-6</span>, Trihydroxystearin, Trideceth-10, <span class="danger">Methylchloroisothiazolinone (CMIT)</span>, <span class="danger">Methylisothiazolinone (MIT)</span></div>
+      <div class="partial-note">⚠ Despite being under the Bio:Renew branding, this older variant still contains SLS/SLES and MIT/CMIT. Newer Bio:Renew variants (Products 4–6) are sulfate-free and use Sodium Benzoate instead.</div>
+    </div>
+  </div>
+</div>
+
+<div class="product">
+  <div class="product-inner">
+    <img class="product-img" src="https://incidecoder-content.storage.googleapis.com/d02f8bba-629a-4ccc-bff4-b5d2444ceff7/products/herbal-essences-bio-renew-sulfate-free-shampoo-with-potent-aloe-mango/herbal-essences-bio-renew-sulfate-free-shampoo-with-potent-aloe-mango_front_photo_original.jpeg" alt="Bio:Renew Potent Aloe + Mango Shampoo">
+    <div class="product-info">
+      <div class="product-name">4. Bio:Renew Sulfate Free Shampoo (Potent Aloe + Mango)</div>
+      <div class="product-meta">
+        <span class="tag cat">Shampoo</span><span class="tag vol">400 ml</span><span class="tag price">₹699</span>
+        <span class="tag note">Sulfate Free · No MIT/CMIT · Aloe + Avocado + Mango</span>
+      </div>
+      <div class="ing-label">Full Ingredients List</div>
+      <div class="ing-text">Aqua, Lauramidopropyl Betaine, Sodium Cocoyl Isethionate, Sodium Lauroyl Sarcosinate, Sodium Citrate, Citric Acid, Parfum, Sodium Benzoate, Sodium Salicylate, <span class="flagged">Polyquaternium-10</span>, <span class="flagged">Tetrasodium EDTA</span>, Limonene, <span class="flagged">Propylene Glycol</span>, Hexyl Cinnamal, Linalool, Aloe Barbadensis Leaf Juice, Butylene Glycol, Histidine, Rubus Fruticosus (Blackberry) Fruit Extract, Persea Gratissima (Avocado) Fruit Extract, Mangifera Indica (Mango) Fruit Extract, <span class="flagged">Alcohol Denatured</span>, Ecklonia Radiata Extract</div>
+      <div class="partial-note">✓ No SLS/SLES · No MIT/CMIT · Fragrance components Limonene and Hexyl Cinnamal may cause sensitivity in some users. Denatured alcohol (Alcohol Denatured) is used as a solubilizer in small amounts.</div>
+    </div>
+  </div>
+</div>
+
+<div class="product">
+  <div class="product-inner">
+    <img class="product-img" src="https://incidecoder-content.storage.googleapis.com/6f810efe-dfae-4047-8ce9-ba3f85fc2e29/products/herbal-essences-bio-renew-potent-aloe-honey-shampoo/herbal-essences-bio-renew-potent-aloe-honey-shampoo_front_photo_original.jpeg" alt="Bio:Renew Potent Aloe + Honey Shampoo">
+    <div class="product-info">
+      <div class="product-name">5. Bio:Renew Potent Aloe + Honey Shampoo (Sulfate Free)</div>
+      <div class="product-meta">
+        <span class="tag cat">Shampoo</span><span class="tag vol">400 ml</span><span class="tag price">₹699</span>
+        <span class="tag note">Sulfate Free · No MIT/CMIT · Aloe + Honey</span>
+      </div>
+      <div class="ing-label">Full Ingredients List</div>
+      <div class="ing-text">Water, Lauramidopropyl Betaine, Sodium Cocoyl Isethionate, Sodium Lauroyl Sarcosinate, Sodium Citrate, Citric Acid, Parfum, Sodium Benzoate, Sodium Salicylate, <span class="flagged">Polyquaternium-10</span>, <span class="flagged">Tetrasodium EDTA</span>, Aloe Barbadensis Leaf Juice, Butylene Glycol, Histidine, Honey Extract, <span class="flagged">Alcohol Denatured</span>, Ecklonia Radiata Extract, T-Butyl Alcohol</div>
+      <div class="partial-note">✓ No SLS/SLES · No MIT/CMIT · Cleanest Bio:Renew variant — no propylene glycol, no fragrance allergens listed. Alcohol Denatured and T-Butyl Alcohol used as solvents in small amounts.</div>
+    </div>
+  </div>
+</div>
+
+<div class="product">
+  <div class="product-inner">
+    <img class="product-img" src="https://incidecoder-content.storage.googleapis.com/6eb33b55-14dc-47d2-84fc-35f430ba7a9b/products/herbal-essences-avocado-and-pequi-bio-renew-shampoo/herbal-essences-avocado-and-pequi-bio-renew-shampoo_front_photo_original.jpeg" alt="Bio:Renew Avocado & Pequi Shampoo">
+    <div class="product-info">
+      <div class="product-name">6. Bio:Renew Avocado & Pequi Shampoo (Sulfate Free)</div>
+      <div class="product-meta">
+        <span class="tag cat">Shampoo</span><span class="tag vol">400 ml</span><span class="tag price">₹699</span>
+        <span class="tag note">Sulfate Free · No MIT/CMIT · Avocado Oil + Aloe</span>
+      </div>
+      <div class="ing-label">Full Ingredients List</div>
+      <div class="ing-text">Aqua, Lauramidopropyl Betaine, Sodium Cocoyl Isethionate, Sodium Lauroyl Sarcosinate, Sodium Citrate, Citric Acid, Parfum, Sodium Benzoate, Sodium Salicylate, <span class="flagged">Polyquaternium-10</span>, <span class="flagged">Tetrasodium EDTA</span>, Limonene, Aloe Barbadensis Leaf Juice, Butylene Glycol, Histidine, Persea Gratissima (Avocado) Oil, <span class="flagged">Alcohol Denatured</span>, Ecklonia Radiata Extract</div>
+      <div class="partial-note">✓ No SLS/SLES · No MIT/CMIT · Limonene is a fragrance component that may trigger scalp sensitivity in some users. Avocado Oil is highly moisturizing and nourishing for hair.</div>
+    </div>
+  </div>
+</div>
+
+</div><!-- end page-body -->
+
+<div class="footer">
+  Herbal Essences · herbalessences.com · Available in India: Nykaa · Amazon.in · Flipkart<br>
+  <span style="color:#8b1a1a; font-weight:600;">Red highlights</span> = commonly questioned ingredients (SLS, MIT/CMIT) &nbsp;|&nbsp; <span style="color:#b05800; font-weight:600;">Orange</span> = worth knowing · June 2026
+</div>
+
+</body>
+</html>

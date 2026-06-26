@@ -24,14 +24,19 @@ import axios from 'axios'
 
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'https://checkkaro.onrender.com'
 
-// Keep Render backend awake — ping on load, every 4 min, and immediately when
-// the user returns to the tab (setInterval is throttled in background tabs, so
-// Render can sleep during a long away period; the visibility ping wakes it fast).
+// Keep Render backend awake. Render free tier spins down after 15 min of inactivity.
+// Ping every 2 min — if the ping times out (backend is waking up), retry after 35s
+// so the backend is warm before the user's next real request.
 function usePrewarm() {
   useEffect(() => {
-    const ping = () => axios.get(`${API_BASE_URL}/health`, { timeout: 30000 }).catch(() => {})
+    const ping = () =>
+      axios.get(`${API_BASE_URL}/health`, { timeout: 60000 }).catch(() => {
+        // Backend was sleeping — it's waking up now. Retry once after 35s.
+        setTimeout(() => axios.get(`${API_BASE_URL}/health`, { timeout: 60000 }).catch(() => {}), 35000)
+      })
     ping()
-    const id = setInterval(ping, 4 * 60 * 1000)
+    const id = setInterval(ping, 2 * 60 * 1000)
+    // When user returns to tab after being away, ping immediately
     const onVisible = () => { if (!document.hidden) ping() }
     document.addEventListener('visibilitychange', onVisible)
     return () => {
