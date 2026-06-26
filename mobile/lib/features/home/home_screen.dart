@@ -73,7 +73,7 @@ class _HeroSection extends StatelessWidget {
                       style: TextStyle(
                           fontSize: 20,
                           fontWeight: FontWeight.w900,
-                          color: AppColors.textPrimary,
+                          color: AppColors.brandBlue,
                           fontFamily: 'Poppins')),
                 ],
               ),
@@ -145,7 +145,7 @@ class _HeroSection extends StatelessWidget {
             children: const [
               Text('FOOD', style: TextStyle(fontSize: 30, fontWeight: FontWeight.w900, color: AppColors.brandOrange, fontFamily: 'Poppins')),
               Text('AND',  style: TextStyle(fontSize: 20, fontWeight: FontWeight.w400, color: AppColors.textMuted,   fontFamily: 'Poppins')),
-              Text('COSMETIC', style: TextStyle(fontSize: 30, fontWeight: FontWeight.w900, color: AppColors.brandBlue, fontFamily: 'Poppins')),
+              Text('COSMETIC', style: TextStyle(fontSize: 30, fontWeight: FontWeight.w900, color: AppColors.brandGreen, fontFamily: 'Poppins')),
             ],
           ),
           const Text('Products',
