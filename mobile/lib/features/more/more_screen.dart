@@ -166,7 +166,7 @@ class MoreScreen extends ConsumerWidget {
                       subtitle: 'Create an account to track your contributions',
                       onTap: () => context.push('/login'),
                     )
-                  else
+                  else ...[
                     _MenuTile(
                       icon: Icons.account_circle_outlined,
                       iconColor: AppColors.brandBlue,
@@ -175,6 +175,15 @@ class MoreScreen extends ConsumerWidget {
                       subtitle: user.email,
                       onTap: () {},
                     ),
+                    _MenuTile(
+                      icon: Icons.logout,
+                      iconColor: const Color(0xFFDC2626),
+                      iconBg: const Color(0xFFFEF2F2),
+                      title: 'Log Out',
+                      subtitle: 'Sign out of your account',
+                      onTap: () => ref.read(authProvider.notifier).signOut(),
+                    ),
+                  ],
                 ],
               ),
             ),

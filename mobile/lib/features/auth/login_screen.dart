@@ -79,8 +79,10 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
     final uri = Uri.parse(
       '$supabaseUrl/auth/v1/authorize?provider=google&redirect_to=https%3A%2F%2Fwww.parkho.in',
     );
-    if (await canLaunchUrl(uri)) {
+    try {
       await launchUrl(uri, mode: LaunchMode.externalApplication);
+    } catch (_) {
+      _show('Could not open Google sign-in. Please try email login.', error: true);
     }
   }
 
