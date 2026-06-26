@@ -71,7 +71,7 @@ async def save_product_from_submission(id: str, body: SaveSubmissionBody, reques
     """Create an ai_extracted_products record from a submission and mark it extracted."""
     user = await require_admin(request)
     try:
-        res = supabase_admin.table("ai_extracted_products").insert({
+        supabase_admin.table("ai_extracted_products").insert({
             "name":            body.name,
             "brand":           (body.brand or "")[:100] or None,
             "category":        body.category or "Personal Care",
@@ -86,8 +86,9 @@ async def save_product_from_submission(id: str, body: SaveSubmissionBody, reques
             "ingredients_raw": body.ingredients_raw[:5000],
             "submission_id":   id,
             "status":          "active",
-        }).select("id").execute()
+        }).execute()
 
+        res = supabase_admin.table("ai_extracted_products").select("id").eq("submission_id", id).order("created_at", desc=True).limit(1).execute()
         product_id = res.data[0]["id"] if res.data else None
         supabase_admin.table("product_submissions").update({"status": "extracted"}).eq("id", id).execute()
 
