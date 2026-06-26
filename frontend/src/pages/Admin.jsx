@@ -332,10 +332,23 @@ function SubmissionCard({ sub, onApprove, onReject, onSave, saving, cardMsg }) {
             <span style={{ fontSize: 15 }}>📧</span>
             <span style={{ fontSize: 13, color: '#374151', wordBreak: 'break-all' }}>{sub.email || '—'}</span>
           </div>
-          <div style={{ display: 'flex', gap: 8 }}>
-            <span style={{ fontSize: 15 }}>💳</span>
-            <span style={{ fontSize: 14, fontWeight: 700, color: '#1d4ed8', wordBreak: 'break-all' }}>{sub.contact}</span>
-          </div>
+          {sub.source === 'open_food_facts' ? (
+            <div style={{ display: 'flex', gap: 8, alignItems: 'center' }}>
+              <span style={{ fontSize: 15 }}>🌐</span>
+              <span style={{ fontSize: 12, background: '#eff6ff', color: '#1d4ed8', fontWeight: 700, padding: '2px 8px', borderRadius: 6 }}>Open Food Facts Import</span>
+            </div>
+          ) : (
+            <div style={{ display: 'flex', gap: 8 }}>
+              <span style={{ fontSize: 15 }}>💳</span>
+              <span style={{ fontSize: 14, fontWeight: 700, color: '#1d4ed8', wordBreak: 'break-all' }}>{sub.contact}</span>
+            </div>
+          )}
+          {sub.barcode && (
+            <div style={{ display: 'flex', gap: 8, alignItems: 'center' }}>
+              <span style={{ fontSize: 15 }}>📊</span>
+              <span style={{ fontSize: 13, fontFamily: 'monospace', color: '#374151' }}>Barcode: {sub.barcode}</span>
+            </div>
+          )}
           <div style={{ display: 'flex', gap: 8 }}>
             <span style={{ fontSize: 15 }}>🖼️</span>
             <span style={{ fontSize: 13, color: '#6b7280' }}>{imgs.length} image{imgs.length !== 1 ? 's' : ''}</span>
@@ -1175,6 +1188,7 @@ export default function Admin() {
           recommendation:  recommendationFromScore(score),
           ingredients:     parsed,
           ingredients_raw: text.trim().slice(0, 5000),
+          barcode:         sub.barcode || null,
         }),
       })
 

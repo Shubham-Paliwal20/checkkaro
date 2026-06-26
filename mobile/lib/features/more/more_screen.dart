@@ -139,14 +139,6 @@ class MoreScreen extends ConsumerWidget {
                     onTap: () => _requireLogin(context, ref, () => context.go('/contribute')),
                   ),
                   _MenuTile(
-                    icon: Icons.camera_alt_outlined,
-                    iconColor: AppColors.brandBlue,
-                    iconBg: const Color(0xFFEFF6FF),
-                    title: 'Submit a Photo',
-                    subtitle: 'Upload a clearer ingredient label photo',
-                    onTap: () => _requireLogin(context, ref, () => context.go('/contribute')),
-                  ),
-                  _MenuTile(
                     icon: Icons.edit_note_outlined,
                     iconColor: AppColors.brandGreen,
                     iconBg: AppColors.brandGreenLight,

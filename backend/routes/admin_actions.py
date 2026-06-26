@@ -64,6 +64,7 @@ class SaveSubmissionBody(BaseModel):
     fssai_note: Optional[str] = None
     verdict: Optional[str] = None
     recommendation: Optional[str] = None
+    barcode: Optional[str] = None
 
 
 @router.post("/product-submissions/{id}/save")
@@ -85,6 +86,7 @@ async def save_product_from_submission(id: str, body: SaveSubmissionBody, reques
             "ingredients":     body.ingredients,
             "ingredients_raw": body.ingredients_raw[:5000],
             "submission_id":   id,
+            "barcode":         body.barcode or None,
             "status":          "active",
         }).execute()
 

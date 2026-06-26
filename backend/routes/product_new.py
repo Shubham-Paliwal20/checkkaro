@@ -638,6 +638,82 @@ async def search_product(name: str = Query(..., description="Product name to sea
     return response
 
 
+# ── Barcode Lookup ────────────────────────────────────────────────────────────
+
+_BARCODE_RE = re.compile(r'^\d{8,14}$')
+
+@router.get("/barcode/{barcode}")
+async def get_product_by_barcode(barcode: str):
+    """Look up a product by EAN/UPC barcode. Returns 404 if not in DB."""
+    if not _BARCODE_RE.match(barcode):
+        raise HTTPException(status_code=400, detail="Invalid barcode format.")
+
+    rows = await _db_get_async(
+        "ai_extracted_products",
+        {"barcode": f"eq.{barcode}", "status": "eq.active", "select": "id,name,brand,category,static_key,image_url,images,grade,summary,fssai_note,verdict,recommendation,ingredients,ingredients_raw"}
+    )
+
+    if not rows:
+        raise HTTPException(status_code=404, detail=f"No product found for barcode {barcode}.")
+
+    p = rows[0]
+    raw = p.get("ingredients_raw") or ""
+    cat = p.get("category") or ""
+    stored_ings = p.get("ingredients") or []
+
+    if stored_ings and p.get("grade"):
+        ingredients = [IngredientItem(
+            name=i.get("name", ""),
+            aliases=i.get("aliases", ""),
+            classification=i.get("classification", "generally_recognised"),
+            one_line_note=i.get("one_line_note", ""),
+            regulatory_note=i.get("regulatory_note", ""),
+            recommendation=i.get("recommendation"),
+            commonly_found_in=i.get("commonly_found_in"),
+            health_effects=i.get("health_effects"),
+            countries_restricted=i.get("countries_restricted", []),
+            fssai_position=i.get("fssai_position"),
+        ) for i in stored_ings]
+        grade = p["grade"]
+    elif raw:
+        raw_names = _parse_raw(raw)
+        ingredients = [_build_ingredient_item(n, cat) for n in raw_names if n]
+        grade = calculate_grade([i.dict() for i in ingredients])
+    else:
+        ingredients = [IngredientItem(
+            name="Standard Ingredients", aliases="",
+            classification="generally_recognised",
+            one_line_note="Full ingredient list not yet available",
+            regulatory_note="FSSAI approved"
+        )]
+        grade = p.get("grade") or "C"
+
+    raw_images = p.get("images") or []
+    if not raw_images and p.get("image_url"):
+        raw_images = [p["image_url"]]
+
+    return ProductResponse(
+        id=str(p.get("id", "")),
+        name=p["name"],
+        brand=p.get("brand") or "Unknown",
+        category=p.get("category") or "General",
+        image_url=p.get("image_url"),
+        images=raw_images or None,
+        grade=grade,
+        awareness_score=grade_to_legacy_score(grade),
+        summary=p.get("summary") or f"{p['name']} — product information.",
+        fssai_note=p.get("fssai_note") or "FSSAI approved product.",
+        verdict=p.get("verdict") or "",
+        recommendation=p.get("recommendation") or "",
+        ingredients=ingredients,
+        ingredients_raw=raw or None,
+        search_count=1,
+        data_source="database_verified",
+        confidence="high",
+        is_complete=True,
+    )
+
+
 # ── Safer Alternatives ───────────────────────────────────────────────────────
 # Category groups for peer lookup (broad category → exact DB categories).
 _CAT_PEERS: dict[str, list[str]] = {
