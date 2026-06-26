@@ -1,4 +1,6 @@
+import 'dart:io';
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import '../../core/api/api_client.dart';
@@ -40,7 +42,7 @@ class _ProductsScreenState extends State<ProductsScreen> {
 
   // UI state
   bool _loading = true;
-  bool _slowLoad = false;
+  bool _noInternet = false;
   String? _error;
 
   final _searchCtrl = TextEditingController();
@@ -57,9 +59,17 @@ class _ProductsScreenState extends State<ProductsScreen> {
     super.dispose();
   }
 
+  bool _isNoInternet(Object e) {
+    if (e is DioException) {
+      if (e.type == DioExceptionType.connectionError) return true;
+      if (e.error is SocketException) return true;
+    }
+    return false;
+  }
+
   Future<void> _fetch() async {
     if (!mounted) return;
-    setState(() { _loading = true; _error = null; _slowLoad = false; });
+    setState(() { _loading = true; _error = null; _noInternet = false; });
 
     for (int attempt = 0; attempt < 3; attempt++) {
       try {
@@ -73,29 +83,31 @@ class _ProductsScreenState extends State<ProductsScreen> {
 
         final prods = (data['products'] as List? ?? []).cast<Map<String, dynamic>>();
         setState(() {
-          _products = prods;
-          _total    = (data['total'] as num?)?.toInt() ?? 0;
-          _pages    = (data['pages'] as num?)?.toInt() ?? 1;
-          _loading  = false;
-          _slowLoad = false;
+          _products   = prods;
+          _total      = (data['total'] as num?)?.toInt() ?? 0;
+          _pages      = (data['pages'] as num?)?.toInt() ?? 1;
+          _loading    = false;
+          _noInternet = false;
           if ((data['categories'] as List?)?.isNotEmpty == true) {
             _categories = (data['categories'] as List).cast<String>();
           }
         });
         _fetchPhotos(prods);
         return;
-      } catch (_) {
+      } catch (e) {
+        if (_isNoInternet(e)) {
+          if (!mounted) return;
+          setState(() { _loading = false; _noInternet = true; });
+          return;
+        }
         if (attempt < 2) {
-          // Show hint only on second retry
-          if (attempt == 1 && mounted) setState(() => _slowLoad = true);
           await Future.delayed(const Duration(seconds: 8));
           if (!mounted) return;
         } else {
           if (!mounted) return;
           setState(() {
-            _loading  = false;
-            _slowLoad = false;
-            _error    = 'Could not connect. Please check your internet and try again.';
+            _loading = false;
+            _error   = 'Something went wrong. Please try again.';
           });
         }
       }
@@ -306,6 +318,39 @@ class _ProductsScreenState extends State<ProductsScreen> {
                 ),
               ),
             )
+          else if (_noInternet)
+            SliverToBoxAdapter(
+              child: Center(
+                child: Padding(
+                  padding: const EdgeInsets.all(40),
+                  child: Column(
+                    children: [
+                      const Text('📵', style: TextStyle(fontSize: 48)),
+                      const SizedBox(height: 12),
+                      const Text('No internet connection',
+                          style: TextStyle(fontSize: 16, fontWeight: FontWeight.w700, color: AppColors.textPrimary)),
+                      const SizedBox(height: 6),
+                      const Text('Please check your internet connection\nand try again.',
+                          textAlign: TextAlign.center,
+                          style: TextStyle(fontSize: 13, color: AppColors.textMuted, height: 1.5)),
+                      const SizedBox(height: 24),
+                      ElevatedButton.icon(
+                        onPressed: _fetch,
+                        icon: const Icon(Icons.refresh, size: 18),
+                        label: const Text('Refresh', style: TextStyle(fontWeight: FontWeight.w700)),
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: AppColors.brandBlue,
+                          foregroundColor: Colors.white,
+                          elevation: 0,
+                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                          padding: const EdgeInsets.symmetric(horizontal: 28, vertical: 13),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            )
           else if (_error != null)
             SliverToBoxAdapter(
               child: Center(
@@ -315,7 +360,8 @@ class _ProductsScreenState extends State<ProductsScreen> {
                     children: [
                       const Text('😕', style: TextStyle(fontSize: 48)),
                       const SizedBox(height: 12),
-                      const Text('Something went wrong', style: TextStyle(fontSize: 16, fontWeight: FontWeight.w700, color: AppColors.textPrimary)),
+                      const Text('Something went wrong',
+                          style: TextStyle(fontSize: 16, fontWeight: FontWeight.w700, color: AppColors.textPrimary)),
                       const SizedBox(height: 6),
                       Text(_error!, textAlign: TextAlign.center, style: const TextStyle(fontSize: 12, color: AppColors.textMuted)),
                       const SizedBox(height: 20),
@@ -363,17 +409,6 @@ class _ProductsScreenState extends State<ProductsScreen> {
               ),
             ),
 
-          // ── Slow load hint ────────────────────────────────────────────────
-          if (_slowLoad)
-            SliverToBoxAdapter(
-              child: Container(
-                margin: const EdgeInsets.fromLTRB(16, 0, 16, 8),
-                padding: const EdgeInsets.all(12),
-                decoration: BoxDecoration(color: const Color(0xFFFFFBEB), borderRadius: BorderRadius.circular(10), border: Border.all(color: const Color(0xFFFDE68A))),
-                child: const Text('⏳ Loading products… this may take a moment on first visit.',
-                    textAlign: TextAlign.center, style: TextStyle(fontSize: 12, color: Color(0xFF92400E))),
-              ),
-            ),
 
           // ── Pagination ────────────────────────────────────────────────────
           if (!_loading && _pages > 1)
