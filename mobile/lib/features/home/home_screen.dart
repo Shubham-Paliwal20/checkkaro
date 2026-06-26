@@ -31,7 +31,7 @@ class HomeScreen extends ConsumerWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            _HeroSection(user: user),
+            _HeroSection(user: user, onLogout: () => ref.read(authProvider.notifier).signOut()),
             _ContributeCTA(),
             _FeaturesSection(),
             _HowItWorksSection(),
@@ -50,7 +50,8 @@ class HomeScreen extends ConsumerWidget {
 
 class _HeroSection extends StatelessWidget {
   final AuthUser? user;
-  const _HeroSection({this.user});
+  final VoidCallback onLogout;
+  const _HeroSection({this.user, required this.onLogout});
 
   @override
   Widget build(BuildContext context) {
@@ -80,7 +81,53 @@ class _HeroSection extends StatelessWidget {
                 ],
               ),
               GestureDetector(
-                onTap: () => context.push('/login'),
+                onTap: () {
+                  if (user == null) {
+                    context.push('/login');
+                  } else {
+                    showModalBottomSheet(
+                      context: context,
+                      backgroundColor: Colors.white,
+                      isScrollControlled: true,
+                      shape: const RoundedRectangleBorder(borderRadius: BorderRadius.vertical(top: Radius.circular(24))),
+                      builder: (ctx) => Padding(
+                        padding: EdgeInsets.fromLTRB(24, 20, 24, MediaQuery.of(ctx).viewInsets.bottom + 36),
+                        child: Column(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Container(width: 40, height: 4, decoration: BoxDecoration(color: AppColors.border, borderRadius: BorderRadius.circular(2))),
+                            const SizedBox(height: 20),
+                            CircleAvatar(radius: 28, backgroundColor: AppColors.brandBlue,
+                                child: Text(user!.email[0].toUpperCase(),
+                                    style: const TextStyle(color: Colors.white, fontSize: 22, fontWeight: FontWeight.w800))),
+                            const SizedBox(height: 12),
+                            Text(user!.email.split('@')[0],
+                                style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w800, color: AppColors.textPrimary, fontFamily: 'Poppins')),
+                            const SizedBox(height: 2),
+                            Text(user!.email,
+                                style: const TextStyle(fontSize: 13, color: AppColors.textMuted)),
+                            const SizedBox(height: 24),
+                            SizedBox(
+                              width: double.infinity,
+                              child: ElevatedButton.icon(
+                                onPressed: () { Navigator.of(ctx).pop(); onLogout(); },
+                                icon: const Icon(Icons.logout, size: 18),
+                                label: const Text('Log Out', style: TextStyle(fontSize: 15, fontWeight: FontWeight.w700)),
+                                style: ElevatedButton.styleFrom(
+                                  backgroundColor: const Color(0xFFFEF2F2),
+                                  foregroundColor: const Color(0xFFDC2626),
+                                  elevation: 0,
+                                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
+                                  padding: const EdgeInsets.symmetric(vertical: 15),
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    );
+                  }
+                },
                 child: Container(
                   padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
                   decoration: BoxDecoration(
