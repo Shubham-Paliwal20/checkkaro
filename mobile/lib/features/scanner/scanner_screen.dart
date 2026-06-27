@@ -207,14 +207,50 @@ class _BarcodeSubmissionSheetState extends ConsumerState<_BarcodeSubmissionSheet
 
   Future<void> _pickPhotos() async {
     if (_photos.length >= 5) return;
+    final source = await _showPhotoSourceSheet();
+    if (source == null) return;
+
     try {
-      final picked = await _picker.pickMultiImage(imageQuality: 80);
-      if (picked.isEmpty) return;
-      final canAdd = 5 - _photos.length;
-      setState(() => _photos = [..._photos, ...picked.take(canAdd)]);
+      if (source == ImageSource.camera) {
+        final photo = await _picker.pickImage(source: ImageSource.camera, imageQuality: 80);
+        if (photo == null) return;
+        setState(() => _photos = [..._photos, photo]);
+      } else {
+        final canAdd = 5 - _photos.length;
+        final picked = await _picker.pickMultiImage(imageQuality: 80);
+        if (picked.isEmpty) return;
+        setState(() => _photos = [..._photos, ...picked.take(canAdd)]);
+      }
     } catch (e) {
-      setState(() => _error = 'Could not open gallery.');
+      setState(() => _error = 'Could not open ${source == ImageSource.camera ? "camera" : "gallery"}.');
     }
+  }
+
+  Future<ImageSource?> _showPhotoSourceSheet() async {
+    return showModalBottomSheet<ImageSource>(
+      context: context,
+      backgroundColor: Colors.white,
+      shape: const RoundedRectangleBorder(borderRadius: BorderRadius.vertical(top: Radius.circular(16))),
+      builder: (_) => SafeArea(
+        child: Column(mainAxisSize: MainAxisSize.min, children: [
+          Container(width: 40, height: 4, margin: const EdgeInsets.symmetric(vertical: 10),
+              decoration: BoxDecoration(color: Colors.grey.shade300, borderRadius: BorderRadius.circular(2))),
+          ListTile(
+            leading: const CircleAvatar(backgroundColor: Color(0xFFFFF3E0), child: Icon(Icons.camera_alt, color: AppColors.brandOrange)),
+            title: const Text('Take Photo', style: TextStyle(fontWeight: FontWeight.w600, fontSize: 14)),
+            subtitle: const Text('Use camera to capture now', style: TextStyle(fontSize: 12)),
+            onTap: () => Navigator.pop(context, ImageSource.camera),
+          ),
+          ListTile(
+            leading: const CircleAvatar(backgroundColor: Color(0xFFE8F5E9), child: Icon(Icons.photo_library, color: Color(0xFF2E7D32))),
+            title: const Text('Choose from Gallery', style: TextStyle(fontWeight: FontWeight.w600, fontSize: 14)),
+            subtitle: const Text('Pick existing photos', style: TextStyle(fontSize: 12)),
+            onTap: () => Navigator.pop(context, ImageSource.gallery),
+          ),
+          const SizedBox(height: 8),
+        ]),
+      ),
+    );
   }
 
   void _removePhoto(int index) {
