@@ -648,10 +648,33 @@ async def get_product_by_barcode(barcode: str):
     if not _BARCODE_RE.match(barcode):
         raise HTTPException(status_code=400, detail="Invalid barcode format.")
 
-    rows = await _db_get_async(
-        "ai_extracted_products",
-        {"barcode": f"eq.{barcode}", "status": "eq.active", "select": "id,name,brand,category,static_key,image_url,images,grade,summary,fssai_note,verdict,recommendation,ingredients,ingredients_raw"}
-    )
+    # Check crowdsourced product_barcodes table first (approved submissions).
+    # Use service-role client — product_barcodes has RLS enabled so anon key returns [].
+    try:
+        _bc_res = supabase_admin.table("product_barcodes") \
+            .select("product_id,variant_label") \
+            .eq("barcode", barcode) \
+            .eq("status", "approved") \
+            .limit(1).execute()
+        barcode_rows = _bc_res.data or []
+    except Exception:
+        barcode_rows = []
+
+    if barcode_rows:
+        product_id = barcode_rows[0]["product_id"]
+        variant_label = barcode_rows[0].get("variant_label")
+        rows = await _db_get_async(
+            "ai_extracted_products",
+            {"id": f"eq.{product_id}", "status": "eq.active", "select": "id,name,brand,category,static_key,image_url,images,grade,summary,fssai_note,verdict,recommendation,ingredients,ingredients_raw"}
+        )
+    else:
+        # Fall back to direct barcode column on the product record
+        rows = await _db_get_async(
+            "ai_extracted_products",
+            {"barcode": f"eq.{barcode}", "status": "eq.active", "select": "id,name,brand,category,static_key,image_url,images,grade,summary,fssai_note,verdict,recommendation,ingredients,ingredients_raw"}
+        )
+        variant_label = None
+
 
     if not rows:
         raise HTTPException(status_code=404, detail=f"No product found for barcode {barcode}.")
@@ -692,7 +715,7 @@ async def get_product_by_barcode(barcode: str):
     if not raw_images and p.get("image_url"):
         raw_images = [p["image_url"]]
 
-    return ProductResponse(
+    resp = ProductResponse(
         id=str(p.get("id", "")),
         name=p["name"],
         brand=p.get("brand") or "Unknown",
@@ -712,6 +735,10 @@ async def get_product_by_barcode(barcode: str):
         confidence="high",
         is_complete=True,
     )
+    result = resp.dict()
+    if variant_label:
+        result["variant_label"] = variant_label
+    return result
 
 
 # ── Safer Alternatives ───────────────────────────────────────────────────────
