@@ -20,15 +20,27 @@ class ScannerScreen extends StatefulWidget {
   State<ScannerScreen> createState() => _ScannerScreenState();
 }
 
-class _ScannerScreenState extends State<ScannerScreen> {
+class _ScannerScreenState extends State<ScannerScreen> with SingleTickerProviderStateMixin {
   final _controller = MobileScannerController();
   bool _scanning = true;
   bool _loading  = false;
   String? _barcode;
   String? _error;
 
+  late final AnimationController _scanAnim;
+  late final Animation<double> _scanPos;
+
+  @override
+  void initState() {
+    super.initState();
+    _scanAnim = AnimationController(vsync: this, duration: const Duration(milliseconds: 1800))
+      ..repeat(reverse: true);
+    _scanPos = CurvedAnimation(parent: _scanAnim, curve: Curves.easeInOut);
+  }
+
   @override
   void dispose() {
+    _scanAnim.dispose();
     _controller.dispose();
     super.dispose();
   }
@@ -97,11 +109,49 @@ class _ScannerScreenState extends State<ScannerScreen> {
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
-                Container(
+                SizedBox(
                   width: 240, height: 240,
-                  decoration: BoxDecoration(
-                    border: Border.all(color: _error != null ? Colors.red : AppColors.brandOrange, width: 3),
-                    borderRadius: BorderRadius.circular(16),
+                  child: Stack(
+                    children: [
+                      // Frame border
+                      Container(
+                        decoration: BoxDecoration(
+                          border: Border.all(
+                            color: _error != null ? Colors.red : AppColors.brandOrange,
+                            width: 3,
+                          ),
+                          borderRadius: BorderRadius.circular(16),
+                        ),
+                      ),
+                      // Animated scan line — only visible while actively scanning
+                      if (_scanning && _error == null)
+                        AnimatedBuilder(
+                          animation: _scanPos,
+                          builder: (_, __) => Positioned(
+                            top: 12 + _scanPos.value * 210,
+                            left: 12, right: 12,
+                            child: Container(
+                              height: 2.5,
+                              decoration: BoxDecoration(
+                                gradient: LinearGradient(
+                                  colors: [
+                                    Colors.transparent,
+                                    AppColors.brandOrange.withOpacity(0.9),
+                                    Colors.transparent,
+                                  ],
+                                ),
+                                boxShadow: [
+                                  BoxShadow(
+                                    color: AppColors.brandOrange.withOpacity(0.5),
+                                    blurRadius: 6,
+                                    spreadRadius: 1,
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                        ),
+                    ],
                   ),
                 ),
                 const SizedBox(height: 24),
