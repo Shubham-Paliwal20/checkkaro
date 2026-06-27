@@ -1164,9 +1164,9 @@ export default function Admin() {
         method: 'POST',
         body: JSON.stringify({ product_id: productId }),
       })
-      setLinkMsg(m => ({ ...m, [submissionId]: `Linked to "${result.product_name}"` }))
       setLinkingId(null); setLinkSearch(''); setLinkResults([])
-      fetchBarcodes()
+      await fetchBarcodes()
+      setBarcodeSubTab('linked')
     } catch (e) { alert(`Link failed: ${e.message}`) }
   }
 
