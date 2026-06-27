@@ -1040,6 +1040,11 @@ export default function Admin() {
         } finally {
           if (!cancelled) setBarcodeFetching(false)
         }
+        // Load approved independently — failure here must not block pending display
+        try {
+          const approved = await adminFetch('/barcodes/approved')
+          if (!cancelled) setApprovedBarcodeSubs(approved || [])
+        } catch (_) {}
       } else {
         setFetching(true)
         setFetchError(null)
@@ -1113,24 +1118,25 @@ export default function Admin() {
   const fetchBarcodes = async () => {
     setBarcodeFetching(true)
     try {
-      const [pending, approved] = await Promise.all([
-        adminFetch('/barcodes/pending'),
-        adminFetch('/barcodes/approved'),
-      ])
+      const pending = await adminFetch('/barcodes/pending')
       setBarcodeSubs(pending || [])
-      setApprovedBarcodeSubs(approved || [])
     } catch (e) {
       setFetchError(`Barcode fetch error: ${e.message}`)
     } finally {
       setBarcodeFetching(false)
     }
+    // Fetch approved separately so a failure here doesn't break the pending list
+    try {
+      const approved = await adminFetch('/barcodes/approved')
+      setApprovedBarcodeSubs(approved || [])
+    } catch (_) {}
   }
 
   const handleApproveBarcode = async (id) => {
     try {
       await adminFetch(`/barcodes/${id}/approve`, { method: 'POST' })
       fetchAll(); fetchBarcodes()
-      setBarcodeSubTab('approved')
+      // Stay on pending tab so admin can continue approving remaining items
     } catch (e) { alert(`Approve failed: ${e.message}`) }
   }
 
