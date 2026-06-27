@@ -251,6 +251,11 @@ class _LinkBarcodeSheetState extends ConsumerState<_LinkBarcodeSheet> {
     }
   }
 
+  void _goToLogin() {
+    Navigator.of(context).pop();
+    GoRouter.of(context).push('/login');
+  }
+
   @override
   Widget build(BuildContext context) {
     final user = ref.watch(authProvider);
@@ -407,12 +412,12 @@ class _LinkBarcodeSheetState extends ConsumerState<_LinkBarcodeSheet> {
       const SizedBox(height: 20),
 
       GestureDetector(
-        onTap: (_submitting || user == null) ? null : _submit,
+        onTap: _submitting ? null : (user == null ? _goToLogin : _submit),
         child: Container(
           width: double.infinity,
           padding: const EdgeInsets.symmetric(vertical: 14),
           decoration: BoxDecoration(
-            color: (user == null || _submitting) ? Colors.grey.shade300 : AppColors.brandOrange,
+            color: _submitting ? Colors.grey.shade300 : AppColors.brandOrange,
             borderRadius: BorderRadius.circular(12),
           ),
           alignment: Alignment.center,
@@ -420,7 +425,7 @@ class _LinkBarcodeSheetState extends ConsumerState<_LinkBarcodeSheet> {
               ? const SizedBox(width: 20, height: 20, child: CircularProgressIndicator(color: Colors.white, strokeWidth: 2))
               : Text(
                   user == null ? 'Log in to Submit' : 'Submit — Earn ₹1 on Approval',
-                  style: TextStyle(fontSize: 15, fontWeight: FontWeight.w700, color: user == null ? Colors.grey.shade600 : Colors.white),
+                  style: const TextStyle(fontSize: 15, fontWeight: FontWeight.w700, color: Colors.white),
                 ),
         ),
       ),
