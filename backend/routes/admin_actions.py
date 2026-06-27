@@ -400,7 +400,11 @@ async def link_barcode_to_product(id: str, body: LinkBarcodeBody, request: Reque
         }).execute()
 
         # Mark submission as linked
-        supabase_admin.table("barcode_submissions").update({"status": "linked", "linked_product_id": body.product_id}).eq("id", id).execute()
+        supabase_admin.table("barcode_submissions").update({
+            "status": "linked",
+            "linked_product_id": body.product_id,
+            "linked_product_name": product.data[0]["name"],
+        }).eq("id", id).execute()
 
         _audit(user.email, "link_barcode", "barcode_submission", id, {
             "barcode": sub["barcode"],

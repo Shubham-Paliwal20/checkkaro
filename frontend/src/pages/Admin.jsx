@@ -1143,7 +1143,7 @@ export default function Admin() {
   const handleRejectBarcode = async (id) => {
     try {
       await adminFetch(`/barcodes/${id}/reject`, { method: 'POST' })
-      fetchAll(); fetchBarcodes()
+      fetchAll(); await fetchBarcodes(); setBarcodeSubTab('done')
     } catch (e) { alert(`Reject failed: ${e.message}`) }
   }
 
@@ -1166,7 +1166,7 @@ export default function Admin() {
       })
       setLinkingId(null); setLinkSearch(''); setLinkResults([])
       await fetchBarcodes()
-      setBarcodeSubTab('linked')
+      setBarcodeSubTab('done')
     } catch (e) { alert(`Link failed: ${e.message}`) }
   }
 
@@ -1698,8 +1698,7 @@ export default function Admin() {
             {[
               { key: 'pending',  label: 'Pending',   color: '#f59e0b', count: barcodeSubs.length },
               { key: 'approved', label: 'To Link',   color: '#059669', count: approvedBarcodeSubs.length },
-              { key: 'rejected', label: 'Rejected',  color: '#dc2626', count: rejectedBarcodeSubs.length },
-              { key: 'linked',   label: 'Linked',    color: '#7c3aed', count: linkedBarcodeSubs.length },
+              { key: 'done',     label: 'Done',      color: '#6366f1', count: rejectedBarcodeSubs.length + linkedBarcodeSubs.length },
             ].map(({ key, label, color, count }) => (
               <button key={key} onClick={() => setBarcodeSubTab(key)} style={{
                 padding: '6px 14px', borderRadius: 20, border: 'none', fontWeight: 700, fontSize: 12,
@@ -1741,20 +1740,21 @@ export default function Admin() {
                   ))}
                 </div>
 
-          ) : barcodeSubTab === 'rejected' ? (
-            rejectedBarcodeSubs.length === 0
-              ? <BarcodeEmpty icon="🚫" text="No rejected submissions" />
+          ) : (() => {
+            const doneItems = [
+              ...rejectedBarcodeSubs.map(s => ({ ...s, _doneStatus: 'rejected' })),
+              ...linkedBarcodeSubs.map(s => ({ ...s, _doneStatus: 'linked' })),
+            ].sort((a, b) => new Date(b.created_at) - new Date(a.created_at))
+            return doneItems.length === 0
+              ? <BarcodeEmpty icon="📋" text="No completed actions yet" />
               : <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
-                  {rejectedBarcodeSubs.map(sub => <BarcodeInfoCard key={sub.id} sub={sub} statusLabel="REJECTED" statusColor="#dc2626" statusBg="#fef2f2" statusBorder="#fecaca" />)}
+                  {doneItems.map(sub =>
+                    sub._doneStatus === 'rejected'
+                      ? <BarcodeInfoCard key={sub.id} sub={sub} statusLabel="REJECTED" statusColor="#dc2626" statusBg="#fef2f2" statusBorder="#fecaca" />
+                      : <BarcodeDoneCard  key={sub.id} sub={sub} />
+                  )}
                 </div>
-
-          ) : (
-            linkedBarcodeSubs.length === 0
-              ? <BarcodeEmpty icon="🟣" text="No linked submissions yet" />
-              : <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
-                  {linkedBarcodeSubs.map(sub => <BarcodeInfoCard key={sub.id} sub={sub} statusLabel="LINKED" statusColor="#7c3aed" statusBg="#f5f3ff" statusBorder="#ddd6fe" />)}
-                </div>
-          )}
+          })()}
         </>
       )}
 
@@ -1833,9 +1833,21 @@ function BarcodeInfoCard({ sub, statusLabel, statusColor, statusBg, statusBorder
       {sub.reviewed_at && (
         <p style={{ margin: 0, fontSize: 11, color: '#9ca3af' }}>Reviewed: {fmtDateTime(sub.reviewed_at)}</p>
       )}
-      {sub.linked_product_id && (
-        <p style={{ margin: '4px 0 0', fontSize: 12, color: '#7c3aed' }}>Linked product ID: <code style={{ fontSize: 11 }}>{sub.linked_product_id}</code></p>
-      )}
+    </BarcodeCardBase>
+  )
+}
+
+function BarcodeDoneCard({ sub }) {
+  return (
+    <BarcodeCardBase sub={sub} statusLabel="LINKED" statusColor="#7c3aed" statusBg="#f5f3ff" statusBorder="#ddd6fe">
+      <div style={{ background: '#f5f3ff', border: '1px solid #ddd6fe', borderRadius: 8, padding: '8px 12px', marginTop: 4 }}>
+        <p style={{ margin: 0, fontSize: 12, color: '#5b21b6', fontWeight: 700 }}>
+          🔗 Linked to: <span style={{ color: '#7c3aed' }}>{sub.linked_product_name || sub.linked_product_id || '—'}</span>
+        </p>
+        {sub.reviewed_at && (
+          <p style={{ margin: '4px 0 0', fontSize: 11, color: '#9ca3af' }}>Linked on: {fmtDateTime(sub.reviewed_at)}</p>
+        )}
+      </div>
     </BarcodeCardBase>
   )
 }
