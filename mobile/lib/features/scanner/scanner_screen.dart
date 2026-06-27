@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:mobile_scanner/mobile_scanner.dart';
@@ -6,6 +7,7 @@ import 'package:go_router/go_router.dart';
 import '../../core/api/api_client.dart';
 import '../../core/auth/auth_provider.dart';
 import '../../core/theme/app_theme.dart';
+import '../auth/login_screen.dart';
 
 class ScannerScreen extends StatefulWidget {
   const ScannerScreen({super.key});
@@ -244,16 +246,19 @@ class _LinkBarcodeSheetState extends ConsumerState<_LinkBarcodeSheet> {
         variantLabel: _variantCtrl.text.trim().isEmpty ? null : _variantCtrl.text.trim(),
       );
       if (mounted) setState(() { _submitted = true; _submitting = false; });
-    } on Exception catch (e) {
-      final raw = e.toString().replaceFirst('Exception: ', '');
-      final msg = (raw.contains('already') || raw.contains('submitted')) ? raw : 'Submission failed. Please try again.';
-      if (mounted) setState(() { _submitError = msg; _submitting = false; });
+    } on DioException catch (e) {
+      final detail = (e.response?.data as Map?)?['detail']?.toString() ?? 'Submission failed. Please try again.';
+      if (mounted) setState(() { _submitError = detail; _submitting = false; });
+    } on Exception catch (_) {
+      if (mounted) setState(() { _submitError = 'Submission failed. Please try again.'; _submitting = false; });
     }
   }
 
   void _goToLogin() {
-    Navigator.of(context).pop();
-    GoRouter.of(context).push('/login');
+    // Push login ON TOP of the sheet so filled details are preserved when user returns
+    Navigator.of(context, rootNavigator: true).push(
+      MaterialPageRoute(fullscreenDialog: true, builder: (_) => const LoginScreen()),
+    );
   }
 
   @override
