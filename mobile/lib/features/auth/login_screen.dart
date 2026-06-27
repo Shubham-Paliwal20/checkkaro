@@ -149,8 +149,15 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                     child: Image.asset('assets/images/logo.png', width: 44, height: 44, fit: BoxFit.cover),
                   ),
                   const SizedBox(width: 12),
-                  const Text('Parkho',
-                      style: TextStyle(fontSize: 24, fontWeight: FontWeight.w900, color: AppColors.textPrimary, fontFamily: 'Poppins')),
+                  RichText(
+                    text: const TextSpan(
+                      style: TextStyle(fontSize: 24, fontWeight: FontWeight.w900, fontFamily: 'Poppins'),
+                      children: [
+                        TextSpan(text: 'Check', style: TextStyle(color: AppColors.brandOrange)),
+                        TextSpan(text: 'Karo',  style: TextStyle(color: AppColors.brandGreen)),
+                      ],
+                    ),
+                  ),
                 ],
               ),
               const SizedBox(height: 24),

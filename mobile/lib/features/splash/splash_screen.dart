@@ -67,14 +67,13 @@ class _SplashScreenState extends State<SplashScreen> with SingleTickerProviderSt
                       ),
                     ),
                     const SizedBox(width: 12),
-                    const Text(
-                      'Parkho',
-                      style: TextStyle(
-                        fontSize: 34,
-                        fontWeight: FontWeight.w900,
-                        color: AppColors.brandBlue,
-                        fontFamily: 'Poppins',
-                        letterSpacing: -1,
+                    RichText(
+                      text: const TextSpan(
+                        style: TextStyle(fontSize: 34, fontWeight: FontWeight.w900, fontFamily: 'Poppins', letterSpacing: -1),
+                        children: [
+                          TextSpan(text: 'Check', style: TextStyle(color: AppColors.brandOrange)),
+                          TextSpan(text: 'Karo',  style: TextStyle(color: AppColors.brandGreen)),
+                        ],
                       ),
                     ),
                   ],
