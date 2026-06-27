@@ -315,6 +315,20 @@ async def get_approved_barcodes(request: Request):
     return res.data or []
 
 
+@router.get("/barcodes/rejected")
+async def get_rejected_barcodes(request: Request):
+    user = await require_admin(request)
+    res = supabase_admin.table("barcode_submissions").select("*").eq("status", "rejected").order("reviewed_at", desc=True).execute()
+    return res.data or []
+
+
+@router.get("/barcodes/linked")
+async def get_linked_barcodes(request: Request):
+    user = await require_admin(request)
+    res = supabase_admin.table("barcode_submissions").select("*").eq("status", "linked").order("reviewed_at", desc=True).execute()
+    return res.data or []
+
+
 @router.post("/barcodes/{id}/approve")
 async def approve_barcode(id: str, request: Request):
     user = await require_admin(request)
