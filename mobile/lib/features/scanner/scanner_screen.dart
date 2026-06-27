@@ -136,15 +136,15 @@ class _ScannerScreenState extends State<ScannerScreen> with SingleTickerProvider
                                 gradient: LinearGradient(
                                   colors: [
                                     Colors.transparent,
-                                    AppColors.brandOrange.withOpacity(0.9),
+                                    AppColors.brandGreen.withOpacity(0.9),
                                     Colors.transparent,
                                   ],
                                 ),
                                 boxShadow: [
                                   BoxShadow(
-                                    color: AppColors.brandOrange.withOpacity(0.5),
-                                    blurRadius: 6,
-                                    spreadRadius: 1,
+                                    color: AppColors.brandGreen.withOpacity(0.5),
+                                    blurRadius: 8,
+                                    spreadRadius: 2,
                                   ),
                                 ],
                               ),
