@@ -964,6 +964,8 @@ export default function Admin() {
   const [counts,     setCounts]     = useState({ pending: 0, approved: 0, rejected: 0, extracted: 0, photos: 0, reports: 0, barcodes: 0 })
   const [barcodeSubs, setBarcodeSubs] = useState([])
   const [approvedBarcodeSubs, setApprovedBarcodeSubs] = useState([])
+  const [rejectedBarcodeSubs, setRejectedBarcodeSubs] = useState([])
+  const [linkedBarcodeSubs, setLinkedBarcodeSubs] = useState([])
   const [barcodeFetching, setBarcodeFetching] = useState(false)
   const [barcodeSubTab, setBarcodeSubTab] = useState('pending')
   const [linkingId, setLinkingId]     = useState(null)
@@ -1040,11 +1042,10 @@ export default function Admin() {
         } finally {
           if (!cancelled) setBarcodeFetching(false)
         }
-        // Load approved independently — failure here must not block pending display
-        try {
-          const approved = await adminFetch('/barcodes/approved')
-          if (!cancelled) setApprovedBarcodeSubs(approved || [])
-        } catch (_) {}
+        // Load other statuses independently
+        try { const d = await adminFetch('/barcodes/approved'); if (!cancelled) setApprovedBarcodeSubs(d || []) } catch (_) {}
+        try { const d = await adminFetch('/barcodes/rejected'); if (!cancelled) setRejectedBarcodeSubs(d || []) } catch (_) {}
+        try { const d = await adminFetch('/barcodes/linked');   if (!cancelled) setLinkedBarcodeSubs(d || [])   } catch (_) {}
       } else {
         setFetching(true)
         setFetchError(null)
@@ -1125,11 +1126,10 @@ export default function Admin() {
     } finally {
       setBarcodeFetching(false)
     }
-    // Fetch approved separately so a failure here doesn't break the pending list
-    try {
-      const approved = await adminFetch('/barcodes/approved')
-      setApprovedBarcodeSubs(approved || [])
-    } catch (_) {}
+    // Fetch other statuses independently so failures don't block pending
+    try { const d = await adminFetch('/barcodes/approved'); setApprovedBarcodeSubs(d || []) } catch (_) {}
+    try { const d = await adminFetch('/barcodes/rejected'); setRejectedBarcodeSubs(d || []) } catch (_) {}
+    try { const d = await adminFetch('/barcodes/linked');   setLinkedBarcodeSubs(d || [])   } catch (_) {}
   }
 
   const handleApproveBarcode = async (id) => {
@@ -1689,126 +1689,71 @@ export default function Admin() {
       {/* ── BARCODES PAGE ── */}
       {adminPage === 'barcodes' && (
         <>
-          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 14 }}>
-            <h2 style={{ fontFamily: 'Poppins,sans-serif', fontSize: 16, fontWeight: 700, color: '#111827', margin: 0 }}>
-              🔢 Barcode Submissions
-            </h2>
-            <div style={{ display: 'flex', gap: 6 }}>
-              <button onClick={() => setBarcodeSubTab('pending')} style={{ padding: '6px 14px', borderRadius: 20, border: 'none', fontWeight: 700, fontSize: 12, cursor: 'pointer', background: barcodeSubTab === 'pending' ? '#f59e0b' : '#f1f5f9', color: barcodeSubTab === 'pending' ? '#fff' : '#475569', fontFamily: 'inherit' }}>
-                Pending {barcodeSubs.length > 0 && `(${barcodeSubs.length})`}
+          <h2 style={{ fontFamily: 'Poppins,sans-serif', fontSize: 16, fontWeight: 700, color: '#111827', marginBottom: 12 }}>
+            🔢 Barcode Submissions
+          </h2>
+
+          {/* Sub-tabs */}
+          <div style={{ display: 'flex', gap: 6, flexWrap: 'wrap', marginBottom: 16 }}>
+            {[
+              { key: 'pending',  label: 'Pending',   color: '#f59e0b', count: barcodeSubs.length },
+              { key: 'approved', label: 'To Link',   color: '#059669', count: approvedBarcodeSubs.length },
+              { key: 'rejected', label: 'Rejected',  color: '#dc2626', count: rejectedBarcodeSubs.length },
+              { key: 'linked',   label: 'Linked',    color: '#7c3aed', count: linkedBarcodeSubs.length },
+            ].map(({ key, label, color, count }) => (
+              <button key={key} onClick={() => setBarcodeSubTab(key)} style={{
+                padding: '6px 14px', borderRadius: 20, border: 'none', fontWeight: 700, fontSize: 12,
+                cursor: 'pointer', fontFamily: 'inherit',
+                background: barcodeSubTab === key ? color : '#f1f5f9',
+                color: barcodeSubTab === key ? '#fff' : '#475569',
+              }}>
+                {label}{count > 0 ? ` (${count})` : ''}
               </button>
-              <button onClick={() => setBarcodeSubTab('approved')} style={{ padding: '6px 14px', borderRadius: 20, border: 'none', fontWeight: 700, fontSize: 12, cursor: 'pointer', background: barcodeSubTab === 'approved' ? '#059669' : '#f1f5f9', color: barcodeSubTab === 'approved' ? '#fff' : '#475569', fontFamily: 'inherit' }}>
-                To Link {approvedBarcodeSubs.length > 0 && `(${approvedBarcodeSubs.length})`}
-              </button>
-            </div>
+            ))}
           </div>
 
           {barcodeFetching ? (
             <div style={{ textAlign: 'center', padding: '48px 0', color: '#9ca3af', fontSize: 15 }}>Loading…</div>
           ) : barcodeSubTab === 'pending' ? (
-            barcodeSubs.length === 0 ? (
-              <div style={{ textAlign: 'center', padding: '48px 0' }}>
-                <div style={{ fontSize: 40, marginBottom: 8 }}>✅</div>
-                <p style={{ color: '#9ca3af', fontSize: 14 }}>No pending barcode submissions</p>
-              </div>
-            ) : (
-              <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
-                {barcodeSubs.map(sub => (
-                  <BarcodeSubCard key={sub.id} sub={sub} onApprove={handleApproveBarcode} onReject={handleRejectBarcode} />
-                ))}
-              </div>
-            )
-          ) : (
-            approvedBarcodeSubs.length === 0 ? (
-              <div style={{ textAlign: 'center', padding: '48px 0' }}>
-                <div style={{ fontSize: 40, marginBottom: 8 }}>🔗</div>
-                <p style={{ color: '#9ca3af', fontSize: 14 }}>No approved submissions to link yet</p>
-              </div>
-            ) : (
-              <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
-                {approvedBarcodeSubs.map(sub => (
-                  <div key={sub.id} style={{ background: '#fff', border: '1.5px solid #d1fae5', borderRadius: 12, padding: '14px 16px', boxShadow: '0 2px 8px rgba(0,0,0,0.05)' }}>
-                    {linkMsg[sub.id] && (
-                      <div style={{ background: '#f0fdf4', border: '1px solid #bbf7d0', borderRadius: 8, padding: '8px 12px', marginBottom: 10, fontSize: 13, color: '#166534', fontWeight: 600 }}>
-                        ✓ {linkMsg[sub.id]}
-                      </div>
-                    )}
-                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', gap: 8, marginBottom: 8 }}>
-                      <div>
-                        <p style={{ margin: 0, fontWeight: 700, fontSize: 15, color: '#111827', fontFamily: 'monospace' }}>{sub.barcode}</p>
-                        {sub.variant_label && (
-                          <span style={{ display: 'inline-block', marginTop: 4, fontSize: 11, background: '#eff6ff', color: '#1d4ed8', border: '1px solid #bfdbfe', borderRadius: 99, padding: '2px 8px', fontWeight: 600 }}>
-                            {sub.variant_label}
-                          </span>
-                        )}
-                      </div>
-                      <span style={{ flexShrink: 0, fontSize: 11, background: '#f0fdf4', color: '#059669', border: '1px solid #bbf7d0', borderRadius: 99, padding: '3px 10px', fontWeight: 700 }}>
-                        APPROVED
-                      </span>
-                    </div>
-                    <p style={{ margin: '0 0 2px', fontSize: 14, fontWeight: 700, color: '#111827' }}>{sub.product_name}</p>
-                    {sub.contact && (
-                      <p style={{ margin: '0 0 8px', fontSize: 12, color: '#374151' }}>
-                        <span style={{ color: '#9ca3af' }}>Pay to: </span><strong>{sub.contact}</strong>
-                      </p>
-                    )}
-                    {Array.isArray(sub.photos) && sub.photos.length > 0 && (
-                      <div style={{ display: 'flex', gap: 8, marginBottom: 12, overflowX: 'auto', paddingBottom: 2 }}>
-                        {sub.photos.map((url, i) => (
-                          <a key={i} href={url} target="_blank" rel="noreferrer">
-                            <img src={url} alt="" style={{ width: 72, height: 72, objectFit: 'cover', borderRadius: 8, border: '1.5px solid #e5e7eb', flexShrink: 0 }} />
-                          </a>
-                        ))}
-                      </div>
-                    )}
+            barcodeSubs.length === 0
+              ? <BarcodeEmpty icon="✅" text="No pending submissions" />
+              : <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
+                  {barcodeSubs.map(sub => (
+                    <BarcodeSubCard key={sub.id} sub={sub} onApprove={handleApproveBarcode} onReject={handleRejectBarcode} />
+                  ))}
+                </div>
 
-                    {/* Link to existing product */}
-                    {linkingId === sub.id ? (
-                      <div style={{ marginBottom: 8 }}>
-                        <div style={{ position: 'relative' }}>
-                          <input
-                            autoFocus
-                            value={linkSearch}
-                            onChange={e => { setLinkSearch(e.target.value); searchProductsForLink(e.target.value) }}
-                            placeholder="Search product by name…"
-                            style={{ width: '100%', padding: '9px 12px', borderRadius: 8, border: '1.5px solid #059669', fontSize: 13, boxSizing: 'border-box', outline: 'none' }}
-                          />
-                          {linkSearching && <span style={{ position: 'absolute', right: 10, top: 10, fontSize: 11, color: '#9ca3af' }}>searching…</span>}
-                        </div>
-                        {linkResults.length > 0 && (
-                          <div style={{ border: '1px solid #e5e7eb', borderRadius: 8, marginTop: 4, overflow: 'hidden', maxHeight: 220, overflowY: 'auto' }}>
-                            {linkResults.map(p => (
-                              <div key={p.id} onClick={() => handleLinkBarcode(sub.id, p.id)}
-                                style={{ padding: '10px 12px', cursor: 'pointer', borderBottom: '1px solid #f3f4f6', fontSize: 13 }}
-                                onMouseEnter={e => e.currentTarget.style.background = '#f0fdf4'}
-                                onMouseLeave={e => e.currentTarget.style.background = '#fff'}>
-                                <div style={{ fontWeight: 600, color: '#111827' }}>{p.name}</div>
-                                {p.brand && <div style={{ fontSize: 11, color: '#9ca3af' }}>{p.brand}</div>}
-                              </div>
-                            ))}
-                          </div>
-                        )}
-                        <button onClick={() => { setLinkingId(null); setLinkSearch(''); setLinkResults([]) }}
-                          style={{ marginTop: 6, fontSize: 12, color: '#9ca3af', background: 'none', border: 'none', cursor: 'pointer', padding: 0 }}>
-                          Cancel
-                        </button>
-                      </div>
-                    ) : (
-                      <div style={{ display: 'flex', gap: 8 }}>
-                        <button onClick={() => { setLinkingId(sub.id); setLinkSearch(''); setLinkResults([]) }}
-                          style={{ flex: 1, background: '#059669', color: '#fff', border: 'none', borderRadius: 8, padding: '9px 0', fontSize: 13, fontWeight: 700, cursor: 'pointer', fontFamily: 'inherit' }}>
-                          🔗 Link to Existing Product
-                        </button>
-                        <button onClick={() => { setTab('add') }}
-                          style={{ flex: 1, background: '#1B3F8A', color: '#fff', border: 'none', borderRadius: 8, padding: '9px 0', fontSize: 13, fontWeight: 700, cursor: 'pointer', fontFamily: 'inherit' }}>
-                          ＋ Add New Product
-                        </button>
-                      </div>
-                    )}
-                  </div>
-                ))}
-              </div>
-            )
+          ) : barcodeSubTab === 'approved' ? (
+            approvedBarcodeSubs.length === 0
+              ? <BarcodeEmpty icon="🔗" text="No approved submissions to link yet" />
+              : <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
+                  {approvedBarcodeSubs.map(sub => (
+                    <BarcodeApprovedCard key={sub.id} sub={sub}
+                      linkingId={linkingId} setLinkingId={setLinkingId}
+                      linkSearch={linkSearch} setLinkSearch={setLinkSearch}
+                      linkResults={linkResults} linkSearching={linkSearching}
+                      linkMsg={linkMsg}
+                      onSearch={searchProductsForLink}
+                      onLink={handleLinkBarcode}
+                      onCancelLink={() => { setLinkingId(null); setLinkSearch(''); setLinkResults([]) }}
+                      onAddNew={() => setTab('add')}
+                    />
+                  ))}
+                </div>
+
+          ) : barcodeSubTab === 'rejected' ? (
+            rejectedBarcodeSubs.length === 0
+              ? <BarcodeEmpty icon="🚫" text="No rejected submissions" />
+              : <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
+                  {rejectedBarcodeSubs.map(sub => <BarcodeInfoCard key={sub.id} sub={sub} statusLabel="REJECTED" statusColor="#dc2626" statusBg="#fef2f2" statusBorder="#fecaca" />)}
+                </div>
+
+          ) : (
+            linkedBarcodeSubs.length === 0
+              ? <BarcodeEmpty icon="🟣" text="No linked submissions yet" />
+              : <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
+                  {linkedBarcodeSubs.map(sub => <BarcodeInfoCard key={sub.id} sub={sub} statusLabel="LINKED" statusColor="#7c3aed" statusBg="#f5f3ff" statusBorder="#ddd6fe" />)}
+                </div>
           )}
         </>
       )}
@@ -1817,29 +1762,47 @@ export default function Admin() {
   )
 }
 
-function BarcodeSubCard({ sub, onApprove, onReject }) {
+function fmtDateTime(iso) {
+  if (!iso) return '—'
+  const d = new Date(iso)
+  return d.toLocaleString('en-IN', { day: '2-digit', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit' })
+}
+
+function BarcodeCardBase({ sub, statusLabel, statusColor, statusBg, statusBorder, children }) {
   return (
-    <div style={{ background: '#fff', border: '1px solid #e5e7eb', borderRadius: 12, padding: '14px 16px', boxShadow: '0 2px 8px rgba(0,0,0,0.05)' }}>
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', gap: 8, marginBottom: 8 }}>
-        <div>
-          <p style={{ margin: 0, fontWeight: 700, fontSize: 15, color: '#111827', fontFamily: 'monospace' }}>{sub.barcode}</p>
-          {sub.variant_label && (
-            <span style={{ display: 'inline-block', marginTop: 4, fontSize: 11, background: '#eff6ff', color: '#1d4ed8', border: '1px solid #bfdbfe', borderRadius: 99, padding: '2px 8px', fontWeight: 600 }}>
-              {sub.variant_label}
-            </span>
-          )}
-        </div>
-        <span style={{ flexShrink: 0, fontSize: 11, background: '#fef3c7', color: '#d97706', border: '1px solid #fde68a', borderRadius: 99, padding: '3px 10px', fontWeight: 700 }}>PENDING</span>
+    <div style={{ background: '#fff', border: `1.5px solid ${statusBorder}`, borderRadius: 12, padding: '14px 16px', boxShadow: '0 2px 8px rgba(0,0,0,0.04)' }}>
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', gap: 8, marginBottom: 6 }}>
+        <p style={{ margin: 0, fontWeight: 700, fontSize: 15, color: '#111827', fontFamily: 'monospace' }}>{sub.barcode}</p>
+        <span style={{ flexShrink: 0, fontSize: 11, background: statusBg, color: statusColor, border: `1px solid ${statusBorder}`, borderRadius: 99, padding: '3px 10px', fontWeight: 700 }}>
+          {statusLabel}
+        </span>
       </div>
-      <p style={{ margin: '0 0 2px', fontSize: 14, fontWeight: 700, color: '#111827' }}>{sub.product_name}</p>
-      {sub.submitted_by_email && (
-        <p style={{ margin: '0 0 2px', fontSize: 12, color: '#9ca3af' }}>by {sub.submitted_by_email} · {new Date(sub.created_at).toLocaleDateString('en-IN')}</p>
+
+      <p style={{ margin: '0 0 4px', fontSize: 14, fontWeight: 700, color: '#111827' }}>{sub.product_name}</p>
+
+      {sub.variant_label && (
+        <span style={{ display: 'inline-block', marginBottom: 6, fontSize: 11, background: '#eff6ff', color: '#1d4ed8', border: '1px solid #bfdbfe', borderRadius: 99, padding: '2px 8px', fontWeight: 600 }}>
+          {sub.variant_label}
+        </span>
       )}
-      {sub.contact && (
-        <p style={{ margin: '0 0 8px', fontSize: 12, color: '#374151' }}>
-          <span style={{ color: '#9ca3af' }}>Pay to: </span><strong>{sub.contact}</strong>
-        </p>
-      )}
+
+      {/* Submitter info row */}
+      <div style={{ display: 'flex', flexWrap: 'wrap', gap: '2px 12px', marginBottom: 6 }}>
+        {sub.submitted_by_email && (
+          <span style={{ fontSize: 12, color: '#374151' }}>
+            <span style={{ color: '#9ca3af' }}>By: </span><strong>{sub.submitted_by_email}</strong>
+          </span>
+        )}
+        <span style={{ fontSize: 12, color: '#6b7280' }}>
+          <span style={{ color: '#9ca3af' }}>Submitted: </span>{fmtDateTime(sub.created_at)}
+        </span>
+        {sub.contact && (
+          <span style={{ fontSize: 12, color: '#374151' }}>
+            <span style={{ color: '#9ca3af' }}>Pay to: </span><strong>{sub.contact}</strong>
+          </span>
+        )}
+      </div>
+
       {Array.isArray(sub.photos) && sub.photos.length > 0 && (
         <div style={{ display: 'flex', gap: 8, marginBottom: 12, overflowX: 'auto', paddingBottom: 2 }}>
           {sub.photos.map((url, i) => (
@@ -1849,6 +1812,91 @@ function BarcodeSubCard({ sub, onApprove, onReject }) {
           ))}
         </div>
       )}
+
+      {children}
+    </div>
+  )
+}
+
+function BarcodeEmpty({ icon, text }) {
+  return (
+    <div style={{ textAlign: 'center', padding: '48px 0' }}>
+      <div style={{ fontSize: 40, marginBottom: 8 }}>{icon}</div>
+      <p style={{ color: '#9ca3af', fontSize: 14 }}>{text}</p>
+    </div>
+  )
+}
+
+function BarcodeInfoCard({ sub, statusLabel, statusColor, statusBg, statusBorder }) {
+  return (
+    <BarcodeCardBase sub={sub} statusLabel={statusLabel} statusColor={statusColor} statusBg={statusBg} statusBorder={statusBorder}>
+      {sub.reviewed_at && (
+        <p style={{ margin: 0, fontSize: 11, color: '#9ca3af' }}>Reviewed: {fmtDateTime(sub.reviewed_at)}</p>
+      )}
+      {sub.linked_product_id && (
+        <p style={{ margin: '4px 0 0', fontSize: 12, color: '#7c3aed' }}>Linked product ID: <code style={{ fontSize: 11 }}>{sub.linked_product_id}</code></p>
+      )}
+    </BarcodeCardBase>
+  )
+}
+
+function BarcodeApprovedCard({ sub, linkingId, setLinkingId, linkSearch, setLinkSearch, linkResults, linkSearching, linkMsg, onSearch, onLink, onCancelLink, onAddNew }) {
+  return (
+    <BarcodeCardBase sub={sub} statusLabel="TO LINK" statusColor="#059669" statusBg="#f0fdf4" statusBorder="#bbf7d0">
+      {linkMsg[sub.id] && (
+        <div style={{ background: '#f0fdf4', border: '1px solid #bbf7d0', borderRadius: 8, padding: '8px 12px', marginBottom: 10, fontSize: 13, color: '#166534', fontWeight: 600 }}>
+          ✓ {linkMsg[sub.id]}
+        </div>
+      )}
+      {linkingId === sub.id ? (
+        <div>
+          <div style={{ position: 'relative' }}>
+            <input autoFocus value={linkSearch}
+              onChange={e => { setLinkSearch(e.target.value); onSearch(e.target.value) }}
+              placeholder="Type product name to search…"
+              style={{ width: '100%', padding: '9px 12px', borderRadius: 8, border: '1.5px solid #059669', fontSize: 13, boxSizing: 'border-box', outline: 'none' }}
+            />
+            {linkSearching && <span style={{ position: 'absolute', right: 10, top: 10, fontSize: 11, color: '#9ca3af' }}>searching…</span>}
+          </div>
+          {linkResults.length > 0 && (
+            <div style={{ border: '1px solid #e5e7eb', borderRadius: 8, marginTop: 4, overflow: 'hidden', maxHeight: 220, overflowY: 'auto' }}>
+              {linkResults.map(p => (
+                <div key={p.id} onClick={() => onLink(sub.id, p.id)}
+                  style={{ padding: '10px 12px', cursor: 'pointer', borderBottom: '1px solid #f3f4f6', fontSize: 13, background: '#fff' }}
+                  onMouseEnter={e => e.currentTarget.style.background = '#f0fdf4'}
+                  onMouseLeave={e => e.currentTarget.style.background = '#fff'}>
+                  <div style={{ fontWeight: 600, color: '#111827' }}>{p.name}</div>
+                  {p.brand && <div style={{ fontSize: 11, color: '#9ca3af' }}>{p.brand}</div>}
+                </div>
+              ))}
+            </div>
+          )}
+          {linkResults.length === 0 && linkSearch.trim() && !linkSearching && (
+            <p style={{ fontSize: 12, color: '#9ca3af', marginTop: 6 }}>No products found — try a different name.</p>
+          )}
+          <button onClick={onCancelLink} style={{ marginTop: 8, fontSize: 12, color: '#9ca3af', background: 'none', border: 'none', cursor: 'pointer', padding: 0 }}>
+            Cancel
+          </button>
+        </div>
+      ) : (
+        <div style={{ display: 'flex', gap: 8 }}>
+          <button onClick={() => { setLinkingId(sub.id); setLinkSearch(''); }}
+            style={{ flex: 1, background: '#059669', color: '#fff', border: 'none', borderRadius: 8, padding: '9px 0', fontSize: 13, fontWeight: 700, cursor: 'pointer', fontFamily: 'inherit' }}>
+            🔗 Link to Existing
+          </button>
+          <button onClick={onAddNew}
+            style={{ flex: 1, background: '#1B3F8A', color: '#fff', border: 'none', borderRadius: 8, padding: '9px 0', fontSize: 13, fontWeight: 700, cursor: 'pointer', fontFamily: 'inherit' }}>
+            ＋ Add New Product
+          </button>
+        </div>
+      )}
+    </BarcodeCardBase>
+  )
+}
+
+function BarcodeSubCard({ sub, onApprove, onReject }) {
+  return (
+    <BarcodeCardBase sub={sub} statusLabel="PENDING" statusColor="#d97706" statusBg="#fef3c7" statusBorder="#fde68a">
       <div style={{ display: 'flex', gap: 8 }}>
         <button onClick={() => onApprove(sub.id)}
           style={{ flex: 1, background: '#059669', color: '#fff', border: 'none', borderRadius: 8, padding: '9px 0', fontSize: 13, fontWeight: 700, cursor: 'pointer', fontFamily: 'inherit' }}>
@@ -1859,7 +1907,7 @@ function BarcodeSubCard({ sub, onApprove, onReject }) {
           ✕ Reject
         </button>
       </div>
-    </div>
+    </BarcodeCardBase>
   )
 }
 
