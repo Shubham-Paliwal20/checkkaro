@@ -1677,7 +1677,13 @@ export default function Admin() {
                   </div>
                   <p style={{ margin: '0 0 4px', fontSize: 14, fontWeight: 700, color: '#111827' }}>{sub.product_name}</p>
                   {sub.submitted_by_email && (
-                    <p style={{ margin: '0 0 10px', fontSize: 12, color: '#9ca3af' }}>by {sub.submitted_by_email} · {new Date(sub.created_at).toLocaleDateString('en-IN')}</p>
+                    <p style={{ margin: '0 0 2px', fontSize: 12, color: '#9ca3af' }}>by {sub.submitted_by_email} · {new Date(sub.created_at).toLocaleDateString('en-IN')}</p>
+                  )}
+                  {sub.contact && (
+                    <p style={{ margin: '0 0 10px', fontSize: 12, color: '#374151' }}>
+                      <span style={{ color: '#9ca3af' }}>Pay to: </span>
+                      <strong>{sub.contact}</strong>
+                    </p>
                   )}
                   {Array.isArray(sub.photos) && sub.photos.length > 0 && (
                     <div style={{ display: 'flex', gap: 8, marginBottom: 12, overflowX: 'auto', paddingBottom: 4 }}>

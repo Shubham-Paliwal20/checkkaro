@@ -134,6 +134,7 @@ class ApiClient {
     required String productName,
     required List<String> photos,
     required String accessToken,
+    required String contact,
     String? variantLabel,
   }) async {
     final res = await _dio.post(
@@ -142,6 +143,7 @@ class ApiClient {
         'barcode': barcode,
         'product_name': productName,
         'photos': photos,
+        'contact': contact,
         if (variantLabel != null && variantLabel.isNotEmpty) 'variant_label': variantLabel,
       },
       options: Options(headers: {'Authorization': 'Bearer $accessToken'}),

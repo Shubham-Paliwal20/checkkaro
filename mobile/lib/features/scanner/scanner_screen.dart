@@ -188,6 +188,7 @@ class _BarcodeSubmissionSheet extends ConsumerStatefulWidget {
 class _BarcodeSubmissionSheetState extends ConsumerState<_BarcodeSubmissionSheet> {
   final _nameCtrl    = TextEditingController();
   final _variantCtrl = TextEditingController();
+  final _contactCtrl = TextEditingController();
   final _picker      = ImagePicker();
   final _rng         = Random();
   List<XFile> _photos = [];
@@ -200,6 +201,7 @@ class _BarcodeSubmissionSheetState extends ConsumerState<_BarcodeSubmissionSheet
   void dispose() {
     _nameCtrl.dispose();
     _variantCtrl.dispose();
+    _contactCtrl.dispose();
     super.dispose();
   }
 
@@ -243,8 +245,10 @@ class _BarcodeSubmissionSheetState extends ConsumerState<_BarcodeSubmissionSheet
     if (user == null) { _goToLogin(); return; }
 
     final name = _nameCtrl.text.trim();
+    final contact = _contactCtrl.text.trim();
     if (name.isEmpty) { setState(() => _error = 'Product name is required.'); return; }
     if (_photos.isEmpty) { setState(() => _error = 'Please add at least 1 front photo.'); return; }
+    if (contact.isEmpty) { setState(() => _error = 'UPI ID or mobile number is required for payment.'); return; }
 
     setState(() { _submitting = true; _uploading = true; _error = null; });
     try {
@@ -260,6 +264,7 @@ class _BarcodeSubmissionSheetState extends ConsumerState<_BarcodeSubmissionSheet
         photos: urls,
         accessToken: user.accessToken,
         variantLabel: _variantCtrl.text.trim().isEmpty ? null : _variantCtrl.text.trim(),
+        contact: contact,
       );
       if (mounted) setState(() { _submitted = true; _submitting = false; });
     } on DioException catch (e) {
@@ -435,6 +440,28 @@ class _BarcodeSubmissionSheetState extends ConsumerState<_BarcodeSubmissionSheet
         ),
         const SizedBox(height: 8),
       ],
+
+      // UPI / mobile
+      const Text('UPI ID or Mobile Number *', style: TextStyle(fontSize: 13, fontWeight: FontWeight.w600, color: Color(0xFF374151))),
+      const SizedBox(height: 6),
+      TextField(
+        controller: _contactCtrl,
+        keyboardType: TextInputType.text,
+        decoration: InputDecoration(
+          hintText: 'e.g. name@upi or 9876543210',
+          hintStyle: const TextStyle(fontSize: 13, color: Color(0xFF9CA3AF)),
+          prefixIcon: const Icon(Icons.account_balance_wallet_outlined, size: 20, color: Color(0xFF9CA3AF)),
+          border: OutlineInputBorder(borderRadius: BorderRadius.circular(10), borderSide: BorderSide(color: Colors.grey.shade300)),
+          enabledBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(10), borderSide: BorderSide(color: Colors.grey.shade300)),
+          focusedBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(10), borderSide: const BorderSide(color: AppColors.brandOrange)),
+          contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+          filled: true, fillColor: const Color(0xFFF9FAFB),
+        ),
+        style: const TextStyle(fontSize: 14),
+      ),
+      const SizedBox(height: 4),
+      const Text('Used to send ₹1 reward when approved', style: TextStyle(fontSize: 11, color: Color(0xFF9CA3AF))),
+      const SizedBox(height: 14),
 
       // Variant
       const Text('Variant / Size (optional)', style: TextStyle(fontSize: 13, fontWeight: FontWeight.w600, color: Color(0xFF374151))),

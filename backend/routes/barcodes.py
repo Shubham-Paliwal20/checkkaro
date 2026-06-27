@@ -16,6 +16,7 @@ class SubmitBarcodeBody(BaseModel):
     barcode: str
     product_name: str
     photos: list[str]           # URLs already uploaded to Supabase storage
+    contact: str                # UPI ID or mobile number for ₹1 reward payment
     variant_label: Optional[str] = None
 
 
@@ -27,6 +28,8 @@ async def submit_barcode(body: SubmitBarcodeBody, request: Request):
         raise HTTPException(status_code=400, detail="Product name is required.")
     if not body.photos:
         raise HTTPException(status_code=400, detail="At least one photo is required.")
+    if not body.contact.strip():
+        raise HTTPException(status_code=400, detail="UPI ID or mobile number is required.")
 
     user = await get_current_user(request)
 
@@ -45,6 +48,7 @@ async def submit_barcode(body: SubmitBarcodeBody, request: Request):
         "product_name": body.product_name.strip(),
         "variant_label": body.variant_label or None,
         "photos": body.photos,
+        "contact": body.contact.strip(),
         "submitted_by": str(user.id),
         "submitted_by_email": user.email,
         "status": "pending",
