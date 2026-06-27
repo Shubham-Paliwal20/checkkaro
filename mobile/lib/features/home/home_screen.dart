@@ -73,15 +73,12 @@ class _HeroSection extends StatelessWidget {
                     child: Image.asset('assets/images/logo.png', width: 32, height: 32, fit: BoxFit.cover),
                   ),
                   const SizedBox(width: 8),
-                  RichText(
-                    text: const TextSpan(
-                      style: TextStyle(fontSize: 20, fontWeight: FontWeight.w900, fontFamily: 'Poppins'),
-                      children: [
-                        TextSpan(text: 'Check', style: TextStyle(color: AppColors.brandOrange)),
-                        TextSpan(text: 'Karo',  style: TextStyle(color: AppColors.brandGreen)),
-                      ],
-                    ),
-                  ),
+                  const Text('Parkho',
+                      style: TextStyle(
+                          fontSize: 20,
+                          fontWeight: FontWeight.w900,
+                          color: AppColors.brandBlue,
+                          fontFamily: 'Poppins')),
                 ],
               ),
               GestureDetector(
@@ -914,15 +911,7 @@ class _AppFooter extends StatelessWidget {
                 child: Image.asset('assets/images/logo.png', width: 28, height: 28, fit: BoxFit.cover),
               ),
               const SizedBox(width: 8),
-              RichText(
-                text: const TextSpan(
-                  style: TextStyle(fontSize: 17, fontWeight: FontWeight.w900, fontFamily: 'Poppins'),
-                  children: [
-                    TextSpan(text: 'Check', style: TextStyle(color: AppColors.brandOrange)),
-                    TextSpan(text: 'Karo',  style: TextStyle(color: AppColors.brandGreen)),
-                  ],
-                ),
-              ),
+              const Text('Parkho', style: TextStyle(fontSize: 17, fontWeight: FontWeight.w900, color: Colors.white, fontFamily: 'Poppins')),
             ],
           ),
           const SizedBox(height: 10),
@@ -946,7 +935,7 @@ class _AppFooter extends StatelessWidget {
           const SizedBox(height: 20),
           const Divider(color: Color(0xFF374151)),
           const SizedBox(height: 12),
-          const Text('© 2026 CheckKaro. All rights reserved.',
+          const Text('© 2026 Parkho. All rights reserved.',
               style: TextStyle(fontSize: 11, color: Color(0xFF6b7280))),
           const SizedBox(height: 4),
           const Text('Data is for awareness only. Not medical advice.',

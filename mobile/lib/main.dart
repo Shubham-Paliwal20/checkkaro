@@ -17,7 +17,7 @@ class CheckKaroApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp.router(
-      title: 'CheckKaro',
+      title: 'Parkho',
       debugShowCheckedModeBanner: false,
       theme: AppTheme.light,
       routerConfig: appRouter,
