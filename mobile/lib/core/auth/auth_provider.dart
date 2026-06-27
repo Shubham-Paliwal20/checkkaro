@@ -1,5 +1,7 @@
+import 'package:dio/dio.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:hive_flutter/hive_flutter.dart';
+import '../config/app_config.dart';
 
 // Auth tokens are stored in a Hive box named 'auth'.
 // Keys: 'access_token', 'refresh_token', 'user_email', 'user_id'
@@ -22,6 +24,29 @@ class AuthNotifier extends Notifier<AuthUser?> {
     _authBox.put('user_email',     email);
     _authBox.put('user_id',        id);
     state = AuthUser(id: id, email: email, accessToken: accessToken);
+  }
+
+  // Exchanges the stored refresh token for a new access token.
+  // Returns the fresh access token, or throws if refresh fails.
+  Future<String> getFreshAccessToken() async {
+    final refreshToken = _authBox.get('refresh_token') as String?;
+    if (refreshToken == null) throw Exception('Not logged in');
+
+    final res = await Dio().post(
+      '$supabaseUrl/auth/v1/token?grant_type=refresh_token',
+      data: {'refresh_token': refreshToken},
+      options: Options(headers: {
+        'apikey': supabaseAnonKey,
+        'Content-Type': 'application/json',
+      }),
+    );
+
+    final newAccess  = res.data['access_token']  as String;
+    final newRefresh = res.data['refresh_token'] as String;
+    final email      = res.data['user']['email'] as String;
+    final id         = res.data['user']['id']    as String;
+    setUser(accessToken: newAccess, refreshToken: newRefresh, email: email, id: id);
+    return newAccess;
   }
 
   void signOut() {

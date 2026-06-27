@@ -338,9 +338,10 @@ class _BarcodeSubmissionSheetState extends ConsumerState<_BarcodeSubmissionSheet
 
     setState(() { _submitting = true; _uploading = true; _error = null; });
     try {
+      final token = await ref.read(authProvider.notifier).getFreshAccessToken();
       final urls = <String>[];
       for (final photo in _photos) {
-        urls.add(await _uploadPhoto(photo, user.id, user.accessToken));
+        urls.add(await _uploadPhoto(photo, user.id, token));
       }
       setState(() => _uploading = false);
 
@@ -348,16 +349,20 @@ class _BarcodeSubmissionSheetState extends ConsumerState<_BarcodeSubmissionSheet
         barcode: widget.barcode,
         productName: name,
         photos: urls,
-        accessToken: user.accessToken,
+        accessToken: token,
         variantLabel: _variantCtrl.text.trim().isEmpty ? null : _variantCtrl.text.trim(),
         contact: contact,
       );
       if (mounted) setState(() { _submitted = true; _submitting = false; });
     } on DioException catch (e) {
-      final detail = (e.response?.data as Map?)?['detail']?.toString() ?? 'Submission failed. Please try again.';
+      final data = e.response?.data as Map?;
+      final detail = data?['detail']?.toString()
+          ?? data?['message']?.toString()
+          ?? e.message
+          ?? 'Submission failed.';
       if (mounted) setState(() { _error = detail; _submitting = false; _uploading = false; });
-    } on Exception catch (_) {
-      if (mounted) setState(() { _error = 'Submission failed. Please try again.'; _submitting = false; _uploading = false; });
+    } catch (e) {
+      if (mounted) setState(() { _error = e.toString(); _submitting = false; _uploading = false; });
     }
   }
 
