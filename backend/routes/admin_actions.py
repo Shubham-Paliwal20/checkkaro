@@ -187,7 +187,7 @@ async def approve_ingredient_report(id: str, body: ApproveReportBody, request: R
             else:
                 res = supabase_admin.table("ai_extracted_products").insert({
                     "name": body.product_name, "ingredients_raw": body.reported_ingredients, "ingredients": []
-                }).select("id").execute()
+                }).execute()
                 updated_id = res.data[0]["id"] if res.data else None
 
         now = datetime.datetime.utcnow().isoformat()
@@ -287,7 +287,7 @@ async def insert_product(body: InsertProductBody, request: Request):
             "verdict":         body.verdict,
             "recommendation":  body.recommendation,
             "image_url":       body.image_url or None,
-        }).select("id").execute()
+        }).execute()
 
         product_id = res.data[0]["id"] if res.data else None
         _audit(user.email, "insert", "product", product_id or "unknown", {
