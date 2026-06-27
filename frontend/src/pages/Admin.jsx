@@ -1088,17 +1088,8 @@ export default function Admin() {
   }
 
   const handleApproveReport = async (report) => {
-    const isUUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(report.product_id)
     try {
-      await adminFetch(`/reports/${report.id}/approve`, {
-        method: 'POST',
-        body: JSON.stringify({
-          product_id:           report.product_id,
-          product_name:         report.product_name,
-          reported_ingredients: report.reported_ingredients,
-          is_uuid:              isUUID,
-        }),
-      })
+      await adminFetch(`/reports/${report.id}/approve`, { method: 'POST' })
       fetchAll(); fetchReports()
     } catch (e) { alert(`Approval failed: ${e.message}`) }
   }
