@@ -494,6 +494,8 @@ def _word_pattern(term: str) -> str:
     words = [w for w in term.strip().split() if w]
     return "%" + "%".join(words) + "%"
 
+_UUID_RE = re.compile(r'^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$', re.I)
+
 def _search_query(term: str):
     """Multi-strategy search — most specific first, broadest last."""
     normalized = normalize_name(term)
@@ -508,6 +510,11 @@ def _search_query(term: str):
             params["order"] = "static_key.asc.nullslast"
         rows = _db_get("ai_extracted_products", params)
         return rows[0] if rows else None
+
+    # 0. UUID direct lookup (used when navigating from barcode scan and product has no static_key)
+    if _UUID_RE.match(term):
+        r = _run("id", "eq", term, prefer_static=False)
+        if r: return r
 
     # 1a. Exact static_key — normalized (spaces stripped)
     r = _run("static_key", "eq", normalized, prefer_static=False)
@@ -736,6 +743,8 @@ async def get_product_by_barcode(barcode: str):
         is_complete=True,
     )
     result = resp.dict()
+    if p.get("static_key"):
+        result["static_key"] = p["static_key"]
     if variant_label:
         result["variant_label"] = variant_label
     return result
