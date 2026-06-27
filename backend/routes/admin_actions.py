@@ -151,13 +151,53 @@ async def reject_photo_submission(id: str, request: Request):
 
 # ── Ingredient Reports ─────────────────────────────────────────────────────────
 
+class ApproveReportBody(BaseModel):
+    product_id: str
+    product_name: str
+    reported_ingredients: str
+    is_uuid: bool
+
+
 @router.post("/reports/{id}/approve")
-async def approve_ingredient_report(id: str, request: Request):
+async def approve_ingredient_report(id: str, body: ApproveReportBody, request: Request):
     user = await require_admin(request)
     try:
+        def _merge(existing: str | None, reported: str) -> str:
+            if not existing:
+                return reported
+            existing_parts = [p.strip().lower() for p in existing.split(",")]
+            new_parts = [
+                s for s in [p.strip() for p in reported.split(",")]
+                if s and s.lower() not in existing_parts
+            ]
+            return existing + (", " + ", ".join(new_parts) if new_parts else "")
+
+        if body.is_uuid:
+            row = supabase_admin.table("ai_extracted_products").select("ingredients_raw").eq("id", body.product_id).limit(1).execute()
+            current_raw = (row.data[0]["ingredients_raw"] if row.data else None)
+            merged = _merge(current_raw, body.reported_ingredients)
+            supabase_admin.table("ai_extracted_products").update({"ingredients_raw": merged, "ingredients": []}).eq("id", body.product_id).execute()
+            updated_id = body.product_id
+        else:
+            found = supabase_admin.table("ai_extracted_products").select("id, ingredients_raw").ilike("name", body.product_name).limit(1).execute()
+            if found.data:
+                merged = _merge(found.data[0]["ingredients_raw"], body.reported_ingredients)
+                supabase_admin.table("ai_extracted_products").update({"ingredients_raw": merged, "ingredients": []}).eq("id", found.data[0]["id"]).execute()
+                updated_id = found.data[0]["id"]
+            else:
+                res = supabase_admin.table("ai_extracted_products").insert({
+                    "name": body.product_name, "ingredients_raw": body.reported_ingredients, "ingredients": []
+                }).select("id").execute()
+                updated_id = res.data[0]["id"] if res.data else None
+
         now = datetime.datetime.utcnow().isoformat()
         supabase_admin.table("ingredient_reports").update({"status": "approved", "reviewed_at": now}).eq("id", id).execute()
-        _audit(user.email, "approve", "ingredient_report", id)
+
+        _audit(user.email, "approve", "ingredient_report", id, {
+            "product_id": body.product_id,
+            "product_name": body.product_name,
+            "updated_product_id": str(updated_id),
+        })
         return {"ok": True}
     except Exception as e:
         logger.error("approve_ingredient_report failed id=%s: %s", id, e)
@@ -247,7 +287,7 @@ async def insert_product(body: InsertProductBody, request: Request):
             "verdict":         body.verdict,
             "recommendation":  body.recommendation,
             "image_url":       body.image_url or None,
-        }).execute()
+        }).select("id").execute()
 
         product_id = res.data[0]["id"] if res.data else None
         _audit(user.email, "insert", "product", product_id or "unknown", {
@@ -256,6 +296,55 @@ async def insert_product(body: InsertProductBody, request: Request):
         return {"id": product_id}
     except Exception as e:
         logger.error("insert_product failed name=%s: %s", body.name, e)
+        raise HTTPException(status_code=500, detail=str(e))
+
+
+# ── Barcode Submissions ────────────────────────────────────────────────────────
+
+@router.get("/barcodes/pending")
+async def get_pending_barcodes(request: Request):
+    user = await require_admin(request)
+    res = supabase_admin.table("barcode_submissions").select("*").eq("status", "pending").order("created_at", desc=True).execute()
+    return res.data or []
+
+
+@router.post("/barcodes/{id}/approve")
+async def approve_barcode(id: str, request: Request):
+    user = await require_admin(request)
+    try:
+        row = supabase_admin.table("barcode_submissions").select("*").eq("id", id).limit(1).execute()
+        if not row.data:
+            raise HTTPException(status_code=404, detail="Barcode submission not found")
+        sub = row.data[0]
+
+        now = datetime.datetime.utcnow().isoformat()
+        supabase_admin.table("barcode_submissions").update({"status": "approved", "reviewed_at": now}).eq("id", id).execute()
+
+        if sub.get("submitted_by"):
+            try:
+                supabase_admin.rpc("increment_earnings", {"uid": sub["submitted_by"], "amount": 1}).execute()
+            except Exception as e:
+                logger.warning("Failed to credit barcode reward: %s", e)
+
+        _audit(user.email, "approve", "barcode_submission", id, {"barcode": sub["barcode"], "product_name": sub.get("product_name")})
+        return {"ok": True}
+    except HTTPException:
+        raise
+    except Exception as e:
+        logger.error("approve_barcode failed id=%s: %s", id, e)
+        raise HTTPException(status_code=500, detail=str(e))
+
+
+@router.post("/barcodes/{id}/reject")
+async def reject_barcode(id: str, request: Request):
+    user = await require_admin(request)
+    try:
+        now = datetime.datetime.utcnow().isoformat()
+        supabase_admin.table("barcode_submissions").update({"status": "rejected", "reviewed_at": now}).eq("id", id).execute()
+        _audit(user.email, "reject", "barcode_submission", id)
+        return {"ok": True}
+    except Exception as e:
+        logger.error("reject_barcode failed id=%s: %s", id, e)
         raise HTTPException(status_code=500, detail=str(e))
 
 
