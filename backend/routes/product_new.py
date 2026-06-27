@@ -648,11 +648,17 @@ async def get_product_by_barcode(barcode: str):
     if not _BARCODE_RE.match(barcode):
         raise HTTPException(status_code=400, detail="Invalid barcode format.")
 
-    # Check crowdsourced product_barcodes table first (approved submissions)
-    barcode_rows = await _db_get_async(
-        "product_barcodes",
-        {"barcode": f"eq.{barcode}", "status": "eq.approved", "select": "product_id,variant_label"}
-    )
+    # Check crowdsourced product_barcodes table first (approved submissions).
+    # Use service-role client — product_barcodes has RLS enabled so anon key returns [].
+    try:
+        _bc_res = supabase_admin.table("product_barcodes") \
+            .select("product_id,variant_label") \
+            .eq("barcode", barcode) \
+            .eq("status", "approved") \
+            .limit(1).execute()
+        barcode_rows = _bc_res.data or []
+    except Exception:
+        barcode_rows = []
 
     if barcode_rows:
         product_id = barcode_rows[0]["product_id"]
