@@ -308,6 +308,13 @@ async def get_pending_barcodes(request: Request):
     return res.data or []
 
 
+@router.get("/barcodes/approved")
+async def get_approved_barcodes(request: Request):
+    user = await require_admin(request)
+    res = supabase_admin.table("barcode_submissions").select("*").eq("status", "approved").order("reviewed_at", desc=True).execute()
+    return res.data or []
+
+
 @router.post("/barcodes/{id}/approve")
 async def approve_barcode(id: str, request: Request):
     user = await require_admin(request)
@@ -345,6 +352,52 @@ async def reject_barcode(id: str, request: Request):
         return {"ok": True}
     except Exception as e:
         logger.error("reject_barcode failed id=%s: %s", id, e)
+        raise HTTPException(status_code=500, detail=str(e))
+
+
+class LinkBarcodeBody(BaseModel):
+    product_id: str
+
+
+@router.post("/barcodes/{id}/link")
+async def link_barcode_to_product(id: str, body: LinkBarcodeBody, request: Request):
+    """Link an approved barcode submission to an existing product."""
+    user = await require_admin(request)
+    try:
+        row = supabase_admin.table("barcode_submissions").select("*").eq("id", id).limit(1).execute()
+        if not row.data:
+            raise HTTPException(status_code=404, detail="Barcode submission not found")
+        sub = row.data[0]
+
+        # Check product exists
+        product = supabase_admin.table("ai_extracted_products").select("id,name").eq("id", body.product_id).limit(1).execute()
+        if not product.data:
+            raise HTTPException(status_code=404, detail="Product not found")
+
+        # Remove any existing entry for this barcode first
+        supabase_admin.table("product_barcodes").delete().eq("barcode", sub["barcode"]).execute()
+
+        # Create the canonical barcode → product mapping
+        supabase_admin.table("product_barcodes").insert({
+            "barcode": sub["barcode"],
+            "product_id": body.product_id,
+            "variant_label": sub.get("variant_label"),
+            "status": "approved",
+        }).execute()
+
+        # Mark submission as linked
+        supabase_admin.table("barcode_submissions").update({"status": "linked", "linked_product_id": body.product_id}).eq("id", id).execute()
+
+        _audit(user.email, "link_barcode", "barcode_submission", id, {
+            "barcode": sub["barcode"],
+            "product_id": body.product_id,
+            "product_name": product.data[0]["name"],
+        })
+        return {"ok": True, "product_name": product.data[0]["name"]}
+    except HTTPException:
+        raise
+    except Exception as e:
+        logger.error("link_barcode failed id=%s: %s", id, e)
         raise HTTPException(status_code=500, detail=str(e))
 
 
