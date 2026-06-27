@@ -129,10 +129,10 @@ class ApiClient {
     }
   }
 
-  static Future<Map<String, dynamic>> submitBarcode({
+  static Future<Map<String, dynamic>> submitBarcodeWithPhotos({
     required String barcode,
-    required String productId,
     required String productName,
+    required List<String> photos,
     required String accessToken,
     String? variantLabel,
   }) async {
@@ -140,8 +140,8 @@ class ApiClient {
       '/api/barcodes/submit',
       data: {
         'barcode': barcode,
-        'product_id': productId,
         'product_name': productName,
+        'photos': photos,
         if (variantLabel != null && variantLabel.isNotEmpty) 'variant_label': variantLabel,
       },
       options: Options(headers: {'Authorization': 'Bearer $accessToken'}),

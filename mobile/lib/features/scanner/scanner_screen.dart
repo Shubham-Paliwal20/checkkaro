@@ -1,11 +1,15 @@
+import 'dart:io';
+import 'dart:math';
 import 'dart:async';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:mobile_scanner/mobile_scanner.dart';
 import 'package:go_router/go_router.dart';
+import 'package:image_picker/image_picker.dart';
+import 'package:mobile_scanner/mobile_scanner.dart';
 import '../../core/api/api_client.dart';
 import '../../core/auth/auth_provider.dart';
+import '../../core/config/app_config.dart';
 import '../../core/theme/app_theme.dart';
 import '../auth/login_screen.dart';
 
@@ -60,15 +64,16 @@ class _ScannerScreenState extends State<ScannerScreen> {
     _controller.start();
   }
 
-  void _openLinkSheet() {
+  void _openSubmitSheet() {
     showModalBottomSheet(
       context: context,
       isScrollControlled: true,
       useSafeArea: true,
       backgroundColor: Colors.transparent,
-      builder: (_) => _LinkBarcodeSheet(barcode: _barcode!),
+      builder: (_) => _BarcodeSubmissionSheet(barcode: _barcode!),
     );
   }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -88,7 +93,6 @@ class _ScannerScreenState extends State<ScannerScreen> {
         children: [
           MobileScanner(controller: _controller, onDetect: _onDetect),
 
-          // Scan frame overlay
           Center(
             child: Column(
               mainAxisSize: MainAxisSize.min,
@@ -128,41 +132,26 @@ class _ScannerScreenState extends State<ScannerScreen> {
                       ),
                       const SizedBox(height: 14),
                       GestureDetector(
-                        onTap: _openLinkSheet,
+                        onTap: _openSubmitSheet,
                         child: Container(
                           width: double.infinity,
-                          padding: const EdgeInsets.symmetric(vertical: 11),
+                          padding: const EdgeInsets.symmetric(vertical: 12),
                           decoration: BoxDecoration(color: AppColors.brandOrange, borderRadius: BorderRadius.circular(10)),
                           alignment: Alignment.center,
-                          child: const Text('Link to Existing Product', style: TextStyle(color: Colors.white, fontSize: 13, fontWeight: FontWeight.w700)),
+                          child: const Text('Submit Product Info', style: TextStyle(color: Colors.white, fontSize: 14, fontWeight: FontWeight.w700)),
                         ),
                       ),
                       const SizedBox(height: 8),
-                      Row(children: [
-                        Expanded(
-                          child: GestureDetector(
-                            onTap: _retry,
-                            child: Container(
-                              padding: const EdgeInsets.symmetric(vertical: 10),
-                              decoration: BoxDecoration(color: Colors.white24, borderRadius: BorderRadius.circular(10)),
-                              alignment: Alignment.center,
-                              child: const Text('Scan Again', style: TextStyle(color: Colors.white, fontSize: 13, fontWeight: FontWeight.w600)),
-                            ),
-                          ),
+                      GestureDetector(
+                        onTap: _retry,
+                        child: Container(
+                          width: double.infinity,
+                          padding: const EdgeInsets.symmetric(vertical: 10),
+                          decoration: BoxDecoration(color: Colors.white24, borderRadius: BorderRadius.circular(10)),
+                          alignment: Alignment.center,
+                          child: const Text('Scan Again', style: TextStyle(color: Colors.white, fontSize: 13, fontWeight: FontWeight.w600)),
                         ),
-                        const SizedBox(width: 10),
-                        Expanded(
-                          child: GestureDetector(
-                            onTap: () => context.push('/contribute'),
-                            child: Container(
-                              padding: const EdgeInsets.symmetric(vertical: 10),
-                              decoration: BoxDecoration(color: Colors.white12, borderRadius: BorderRadius.circular(10), border: Border.all(color: Colors.white30)),
-                              alignment: Alignment.center,
-                              child: const Text('Add New Product', style: TextStyle(color: Colors.white70, fontSize: 13, fontWeight: FontWeight.w600)),
-                            ),
-                          ),
-                        ),
-                      ]),
+                      ),
                     ]),
                   )
 
@@ -186,76 +175,102 @@ class _ScannerScreenState extends State<ScannerScreen> {
 }
 
 
-// ── Link Barcode Sheet ────────────────────────────────────────────────────────
+// ── Barcode Submission Sheet ──────────────────────────────────────────────────
 
-class _LinkBarcodeSheet extends ConsumerStatefulWidget {
+class _BarcodeSubmissionSheet extends ConsumerStatefulWidget {
   final String barcode;
-  const _LinkBarcodeSheet({required this.barcode});
+  const _BarcodeSubmissionSheet({required this.barcode});
 
   @override
-  ConsumerState<_LinkBarcodeSheet> createState() => _LinkBarcodeSheetState();
+  ConsumerState<_BarcodeSubmissionSheet> createState() => _BarcodeSubmissionSheetState();
 }
 
-class _LinkBarcodeSheetState extends ConsumerState<_LinkBarcodeSheet> {
-  final _searchCtrl  = TextEditingController();
+class _BarcodeSubmissionSheetState extends ConsumerState<_BarcodeSubmissionSheet> {
+  final _nameCtrl    = TextEditingController();
   final _variantCtrl = TextEditingController();
-  Timer? _debounce;
-  List<Map<String, dynamic>> _results = [];
-  Map<String, dynamic>? _selected;
-  bool _searching  = false;
+  final _picker      = ImagePicker();
+  final _rng         = Random();
+  List<XFile> _photos = [];
+  bool _uploading  = false;
   bool _submitting = false;
-  String? _submitError;
+  String? _error;
   bool _submitted  = false;
 
   @override
   void dispose() {
-    _searchCtrl.dispose();
+    _nameCtrl.dispose();
     _variantCtrl.dispose();
-    _debounce?.cancel();
     super.dispose();
   }
 
-  void _onSearchChanged(String q) {
-    _debounce?.cancel();
-    if (q.trim().isEmpty) { setState(() { _results = []; }); return; }
-    _debounce = Timer(const Duration(milliseconds: 400), () => _search(q.trim()));
+  Future<void> _pickPhotos() async {
+    if (_photos.length >= 5) return;
+    try {
+      final picked = await _picker.pickMultiImage(imageQuality: 80);
+      if (picked.isEmpty) return;
+      final canAdd = 5 - _photos.length;
+      setState(() => _photos = [..._photos, ...picked.take(canAdd)]);
+    } catch (e) {
+      setState(() => _error = 'Could not open gallery.');
+    }
   }
 
-  Future<void> _search(String q) async {
-    setState(() { _searching = true; });
-    try {
-      final results = await ApiClient.searchProducts(q);
-      if (mounted) setState(() { _results = results; _searching = false; });
-    } catch (_) {
-      if (mounted) setState(() { _searching = false; });
-    }
+  void _removePhoto(int index) {
+    setState(() => _photos = [..._photos]..removeAt(index));
+  }
+
+  Future<String> _uploadPhoto(XFile file, String userId, String token) async {
+    final bytes = await file.readAsBytes();
+    final ext   = file.name.split('.').last.toLowerCase();
+    final mime  = ext == 'png' ? 'image/png' : 'image/jpeg';
+    final ts    = DateTime.now().millisecondsSinceEpoch;
+    final rand  = _rng.nextInt(9999).toString().padLeft(4, '0');
+    final path  = 'barcode-submissions/$userId/${ts}_$rand.$ext';
+    await Dio().put(
+      '$supabaseUrl/storage/v1/object/product-images/$path',
+      data: bytes,
+      options: Options(headers: {
+        'apikey': supabaseAnonKey,
+        'Authorization': 'Bearer $token',
+        'Content-Type': mime,
+      }),
+    );
+    return '$supabaseUrl/storage/v1/object/public/product-images/$path';
   }
 
   Future<void> _submit() async {
     final user = ref.read(authProvider);
-    if (user == null) { setState(() { _submitError = 'Please log in first.'; }); return; }
-    if (_selected == null) { setState(() { _submitError = 'Please select a product first.'; }); return; }
+    if (user == null) { _goToLogin(); return; }
 
-    setState(() { _submitting = true; _submitError = null; });
+    final name = _nameCtrl.text.trim();
+    if (name.isEmpty) { setState(() => _error = 'Product name is required.'); return; }
+    if (_photos.isEmpty) { setState(() => _error = 'Please add at least 1 front photo.'); return; }
+
+    setState(() { _submitting = true; _uploading = true; _error = null; });
     try {
-      await ApiClient.submitBarcode(
+      final urls = <String>[];
+      for (final photo in _photos) {
+        urls.add(await _uploadPhoto(photo, user.id, user.accessToken));
+      }
+      setState(() => _uploading = false);
+
+      await ApiClient.submitBarcodeWithPhotos(
         barcode: widget.barcode,
-        productId: _selected!['id']?.toString() ?? '',
-        productName: _selected!['name']?.toString() ?? '',
+        productName: name,
+        photos: urls,
         accessToken: user.accessToken,
         variantLabel: _variantCtrl.text.trim().isEmpty ? null : _variantCtrl.text.trim(),
       );
       if (mounted) setState(() { _submitted = true; _submitting = false; });
     } on DioException catch (e) {
       final detail = (e.response?.data as Map?)?['detail']?.toString() ?? 'Submission failed. Please try again.';
-      if (mounted) setState(() { _submitError = detail; _submitting = false; });
+      if (mounted) setState(() { _error = detail; _submitting = false; _uploading = false; });
     } on Exception catch (_) {
-      if (mounted) setState(() { _submitError = 'Submission failed. Please try again.'; _submitting = false; });
+      if (mounted) setState(() { _error = 'Submission failed. Please try again.'; _submitting = false; _uploading = false; });
     }
   }
 
   void _goToLogin() {
-    // Push login ON TOP of the sheet so filled details are preserved when user returns
     Navigator.of(context, rootNavigator: true).push(
       MaterialPageRoute(fullscreenDialog: true, builder: (_) => const LoginScreen()),
     );
@@ -263,7 +278,6 @@ class _LinkBarcodeSheetState extends ConsumerState<_LinkBarcodeSheet> {
 
   @override
   Widget build(BuildContext context) {
-    final user = ref.watch(authProvider);
     return Container(
       decoration: const BoxDecoration(
         color: Colors.white,
@@ -273,11 +287,12 @@ class _LinkBarcodeSheetState extends ConsumerState<_LinkBarcodeSheet> {
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-          Container(width: 40, height: 4, margin: const EdgeInsets.symmetric(vertical: 12), decoration: BoxDecoration(color: Colors.grey.shade300, borderRadius: BorderRadius.circular(2))),
+          Container(width: 40, height: 4, margin: const EdgeInsets.symmetric(vertical: 12),
+              decoration: BoxDecoration(color: Colors.grey.shade300, borderRadius: BorderRadius.circular(2))),
           Flexible(
             child: SingleChildScrollView(
-              padding: const EdgeInsets.fromLTRB(20, 0, 20, 24),
-              child: _submitted ? _buildSuccess() : _buildForm(user),
+              padding: const EdgeInsets.fromLTRB(20, 0, 20, 28),
+              child: _submitted ? _buildSuccess() : _buildForm(),
             ),
           ),
         ],
@@ -294,44 +309,36 @@ class _LinkBarcodeSheetState extends ConsumerState<_LinkBarcodeSheet> {
         child: Icon(Icons.check_circle, color: Colors.green.shade600, size: 48),
       ),
       const SizedBox(height: 16),
-      const Text('Barcode Submitted!', style: TextStyle(fontSize: 18, fontWeight: FontWeight.w800, color: Color(0xFF0D1B2A))),
+      const Text('Submitted!', style: TextStyle(fontSize: 20, fontWeight: FontWeight.w800, color: Color(0xFF0D1B2A))),
       const SizedBox(height: 8),
-      Text(
-        'Linked barcode ${widget.barcode}\nto ${_selected?['name'] ?? 'the product'}.\nYou\'ll earn ₹1 once it\'s approved.',
+      const Text(
+        'Our team will review the product info\nyou submitted. You\'ll earn ₹1 once approved.',
         textAlign: TextAlign.center,
-        style: const TextStyle(fontSize: 13, color: Color(0xFF6B7280), height: 1.5),
+        style: TextStyle(fontSize: 13, color: Color(0xFF6B7280), height: 1.5),
       ),
       const SizedBox(height: 32),
     ]);
   }
 
-  Widget _buildForm(AuthUser? user) {
+  Widget _buildForm() {
+    final user = ref.watch(authProvider);
     return Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-      const Text('Link Barcode to Product', style: TextStyle(fontSize: 17, fontWeight: FontWeight.w800, color: Color(0xFF0D1B2A))),
+      const Text('Submit Product Info', style: TextStyle(fontSize: 17, fontWeight: FontWeight.w800, color: Color(0xFF0D1B2A))),
       const SizedBox(height: 4),
       Text('Barcode: ${widget.barcode}', style: const TextStyle(fontSize: 12, color: Color(0xFF6B7280), fontFamily: 'monospace')),
-      const SizedBox(height: 14),
+      const SizedBox(height: 4),
+      const Text('Our team will review & add it to the database.', style: TextStyle(fontSize: 12, color: Color(0xFF9CA3AF))),
+      const SizedBox(height: 18),
 
-      if (user == null) ...[
-        Container(
-          padding: const EdgeInsets.all(12),
-          decoration: BoxDecoration(color: Colors.orange.shade50, borderRadius: BorderRadius.circular(10), border: Border.all(color: Colors.orange.shade200)),
-          child: const Text('Log in to submit a barcode link and earn ₹1.', style: TextStyle(fontSize: 13, color: Color(0xFF92400E))),
-        ),
-        const SizedBox(height: 14),
-      ],
-
-      const Text('Search product by name', style: TextStyle(fontSize: 13, fontWeight: FontWeight.w600, color: Color(0xFF374151))),
+      // Product name
+      const Text('Product Name *', style: TextStyle(fontSize: 13, fontWeight: FontWeight.w600, color: Color(0xFF374151))),
       const SizedBox(height: 6),
       TextField(
-        controller: _searchCtrl,
-        onChanged: _onSearchChanged,
+        controller: _nameCtrl,
+        textCapitalization: TextCapitalization.words,
         decoration: InputDecoration(
           hintText: 'e.g. Maggi Masala Noodles',
           hintStyle: const TextStyle(fontSize: 13, color: Color(0xFF9CA3AF)),
-          prefixIcon: _searching
-              ? const Padding(padding: EdgeInsets.all(12), child: SizedBox(width: 16, height: 16, child: CircularProgressIndicator(strokeWidth: 2, color: Color(0xFF9CA3AF))))
-              : const Icon(Icons.search, size: 20, color: Color(0xFF9CA3AF)),
           border: OutlineInputBorder(borderRadius: BorderRadius.circular(10), borderSide: BorderSide(color: Colors.grey.shade300)),
           enabledBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(10), borderSide: BorderSide(color: Colors.grey.shade300)),
           focusedBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(10), borderSide: const BorderSide(color: AppColors.brandOrange)),
@@ -340,61 +347,102 @@ class _LinkBarcodeSheetState extends ConsumerState<_LinkBarcodeSheet> {
         ),
         style: const TextStyle(fontSize: 14),
       ),
+      const SizedBox(height: 18),
 
-      if (_results.isNotEmpty) ...[
-        const SizedBox(height: 6),
-        Container(
-          constraints: const BoxConstraints(maxHeight: 200),
-          decoration: BoxDecoration(border: Border.all(color: Colors.grey.shade200), borderRadius: BorderRadius.circular(10)),
+      // Photos
+      Row(children: [
+        const Text('Photos *', style: TextStyle(fontSize: 13, fontWeight: FontWeight.w600, color: Color(0xFF374151))),
+        const SizedBox(width: 6),
+        Text('(front photo required, max 5)', style: TextStyle(fontSize: 11, color: Colors.grey.shade500)),
+      ]),
+      const SizedBox(height: 8),
+
+      if (_photos.isNotEmpty) ...[
+        SizedBox(
+          height: 90,
           child: ListView.separated(
-            shrinkWrap: true,
-            itemCount: _results.length,
-            separatorBuilder: (_, __) => Divider(height: 1, color: Colors.grey.shade100),
+            scrollDirection: Axis.horizontal,
+            itemCount: _photos.length + (_photos.length < 5 ? 1 : 0),
+            separatorBuilder: (_, __) => const SizedBox(width: 8),
             itemBuilder: (ctx, i) {
-              final p = _results[i];
-              return InkWell(
-                onTap: () => setState(() {
-                  _selected = p;
-                  _results = [];
-                  _searchCtrl.text = p['name'] ?? '';
-                }),
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
-                  child: Row(children: [
-                    Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-                      Text(p['name'] ?? '', style: const TextStyle(fontSize: 13, fontWeight: FontWeight.w600, color: Color(0xFF0D1B2A))),
-                      if ((p['brand'] ?? '').toString().isNotEmpty)
-                        Text(p['brand'].toString(), style: const TextStyle(fontSize: 11, color: Color(0xFF6B7280))),
-                    ])),
-                  ]),
+              if (i == _photos.length) {
+                // Add more button
+                return GestureDetector(
+                  onTap: _pickPhotos,
+                  child: Container(
+                    width: 80,
+                    decoration: BoxDecoration(
+                      border: Border.all(color: AppColors.brandOrange, width: 1.5),
+                      borderRadius: BorderRadius.circular(10),
+                      color: Colors.orange.shade50,
+                    ),
+                    child: const Column(mainAxisAlignment: MainAxisAlignment.center, children: [
+                      Icon(Icons.add_photo_alternate_outlined, color: AppColors.brandOrange, size: 24),
+                      SizedBox(height: 4),
+                      Text('Add', style: TextStyle(fontSize: 11, color: AppColors.brandOrange, fontWeight: FontWeight.w600)),
+                    ]),
+                  ),
+                );
+              }
+              return Stack(children: [
+                ClipRRect(
+                  borderRadius: BorderRadius.circular(10),
+                  child: Image.file(File(_photos[i].path), width: 80, height: 80, fit: BoxFit.cover),
                 ),
-              );
+                Positioned(top: 2, right: 2,
+                  child: GestureDetector(
+                    onTap: () => _removePhoto(i),
+                    child: Container(
+                      decoration: const BoxDecoration(color: Colors.black54, shape: BoxShape.circle),
+                      padding: const EdgeInsets.all(2),
+                      child: const Icon(Icons.close, color: Colors.white, size: 14),
+                    ),
+                  ),
+                ),
+                if (i == 0)
+                  Positioned(bottom: 0, left: 0, right: 0,
+                    child: Container(
+                      padding: const EdgeInsets.symmetric(vertical: 2),
+                      decoration: const BoxDecoration(color: Colors.black54, borderRadius: BorderRadius.vertical(bottom: Radius.circular(10))),
+                      alignment: Alignment.center,
+                      child: const Text('Front', style: TextStyle(color: Colors.white, fontSize: 9, fontWeight: FontWeight.w600)),
+                    ),
+                  ),
+              ]);
             },
           ),
         ),
-      ],
-
-      if (_selected != null) ...[
-        const SizedBox(height: 12),
-        Container(
-          padding: const EdgeInsets.all(12),
-          decoration: BoxDecoration(color: Colors.green.shade50, borderRadius: BorderRadius.circular(10), border: Border.all(color: Colors.green.shade200)),
-          child: Row(children: [
-            Icon(Icons.check_circle, color: Colors.green.shade600, size: 18),
-            const SizedBox(width: 8),
-            Expanded(child: Text(_selected!['name']?.toString() ?? '', style: TextStyle(fontSize: 13, fontWeight: FontWeight.w600, color: Colors.green.shade800))),
-          ]),
+        const SizedBox(height: 8),
+      ] else ...[
+        GestureDetector(
+          onTap: _pickPhotos,
+          child: Container(
+            width: double.infinity,
+            padding: const EdgeInsets.symmetric(vertical: 18),
+            decoration: BoxDecoration(
+              border: Border.all(color: AppColors.brandOrange, width: 1.5),
+              borderRadius: BorderRadius.circular(10),
+              color: Colors.orange.shade50,
+            ),
+            child: const Column(children: [
+              Icon(Icons.add_photo_alternate_outlined, color: AppColors.brandOrange, size: 32),
+              SizedBox(height: 6),
+              Text('Add front photo of product', style: TextStyle(fontSize: 13, color: AppColors.brandOrange, fontWeight: FontWeight.w600)),
+              SizedBox(height: 2),
+              Text('Clear photo of product label helps us verify', style: TextStyle(fontSize: 11, color: Color(0xFF9CA3AF))),
+            ]),
+          ),
         ),
+        const SizedBox(height: 8),
       ],
 
-      const SizedBox(height: 14),
-
+      // Variant
       const Text('Variant / Size (optional)', style: TextStyle(fontSize: 13, fontWeight: FontWeight.w600, color: Color(0xFF374151))),
       const SizedBox(height: 6),
       TextField(
         controller: _variantCtrl,
         decoration: InputDecoration(
-          hintText: 'e.g. 70g Pack, 500ml Bottle',
+          hintText: 'e.g. 70g, 500ml, Family Pack',
           hintStyle: const TextStyle(fontSize: 13, color: Color(0xFF9CA3AF)),
           border: OutlineInputBorder(borderRadius: BorderRadius.circular(10), borderSide: BorderSide(color: Colors.grey.shade300)),
           enabledBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(10), borderSide: BorderSide(color: Colors.grey.shade300)),
@@ -405,12 +453,12 @@ class _LinkBarcodeSheetState extends ConsumerState<_LinkBarcodeSheet> {
         style: const TextStyle(fontSize: 14),
       ),
 
-      if (_submitError != null) ...[
+      if (_error != null) ...[
         const SizedBox(height: 10),
         Container(
           padding: const EdgeInsets.all(10),
           decoration: BoxDecoration(color: Colors.red.shade50, borderRadius: BorderRadius.circular(8), border: Border.all(color: Colors.red.shade200)),
-          child: Text(_submitError!, style: TextStyle(fontSize: 12, color: Colors.red.shade700)),
+          child: Text(_error!, style: TextStyle(fontSize: 12, color: Colors.red.shade700)),
         ),
       ],
 
@@ -427,7 +475,12 @@ class _LinkBarcodeSheetState extends ConsumerState<_LinkBarcodeSheet> {
           ),
           alignment: Alignment.center,
           child: _submitting
-              ? const SizedBox(width: 20, height: 20, child: CircularProgressIndicator(color: Colors.white, strokeWidth: 2))
+              ? Row(mainAxisSize: MainAxisSize.min, children: [
+                  const SizedBox(width: 18, height: 18, child: CircularProgressIndicator(color: Colors.white, strokeWidth: 2)),
+                  const SizedBox(width: 10),
+                  Text(_uploading ? 'Uploading photos...' : 'Submitting...',
+                      style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w600, color: Colors.white)),
+                ])
               : Text(
                   user == null ? 'Log in to Submit' : 'Submit — Earn ₹1 on Approval',
                   style: const TextStyle(fontSize: 15, fontWeight: FontWeight.w700, color: Colors.white),

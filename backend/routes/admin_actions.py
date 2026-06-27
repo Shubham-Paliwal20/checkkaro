@@ -304,7 +304,7 @@ async def insert_product(body: InsertProductBody, request: Request):
 @router.get("/barcodes/pending")
 async def get_pending_barcodes(request: Request):
     user = await require_admin(request)
-    res = supabase_admin.table("product_barcodes").select("*").eq("status", "pending").order("created_at", desc=True).execute()
+    res = supabase_admin.table("barcode_submissions").select("*").eq("status", "pending").order("created_at", desc=True).execute()
     return res.data or []
 
 
@@ -312,17 +312,13 @@ async def get_pending_barcodes(request: Request):
 async def approve_barcode(id: str, request: Request):
     user = await require_admin(request)
     try:
-        row = supabase_admin.table("product_barcodes").select("*").eq("id", id).limit(1).execute()
+        row = supabase_admin.table("barcode_submissions").select("*").eq("id", id).limit(1).execute()
         if not row.data:
             raise HTTPException(status_code=404, detail="Barcode submission not found")
         sub = row.data[0]
 
-        conflict = supabase_admin.table("product_barcodes").select("id").eq("barcode", sub["barcode"]).eq("status", "approved").limit(1).execute()
-        if conflict.data and conflict.data[0]["id"] != id:
-            raise HTTPException(status_code=409, detail="Another submission for this barcode is already approved.")
-
         now = datetime.datetime.utcnow().isoformat()
-        supabase_admin.table("product_barcodes").update({"status": "approved", "reviewed_at": now}).eq("id", id).execute()
+        supabase_admin.table("barcode_submissions").update({"status": "approved", "reviewed_at": now}).eq("id", id).execute()
 
         if sub.get("submitted_by"):
             try:
@@ -330,7 +326,7 @@ async def approve_barcode(id: str, request: Request):
             except Exception as e:
                 logger.warning("Failed to credit barcode reward: %s", e)
 
-        _audit(user.email, "approve", "barcode_submission", id, {"barcode": sub["barcode"], "product_id": sub["product_id"]})
+        _audit(user.email, "approve", "barcode_submission", id, {"barcode": sub["barcode"], "product_name": sub.get("product_name")})
         return {"ok": True}
     except HTTPException:
         raise
@@ -344,7 +340,7 @@ async def reject_barcode(id: str, request: Request):
     user = await require_admin(request)
     try:
         now = datetime.datetime.utcnow().isoformat()
-        supabase_admin.table("product_barcodes").update({"status": "rejected", "reviewed_at": now}).eq("id", id).execute()
+        supabase_admin.table("barcode_submissions").update({"status": "rejected", "reviewed_at": now}).eq("id", id).execute()
         _audit(user.email, "reject", "barcode_submission", id)
         return {"ok": True}
     except Exception as e:

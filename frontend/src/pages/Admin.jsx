@@ -1675,9 +1675,18 @@ export default function Admin() {
                       pending
                     </span>
                   </div>
-                  <p style={{ margin: '0 0 4px', fontSize: 13, fontWeight: 600, color: '#374151' }}>{sub.product_name}</p>
+                  <p style={{ margin: '0 0 4px', fontSize: 14, fontWeight: 700, color: '#111827' }}>{sub.product_name}</p>
                   {sub.submitted_by_email && (
-                    <p style={{ margin: '0 0 10px', fontSize: 12, color: '#9ca3af' }}>Submitted by {sub.submitted_by_email}</p>
+                    <p style={{ margin: '0 0 10px', fontSize: 12, color: '#9ca3af' }}>by {sub.submitted_by_email} · {new Date(sub.created_at).toLocaleDateString('en-IN')}</p>
+                  )}
+                  {Array.isArray(sub.photos) && sub.photos.length > 0 && (
+                    <div style={{ display: 'flex', gap: 8, marginBottom: 12, overflowX: 'auto', paddingBottom: 4 }}>
+                      {sub.photos.map((url, i) => (
+                        <a key={i} href={url} target="_blank" rel="noreferrer">
+                          <img src={url} alt={`photo-${i}`} style={{ width: 72, height: 72, objectFit: 'cover', borderRadius: 8, border: '1.5px solid #e5e7eb', flexShrink: 0 }} />
+                        </a>
+                      ))}
+                    </div>
                   )}
                   <div style={{ display: 'flex', gap: 8 }}>
                     <button onClick={() => handleApproveBarcode(sub.id)}
