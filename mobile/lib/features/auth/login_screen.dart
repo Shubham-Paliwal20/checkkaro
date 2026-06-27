@@ -2,10 +2,10 @@ import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import 'package:url_launcher/url_launcher.dart';
 import '../../core/auth/auth_provider.dart';
 import '../../core/config/app_config.dart';
 import '../../core/theme/app_theme.dart';
+import 'onboarding_quiz_screen.dart';
 
 enum _Mode { signIn, signUp }
 
@@ -33,6 +33,14 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
     super.dispose();
   }
 
+  Future<void> _forgotPassword() async {
+    final emailCtrl = TextEditingController(text: _emailCtrl.text.trim());
+    await showDialog(
+      context: context,
+      builder: (ctx) => _ForgotPasswordDialog(emailCtrl: emailCtrl, dio: _dio),
+    );
+  }
+
   Future<void> _submit() async {
     final email    = _emailCtrl.text.trim();
     final password = _passwordCtrl.text;
@@ -47,13 +55,19 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
           data: {'email': email, 'password': password},
           options: Options(headers: {'apikey': supabaseAnonKey, 'Content-Type': 'application/json'}),
         );
-        final user = (res.data as Map)['user'] as Map? ?? {};
+        final data        = res.data as Map;
+        final user        = data['user'] as Map? ?? {};
+        final accessToken = data['access_token']  as String? ?? '';
+        final userId      = user['id']             as String? ?? '';
         ref.read(authProvider.notifier).setUser(
-          accessToken:  (res.data as Map)['access_token']  as String? ?? '',
-          refreshToken: (res.data as Map)['refresh_token'] as String? ?? '',
+          accessToken:  accessToken,
+          refreshToken: data['refresh_token'] as String? ?? '',
           email:        (user['email'] as String?) ?? email,
-          id:           (user['id']    as String?) ?? '',
+          id:           userId,
         );
+        if (!mounted) return;
+        setState(() => _loading = false);
+        await _checkAndShowQuiz(userId, accessToken);
         if (mounted) context.pop();
       } else {
         await _dio.post(
@@ -61,28 +75,39 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
           data: {'email': email, 'password': password},
           options: Options(headers: {'apikey': supabaseAnonKey, 'Content-Type': 'application/json'}),
         );
+        if (mounted) setState(() => _loading = false);
         _show('Account created! Check your email to confirm before logging in.', error: false);
       }
     } on DioException catch (e) {
+      if (mounted) setState(() => _loading = false);
       final msg = (e.response?.data as Map?)?['error_description']
                 ?? (e.response?.data as Map?)?['msg']
                 ?? 'Login failed. Please check your credentials.';
       _show(msg.toString(), error: true);
     } catch (_) {
-      _show('Something went wrong. Please try again.', error: true);
-    } finally {
       if (mounted) setState(() => _loading = false);
+      _show('Something went wrong. Please try again.', error: true);
     }
   }
 
-  Future<void> _googleSignIn() async {
-    final uri = Uri.parse(
-      '$supabaseUrl/auth/v1/authorize?provider=google&redirect_to=https%3A%2F%2Fwww.parkho.in',
-    );
+  Future<void> _checkAndShowQuiz(String userId, String accessToken) async {
+    if (userId.isEmpty || accessToken.isEmpty) return;
     try {
-      await launchUrl(uri, mode: LaunchMode.externalApplication);
+      final res = await _dio.get(
+        '$supabaseUrl/rest/v1/user_profiles',
+        queryParameters: {'id': 'eq.$userId', 'select': 'id,quiz_completed'},
+        options: Options(headers: {'apikey': supabaseAnonKey, 'Authorization': 'Bearer $accessToken'}),
+      );
+      final data = res.data;
+      final quizCompleted = data is List && data.isNotEmpty && data[0]['quiz_completed'] == true;
+      if (!quizCompleted && mounted) {
+        await Navigator.of(context).push(MaterialPageRoute(
+          fullscreenDialog: true,
+          builder: (_) => OnboardingQuizScreen(userId: userId, accessToken: accessToken),
+        ));
+      }
     } catch (_) {
-      _show('Could not open Google sign-in. Please try email login.', error: true);
+      // On error, skip quiz silently
     }
   }
 
@@ -143,45 +168,6 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
               ),
               const SizedBox(height: 28),
 
-              // ── Google button ──────────────────────────────────────────────
-              GestureDetector(
-                onTap: _googleSignIn,
-                child: Container(
-                  padding: const EdgeInsets.symmetric(vertical: 14),
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.circular(12),
-                    border: Border.all(color: const Color(0xFFD1D5DB), width: 1.5),
-                    boxShadow: [BoxShadow(color: Colors.black.withOpacity(0.05), blurRadius: 4, offset: const Offset(0, 1))],
-                  ),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      // Google G icon
-                      SizedBox(
-                        width: 20, height: 20,
-                        child: CustomPaint(painter: _GoogleIconPainter()),
-                      ),
-                      const SizedBox(width: 10),
-                      const Text('Continue with Google',
-                          style: TextStyle(fontSize: 15, fontWeight: FontWeight.w600, color: Color(0xFF374151))),
-                    ],
-                  ),
-                ),
-              ),
-              const SizedBox(height: 20),
-
-              // ── Divider ────────────────────────────────────────────────────
-              const Row(children: [
-                Expanded(child: Divider()),
-                Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 12),
-                  child: Text('or', style: TextStyle(color: AppColors.textMuted, fontSize: 12)),
-                ),
-                Expanded(child: Divider()),
-              ]),
-              const SizedBox(height: 20),
-
               // ── Email / Password ───────────────────────────────────────────
               const _Label('Email'),
               const SizedBox(height: 6),
@@ -202,6 +188,17 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                 decoration: _inputDeco('••••••••'),
               ),
 
+              if (_mode == _Mode.signIn) ...[
+                const SizedBox(height: 8),
+                Align(
+                  alignment: Alignment.centerRight,
+                  child: GestureDetector(
+                    onTap: _forgotPassword,
+                    child: const Text('Forgot password?',
+                        style: TextStyle(fontSize: 13, color: AppColors.brandBlue, fontWeight: FontWeight.w600)),
+                  ),
+                ),
+              ],
               const SizedBox(height: 20),
               if (_message != null)
                 Container(
@@ -258,46 +255,6 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
   );
 }
 
-// Draws the Google "G" logo using canvas
-class _GoogleIconPainter extends CustomPainter {
-  @override
-  void paint(Canvas canvas, Size size) {
-    final paint = Paint()..style = PaintingStyle.fill;
-    final cx = size.width / 2;
-    final cy = size.height / 2;
-    final r  = size.width / 2;
-
-    // White circle background
-    paint.color = Colors.white;
-    canvas.drawCircle(Offset(cx, cy), r, paint);
-
-    // Red arc (top + left)
-    paint.color = const Color(0xFFEA4335);
-    canvas.drawArc(Rect.fromCircle(center: Offset(cx, cy), radius: r * 0.85),
-        -2.36, 2.09, true, paint);
-    // Blue arc (right)
-    paint.color = const Color(0xFF4285F4);
-    canvas.drawArc(Rect.fromCircle(center: Offset(cx, cy), radius: r * 0.85),
-        -0.27, 0.9, true, paint);
-    // Green arc (bottom)
-    paint.color = const Color(0xFF34A853);
-    canvas.drawArc(Rect.fromCircle(center: Offset(cx, cy), radius: r * 0.85),
-        0.63, 0.85, true, paint);
-    // Yellow arc (bottom-left)
-    paint.color = const Color(0xFFFBBC05);
-    canvas.drawArc(Rect.fromCircle(center: Offset(cx, cy), radius: r * 0.85),
-        1.48, 0.88, true, paint);
-    // White inner circle to make ring
-    paint.color = Colors.white;
-    canvas.drawCircle(Offset(cx, cy), r * 0.5, paint);
-    // Blue bar (horizontal right bar of G)
-    paint.color = const Color(0xFF4285F4);
-    canvas.drawRect(Rect.fromLTWH(cx, cy - r * 0.13, r * 0.85, r * 0.26), paint);
-  }
-
-  @override
-  bool shouldRepaint(_GoogleIconPainter old) => false;
-}
 
 class _Label extends StatelessWidget {
   final String text;
@@ -316,4 +273,112 @@ class _TextBtn extends StatelessWidget {
     onTap: onTap,
     child: Center(child: Text(text, style: const TextStyle(fontSize: 13, color: AppColors.brandBlue, fontWeight: FontWeight.w600))),
   );
+}
+
+class _ForgotPasswordDialog extends StatefulWidget {
+  final TextEditingController emailCtrl;
+  final Dio dio;
+  const _ForgotPasswordDialog({required this.emailCtrl, required this.dio});
+
+  @override
+  State<_ForgotPasswordDialog> createState() => _ForgotPasswordDialogState();
+}
+
+class _ForgotPasswordDialogState extends State<_ForgotPasswordDialog> {
+  bool _loading = false;
+  bool _sent = false;
+  String? _error;
+
+  Future<void> _send() async {
+    final email = widget.emailCtrl.text.trim();
+    if (email.isEmpty) {
+      setState(() => _error = 'Please enter your email address.');
+      return;
+    }
+    setState(() { _loading = true; _error = null; });
+    try {
+      await widget.dio.post(
+        '$supabaseUrl/auth/v1/recover',
+        data: {'email': email},
+        options: Options(headers: {'apikey': supabaseAnonKey, 'Content-Type': 'application/json'}),
+      );
+      if (mounted) setState(() { _loading = false; _sent = true; });
+    } catch (_) {
+      if (mounted) setState(() { _loading = false; _error = 'Failed to send reset email. Please try again.'; });
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return AlertDialog(
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+      title: const Text('Reset Password',
+          style: TextStyle(fontSize: 18, fontWeight: FontWeight.w800, color: AppColors.textPrimary, fontFamily: 'Poppins')),
+      content: _sent
+          ? Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                const Icon(Icons.mark_email_read_outlined, size: 48, color: AppColors.gradeA),
+                const SizedBox(height: 12),
+                const Text(
+                  'Password reset email sent!\nCheck your inbox and follow the link to set a new password.',
+                  textAlign: TextAlign.center,
+                  style: TextStyle(fontSize: 13, color: AppColors.textMuted, height: 1.5),
+                ),
+              ],
+            )
+          : Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const Text('Enter your email and we\'ll send you a link to reset your password.',
+                    style: TextStyle(fontSize: 13, color: AppColors.textMuted, height: 1.5)),
+                const SizedBox(height: 16),
+                TextField(
+                  controller: widget.emailCtrl,
+                  keyboardType: TextInputType.emailAddress,
+                  autofocus: true,
+                  decoration: InputDecoration(
+                    hintText: 'you@example.com',
+                    hintStyle: const TextStyle(color: AppColors.textMuted, fontSize: 14),
+                    filled: true, fillColor: AppColors.surface,
+                    border: OutlineInputBorder(borderRadius: BorderRadius.circular(10), borderSide: const BorderSide(color: AppColors.border)),
+                    enabledBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(10), borderSide: const BorderSide(color: AppColors.border)),
+                    focusedBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(10), borderSide: const BorderSide(color: AppColors.brandOrange, width: 1.5)),
+                    contentPadding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
+                  ),
+                ),
+                if (_error != null) ...[
+                  const SizedBox(height: 10),
+                  Text(_error!, style: const TextStyle(fontSize: 12, color: AppColors.gradeD)),
+                ],
+              ],
+            ),
+      actions: _sent
+          ? [
+              TextButton(
+                onPressed: () => Navigator.of(context).pop(),
+                child: const Text('Done', style: TextStyle(fontWeight: FontWeight.w700, color: AppColors.brandOrange)),
+              ),
+            ]
+          : [
+              TextButton(
+                onPressed: () => Navigator.of(context).pop(),
+                child: const Text('Cancel', style: TextStyle(color: AppColors.textMuted)),
+              ),
+              ElevatedButton(
+                onPressed: _loading ? null : _send,
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: AppColors.brandOrange,
+                  foregroundColor: Colors.white,
+                  elevation: 0,
+                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+                ),
+                child: _loading
+                    ? const SizedBox(width: 18, height: 18, child: CircularProgressIndicator(color: Colors.white, strokeWidth: 2))
+                    : const Text('Send Link', style: TextStyle(fontWeight: FontWeight.w700)),
+              ),
+            ],
+    );
+  }
 }

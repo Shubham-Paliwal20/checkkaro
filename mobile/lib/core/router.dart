@@ -27,10 +27,6 @@ final appRouter = GoRouter(
         GoRoute(path: '/search',           builder: (c, s) => const SearchScreen()),
         GoRoute(path: '/scanner',          builder: (c, s) => const ScannerScreen()),
         GoRoute(path: '/check-ingredient', builder: (c, s) => const CheckIngredientScreen()),
-        GoRoute(
-          path: '/check-ingredient/:name',
-          builder: (c, s) => CheckIngredientScreen(initialQuery: s.pathParameters['name']),
-        ),
         GoRoute(path: '/products',   builder: (c, s) => const ProductsScreen()),
         GoRoute(path: '/contribute', builder: (c, s) => const ContributeScreen()),
         GoRoute(path: '/about',      builder: (c, s) => const AboutScreen()),
@@ -40,6 +36,10 @@ final appRouter = GoRouter(
     ),
 
     // Full-screen routes (no bottom nav)
+    GoRoute(
+      path: '/check-ingredient/:name',
+      builder: (c, s) => CheckIngredientScreen(initialQuery: s.pathParameters['name']),
+    ),
     GoRoute(
       path: '/product/:key',
       builder: (c, s) => ProductScreen(

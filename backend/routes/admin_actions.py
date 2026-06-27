@@ -299,6 +299,59 @@ async def insert_product(body: InsertProductBody, request: Request):
         raise HTTPException(status_code=500, detail=str(e))
 
 
+# ── Barcode Submissions ────────────────────────────────────────────────────────
+
+@router.get("/barcodes/pending")
+async def get_pending_barcodes(request: Request):
+    user = await require_admin(request)
+    res = supabase_admin.table("product_barcodes").select("*").eq("status", "pending").order("created_at", desc=True).execute()
+    return res.data or []
+
+
+@router.post("/barcodes/{id}/approve")
+async def approve_barcode(id: str, request: Request):
+    user = await require_admin(request)
+    try:
+        row = supabase_admin.table("product_barcodes").select("*").eq("id", id).limit(1).execute()
+        if not row.data:
+            raise HTTPException(status_code=404, detail="Barcode submission not found")
+        sub = row.data[0]
+
+        conflict = supabase_admin.table("product_barcodes").select("id").eq("barcode", sub["barcode"]).eq("status", "approved").limit(1).execute()
+        if conflict.data and conflict.data[0]["id"] != id:
+            raise HTTPException(status_code=409, detail="Another submission for this barcode is already approved.")
+
+        now = datetime.datetime.utcnow().isoformat()
+        supabase_admin.table("product_barcodes").update({"status": "approved", "reviewed_at": now}).eq("id", id).execute()
+
+        if sub.get("submitted_by"):
+            try:
+                supabase_admin.rpc("increment_earnings", {"uid": sub["submitted_by"], "amount": 1}).execute()
+            except Exception as e:
+                logger.warning("Failed to credit barcode reward: %s", e)
+
+        _audit(user.email, "approve", "barcode_submission", id, {"barcode": sub["barcode"], "product_id": sub["product_id"]})
+        return {"ok": True}
+    except HTTPException:
+        raise
+    except Exception as e:
+        logger.error("approve_barcode failed id=%s: %s", id, e)
+        raise HTTPException(status_code=500, detail=str(e))
+
+
+@router.post("/barcodes/{id}/reject")
+async def reject_barcode(id: str, request: Request):
+    user = await require_admin(request)
+    try:
+        now = datetime.datetime.utcnow().isoformat()
+        supabase_admin.table("product_barcodes").update({"status": "rejected", "reviewed_at": now}).eq("id", id).execute()
+        _audit(user.email, "reject", "barcode_submission", id)
+        return {"ok": True}
+    except Exception as e:
+        logger.error("reject_barcode failed id=%s: %s", id, e)
+        raise HTTPException(status_code=500, detail=str(e))
+
+
 @router.patch("/products/{id}/image")
 async def update_product_image(id: str, request: Request):
     user = await require_admin(request)

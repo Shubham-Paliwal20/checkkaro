@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 import '../../core/api/api_client.dart';
 import '../../core/models/product.dart';
 import '../../core/theme/app_theme.dart';
@@ -111,6 +112,13 @@ class _CheckIngredientScreenState
                 children: [
                   Row(
                     children: [
+                      if (widget.initialQuery != null) ...[
+                        GestureDetector(
+                          onTap: () => context.pop(),
+                          child: const Icon(Icons.arrow_back, color: Colors.white, size: 22),
+                        ),
+                        const SizedBox(width: 10),
+                      ],
                       Container(
                         padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
                         decoration: BoxDecoration(

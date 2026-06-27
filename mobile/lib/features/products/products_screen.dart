@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:io';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:dio/dio.dart';
@@ -46,6 +47,7 @@ class _ProductsScreenState extends State<ProductsScreen> {
   String? _error;
 
   final _searchCtrl = TextEditingController();
+  Timer? _searchDebounce;
 
   @override
   void initState() {
@@ -55,6 +57,7 @@ class _ProductsScreenState extends State<ProductsScreen> {
 
   @override
   void dispose() {
+    _searchDebounce?.cancel();
     _searchCtrl.dispose();
     super.dispose();
   }
@@ -188,6 +191,10 @@ class _ProductsScreenState extends State<ProductsScreen> {
                         child: TextField(
                           controller: _searchCtrl,
                           textInputAction: TextInputAction.search,
+                          onChanged: (v) {
+                            _searchDebounce?.cancel();
+                            _searchDebounce = Timer(const Duration(milliseconds: 400), () => _submitSearch(v));
+                          },
                           onSubmitted: _submitSearch,
                           decoration: InputDecoration(
                             filled: true,
@@ -497,7 +504,10 @@ class _BrowseCard extends StatelessWidget {
     final key      = (product['static_key'] ?? product['id'])?.toString() ?? '';
 
     return GestureDetector(
-      onTap: () => context.push('/product/$key?name=${Uri.encodeComponent(name)}'),
+      onTap: () {
+        final dest = key.isNotEmpty ? key : 'q';
+        context.push('/product/$dest?name=${Uri.encodeComponent(name)}');
+      },
       child: Container(
         decoration: BoxDecoration(
           color: Colors.white,

@@ -73,17 +73,11 @@ class ContributeScreen extends ConsumerWidget {
                   title: 'Submit a Product',
                   subtitle: 'Know a product we don\'t have? Add it to the database.',
                   color: AppColors.brandBlue,
-                  onTap: () => showModalBottomSheet(context: context, isScrollControlled: true, backgroundColor: Colors.transparent,
-                      builder: (_) => _SubmitProductSheet(userToken: user?.accessToken, userId: user?.id, userEmail: user?.email)),
-                ),
-                const SizedBox(height: 12),
-                _ContributeCard(
-                  icon: Icons.camera_alt_outlined,
-                  title: 'Submit Product Photo',
-                  subtitle: 'Upload a product label photo. Earn ₹1 per approved submission.',
-                  color: AppColors.brandOrange,
-                  onTap: () => showModalBottomSheet(context: context, isScrollControlled: true, backgroundColor: Colors.transparent,
-                      builder: (_) => _PhotoSheet(userToken: user?.accessToken, userId: user?.id, userEmail: user?.email)),
+                  onTap: () {
+                    if (user == null) { _requireLogin(context); return; }
+                    showModalBottomSheet(context: context, isScrollControlled: true, backgroundColor: Colors.transparent,
+                        builder: (_) => _SubmitProductSheet(userToken: user.accessToken, userId: user.id, userEmail: user.email));
+                  },
                 ),
                 const SizedBox(height: 12),
                 _ContributeCard(
@@ -91,8 +85,11 @@ class ContributeScreen extends ConsumerWidget {
                   title: 'Report Wrong Ingredients',
                   subtitle: 'Found incorrect ingredient info? Help us fix it.',
                   color: AppColors.gradeC,
-                  onTap: () => showModalBottomSheet(context: context, isScrollControlled: true, backgroundColor: Colors.transparent,
-                      builder: (_) => _ReportSheet(userToken: user?.accessToken)),
+                  onTap: () {
+                    if (user == null) { _requireLogin(context); return; }
+                    showModalBottomSheet(context: context, isScrollControlled: true, backgroundColor: Colors.transparent,
+                        builder: (_) => _ReportSheet(userToken: user.accessToken));
+                  },
                 ),
                 const SizedBox(height: 12),
                 _ContributeCard(
@@ -100,9 +97,12 @@ class ContributeScreen extends ConsumerWidget {
                   title: 'Write a Blog Post',
                   subtitle: 'Share your knowledge about ingredients and consumer awareness.',
                   color: AppColors.brandGreen,
-                  onTap: () => showModalBottomSheet(context: context, isScrollControlled: true, backgroundColor: Colors.transparent,
-                      builder: (_) => SizedBox(height: MediaQuery.of(context).size.height * 0.92,
-                          child: _BlogSheet(userToken: user?.accessToken, userId: user?.id, userEmail: user?.email))),
+                  onTap: () {
+                    if (user == null) { _requireLogin(context); return; }
+                    showModalBottomSheet(context: context, isScrollControlled: true, backgroundColor: Colors.transparent,
+                        builder: (_) => SizedBox(height: MediaQuery.of(context).size.height * 0.92,
+                            child: _BlogSheet(userToken: user.accessToken, userId: user.id, userEmail: user.email)));
+                  },
                 ),
                 const SizedBox(height: 24),
                 Container(
@@ -136,6 +136,16 @@ class ContributeScreen extends ConsumerWidget {
       ),
     );
   }
+}
+
+void _requireLogin(BuildContext context) {
+  ScaffoldMessenger.of(context).showSnackBar(
+    SnackBar(
+      content: const Text('Please log in to contribute'),
+      action: SnackBarAction(label: 'Log In', onPressed: () => context.push('/login')),
+      duration: const Duration(seconds: 4),
+    ),
+  );
 }
 
 // ── Login prompt ──────────────────────────────────────────────────────────────

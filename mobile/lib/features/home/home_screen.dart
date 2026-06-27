@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -209,35 +210,7 @@ class _HeroSection extends StatelessWidget {
 
           const SizedBox(height: 22),
 
-          // Search bar
-          GestureDetector(
-            onTap: () => context.go('/products'),
-            child: Container(
-              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
-              decoration: BoxDecoration(
-                color: AppColors.surface,
-                borderRadius: BorderRadius.circular(14),
-                border: Border.all(color: AppColors.border),
-                boxShadow: [BoxShadow(color: Colors.black.withOpacity(0.05), blurRadius: 10, offset: const Offset(0, 2))],
-              ),
-              child: Row(
-                children: [
-                  const Icon(Icons.search, color: AppColors.textMuted, size: 22),
-                  const SizedBox(width: 12),
-                  const Expanded(
-                    child: Text('Search any product... e.g., Maggi, Dove Soap',
-                        style: TextStyle(color: AppColors.textMuted, fontSize: 14)),
-                  ),
-                  Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
-                    decoration: BoxDecoration(color: AppColors.brandOrange, borderRadius: BorderRadius.circular(8)),
-                    child: const Text('Search',
-                        style: TextStyle(color: Colors.white, fontSize: 13, fontWeight: FontWeight.w700)),
-                  ),
-                ],
-              ),
-            ),
-          ),
+          const _HomeSearchBar(),
 
           const SizedBox(height: 16),
 
@@ -288,9 +261,10 @@ class _HeroSection extends StatelessWidget {
 
 // ── Contribute CTA ────────────────────────────────────────────────────────────
 
-class _ContributeCTA extends StatelessWidget {
+class _ContributeCTA extends ConsumerWidget {
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final user = ref.watch(authProvider);
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 28),
       decoration: const BoxDecoration(
@@ -310,7 +284,19 @@ class _ContributeCTA extends StatelessWidget {
           ),
           const SizedBox(height: 16),
           GestureDetector(
-            onTap: () => context.go('/contribute'),
+            onTap: () {
+              if (user == null) {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(
+                    content: const Text('Please log in to add a product and earn ₹1'),
+                    action: SnackBarAction(label: 'Log In', onPressed: () => context.push('/login')),
+                    duration: const Duration(seconds: 4),
+                  ),
+                );
+                return;
+              }
+              context.go('/contribute');
+            },
             child: Container(
               padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
               decoration: BoxDecoration(
@@ -963,6 +949,216 @@ class _AppFooter extends StatelessWidget {
     return GestureDetector(
       onTap: onTap,
       child: Text(label, style: const TextStyle(fontSize: 12, color: Color(0xFFd1d5db), fontWeight: FontWeight.w500)),
+    );
+  }
+}
+
+// ── Home Live Search Bar ──────────────────────────────────────────────────────
+
+class _HomeSearchBar extends StatefulWidget {
+  const _HomeSearchBar();
+
+  @override
+  State<_HomeSearchBar> createState() => _HomeSearchBarState();
+}
+
+class _HomeSearchBarState extends State<_HomeSearchBar> {
+  final _ctrl      = TextEditingController();
+  final _focusNode = FocusNode();
+  List<Map<String, dynamic>> _suggestions = [];
+  bool _showSuggestions = false;
+  bool _loading = false;
+  Timer? _debounce;
+
+  @override
+  void initState() {
+    super.initState();
+    _focusNode.addListener(() {
+      if (!_focusNode.hasFocus && mounted) {
+        setState(() => _showSuggestions = false);
+      }
+    });
+  }
+
+  @override
+  void dispose() {
+    _debounce?.cancel();
+    _ctrl.dispose();
+    _focusNode.dispose();
+    super.dispose();
+  }
+
+  void _onChanged(String value) {
+    _debounce?.cancel();
+    if (value.trim().isEmpty) {
+      setState(() { _suggestions = []; _showSuggestions = false; _loading = false; });
+      return;
+    }
+    setState(() => _loading = true);
+    _debounce = Timer(const Duration(milliseconds: 250), () async {
+      final results = await ApiClient.getSuggestions(value.trim());
+      if (mounted) setState(() { _suggestions = results; _showSuggestions = results.isNotEmpty; _loading = false; });
+    });
+  }
+
+  void _selectSuggestion(Map<String, dynamic> s) {
+    final name = (s['name'] as String?) ?? '';
+    _focusNode.unfocus();
+    setState(() { _showSuggestions = false; _ctrl.clear(); });
+    if (name.isNotEmpty) context.push('/product/q?name=${Uri.encodeComponent(name)}');
+  }
+
+  void _submit() {
+    final q = _ctrl.text.trim();
+    _focusNode.unfocus();
+    setState(() => _showSuggestions = false);
+    if (q.isEmpty) { context.go('/products'); return; }
+    context.push('/product/q?name=${Uri.encodeComponent(q)}');
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: [
+        // ── Search field ────────────────────────────────────────────────────
+        Container(
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(14),
+            border: Border.all(color: _focusNode.hasFocus ? AppColors.brandBlue : AppColors.border),
+            boxShadow: [BoxShadow(color: Colors.black.withOpacity(0.05), blurRadius: 10, offset: const Offset(0, 2))],
+          ),
+          child: Row(
+            children: [
+              const Padding(
+                padding: EdgeInsets.only(left: 14),
+                child: Icon(Icons.search, color: AppColors.textMuted, size: 20),
+              ),
+              Expanded(
+                child: TextField(
+                  controller: _ctrl,
+                  focusNode: _focusNode,
+                  onChanged: _onChanged,
+                  onSubmitted: (_) => _submit(),
+                  textInputAction: TextInputAction.search,
+                  decoration: const InputDecoration(
+                    hintText: 'Search any product...',
+                    hintStyle: TextStyle(color: AppColors.textMuted, fontSize: 14),
+                    border: InputBorder.none,
+                    contentPadding: EdgeInsets.symmetric(horizontal: 10, vertical: 14),
+                  ),
+                ),
+              ),
+              if (_loading)
+                const Padding(
+                  padding: EdgeInsets.only(right: 8),
+                  child: SizedBox(width: 14, height: 14, child: CircularProgressIndicator(strokeWidth: 2, color: AppColors.textMuted)),
+                )
+              else if (_ctrl.text.isNotEmpty)
+                GestureDetector(
+                  onTap: () { _ctrl.clear(); setState(() { _suggestions = []; _showSuggestions = false; }); },
+                  child: const Padding(padding: EdgeInsets.only(right: 8), child: Icon(Icons.clear, size: 18, color: AppColors.textMuted)),
+                ),
+              GestureDetector(
+                onTap: _submit,
+                child: Container(
+                  margin: const EdgeInsets.all(5),
+                  padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
+                  decoration: BoxDecoration(color: AppColors.brandOrange, borderRadius: BorderRadius.circular(10)),
+                  child: const Text('Search', style: TextStyle(color: Colors.white, fontSize: 13, fontWeight: FontWeight.w700)),
+                ),
+              ),
+            ],
+          ),
+        ),
+
+        // ── Suggestions dropdown ────────────────────────────────────────────
+        if (_showSuggestions && _suggestions.isNotEmpty)
+          Container(
+            margin: const EdgeInsets.only(top: 4),
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(14),
+              border: Border.all(color: AppColors.border),
+              boxShadow: [BoxShadow(color: Colors.black.withOpacity(0.08), blurRadius: 12, offset: const Offset(0, 4))],
+            ),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Padding(
+                  padding: const EdgeInsets.fromLTRB(14, 10, 14, 6),
+                  child: Text('${_suggestions.length} results',
+                      style: const TextStyle(fontSize: 11, fontWeight: FontWeight.w600, color: AppColors.textMuted)),
+                ),
+                const Divider(height: 1, color: Color(0xFFF3F4F6)),
+                ..._suggestions.take(7).map((s) {
+                  final name     = (s['name']     as String?) ?? '';
+                  final brand    = (s['brand']    as String?) ?? '';
+                  final category = (s['category'] as String?) ?? '';
+                  return GestureDetector(
+                    behavior: HitTestBehavior.opaque,
+                    onTap: () => _selectSuggestion(s),
+                    child: Container(
+                      padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 11),
+                      decoration: const BoxDecoration(border: Border(bottom: BorderSide(color: Color(0xFFF3F4F6)))),
+                      child: Row(
+                        children: [
+                          Container(
+                            width: 30, height: 30,
+                            decoration: const BoxDecoration(color: AppColors.surface, shape: BoxShape.circle),
+                            child: Center(child: Text(name.isNotEmpty ? name[0].toUpperCase() : '?',
+                                style: const TextStyle(fontSize: 12, fontWeight: FontWeight.w800, color: AppColors.textMuted))),
+                          ),
+                          const SizedBox(width: 10),
+                          Expanded(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(name, maxLines: 1, overflow: TextOverflow.ellipsis,
+                                    style: const TextStyle(fontSize: 13, fontWeight: FontWeight.w600, color: AppColors.textPrimary)),
+                                Text('${brand.isNotEmpty ? brand : ''}${brand.isNotEmpty && category.isNotEmpty ? ' · ' : ''}$category',
+                                    style: const TextStyle(fontSize: 11, color: AppColors.textMuted)),
+                              ],
+                            ),
+                          ),
+                          const Icon(Icons.chevron_right, size: 16, color: AppColors.textMuted),
+                        ],
+                      ),
+                    ),
+                  );
+                }),
+                // "Search for..." footer
+                GestureDetector(
+                  behavior: HitTestBehavior.opaque,
+                  onTap: _submit,
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 11),
+                    child: Row(
+                      children: [
+                        Container(
+                          width: 30, height: 30,
+                          decoration: const BoxDecoration(color: Color(0xFFEFF4FF), shape: BoxShape.circle),
+                          child: const Center(child: Icon(Icons.search, size: 14, color: AppColors.brandBlue)),
+                        ),
+                        const SizedBox(width: 10),
+                        RichText(
+                          text: TextSpan(
+                            style: const TextStyle(fontSize: 13, color: AppColors.brandBlue),
+                            children: [
+                              const TextSpan(text: 'Search for "'),
+                              TextSpan(text: _ctrl.text, style: const TextStyle(fontWeight: FontWeight.w800)),
+                              const TextSpan(text: '"'),
+                            ],
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+      ],
     );
   }
 }

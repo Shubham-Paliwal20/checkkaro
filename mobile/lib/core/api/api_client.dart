@@ -116,6 +116,39 @@ class ApiClient {
     }
   }
 
+  static Future<List<Map<String, dynamic>>> getSuggestions(String query) async {
+    try {
+      final res = await _dio.get('/api/product/suggestions', queryParameters: {'q': query});
+      final data = res.data;
+      if (data is Map && data['suggestions'] is List) {
+        return (data['suggestions'] as List).cast<Map<String, dynamic>>();
+      }
+      return [];
+    } catch (_) {
+      return [];
+    }
+  }
+
+  static Future<Map<String, dynamic>> submitBarcode({
+    required String barcode,
+    required String productId,
+    required String productName,
+    required String accessToken,
+    String? variantLabel,
+  }) async {
+    final res = await _dio.post(
+      '/api/barcodes/submit',
+      data: {
+        'barcode': barcode,
+        'product_id': productId,
+        'product_name': productName,
+        if (variantLabel != null && variantLabel.isNotEmpty) 'variant_label': variantLabel,
+      },
+      options: Options(headers: {'Authorization': 'Bearer $accessToken'}),
+    );
+    return res.data as Map<String, dynamic>;
+  }
+
   static Future<void> reportProduct({
     required String productId,
     required String productName,

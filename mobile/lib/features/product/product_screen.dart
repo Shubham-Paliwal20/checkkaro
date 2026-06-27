@@ -667,11 +667,27 @@ class _IngredientCardState extends State<_IngredientCard> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(ing.name,
-              style: TextStyle(
-                  fontSize: 13,
-                  fontWeight: FontWeight.w700,
-                  color: color)),
+          GestureDetector(
+            onTap: () {
+              if (ing.name.isEmpty) return;
+              final router = GoRouter.of(context);
+              showModalBottomSheet(
+                context: context,
+                isScrollControlled: true,
+                backgroundColor: Colors.transparent,
+                builder: (_) => _IngredientDetailSheet(name: ing.name, router: router),
+              );
+            },
+            child: Row(
+              children: [
+                Expanded(
+                  child: Text(ing.name,
+                      style: TextStyle(fontSize: 13, fontWeight: FontWeight.w700, color: color)),
+                ),
+                Icon(Icons.info_outline, size: 14, color: color.withOpacity(0.6)),
+              ],
+            ),
+          ),
           if (note.isNotEmpty) ...[
             const SizedBox(height: 4),
             Text(
@@ -989,6 +1005,313 @@ class _ReportButton extends ConsumerWidget {
             style: ElevatedButton.styleFrom(
                 backgroundColor: AppColors.gradeD),
             child: const Text('Submit'),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+// ── Ingredient detail bottom sheet ─────────────────────────────────────────
+
+class _IngredientDetailSheet extends StatefulWidget {
+  final String name;
+  final GoRouter router;
+  const _IngredientDetailSheet({required this.name, required this.router});
+
+  @override
+  State<_IngredientDetailSheet> createState() => _IngredientDetailSheetState();
+}
+
+class _IngredientDetailSheetState extends State<_IngredientDetailSheet> {
+  bool _loading = true;
+  IngredientDetail? _detail;
+  bool _notFound = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _load();
+  }
+
+  Future<void> _load() async {
+    try {
+      final data = await ApiClient.searchIngredient(widget.name);
+      if (!mounted) return;
+      setState(() {
+        _loading = false;
+        if (data != null) {
+          _detail = IngredientDetail.fromJson(data);
+        } else {
+          _notFound = true;
+        }
+      });
+    } catch (_) {
+      if (mounted) setState(() { _loading = false; _notFound = true; });
+    }
+  }
+
+  Color get _color {
+    final d = _detail;
+    if (d == null) return AppColors.textMuted;
+    if (d.isQuestioned) return AppColors.gradeD;
+    if (d.isWorthKnowing) return AppColors.gradeC;
+    return AppColors.gradeA;
+  }
+
+  Color get _bg {
+    final d = _detail;
+    if (d == null) return AppColors.surface;
+    if (d.isQuestioned) return AppColors.gradeBgD;
+    if (d.isWorthKnowing) return AppColors.gradeBgC;
+    return AppColors.gradeBgA;
+  }
+
+  String get _label {
+    switch (_detail?.classification) {
+      case 'commonly_questioned': return 'Commonly Questioned';
+      case 'worth_knowing':       return 'Worth Knowing';
+      default:                    return 'Generally Recognised Safe';
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      decoration: const BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
+      ),
+      constraints: BoxConstraints(maxHeight: MediaQuery.of(context).size.height * 0.85),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          const SizedBox(height: 12),
+          Center(
+            child: Container(
+              width: 36, height: 4,
+              decoration: BoxDecoration(color: AppColors.border, borderRadius: BorderRadius.circular(2)),
+            ),
+          ),
+          const SizedBox(height: 16),
+          Padding(
+            padding: const EdgeInsets.fromLTRB(20, 0, 12, 12),
+            child: Row(
+              children: [
+                Expanded(
+                  child: Text(widget.name,
+                      style: const TextStyle(fontSize: 18, fontWeight: FontWeight.w800,
+                          color: AppColors.textPrimary, fontFamily: 'Poppins')),
+                ),
+                IconButton(
+                  icon: const Icon(Icons.close, size: 20, color: AppColors.textMuted),
+                  onPressed: () => Navigator.of(context).pop(),
+                ),
+              ],
+            ),
+          ),
+          const Divider(height: 1),
+          Flexible(
+            child: SingleChildScrollView(
+              padding: const EdgeInsets.fromLTRB(20, 20, 20, 32),
+              child: _loading
+                  ? const Center(
+                      child: Padding(
+                        padding: EdgeInsets.symmetric(vertical: 60),
+                        child: CircularProgressIndicator(color: AppColors.brandOrange),
+                      ))
+                  : _notFound
+                      ? Padding(
+                          padding: const EdgeInsets.symmetric(vertical: 40),
+                          child: Column(
+                            children: [
+                              const Icon(Icons.search_off, size: 40, color: AppColors.textMuted),
+                              const SizedBox(height: 12),
+                              Text('No info found for "${widget.name}".',
+                                  textAlign: TextAlign.center,
+                                  style: const TextStyle(color: AppColors.textMuted, fontSize: 14)),
+                            ],
+                          ),
+                        )
+                      : _buildContent(),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildContent() {
+    final d = _detail!;
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Container(
+          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+          decoration: BoxDecoration(
+            color: _bg,
+            borderRadius: BorderRadius.circular(20),
+            border: Border.all(color: _color.withOpacity(0.4)),
+          ),
+          child: Text(_label,
+              style: TextStyle(fontSize: 12, fontWeight: FontWeight.w700, color: _color)),
+        ),
+        if (d.whatItIs != null) ...[
+          const SizedBox(height: 14),
+          Text(d.whatItIs!,
+              style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w600,
+                  color: AppColors.textPrimary, height: 1.4)),
+        ],
+        if (d.oneLineNote != null) ...[
+          const SizedBox(height: 8),
+          Text(d.oneLineNote!,
+              style: const TextStyle(fontSize: 13, color: AppColors.textMuted, height: 1.5)),
+        ],
+        if (d.healthEffects != null && d.healthEffects!.isNotEmpty) ...[
+          const SizedBox(height: 16),
+          _SheetSection(
+            title: 'Health & Safety',
+            icon: Icons.health_and_safety_outlined,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                if (d.healthEffects!['short_term'] != null)
+                  _SheetRow(label: 'Short-term',
+                      value: '${d.healthEffects!['short_term']}', color: AppColors.gradeC),
+                if (d.healthEffects!['long_term'] != null)
+                  _SheetRow(label: 'Long-term',
+                      value: '${d.healthEffects!['long_term']}', color: AppColors.gradeD),
+                if (d.healthEffects!['vulnerable_groups'] != null)
+                  _SheetRow(label: 'Vulnerable groups',
+                      value: '${d.healthEffects!['vulnerable_groups']}', color: AppColors.gradeB),
+              ],
+            ),
+          ),
+        ],
+        if (d.regulatoryNote != null) ...[
+          const SizedBox(height: 12),
+          _SheetSection(
+            title: 'Regulatory Note',
+            icon: Icons.policy_outlined,
+            child: Text(d.regulatoryNote!,
+                style: const TextStyle(fontSize: 13, color: AppColors.textMuted, height: 1.5)),
+          ),
+        ],
+        if (d.countriesRestricted.isNotEmpty) ...[
+          const SizedBox(height: 12),
+          _SheetSection(
+            title: 'Restricted / Banned In',
+            icon: Icons.block_outlined,
+            child: Wrap(
+              spacing: 6, runSpacing: 6,
+              children: d.countriesRestricted.map((c) => Container(
+                padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                decoration: BoxDecoration(
+                  color: AppColors.gradeBgD,
+                  borderRadius: BorderRadius.circular(8),
+                  border: Border.all(color: AppColors.gradeD.withOpacity(0.4)),
+                ),
+                child: Text(c, style: const TextStyle(
+                    fontSize: 12, fontWeight: FontWeight.w600, color: AppColors.gradeD)),
+              )).toList(),
+            ),
+          ),
+        ],
+        if (d.fssaiPosition != null) ...[
+          const SizedBox(height: 12),
+          _SheetSection(
+            title: 'FSSAI Position (India)',
+            icon: Icons.gavel_outlined,
+            child: Text(d.fssaiPosition!,
+                style: const TextStyle(fontSize: 13, color: AppColors.textMuted, height: 1.5)),
+          ),
+        ],
+        const SizedBox(height: 20),
+        GestureDetector(
+          onTap: () {
+            final encodedName = Uri.encodeComponent(d.name);
+            Navigator.of(context).pop();
+            widget.router.push('/check-ingredient/$encodedName');
+          },
+          child: Container(
+            width: double.infinity,
+            padding: const EdgeInsets.symmetric(vertical: 13),
+            decoration: BoxDecoration(
+              border: Border.all(color: AppColors.brandBlue),
+              borderRadius: BorderRadius.circular(12),
+            ),
+            alignment: Alignment.center,
+            child: const Text('View Full Ingredient Details →',
+                style: TextStyle(color: AppColors.brandBlue,
+                    fontWeight: FontWeight.w700, fontSize: 14)),
+          ),
+        ),
+      ],
+    );
+  }
+}
+
+class _SheetSection extends StatelessWidget {
+  final String title;
+  final IconData icon;
+  final Widget child;
+  const _SheetSection({required this.title, required this.icon, required this.child});
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.all(14),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(12),
+        border: Border.all(color: AppColors.border),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              Icon(icon, size: 15, color: AppColors.textMuted),
+              const SizedBox(width: 7),
+              Text(title, style: const TextStyle(
+                  fontSize: 13, fontWeight: FontWeight.w700, color: AppColors.textPrimary)),
+            ],
+          ),
+          const SizedBox(height: 10),
+          child,
+        ],
+      ),
+    );
+  }
+}
+
+class _SheetRow extends StatelessWidget {
+  final String label, value;
+  final Color color;
+  const _SheetRow({required this.label, required this.value, required this.color});
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 8),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Container(
+            width: 7, height: 7,
+            margin: const EdgeInsets.only(top: 5, right: 8),
+            decoration: BoxDecoration(color: color, shape: BoxShape.circle),
+          ),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(label, style: TextStyle(
+                    fontSize: 11, fontWeight: FontWeight.w700, color: color)),
+                Text(value, style: const TextStyle(
+                    fontSize: 12, color: AppColors.textMuted, height: 1.4)),
+              ],
+            ),
           ),
         ],
       ),

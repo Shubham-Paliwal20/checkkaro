@@ -961,7 +961,9 @@ export default function Admin() {
   const isMobile = useIsMobile()
   const [tab,        setTab]        = useState('pending')
   const [subs,       setSubs]       = useState([])
-  const [counts,     setCounts]     = useState({ pending: 0, approved: 0, rejected: 0, extracted: 0, photos: 0, reports: 0 })
+  const [counts,     setCounts]     = useState({ pending: 0, approved: 0, rejected: 0, extracted: 0, photos: 0, reports: 0, barcodes: 0 })
+  const [barcodeSubs, setBarcodeSubs] = useState([])
+  const [barcodeFetching, setBarcodeFetching] = useState(false)
   const [ingredientReports, setIngredientReports] = useState([])
   const [fetching,   setFetching]   = useState(false)
   const [saving,     setSaving]     = useState(null)
@@ -1021,6 +1023,16 @@ export default function Admin() {
         const { data } = await supabase
           .from('ingredient_reports').select('*').order('created_at', { ascending: false })
         if (!cancelled) setIngredientReports(data || [])
+      } else if (tab === 'barcodes') {
+        if (!cancelled) setBarcodeFetching(true)
+        try {
+          const data = await adminFetch('/barcodes/pending')
+          if (!cancelled) setBarcodeSubs(data || [])
+        } catch (e) {
+          if (!cancelled) setFetchError(`Barcode fetch error: ${e.message}`)
+        } finally {
+          if (!cancelled) setBarcodeFetching(false)
+        }
       } else {
         setFetching(true)
         setFetchError(null)
@@ -1051,12 +1063,16 @@ export default function Admin() {
         supabase.from('product_photo_submissions').select('status'),
         supabase.from('ingredient_reports').select('status'),
       ])
-      const c = { pending: 0, approved: 0, rejected: 0, extracted: 0, photos: 0, reports: 0 }
+      const c = { pending: 0, approved: 0, rejected: 0, extracted: 0, photos: 0, reports: 0, barcodes: 0 }
       if (data) data.forEach(r => { if (c[r.status] !== undefined) c[r.status]++ })
       const pc = { pending: 0, approved: 0, rejected: 0 }
       if (allPhotoData) allPhotoData.forEach(r => { if (pc[r.status] !== undefined) pc[r.status]++ })
       c.photos = pc.pending
       if (repData) c.reports = repData.filter(r => r.status === 'pending').length
+      try {
+        const barcodeData = await adminFetch('/barcodes/pending')
+        c.barcodes = (barcodeData || []).length
+      } catch (_) {}
       setCounts(c)
       setPhotoCounts(pc)
     } catch (e) {
@@ -1085,6 +1101,32 @@ export default function Admin() {
     const { data } = await supabase
       .from('ingredient_reports').select('*').order('created_at', { ascending: false })
     setIngredientReports(data || [])
+  }
+
+  const fetchBarcodes = async () => {
+    setBarcodeFetching(true)
+    try {
+      const data = await adminFetch('/barcodes/pending')
+      setBarcodeSubs(data || [])
+    } catch (e) {
+      setFetchError(`Barcode fetch error: ${e.message}`)
+    } finally {
+      setBarcodeFetching(false)
+    }
+  }
+
+  const handleApproveBarcode = async (id) => {
+    try {
+      await adminFetch(`/barcodes/${id}/approve`, { method: 'POST' })
+      fetchAll(); fetchBarcodes()
+    } catch (e) { alert(`Approve failed: ${e.message}`) }
+  }
+
+  const handleRejectBarcode = async (id) => {
+    try {
+      await adminFetch(`/barcodes/${id}/reject`, { method: 'POST' })
+      fetchAll(); fetchBarcodes()
+    } catch (e) { alert(`Reject failed: ${e.message}`) }
   }
 
   const handleApproveReport = async (report) => {
@@ -1238,7 +1280,7 @@ export default function Admin() {
     }
   }
 
-  const adminPage = tab === 'photos' ? 'photos' : tab === 'reports' ? 'reports' : tab === 'add' ? 'add' : tab === 'blogs' ? 'blogs' : 'products'
+  const adminPage = tab === 'photos' ? 'photos' : tab === 'reports' ? 'reports' : tab === 'add' ? 'add' : tab === 'blogs' ? 'blogs' : tab === 'barcodes' ? 'barcodes' : 'products'
 
   return (
     <div style={{ maxWidth: 1100, margin: '0 auto', padding: isMobile ? '20px 14px 48px' : '32px 20px 60px' }}>
@@ -1350,6 +1392,19 @@ export default function Admin() {
           <div style={{ fontSize: isMobile ? 22 : 26 }}>📝</div>
           <div style={{ fontSize: isMobile ? 12 : 14, fontWeight: 700, marginTop: 4 }}>Blog Approvals</div>
           <div style={{ fontSize: 11, marginTop: 2, opacity: 0.8 }}>review · approve</div>
+        </button>
+        <button
+          onClick={() => setTab('barcodes')}
+          style={{
+            flex: 1, padding: isMobile ? '14px 8px' : '16px 12px', borderRadius: 14, border: 'none', cursor: 'pointer', fontFamily: 'inherit', textAlign: 'center',
+            background: adminPage === 'barcodes' ? '#059669' : '#f1f5f9',
+            color: adminPage === 'barcodes' ? '#fff' : '#475569',
+            boxShadow: adminPage === 'barcodes' ? '0 4px 14px rgba(5,150,105,0.25)' : 'none',
+            transition: 'all 0.15s',
+          }}>
+          <div style={{ fontSize: isMobile ? 22 : 26 }}>🔢</div>
+          <div style={{ fontSize: isMobile ? 12 : 14, fontWeight: 700, marginTop: 4 }}>Barcodes</div>
+          <div style={{ fontSize: 11, marginTop: 2, opacity: 0.8 }}>{counts.barcodes} pending</div>
         </button>
       </div>
 
@@ -1589,6 +1644,57 @@ export default function Admin() {
 
       {/* ── BLOG APPROVALS PAGE ── */}
       {adminPage === 'blogs' && <BlogApprovals />}
+
+      {/* ── BARCODES PAGE ── */}
+      {adminPage === 'barcodes' && (
+        <>
+          <h2 style={{ fontFamily: 'Poppins,sans-serif', fontSize: 16, fontWeight: 700, color: '#111827', marginBottom: 14 }}>
+            🔢 Barcode Submissions
+          </h2>
+          {barcodeFetching ? (
+            <div style={{ textAlign: 'center', padding: '48px 0', color: '#9ca3af', fontSize: 15 }}>Loading…</div>
+          ) : barcodeSubs.length === 0 ? (
+            <div style={{ textAlign: 'center', padding: '48px 0' }}>
+              <div style={{ fontSize: 48, marginBottom: 12 }}>🔢</div>
+              <p style={{ color: '#9ca3af', fontSize: 15 }}>No pending barcode submissions</p>
+            </div>
+          ) : (
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
+              {barcodeSubs.map(sub => (
+                <div key={sub.id} style={{ background: '#fff', border: '1px solid #e5e7eb', borderRadius: 12, padding: '14px 16px', boxShadow: '0 2px 8px rgba(0,0,0,0.05)' }}>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', gap: 8, marginBottom: 10 }}>
+                    <div>
+                      <p style={{ margin: 0, fontWeight: 700, fontSize: 15, color: '#111827', fontFamily: 'monospace' }}>{sub.barcode}</p>
+                      {sub.variant_label && (
+                        <span style={{ display: 'inline-block', marginTop: 4, fontSize: 11, background: '#eff6ff', color: '#1d4ed8', border: '1px solid #bfdbfe', borderRadius: 99, padding: '2px 8px', fontWeight: 600 }}>
+                          {sub.variant_label}
+                        </span>
+                      )}
+                    </div>
+                    <span style={{ flexShrink: 0, fontSize: 11, background: '#fef3c7', color: '#d97706', border: '1px solid #fde68a', borderRadius: 99, padding: '3px 10px', fontWeight: 700, textTransform: 'uppercase' }}>
+                      pending
+                    </span>
+                  </div>
+                  <p style={{ margin: '0 0 4px', fontSize: 13, fontWeight: 600, color: '#374151' }}>{sub.product_name}</p>
+                  {sub.submitted_by_email && (
+                    <p style={{ margin: '0 0 10px', fontSize: 12, color: '#9ca3af' }}>Submitted by {sub.submitted_by_email}</p>
+                  )}
+                  <div style={{ display: 'flex', gap: 8 }}>
+                    <button onClick={() => handleApproveBarcode(sub.id)}
+                      style={{ flex: 1, background: '#059669', color: '#fff', border: 'none', borderRadius: 8, padding: '9px 0', fontSize: 13, fontWeight: 700, cursor: 'pointer', fontFamily: 'inherit' }}>
+                      ✓ Approve + Reward ₹1
+                    </button>
+                    <button onClick={() => handleRejectBarcode(sub.id)}
+                      style={{ flex: 1, background: '#fff', color: '#dc2626', border: '1.5px solid #dc2626', borderRadius: 8, padding: '9px 0', fontSize: 13, fontWeight: 700, cursor: 'pointer', fontFamily: 'inherit' }}>
+                      ✕ Reject
+                    </button>
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
+        </>
+      )}
 
     </div>
   )
